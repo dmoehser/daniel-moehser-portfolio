@@ -16,85 +16,47 @@ const ANIMATION = {
 // Skill card data from Customizer
 // --------------------------------
 const getSkillCards = () => {
-  // Check if Customizer values are available
   if (typeof window !== 'undefined' && window.__SKILLS_CARD1__) {
     return [
       {
         id: 1,
-        title: window.__SKILLS_CARD1__.title || 'Frontend Development',
-        description: window.__SKILLS_CARD1__.description || 'Building responsive and interactive user interfaces with modern web technologies.',
-        tags: window.__SKILLS_CARD1__.tags ? window.__SKILLS_CARD1__.tags.split(',').map(tag => tag.trim()) : ['React', 'JavaScript', 'CSS', 'HTML'],
+        title: window.__SKILLS_CARD1__.title,
+        description: window.__SKILLS_CARD1__.description,
+        tags: window.__SKILLS_CARD1__.tags ? window.__SKILLS_CARD1__.tags.split(',').map(tag => tag.trim()) : [],
         isSpecial: false
       },
       {
         id: 2,
-        title: window.__SKILLS_CARD2__.title || 'Backend Development',
-        description: window.__SKILLS_CARD2__.description || 'Creating robust server-side applications and APIs.',
-        tags: window.__SKILLS_CARD2__.tags ? window.__SKILLS_CARD2__.tags.split(',').map(tag => tag.trim()) : ['Node.js', 'PHP', 'MySQL', 'WordPress'],
+        title: window.__SKILLS_CARD2__.title,
+        description: window.__SKILLS_CARD2__.description,
+        tags: window.__SKILLS_CARD2__.tags ? window.__SKILLS_CARD2__.tags.split(',').map(tag => tag.trim()) : [],
         isSpecial: false
       },
       {
         id: 3,
-        title: window.__SKILLS_CARD3__.title || 'Design & UX',
-        description: window.__SKILLS_CARD3__.description || 'Creating intuitive and beautiful user experiences.',
-        tags: window.__SKILLS_CARD3__.tags ? window.__SKILLS_CARD3__.tags.split(',').map(tag => tag.trim()) : ['Figma', 'Adobe XD', 'User Research'],
+        title: window.__SKILLS_CARD3__.title,
+        description: window.__SKILLS_CARD3__.description,
+        tags: window.__SKILLS_CARD3__.tags ? window.__SKILLS_CARD3__.tags.split(',').map(tag => tag.trim()) : [],
         isSpecial: false
       },
       {
         id: 4,
-        title: window.__SKILLS_CARD4__.title || 'DevOps & Tools',
-        description: window.__SKILLS_CARD4__.description || 'Streamlining development workflows and deployment processes.',
-        tags: window.__SKILLS_CARD4__.tags ? window.__SKILLS_CARD4__.tags.split(',').map(tag => tag.trim()) : ['Git', 'Docker', 'CI/CD', 'AWS'],
+        title: window.__SKILLS_CARD4__.title,
+        description: window.__SKILLS_CARD4__.description,
+        tags: window.__SKILLS_CARD4__.tags ? window.__SKILLS_CARD4__.tags.split(',').map(tag => tag.trim()) : [],
         isSpecial: false
       },
       {
         id: 5,
-        title: window.__SKILLS_CARD5__.title || 'Mobile Development',
-        description: window.__SKILLS_CARD5__.description || 'Building native and cross-platform mobile applications.',
-        tags: window.__SKILLS_CARD5__.tags ? window.__SKILLS_CARD5__.tags.split(',').map(tag => tag.trim()) : ['React Native', 'Flutter', 'iOS', 'Android'],
+        title: window.__SKILLS_CARD5__.title,
+        description: window.__SKILLS_CARD5__.description,
+        tags: window.__SKILLS_CARD5__.tags ? window.__SKILLS_CARD5__.tags.split(',').map(tag => tag.trim()) : [],
         isSpecial: false
       }
     ];
   }
   
-  // Fallback to default values (should never happen in production)
-  return [
-    {
-      id: 1,
-      title: 'Frontend Development',
-      description: 'Building responsive and interactive user interfaces with modern web technologies.',
-      tags: ['React', 'JavaScript', 'CSS', 'HTML'],
-      isSpecial: false
-    },
-    {
-      id: 2,
-      title: 'Backend Development',
-      description: 'Creating robust server-side applications and APIs.',
-      tags: ['Node.js', 'PHP', 'MySQL', 'WordPress'],
-      isSpecial: false
-    },
-    {
-      id: 3,
-      title: 'Design & UX',
-      description: 'Creating intuitive and beautiful user experiences.',
-      tags: ['Figma', 'Adobe XD', 'User Research'],
-      isSpecial: false
-    },
-    {
-      id: 4,
-      title: 'DevOps & Tools',
-      description: 'Streamlining development workflows and deployment processes.',
-      tags: ['Git', 'Docker', 'CI/CD', 'AWS'],
-      isSpecial: false
-    },
-    {
-      id: 5,
-      title: 'Mobile Development',
-      description: 'Building native and cross-platform mobile applications.',
-      tags: ['React Native', 'Flutter', 'iOS', 'Android'],
-      isSpecial: false
-    }
-  ];
+  return [];
 };
 
 // Reusable skill card component
@@ -123,9 +85,8 @@ export default function Skills() {
   const topRowCards = skillCards.slice(0, 3);
   const bottomRowCards = skillCards.slice(3, 5);
 
-  // Get Customizer values for title and subtitle
-  const title = typeof window !== 'undefined' && window.__SKILLS_TITLE__ ? window.__SKILLS_TITLE__ : 'Skills';
-  const subtitle = typeof window !== 'undefined' && window.__SKILLS_SUBTITLE__ ? window.__SKILLS_SUBTITLE__ : 'My technical & soft skills';
+  const title = typeof window !== 'undefined' && window.__SKILLS_TITLE__ ? window.__SKILLS_TITLE__ : '';
+  const subtitle = typeof window !== 'undefined' && window.__SKILLS_SUBTITLE__ ? window.__SKILLS_SUBTITLE__ : '';
 
   return (
     <section className="skills" id="skills">
