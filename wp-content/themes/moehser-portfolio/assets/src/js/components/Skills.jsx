@@ -13,6 +13,15 @@ const ANIMATION = {
   transition: { duration: 0.2 }
 };
 
+// Helper function to decode HTML entities
+// -------------------------------------
+const decodeHtmlEntities = (text) => {
+  if (!text) return '';
+  const textarea = document.createElement('textarea');
+  textarea.innerHTML = text;
+  return textarea.value;
+};
+
 // Skill card data from Customizer
 // --------------------------------
 const getSkillCards = () => {
@@ -20,42 +29,42 @@ const getSkillCards = () => {
     return [
       {
         id: 1,
-        title: window.__SKILLS_CARD1__.title,
-        description: window.__SKILLS_CARD1__.description,
-        skills_list: window.__SKILLS_CARD1__.skills_list,
-        tags: window.__SKILLS_CARD1__.tags ? window.__SKILLS_CARD1__.tags.split(',').map(tag => tag.trim()) : [],
+        title: decodeHtmlEntities(window.__SKILLS_CARD1__.title),
+        description: decodeHtmlEntities(window.__SKILLS_CARD1__.description),
+        skills_list: decodeHtmlEntities(window.__SKILLS_CARD1__.skills_list),
+        tags: window.__SKILLS_CARD1__.tags ? window.__SKILLS_CARD1__.tags.split(',').map(tag => decodeHtmlEntities(tag.trim())) : [],
         isSpecial: false
       },
       {
         id: 2,
-        title: window.__SKILLS_CARD2__.title,
-        description: window.__SKILLS_CARD2__.description,
-        skills_list: window.__SKILLS_CARD2__.skills_list,
-        tags: window.__SKILLS_CARD2__.tags ? window.__SKILLS_CARD2__.tags.split(',').map(tag => tag.trim()) : [],
+        title: decodeHtmlEntities(window.__SKILLS_CARD2__.title),
+        description: decodeHtmlEntities(window.__SKILLS_CARD2__.description),
+        skills_list: decodeHtmlEntities(window.__SKILLS_CARD2__.skills_list),
+        tags: window.__SKILLS_CARD2__.tags ? window.__SKILLS_CARD2__.tags.split(',').map(tag => decodeHtmlEntities(tag.trim())) : [],
         isSpecial: false
       },
       {
         id: 3,
-        title: window.__SKILLS_CARD3__.title,
-        description: window.__SKILLS_CARD3__.description,
-        skills_list: window.__SKILLS_CARD3__.skills_list,
-        tags: window.__SKILLS_CARD3__.tags ? window.__SKILLS_CARD3__.tags.split(',').map(tag => tag.trim()) : [],
+        title: decodeHtmlEntities(window.__SKILLS_CARD3__.title),
+        description: decodeHtmlEntities(window.__SKILLS_CARD3__.description),
+        skills_list: decodeHtmlEntities(window.__SKILLS_CARD3__.skills_list),
+        tags: window.__SKILLS_CARD3__.tags ? window.__SKILLS_CARD3__.tags.split(',').map(tag => decodeHtmlEntities(tag.trim())) : [],
         isSpecial: false
       },
       {
         id: 4,
-        title: window.__SKILLS_CARD4__.title,
-        description: window.__SKILLS_CARD4__.description,
-        skills_list: window.__SKILLS_CARD4__.skills_list,
-        tags: window.__SKILLS_CARD4__.tags ? window.__SKILLS_CARD4__.tags.split(',').map(tag => tag.trim()) : [],
+        title: decodeHtmlEntities(window.__SKILLS_CARD4__.title),
+        description: decodeHtmlEntities(window.__SKILLS_CARD4__.description),
+        skills_list: decodeHtmlEntities(window.__SKILLS_CARD4__.skills_list),
+        tags: window.__SKILLS_CARD4__.tags ? window.__SKILLS_CARD4__.tags.split(',').map(tag => decodeHtmlEntities(tag.trim())) : [],
         isSpecial: false
       },
       {
         id: 5,
-        title: window.__SKILLS_CARD5__.title,
-        description: window.__SKILLS_CARD5__.description,
-        skills_list: window.__SKILLS_CARD5__.skills_list,
-        tags: window.__SKILLS_CARD5__.tags ? window.__SKILLS_CARD5__.tags.split(',').map(tag => tag.trim()) : [],
+        title: decodeHtmlEntities(window.__SKILLS_CARD5__.title),
+        description: decodeHtmlEntities(window.__SKILLS_CARD5__.description),
+        skills_list: decodeHtmlEntities(window.__SKILLS_CARD5__.skills_list),
+        tags: window.__SKILLS_CARD5__.tags ? window.__SKILLS_CARD5__.tags.split(',').map(tag => decodeHtmlEntities(tag.trim())) : [],
         isSpecial: false
       }
     ];
@@ -103,8 +112,8 @@ export default function Skills() {
   const topRowCards = skillCards.slice(0, 3);
   const bottomRowCards = skillCards.slice(3, 5);
 
-  const title = typeof window !== 'undefined' && window.__SKILLS_TITLE__ ? window.__SKILLS_TITLE__ : '';
-  const subtitle = typeof window !== 'undefined' && window.__SKILLS_SUBTITLE__ ? window.__SKILLS_SUBTITLE__ : '';
+  const title = typeof window !== 'undefined' && window.__SKILLS_TITLE__ ? decodeHtmlEntities(window.__SKILLS_TITLE__) : '';
+  const subtitle = typeof window !== 'undefined' && window.__SKILLS_SUBTITLE__ ? decodeHtmlEntities(window.__SKILLS_SUBTITLE__) : '';
 
   return (
     <section className="skills" id="skills">
