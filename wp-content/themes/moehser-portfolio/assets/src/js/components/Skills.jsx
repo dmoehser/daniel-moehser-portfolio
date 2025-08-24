@@ -98,7 +98,7 @@ const SkillCard = ({ card, isSpecial = false }) => (
     )}
     
     <div className="tags">
-      {card.tags.map((tag, index) => (
+      {card.tags.slice(0, 3).map((tag, index) => (
         <span key={index} className="animated-border">{tag}</span>
       ))}
     </div>

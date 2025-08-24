@@ -186,6 +186,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]);
     $wp_customize->add_control('moehser_skills_card1_tags', [
         'label' => __('Skills Card 1 - Tags (comma separated)', 'moehser-portfolio'),
+        'description' => __('Max 3 tags for consistent layout. Example: React, Vue, TypeScript', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'text',
     ]);
@@ -220,6 +221,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]);
     $wp_customize->add_control('moehser_skills_card2_tags', [
         'label' => __('Skills Card 2 - Tags (comma separated)', 'moehser-portfolio'),
+        'description' => __('Max 3 tags for consistent layout. Example: Node.js, PHP, MySQL', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'text',
     ]);
@@ -254,6 +256,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]);
     $wp_customize->add_control('moehser_skills_card3_tags', [
         'label' => __('Skills Card 3 - Tags (comma separated)', 'moehser-portfolio'),
+        'description' => __('Max 3 tags for consistent layout. Example: Figma, Adobe XD, User Research', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'text',
     ]);
@@ -265,6 +268,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     $wp_customize->add_control('moehser_skills_card3_skills_list', [
         'label' => __('Skills Card 3 - Skills List (comma separated)', 'moehser-portfolio'),
         'description' => __('Max 3 items for consistent card height. Example: Figma, Adobe XD, User Research', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
         'type' => 'textarea',
     ]);
 
