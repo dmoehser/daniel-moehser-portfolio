@@ -198,6 +198,17 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'type' => 'text',
     ]);
 
+    $wp_customize->add_setting('moehser_skills_card1_skills_list', [
+        'default' => 'React + Vite + TypeScript, Animations with Framer Motion, Accessibility & Core Web Vitals',
+        'sanitize_callback' => 'wp_kses_post',
+    ]);
+    $wp_customize->add_control('moehser_skills_card1_skills_list', [
+        'label' => __('Skills Card 1 - Skills List (comma separated)', 'moehser-portfolio'),
+        'description' => __('Leave empty if you only want to show description', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'textarea',
+    ]);
+
     // Skills Card 2
     $wp_customize->add_setting('moehser_skills_card2_title', [
         'default' => __('Backend Development', 'moehser-portfolio'),
@@ -227,6 +238,17 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'label' => __('Skills Card 2 - Tags (comma separated)', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'text',
+    ]);
+
+    $wp_customize->add_setting('moehser_skills_card2_skills_list', [
+        'default' => 'Node.js / Express & PHP, REST APIs, auth, caching, Robust release pipelines',
+        'sanitize_callback' => 'wp_kses_post',
+    ]);
+    $wp_customize->add_control('moehser_skills_card2_skills_list', [
+        'label' => __('Skills Card 2 - Skills List (comma separated)', 'moehser-portfolio'),
+        'description' => __('Leave empty if you only want to show description', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'textarea',
     ]);
 
     // Skills Card 3
@@ -260,6 +282,17 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'type' => 'text',
     ]);
 
+    $wp_customize->add_setting('moehser_skills_card3_skills_list', [
+        'default' => 'Design tokens, SCSS architecture, Tailwind when it speeds things up without clutter',
+        'sanitize_callback' => 'wp_kses_post',
+    ]);
+    $wp_customize->add_control('moehser_skills_card3_skills_list', [
+        'label' => __('Skills Card 3 - Skills List (comma separated)', 'moehser-portfolio'),
+        'description' => __('Leave empty if you only want to show description', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'textarea',
+    ]);
+
     // Skills Card 4
     $wp_customize->add_setting('moehser_skills_card4_title', [
         'default' => __('DevOps & Tools', 'moehser-portfolio'),
@@ -289,6 +322,17 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'label' => __('Skills Card 4 - Tags (comma separated)', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'text',
+    ]);
+
+    $wp_customize->add_setting('moehser_skills_card4_skills_list', [
+        'default' => 'Git, Docker, CI/CD, AWS, Streamlining development workflows',
+        'sanitize_callback' => 'wp_kses_post',
+    ]);
+    $wp_customize->add_control('moehser_skills_card4_skills_list', [
+        'label' => __('Skills Card 4 - Skills List (comma separated)', 'moehser-portfolio'),
+        'description' => __('Leave empty if you only want to show description', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'textarea',
     ]);
 
     // Skills Card 5
@@ -321,6 +365,17 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'section' => 'moehser_skills',
         'type' => 'text',
     ]);
+
+    $wp_customize->add_setting('moehser_skills_card5_skills_list', [
+        'default' => 'React Native, Flutter, iOS, Android, Building native and cross-platform mobile applications',
+        'sanitize_callback' => 'wp_kses_post',
+    ]);
+    $wp_customize->add_control('moehser_skills_card5_skills_list', [
+        'label' => __('Skills Card 5 - Skills List (comma separated)', 'moehser-portfolio'),
+        'description' => __('Leave empty if you only want to show description', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'textarea',
+    ]);
 });
 
 // Pass Customizer values to frontend
@@ -348,22 +403,27 @@ add_action('wp_head', function () {
     $skills_card1_title = get_theme_mod('moehser_skills_card1_title', 'Frontend Development');
     $skills_card1_description = get_theme_mod('moehser_skills_card1_description', 'Building responsive and interactive user interfaces with modern web technologies.');
     $skills_card1_tags = get_theme_mod('moehser_skills_card1_tags', 'React, JavaScript, CSS, HTML');
+    $skills_card1_skills_list = get_theme_mod('moehser_skills_card1_skills_list', 'React + Vite + TypeScript, Animations with Framer Motion, Accessibility & Core Web Vitals');
     
     $skills_card2_title = get_theme_mod('moehser_skills_card2_title', 'Backend Development');
     $skills_card2_description = get_theme_mod('moehser_skills_card2_description', 'Creating robust server-side applications and APIs.');
     $skills_card2_tags = get_theme_mod('moehser_skills_card2_tags', 'Node.js, PHP, MySQL, WordPress');
+    $skills_card2_skills_list = get_theme_mod('moehser_skills_card2_skills_list', 'Node.js / Express & PHP, REST APIs, auth, caching, Robust release pipelines');
     
     $skills_card3_title = get_theme_mod('moehser_skills_card3_title', 'Design & UX');
     $skills_card3_description = get_theme_mod('moehser_skills_card3_description', 'Creating intuitive and beautiful user experiences.');
     $skills_card3_tags = get_theme_mod('moehser_skills_card3_tags', 'Figma, Adobe XD, User Research');
+    $skills_card3_skills_list = get_theme_mod('moehser_skills_card3_skills_list', 'Design tokens, SCSS architecture, Tailwind when it speeds things up without clutter');
     
     $skills_card4_title = get_theme_mod('moehser_skills_card4_title', 'DevOps & Tools');
     $skills_card4_description = get_theme_mod('moehser_skills_card4_description', 'Streamlining development workflows and deployment processes.');
     $skills_card4_tags = get_theme_mod('moehser_skills_card4_tags', 'Git, Docker, CI/CD, AWS');
+    $skills_card4_skills_list = get_theme_mod('moehser_skills_card4_skills_list', 'Git, Docker, CI/CD, AWS, Streamlining development workflows');
     
     $skills_card5_title = get_theme_mod('moehser_skills_card5_title', 'Mobile Development');
     $skills_card5_description = get_theme_mod('moehser_skills_card5_description', 'Building native and cross-platform mobile applications.');
     $skills_card5_tags = get_theme_mod('moehser_skills_card5_tags', 'React Native, Flutter, iOS, Android');
+    $skills_card5_skills_list = get_theme_mod('moehser_skills_card5_skills_list', 'React Native, Flutter, iOS, Android, Building native and cross-platform mobile applications');
     
     echo '<script>';
     // About texts to frontend
@@ -380,11 +440,11 @@ add_action('wp_head', function () {
     echo 'window.__SKILLS_SUBTITLE__ = "' . esc_js($skills_subtitle) . '";';
     
     // Skills Cards to frontend
-    echo 'window.__SKILLS_CARD1__ = { title: "' . esc_js($skills_card1_title) . '", description: "' . esc_js($skills_card1_description) . '", tags: "' . esc_js($skills_card1_tags) . '" };';
-    echo 'window.__SKILLS_CARD2__ = { title: "' . esc_js($skills_card2_title) . '", description: "' . esc_js($skills_card2_description) . '", tags: "' . esc_js($skills_card2_tags) . '" };';
-    echo 'window.__SKILLS_CARD3__ = { title: "' . esc_js($skills_card3_title) . '", description: "' . esc_js($skills_card3_description) . '", tags: "' . esc_js($skills_card3_tags) . '" };';
-    echo 'window.__SKILLS_CARD4__ = { title: "' . esc_js($skills_card4_title) . '", description: "' . esc_js($skills_card4_description) . '", tags: "' . esc_js($skills_card4_tags) . '" };';
-    echo 'window.__SKILLS_CARD5__ = { title: "' . esc_js($skills_card5_title) . '", description: "' . esc_js($skills_card5_description) . '", tags: "' . esc_js($skills_card5_tags) . '" };';
+    echo 'window.__SKILLS_CARD1__ = { title: "' . esc_js($skills_card1_title) . '", description: "' . esc_js($skills_card1_description) . '", tags: "' . esc_js($skills_card1_tags) . '", skills_list: "' . esc_js($skills_card1_skills_list) . '" };';
+    echo 'window.__SKILLS_CARD2__ = { title: "' . esc_js($skills_card2_title) . '", description: "' . esc_js($skills_card2_description) . '", tags: "' . esc_js($skills_card2_tags) . '", skills_list: "' . esc_js($skills_card2_skills_list) . '" };';
+    echo 'window.__SKILLS_CARD3__ = { title: "' . esc_js($skills_card3_title) . '", description: "' . esc_js($skills_card3_description) . '", tags: "' . esc_js($skills_card3_tags) . '", skills_list: "' . esc_js($skills_card3_skills_list) . '" };';
+    echo 'window.__SKILLS_CARD4__ = { title: "' . esc_js($skills_card4_title) . '", description: "' . esc_js($skills_card4_description) . '", tags: "' . esc_js($skills_card4_tags) . '", skills_list: "' . esc_js($skills_card4_skills_list) . '" };';
+    echo 'window.__SKILLS_CARD5__ = { title: "' . esc_js($skills_card5_title) . '", description: "' . esc_js($skills_card5_description) . '", tags: "' . esc_js($skills_card5_tags) . '", skills_list: "' . esc_js($skills_card5_skills_list) . '" };';
     
     // Profile and Social JavaScript Variables
     if ($profile_avatar) echo 'window.__PROFILE_AVATAR_URL__ = "' . esc_js($profile_avatar) . '";';
