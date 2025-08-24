@@ -303,17 +303,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'type' => 'text',
     ]);
 
-    $wp_customize->add_setting('moehser_skills_card4_skills_list', [
-        'default' => '',
-        'sanitize_callback' => 'wp_kses_post',
-    ]);
-    $wp_customize->add_control('moehser_skills_card4_skills_list', [
-        'label' => __('Skills Card 4 - Skills List (disabled for bottom row)', 'moehser-portfolio'),
-        'description' => __('Bottom row cards use descriptions instead', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'textarea',
-        'input_attrs' => ['disabled' => 'disabled'],
-    ]);
+
 
     // Skills Card 5
     $wp_customize->add_setting('moehser_skills_card5_title', [
@@ -346,17 +336,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'type' => 'text',
     ]);
 
-    $wp_customize->add_setting('moehser_skills_card5_skills_list', [
-        'default' => '',
-        'sanitize_callback' => 'wp_kses_post',
-    ]);
-    $wp_customize->add_control('moehser_skills_card5_skills_list', [
-        'label' => __('Skills Card 5 - Skills List (disabled for bottom row)', 'moehser-portfolio'),
-        'description' => __('Bottom row cards use descriptions instead', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'textarea',
-        'input_attrs' => ['disabled' => 'disabled'],
-    ]);
+
 });
 
 // Pass Customizer values to frontend
