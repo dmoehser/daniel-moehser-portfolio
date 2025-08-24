@@ -179,13 +179,15 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]);
 
     $wp_customize->add_setting('moehser_skills_card1_description', [
-        'default' => __('Building responsive and interactive user interfaces with modern web technologies.', 'moehser-portfolio'),
+        'default' => '',
         'sanitize_callback' => 'wp_kses_post',
     ]);
     $wp_customize->add_control('moehser_skills_card1_description', [
-        'label' => __('Skills Card 1 - Description', 'moehser-portfolio'),
+        'label' => __('Skills Card 1 - Description (disabled for top row)', 'moehser-portfolio'),
+        'description' => __('Top row cards use skills lists instead', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'textarea',
+        'input_attrs' => ['disabled' => 'disabled'],
     ]);
 
     $wp_customize->add_setting('moehser_skills_card1_tags', [
@@ -221,13 +223,15 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]);
 
     $wp_customize->add_setting('moehser_skills_card2_description', [
-        'default' => __('Creating robust server-side applications and APIs.', 'moehser-portfolio'),
+        'default' => '',
         'sanitize_callback' => 'wp_kses_post',
     ]);
     $wp_customize->add_control('moehser_skills_card2_description', [
-        'label' => __('Skills Card 2 - Description', 'moehser-portfolio'),
+        'label' => __('Skills Card 2 - Description (disabled for top row)', 'moehser-portfolio'),
+        'description' => __('Top row cards use skills lists instead', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'textarea',
+        'input_attrs' => ['disabled' => 'disabled'],
     ]);
 
     $wp_customize->add_setting('moehser_skills_card2_tags', [
@@ -263,13 +267,15 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]);
 
     $wp_customize->add_setting('moehser_skills_card3_description', [
-        'default' => __('Creating intuitive and beautiful user experiences.', 'moehser-portfolio'),
+        'default' => '',
         'sanitize_callback' => 'wp_kses_post',
     ]);
     $wp_customize->add_control('moehser_skills_card3_description', [
-        'label' => __('Skills Card 3 - Description', 'moehser-portfolio'),
+        'label' => __('Skills Card 3 - Description (disabled for top row)', 'moehser-portfolio'),
+        'description' => __('Top row cards use skills lists instead', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'textarea',
+        'input_attrs' => ['disabled' => 'disabled'],
     ]);
 
     $wp_customize->add_setting('moehser_skills_card3_tags', [
@@ -325,14 +331,15 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]);
 
     $wp_customize->add_setting('moehser_skills_card4_skills_list', [
-        'default' => 'Git, Docker, CI/CD, AWS, Streamlining development workflows',
+        'default' => '',
         'sanitize_callback' => 'wp_kses_post',
     ]);
     $wp_customize->add_control('moehser_skills_card4_skills_list', [
-        'label' => __('Skills Card 4 - Skills List (comma separated)', 'moehser-portfolio'),
-        'description' => __('Leave empty if you only want to show description', 'moehser-portfolio'),
+        'label' => __('Skills Card 4 - Skills List (disabled for bottom row)', 'moehser-portfolio'),
+        'description' => __('Bottom row cards use descriptions instead', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'textarea',
+        'input_attrs' => ['disabled' => 'disabled'],
     ]);
 
     // Skills Card 5
@@ -367,14 +374,15 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]);
 
     $wp_customize->add_setting('moehser_skills_card5_skills_list', [
-        'default' => 'React Native, Flutter, iOS, Android, Building native and cross-platform mobile applications',
+        'default' => '',
         'sanitize_callback' => 'wp_kses_post',
     ]);
     $wp_customize->add_control('moehser_skills_card5_skills_list', [
-        'label' => __('Skills Card 5 - Skills List (comma separated)', 'moehser-portfolio'),
-        'description' => __('Leave empty if you only want to show description', 'moehser-portfolio'),
+        'label' => __('Skills Card 5 - Skills List (disabled for bottom row)', 'moehser-portfolio'),
+        'description' => __('Bottom row cards use descriptions instead', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'textarea',
+        'input_attrs' => ['disabled' => 'disabled'],
     ]);
 });
 

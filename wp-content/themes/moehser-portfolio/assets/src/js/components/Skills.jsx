@@ -74,18 +74,18 @@ const SkillCard = ({ card, isSpecial = false }) => (
   >
     <h3 className="skill-card__title">{card.title}</h3>
     
-    {/* Show description if available */}
-    {card.description && (
-      <p className="skill-card__description">{card.description}</p>
-    )}
-    
-    {/* Show skills list if available */}
-    {card.skills_list && (
+    {/* Top row (cards 1-3): Show skills list only */}
+    {!isSpecial && card.skills_list && (
       <ul className="skill-card__list">
         {card.skills_list.split(',').map((skill, index) => (
           <li key={index}>{skill.trim()}</li>
         ))}
       </ul>
+    )}
+    
+    {/* Bottom row (cards 4-5): Show description only */}
+    {isSpecial && card.description && (
+      <p className="skill-card__description">{card.description}</p>
     )}
     
     <div className="tags">
