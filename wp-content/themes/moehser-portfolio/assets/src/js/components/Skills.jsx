@@ -13,81 +13,100 @@ const ANIMATION = {
   transition: { duration: 0.2 }
 };
 
-// Skill card data
-// ---------------
-const SKILL_CARDS = [
-  {
-    id: 1,
-    title: 'Frontend',
-    skills: [
-      'React + Vite + TypeScript',
-      'Animations with Framer Motion',
-      'Accessibility & Core Web Vitals'
-    ],
-    tags: ['React', 'Vite', 'TypeScript', 'Framer Motion'],
-    isSpecial: false
-  },
-  {
-    id: 2,
-    title: 'Backend',
-    skills: [
-      'Node.js / Express & PHP',
-      'REST APIs, auth, caching',
-      'Robust release pipelines'
-    ],
-    tags: ['Node.js', 'Express', 'PHP'],
-    isSpecial: false
-  },
-  {
-    id: 3,
-    title: 'Database',
-    skills: [
-      'MySQL for WordPress & headless',
-      'Clear schemas, migrations',
-      'Automated backups'
-    ],
-    tags: ['MySQL', 'SQL'],
-    isSpecial: false
-  },
-  {
-    id: 4,
-    title: 'Styling',
-    description: 'Design tokens, SCSS architecture; Tailwind when it speeds things up without clutter.',
-    tags: ['CSS', 'SCSS', 'Tailwind'],
-    isSpecial: true
-  },
-  {
-    id: 5,
-    title: 'WordPress Templates',
-    description: 'Headless or classic themes. Customizer fields, CPTs, REST endpoints — production-ready.',
-    tags: ['Customizer', 'CPT', 'REST API', 'Theme Dev'],
-    isSpecial: true
+// Skill card data from Customizer
+// --------------------------------
+const getSkillCards = () => {
+  // Check if Customizer values are available
+  if (typeof window !== 'undefined' && window.__SKILLS_CARD1__) {
+    return [
+      {
+        id: 1,
+        title: window.__SKILLS_CARD1__.title || 'Frontend Development',
+        description: window.__SKILLS_CARD1__.description || 'Building responsive and interactive user interfaces with modern web technologies.',
+        tags: window.__SKILLS_CARD1__.tags ? window.__SKILLS_CARD1__.tags.split(',').map(tag => tag.trim()) : ['React', 'JavaScript', 'CSS', 'HTML'],
+        isSpecial: false
+      },
+      {
+        id: 2,
+        title: window.__SKILLS_CARD2__.title || 'Backend Development',
+        description: window.__SKILLS_CARD2__.description || 'Creating robust server-side applications and APIs.',
+        tags: window.__SKILLS_CARD2__.tags ? window.__SKILLS_CARD2__.tags.split(',').map(tag => tag.trim()) : ['Node.js', 'PHP', 'MySQL', 'WordPress'],
+        isSpecial: false
+      },
+      {
+        id: 3,
+        title: window.__SKILLS_CARD3__.title || 'Design & UX',
+        description: window.__SKILLS_CARD3__.description || 'Creating intuitive and beautiful user experiences.',
+        tags: window.__SKILLS_CARD3__.tags ? window.__SKILLS_CARD3__.tags.split(',').map(tag => tag.trim()) : ['Figma', 'Adobe XD', 'User Research'],
+        isSpecial: false
+      },
+      {
+        id: 4,
+        title: window.__SKILLS_CARD4__.title || 'DevOps & Tools',
+        description: window.__SKILLS_CARD4__.description || 'Streamlining development workflows and deployment processes.',
+        tags: window.__SKILLS_CARD4__.tags ? window.__SKILLS_CARD4__.tags.split(',').map(tag => tag.trim()) : ['Git', 'Docker', 'CI/CD', 'AWS'],
+        isSpecial: false
+      },
+      {
+        id: 5,
+        title: window.__SKILLS_CARD5__.title || 'Mobile Development',
+        description: window.__SKILLS_CARD5__.description || 'Building native and cross-platform mobile applications.',
+        tags: window.__SKILLS_CARD5__.tags ? window.__SKILLS_CARD5__.tags.split(',').map(tag => tag.trim()) : ['React Native', 'Flutter', 'iOS', 'Android'],
+        isSpecial: false
+      }
+    ];
   }
-];
+  
+  // Fallback to default values (should never happen in production)
+  return [
+    {
+      id: 1,
+      title: 'Frontend Development',
+      description: 'Building responsive and interactive user interfaces with modern web technologies.',
+      tags: ['React', 'JavaScript', 'CSS', 'HTML'],
+      isSpecial: false
+    },
+    {
+      id: 2,
+      title: 'Backend Development',
+      description: 'Creating robust server-side applications and APIs.',
+      tags: ['Node.js', 'PHP', 'MySQL', 'WordPress'],
+      isSpecial: false
+    },
+    {
+      id: 3,
+      title: 'Design & UX',
+      description: 'Creating intuitive and beautiful user experiences.',
+      tags: ['Figma', 'Adobe XD', 'User Research'],
+      isSpecial: false
+    },
+    {
+      id: 4,
+      title: 'DevOps & Tools',
+      description: 'Streamlining development workflows and deployment processes.',
+      tags: ['Git', 'Docker', 'CI/CD', 'AWS'],
+      isSpecial: false
+    },
+    {
+      id: 5,
+      title: 'Mobile Development',
+      description: 'Building native and cross-platform mobile applications.',
+      tags: ['React Native', 'Flutter', 'iOS', 'Android'],
+      isSpecial: false
+    }
+  ];
+};
 
 // Reusable skill card component
 // -----------------------------
 const SkillCard = ({ card }) => (
   <motion.div
-    className={`skill-card interactive enhanced skill-card--${card.isSpecial ? 'special' : 'standard'}`}
+    className="skill-card interactive enhanced skill-card--standard"
     whileHover={ANIMATION.hover}
     transition={ANIMATION.transition}
   >
-    {card.isSpecial ? (
-      <>
-        <h3 className="skill-card__title">{card.title}</h3>
-        <p className="skill-card__description">{card.description}</p>
-      </>
-    ) : (
-      <>
-        <h3 className="skill-card__title">{card.title}</h3>
-        <ul className="skill-card__list">
-          {card.skills.map((skill, index) => (
-            <li key={index}>{skill}</li>
-          ))}
-        </ul>
-      </>
-    )}
+    <h3 className="skill-card__title">{card.title}</h3>
+    <p className="skill-card__description">{card.description}</p>
     
     <div className="tags">
       {card.tags.map((tag, index) => (
@@ -100,15 +119,20 @@ const SkillCard = ({ card }) => (
 // Main Skills component
 // --------------------
 export default function Skills() {
-  const topRowCards = SKILL_CARDS.slice(0, 3); // Frontend, Backend, Database
-  const bottomRowCards = SKILL_CARDS.slice(3, 5); // Styling, WordPress Templates
+  const skillCards = getSkillCards();
+  const topRowCards = skillCards.slice(0, 3);
+  const bottomRowCards = skillCards.slice(3, 5);
+
+  // Get Customizer values for title and subtitle
+  const title = typeof window !== 'undefined' && window.__SKILLS_TITLE__ ? window.__SKILLS_TITLE__ : 'Skills';
+  const subtitle = typeof window !== 'undefined' && window.__SKILLS_SUBTITLE__ ? window.__SKILLS_SUBTITLE__ : 'My technical & soft skills';
 
   return (
     <section className="skills" id="skills">
       <div className="skills__inner">
         <header className="skills__header">
-          <h2 className="skills__title">Skills</h2>
-          <p className="skills__subtitle">My technical & soft skills</p>
+          <h2 className="skills__title">{title}</h2>
+          <p className="skills__subtitle">{subtitle}</p>
         </header>
 
         <div className="skills__content">

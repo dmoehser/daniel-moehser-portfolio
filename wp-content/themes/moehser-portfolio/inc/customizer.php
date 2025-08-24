@@ -135,6 +135,192 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'section' => 'moehser_projects',
         'type' => 'text',
     ]);
+
+    // Section: Skills Settings
+    $wp_customize->add_section('moehser_skills', [
+        'title' => __('Skills Settings', 'moehser-portfolio'),
+        'description' => __('Configure the skills section content and layout', 'moehser-portfolio'),
+        'priority' => 33,
+    ]);
+
+    // Skills Section Title
+    $wp_customize->add_setting('moehser_skills_title', [
+        'default' => __('Skills', 'moehser-portfolio'),
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp_customize->add_control('moehser_skills_title', [
+        'label' => __('Skills Section Title', 'moehser-portfolio'),
+        'description' => __('Main title for the skills section', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'text',
+    ]);
+
+    // Skills Section Subtitle
+    $wp_customize->add_setting('moehser_skills_subtitle', [
+        'default' => __('Technologies & tools I work with', 'moehser-portfolio'),
+        'sanitize_callback' => 'wp_kses_post',
+    ]);
+    $wp_customize->add_control('moehser_skills_subtitle', [
+        'label' => __('Skills Section Subtitle', 'moehser-portfolio'),
+        'description' => __('Subtitle below the main title', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'text',
+    ]);
+
+    // Skills Card 1
+    $wp_customize->add_setting('moehser_skills_card1_title', [
+        'default' => __('Frontend Development', 'moehser-portfolio'),
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp_customize->add_control('moehser_skills_card1_title', [
+        'label' => __('Skills Card 1 - Title', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'text',
+    ]);
+
+    $wp_customize->add_setting('moehser_skills_card1_description', [
+        'default' => __('Building responsive and interactive user interfaces with modern web technologies.', 'moehser-portfolio'),
+        'sanitize_callback' => 'wp_kses_post',
+    ]);
+    $wp_customize->add_control('moehser_skills_card1_description', [
+        'label' => __('Skills Card 1 - Description', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'textarea',
+    ]);
+
+    $wp_customize->add_setting('moehser_skills_card1_tags', [
+        'default' => 'React, JavaScript, CSS, HTML',
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp_customize->add_control('moehser_skills_card1_tags', [
+        'label' => __('Skills Card 1 - Tags (comma separated)', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'text',
+    ]);
+
+    // Skills Card 2
+    $wp_customize->add_setting('moehser_skills_card2_title', [
+        'default' => __('Backend Development', 'moehser-portfolio'),
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp_customize->add_control('moehser_skills_card2_title', [
+        'label' => __('Skills Card 2 - Title', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'text',
+    ]);
+
+    $wp_customize->add_setting('moehser_skills_card2_description', [
+        'default' => __('Creating robust server-side applications and APIs.', 'moehser-portfolio'),
+        'sanitize_callback' => 'wp_kses_post',
+    ]);
+    $wp_customize->add_control('moehser_skills_card2_description', [
+        'label' => __('Skills Card 2 - Description', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'textarea',
+    ]);
+
+    $wp_customize->add_setting('moehser_skills_card2_tags', [
+        'default' => 'Node.js, PHP, MySQL, WordPress',
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp_customize->add_control('moehser_skills_card2_tags', [
+        'label' => __('Skills Card 2 - Tags (comma separated)', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'text',
+    ]);
+
+    // Skills Card 3
+    $wp_customize->add_setting('moehser_skills_card3_title', [
+        'default' => __('Design & UX', 'moehser-portfolio'),
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp_customize->add_control('moehser_skills_card3_title', [
+        'label' => __('Skills Card 3 - Title', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'text',
+    ]);
+
+    $wp_customize->add_setting('moehser_skills_card3_description', [
+        'default' => __('Creating intuitive and beautiful user experiences.', 'moehser-portfolio'),
+        'sanitize_callback' => 'wp_kses_post',
+    ]);
+    $wp_customize->add_control('moehser_skills_card3_description', [
+        'label' => __('Skills Card 3 - Description', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'textarea',
+    ]);
+
+    $wp_customize->add_setting('moehser_skills_card3_tags', [
+        'default' => 'Figma, Adobe XD, User Research',
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp_customize->add_control('moehser_skills_card3_tags', [
+        'label' => __('Skills Card 3 - Tags (comma separated)', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'text',
+    ]);
+
+    // Skills Card 4
+    $wp_customize->add_setting('moehser_skills_card4_title', [
+        'default' => __('DevOps & Tools', 'moehser-portfolio'),
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp_customize->add_control('moehser_skills_card4_title', [
+        'label' => __('Skills Card 4 - Title', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'text',
+    ]);
+
+    $wp_customize->add_setting('moehser_skills_card4_description', [
+        'default' => __('Streamlining development workflows and deployment processes.', 'moehser-portfolio'),
+        'sanitize_callback' => 'wp_kses_post',
+    ]);
+    $wp_customize->add_control('moehser_skills_card4_description', [
+        'label' => __('Skills Card 4 - Description', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'textarea',
+    ]);
+
+    $wp_customize->add_setting('moehser_skills_card4_tags', [
+        'default' => 'Git, Docker, CI/CD, AWS',
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp_customize->add_control('moehser_skills_card4_tags', [
+        'label' => __('Skills Card 4 - Tags (comma separated)', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'text',
+    ]);
+
+    // Skills Card 5
+    $wp_customize->add_setting('moehser_skills_card5_title', [
+        'default' => __('Mobile Development', 'moehser-portfolio'),
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp_customize->add_control('moehser_skills_card5_title', [
+        'label' => __('Skills Card 5 - Title', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'text',
+    ]);
+
+    $wp_customize->add_setting('moehser_skills_card5_description', [
+        'default' => __('Building native and cross-platform mobile applications.', 'moehser-portfolio'),
+        'sanitize_callback' => 'wp_kses_post',
+    ]);
+    $wp_customize->add_control('moehser_skills_card5_description', [
+        'label' => __('Skills Card 5 - Description', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'textarea',
+    ]);
+
+    $wp_customize->add_setting('moehser_skills_card5_tags', [
+        'default' => 'React Native, Flutter, iOS, Android',
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp_customize->add_control('moehser_skills_card5_tags', [
+        'label' => __('Skills Card 5 - Tags (comma separated)', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'text',
+    ]);
 });
 
 // Pass Customizer values to frontend
@@ -154,6 +340,31 @@ add_action('wp_head', function () {
     $projects_title = get_theme_mod('moehser_projects_title', 'Projekte');
     $projects_subtitle = get_theme_mod('moehser_projects_subtitle', 'Subtitle below the main title');
     
+    // Skills Settings
+    $skills_title = get_theme_mod('moehser_skills_title', 'Skills');
+    $skills_subtitle = get_theme_mod('moehser_skills_subtitle', 'Technologies & tools I work with');
+    
+    // Skills Cards
+    $skills_card1_title = get_theme_mod('moehser_skills_card1_title', 'Frontend Development');
+    $skills_card1_description = get_theme_mod('moehser_skills_card1_description', 'Building responsive and interactive user interfaces with modern web technologies.');
+    $skills_card1_tags = get_theme_mod('moehser_skills_card1_tags', 'React, JavaScript, CSS, HTML');
+    
+    $skills_card2_title = get_theme_mod('moehser_skills_card2_title', 'Backend Development');
+    $skills_card2_description = get_theme_mod('moehser_skills_card2_description', 'Creating robust server-side applications and APIs.');
+    $skills_card2_tags = get_theme_mod('moehser_skills_card2_tags', 'Node.js, PHP, MySQL, WordPress');
+    
+    $skills_card3_title = get_theme_mod('moehser_skills_card3_title', 'Design & UX');
+    $skills_card3_description = get_theme_mod('moehser_skills_card3_description', 'Creating intuitive and beautiful user experiences.');
+    $skills_card3_tags = get_theme_mod('moehser_skills_card3_tags', 'Figma, Adobe XD, User Research');
+    
+    $skills_card4_title = get_theme_mod('moehser_skills_card4_title', 'DevOps & Tools');
+    $skills_card4_description = get_theme_mod('moehser_skills_card4_description', 'Streamlining development workflows and deployment processes.');
+    $skills_card4_tags = get_theme_mod('moehser_skills_card4_tags', 'Git, Docker, CI/CD, AWS');
+    
+    $skills_card5_title = get_theme_mod('moehser_skills_card5_title', 'Mobile Development');
+    $skills_card5_description = get_theme_mod('moehser_skills_card5_description', 'Building native and cross-platform mobile applications.');
+    $skills_card5_tags = get_theme_mod('moehser_skills_card5_tags', 'React Native, Flutter, iOS, Android');
+    
     echo '<script>';
     // About texts to frontend
     echo 'window.__ABOUT_TITLE__ = "' . esc_js($about_title) . '";';
@@ -163,6 +374,17 @@ add_action('wp_head', function () {
     echo 'window.__SHOW_ONLY_ACTIVE_PROJECTS__ = ' . ($show_only_active_projects ? 'true' : 'false') . ';';
     echo 'window.__PROJECTS_TITLE__ = "' . esc_js($projects_title) . '";';
     echo 'window.__PROJECTS_SUBTITLE__ = "' . esc_js($projects_subtitle) . '";';
+    
+    // Skills Settings to frontend
+    echo 'window.__SKILLS_TITLE__ = "' . esc_js($skills_title) . '";';
+    echo 'window.__SKILLS_SUBTITLE__ = "' . esc_js($skills_subtitle) . '";';
+    
+    // Skills Cards to frontend
+    echo 'window.__SKILLS_CARD1__ = { title: "' . esc_js($skills_card1_title) . '", description: "' . esc_js($skills_card1_description) . '", tags: "' . esc_js($skills_card1_tags) . '" };';
+    echo 'window.__SKILLS_CARD2__ = { title: "' . esc_js($skills_card2_title) . '", description: "' . esc_js($skills_card2_description) . '", tags: "' . esc_js($skills_card2_tags) . '" };';
+    echo 'window.__SKILLS_CARD3__ = { title: "' . esc_js($skills_card3_title) . '", description: "' . esc_js($skills_card3_description) . '", tags: "' . esc_js($skills_card3_tags) . '" };';
+    echo 'window.__SKILLS_CARD4__ = { title: "' . esc_js($skills_card4_title) . '", description: "' . esc_js($skills_card4_description) . '", tags: "' . esc_js($skills_card4_tags) . '" };';
+    echo 'window.__SKILLS_CARD5__ = { title: "' . esc_js($skills_card5_title) . '", description: "' . esc_js($skills_card5_description) . '", tags: "' . esc_js($skills_card5_tags) . '" };';
     
     // Profile and Social JavaScript Variables
     if ($profile_avatar) echo 'window.__PROFILE_AVATAR_URL__ = "' . esc_js($profile_avatar) . '";';
