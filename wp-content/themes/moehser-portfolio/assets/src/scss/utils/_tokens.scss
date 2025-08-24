@@ -1,0 +1,38 @@
+// Design Tokens
+// =============
+
+// Neutral defaults for a developer portfolio
+// ------------------------------------------
+
+// Colors
+// ------
+$color-bg: #f8fafc;         // page background
+$color-text: #0f172a;       // primary text
+$color-muted: #475569;      // secondary text
+$color-brand: #0f172a;      // brand primary
+$color-accent: #38bdf8;     // accent for interactive elements
+
+// Dark mode palette
+// -----------------
+$dark-bg: #0b1220;          // deep navy
+$dark-text: #c7f5d9;        // soft neon green text
+$dark-muted: #89cda3;       // muted green
+$dark-accent: #22ff88;      // glow green accents
+
+// Spacing scale
+// -------------
+// Multiples of 4
+$space-1: .25rem; // 4px
+$space-2: .5rem;  // 8px
+$space-3: .75rem; // 12px
+$space-4: 1rem;   // 16px
+$space-6: 1.5rem; // 24px
+$space-8: 2rem;   // 32px
+
+// Typography
+// ----------
+$font-sans: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+$font-size-base: 16px;
+$radius-lg: 12px;
+
+

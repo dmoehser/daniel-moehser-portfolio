@@ -1,0 +1,56 @@
+// Theme Toggle
+// ============
+
+// Base theme toggle button
+// ------------------------
+
+.theme-toggle__btn {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(15, 23, 42, 0.6);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 12px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(15, 23, 42, 0.9);
+    transform: translateY(-1px);
+  }
+}
+
+// Hero variant styling
+// --------------------
+.theme-toggle__btn--hero {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-size: 1.0625rem;
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.62));
+  color: #0f172a;
+  font-weight: 800;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.75));
+    transform: translateY(-1px);
+  }
+}
+
+// Dark mode support
+// -----------------
+body.theme-dark .theme-toggle__btn--hero {
+  background: linear-gradient(180deg, rgba(11, 18, 32, 0.85), rgba(11, 18, 32, 0.78));
+  color: #e2e8f0;
+  border-color: rgba(255, 255, 255, 0.10);
+  
+  &:hover {
+    background: linear-gradient(180deg, rgba(11, 18, 32, 0.92), rgba(11, 18, 32, 0.82));
+  }
+}

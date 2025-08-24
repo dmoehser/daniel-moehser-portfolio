@@ -1,0 +1,66 @@
+// Scroll Progress
+// ===============
+
+// Global scrollbar removal - Cross-browser support
+*, 
+*::before, 
+*::after,
+html,
+body {
+  // Webkit browsers (Chrome, Safari, Edge, Opera)
+  &::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+  
+  // Modern browsers with standardized scrollbar-width property
+  scrollbar-width: none !important;
+  
+  // Legacy IE and Edge
+  -ms-overflow-style: none !important;
+}
+
+// Top scroll progress bar
+// -----------------------
+
+// Top scroll progress bar
+.scroll-progress-top {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 4px;
+  z-index: 1000;
+  background: transparent;
+  pointer-events: none;
+}
+
+.scroll-progress-top__bar {
+  height: 100%;
+  width: var(--progress, 0%);
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  transition: width 0.1s ease;
+  border-radius: 0 2px 2px 0;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 20px;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3));
+    border-radius: 0 2px 2px 0;
+  }
+}
+
+// Dark mode support
+// -----------------
+body.theme-dark .scroll-progress-top__bar {
+  background: linear-gradient(90deg, #22c55e, #10b981);
+  
+  &::after {
+    background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.3));
+  }
+}

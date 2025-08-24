@@ -1,0 +1,84 @@
+// Sass modules must be loaded first
+@use './utils/tokens';
+
+// Core components
+@use './components/header';
+@use './components/ui';
+@use './components/projects';
+@use './components/hero';
+@use './components/sections';
+@use './components/skills';
+@use './components/terminal';
+@use './components/overlays';
+
+:root {
+  --brand: #0f172a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  background: #ffffff;
+}
+
+body {
+  margin: 0;
+  font-family: tokens.$font-sans;
+  color: tokens.$color-text;
+}
+
+// Dark mode support
+// -----------------
+// Toggled by .theme-dark on <body>
+
+body.theme-dark {
+  background: tokens.$dark-bg;
+  color: tokens.$dark-text;
+
+  // Hero components
+  .hero__brand-link { 
+    filter: none; 
+  }
+  
+  .hero__code { 
+    color: tokens.$dark-text; 
+  }
+  
+  .hero__code + .hero__code { 
+    color: tokens.$dark-muted; 
+  }
+  
+  .hero__cursor, 
+  .hero__code .caret, 
+  .brand-caret { 
+    background: tokens.$dark-accent; 
+    color: tokens.$dark-accent; 
+    opacity: .9; 
+  }
+
+  .hero__quick-btn { 
+    background: rgba(4,12,24,.8); 
+    border-color: rgba(34,255,136,.25); 
+  }
+
+  // Navigation elements
+  .scroll-arrow { 
+    background: tokens.$dark-accent; 
+  }
+
+  // Tiles and cards
+  .tile { 
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); 
+    border-color: rgba(255,255,255,0.08); 
+    color: tokens.$dark-text; 
+  }
+}
+
+h1 {
+  color: var(--brand);
+  font-size: 2rem;
+}
+
+

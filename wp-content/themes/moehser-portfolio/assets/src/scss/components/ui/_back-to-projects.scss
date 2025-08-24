@@ -1,0 +1,62 @@
+// Back to Projects Button
+// ======================
+
+// Right-side menu bar for exiting fullscreen preview
+// ------------------------------
+
+.back-to-projects {
+  position: fixed;
+  top: 55px;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
+  width: 180px;
+  height: 48px;
+
+  // Minimized state
+  &--minimized {
+    width: 48px;
+
+    .back-to-projects__text {
+      opacity: 0;
+      transform: translateX(20px);
+      visibility: hidden;
+    }
+  }
+
+  // Arrow icon container
+  &__arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    color: #0f172a;
+    font-size: 24px;
+    font-weight: bold;
+    margin-left: 12px;
+  }
+
+  // Menu text
+  &__text {
+    color: #0f172a;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 1;
+    transform: translateX(0);
+    transition: all 0.3s ease;
+    margin-right: 16px;
+    align-self: center;
+    line-height: 1;
+    visibility: visible;
+  }
+}

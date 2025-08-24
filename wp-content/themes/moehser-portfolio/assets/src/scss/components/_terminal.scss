@@ -1,0 +1,73 @@
+// Terminal
+// ========
+
+// Terminal structure and positioning
+// ----------------------------------
+
+.terminal { position: fixed; left: 0; right: 0; bottom: 0; z-index: 9999; }
+.terminal--dock { transform: translateZ(0); }
+.terminal__dockwrap { position: relative; width: 100%; background: transparent; display: flex; flex-direction: column; height: 44vh; }
+// Terminal shell bar and header
+// -----------------------------
+
+.terminal__shellbar { display: flex; align-items: center; gap: 12px; padding: 8px 12px; width: 100%; margin: 0; background: #111827; color: #cbd5e1; border-radius: 0; border-top: 1px solid rgba(255,255,255,.06); border-left: 0; border-right: 0; border-bottom: 1px solid rgba(0,0,0,.8); font-family: 'JetBrains Mono', monospace; height: 36px; opacity: 1; }
+.shellbar__group { display: flex; align-items: center; gap: 8px; }
+.shellbar__title { font-size: .85rem; color: #e2e8f0; letter-spacing: .01em; }
+.shellbar__sep { width: 8px; height: 1px; background: transparent; }
+.shellbar__btn { background: transparent; border: 0; color: inherit; cursor: pointer; font-size: 16px; line-height: 1; display: grid; place-items: center; }
+.shellbar__btn--icon .icon { display: block; width: 16px; height: 16px; }
+.shellbar__spacer { flex: 1; }
+.shellbar__pill { display: none; }
+.terminal__resize { display: none; }
+// Terminal body and content
+// ------------------------
+
+.terminal__inner { width: 100%; margin: 0; border-radius: 0; overflow: hidden; border-top: 0; border-left: 0; border-right: 0; border-bottom: 1px solid rgba(0,0,0,.6); background: #000; box-shadow: none; display: flex; flex-direction: column; min-height: 0; flex: 1; }
+.terminal__head { display: grid; place-items: center; }
+.terminal__head-inner { width: min(1200px, 92vw); }
+.terminal__heading { margin: 0 0 .25rem; font-size: 1.1rem; letter-spacing: .12em; font-weight: 800; color: #0f172a; }
+.terminal__hint { margin: 0 0 .5rem; font-size: .9rem; color: #475569; }
+.terminal__chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.term-chip { padding: 6px 10px; border-radius: 999px; border: 1px solid rgba(15,23,42,.12); background: #fff; color: #0f172a; cursor: pointer; }
+.term-chip.is-active { background: #0f172a; color: #fff; }
+
+.terminal__header { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: linear-gradient(180deg, rgba(15,23,42,.08), rgba(15,23,42,.03)); border-bottom: 1px solid rgba(15,23,42,.08); }
+.terminal__close { margin-left: auto; background: transparent; border: 0; font-size: 22px; line-height: 1; color: #0f172a; cursor: pointer; opacity: .6; }
+.terminal__close:hover { opacity: 1; }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.dot--red { background: #ff5f56; }
+.dot--yellow { background: #ffbd2e; }
+.dot--green { background: #27c93f; }
+.terminal__title { margin-left: auto; font-size: .85rem; color: #475569; }
+.terminal__body { padding: 0; font-family: 'JetBrains Mono', monospace; color: #e2e8f0; overflow: hidden; flex: 1; min-height: 0; display: flex; }
+.terminal__xterm { flex: 1; min-height: 0; background: #000; opacity: 1; width: 100%; height: 100%; }
+.terminal__xterm .xterm-screen { filter: none; }
+.terminal__prompt { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.terminal__buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+.term-btn { display:none; }
+.terminal__inputwrap { position: relative; flex: 1; display: flex; align-items: center; }
+.terminal__input { width: 100%; margin-left: 10px; font-family: inherit; font-size: .95rem; padding: 6px 10px; border-radius: 8px; border: 1px solid rgba(15,23,42,.12); background: rgba(255,255,255,.9); color: #0f172a; }
+.terminal__ghost { display: none; }
+.terminal__output { padding-top: 6px; }
+.term-title { font-weight: 800; margin-bottom: 6px; }
+.term-lines { margin: 0; padding-left: 1.2rem; }
+.term-lines li { margin: .25rem 0; color: #334155; cursor: default; }
+.term-lines li.is-sel { background: rgba(15,23,42,.06); border-radius: 6px; padding: 2px 4px; }
+.term-actions { margin-top: .6rem; display: flex; gap: 8px; }
+
+// Dark mode support
+// -----------------
+body.theme-dark .terminal__shellbar { background: rgba(11,18,32,.85); border-color: rgba(255,255,255,.1); }
+body.theme-dark .terminal__inner { background: #0b1220; border-color: rgba(255,255,255,.08); }
+body.theme-dark .terminal__heading { color: #22ff88; }
+body.theme-dark .terminal__hint { color: #89cda3; }
+body.theme-dark .term-chip { background: rgba(34,255,136,.08); color: #c7f5d9; border-color: rgba(34,255,136,.25); }
+body.theme-dark .term-chip.is-active { background: #22ff88; color: #0b1220; }
+body.theme-dark .terminal__close { color: #c7f5d9; }
+body.theme-dark .terminal__title { color: #89cda3; }
+body.theme-dark .terminal__body { color: #c7f5d9; }
+body.theme-dark .term-lines li { color: #c7f5d9; }
+body.theme-dark .term-lines li.is-sel { background: rgba(34,255,136,.12); }
+body.theme-dark .terminal__input { background: rgba(11,18,32,.9); color: #c7f5d9; border-color: rgba(255,255,255,.12); }
+body.theme-dark .terminal__ghost { color: #89cda3; }
+

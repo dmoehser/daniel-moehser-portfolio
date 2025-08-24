@@ -1,0 +1,21 @@
+# OS
+.DS_Store
+
+# Env
+.env
+
+# Logs
+*.log
+
+# WordPress runtime
+wp-content/uploads/
+wp-content/upgrade/
+wp-content/cache/
+wp-content/debug.log
+
+# Node / Vite
+node_modules/
+wp-content/themes/moehser-portfolio/assets/dist/
+wp-content/themes/moehser-portfolio/.vite/
+
+

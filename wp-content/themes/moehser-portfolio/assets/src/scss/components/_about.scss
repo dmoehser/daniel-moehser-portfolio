@@ -1,0 +1,275 @@
+// About Component
+// ===============
+
+// About section - Using unified base classes
+.about {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background: transparent;
+  scroll-snap-align: start;
+  scroll-margin-top: 80px;
+  position: relative;
+  padding: 120px 0 4vh 0;
+  box-sizing: border-box;
+  z-index: 1;
+}
+
+.about__inner {
+  width: min(1280px, 92vw);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  position: relative;
+  z-index: 2;
+  overflow: visible;
+}
+
+// About-specific content
+// ----------------------
+
+.about__content {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  align-items: center;
+}
+
+// Centered content layout
+.about__content--centered {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  align-items: center;
+}
+
+.about__card {
+  width: 100%;
+  margin: 0 auto;
+  background: rgba(255,255,255,.95);
+  border: 1px solid rgba(15,23,42,.12);
+  border-radius: 16px;
+  overflow: visible;
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  padding: clamp(24px, 3.5vw, 48px);
+  position: relative;
+}
+
+.about__header {
+  text-align: center;
+  margin-bottom: clamp(12px, 2.5vw, 24px);
+}
+
+.about__title {
+  margin: 0 0 8px;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1.1;
+}
+
+.about__subtitle {
+  margin: 0;
+  color: #64748b;
+  font-size: clamp(0.95rem, 1.7vw, 1.15rem);
+  font-weight: 600;
+}
+
+.about__body {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(12px, 2.5vw, 24px);
+  align-items: start;
+}
+
+// Grid layout for body content
+.about__body--grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(12px, 2.5vw, 24px);
+  align-items: start;
+}
+
+// About-specific content
+// ----------------------
+
+.about__image {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.about__image img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+.about__text {
+  width: 100%;
+}
+
+.about__content-text {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: #4b5563;
+}
+
+.about__content-text p {
+  margin-bottom: 1rem;
+}
+
+.about__content-text h3,
+.about__content-text h4 {
+  margin: 1.5rem 0 0.5rem;
+  color: #111827;
+}
+
+// Skills section within about
+.about__skills {
+  margin-top: 2rem;
+}
+
+.about__skills h3 {
+  margin-bottom: 1rem;
+  color: #111827;
+  font-size: 1.25rem;
+}
+
+.about__skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.about__skill-tag {
+  background: #f3f4f6;
+  color: #374151;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.about__skill-tag:hover {
+  background: #3b82f6;
+  color: #ffffff;
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+// Call to action
+.about__cta {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.about__cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #3b82f6;
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.about__cta-btn:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+// Loading and error states
+.about__loading,
+.about__error {
+  text-align: center;
+  padding: clamp(24px, 3.5vw, 48px);
+  color: #64748b;
+}
+
+// Responsive layout adjustments
+@media (min-width: 768px) {
+  .about__body.has-image {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
+  }
+  
+  .about__body.has-image {
+    text-align: left;
+  }
+  
+  .about__image {
+    order: 2;
+  }
+  
+  .about__content {
+    order: 1;
+  }
+  
+  .about__skills-list {
+    justify-content: flex-start;
+  }
+}
+
+// Dark mode support
+// -----------------
+
+body.theme-dark {
+  .about__card {
+    background: rgba(30,41,59,.95);
+    border-color: rgba(255,255,255,.12);
+    color: #e2e8f0;
+  }
+  
+  .about__title {
+    color: #e2e8f0;
+  }
+  
+  .about__subtitle {
+    color: #cbd5e1;
+  }
+  
+  .about__loading,
+  .about__error {
+    color: #cbd5e1;
+  }
+  
+  .about__skill-tag {
+    background: rgba(30,41,59,.95);
+    color: #cbd5e1;
+    border-color: rgba(255,255,255,.12);
+    
+    &:hover {
+      background: #3b82f6;
+      color: #ffffff;
+      border-color: #3b82f6;
+    }
+  }
+  
+  .about__cta-btn {
+    background: #3b82f6;
+    color: #ffffff;
+    
+    &:hover {
+      background: #2563eb;
+    }
+  }
+}

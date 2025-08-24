@@ -1,0 +1,463 @@
+// Projects Component
+// =================
+
+// Project section - Using unified base classes
+.projects {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background: transparent;
+  scroll-snap-align: start;
+  scroll-margin-top: 80px;
+  position: relative;
+  padding: 120px 0 4vh 0;
+  box-sizing: border-box;
+  z-index: 1;
+}
+
+.projects__inner {
+  width: min(1280px, 92vw);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  position: relative;
+  z-index: 2;
+  overflow: visible;
+}
+
+.projects__content {
+  width: 100%;
+}
+
+.projects__card {
+  width: 100%;
+  margin: 0 auto;
+  background: rgba(255,255,255,.95);
+  border: 1px solid rgba(15,23,42,.12);
+  border-radius: 16px;
+  overflow: visible;
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  padding: clamp(24px, 3.5vw, 48px);
+  position: relative;
+}
+
+.projects__header {
+  text-align: center;
+  margin-bottom: clamp(12px, 2.5vw, 24px);
+}
+
+.projects__title {
+  margin: 0 0 8px;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1.1;
+}
+
+.projects__subtitle {
+  margin: 0;
+  color: #64748b;
+  font-size: clamp(0.95rem, 1.7vw, 1.15rem);
+  font-weight: 600;
+}
+
+.projects__body {
+  width: 100%;
+}
+
+.projects__loading,
+.projects__error,
+.projects__empty {
+  text-align: center;
+  padding: clamp(24px, 3.5vw, 48px);
+  color: #64748b;
+}
+
+// Project status - Status display styling
+// ---------------------------------------
+
+.projects__status {
+  padding: 2rem;
+  color: #475569;
+}
+
+// Projects slider
+// ---------------
+
+.projects__slider--side-by-side {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  margin: 0;
+  
+  .projects__slider-container {
+    display: flex;
+    transition: transform 0.5s ease;
+    width: 100%;
+  }
+  
+  .projects__slide {
+    flex: 0 0 100%;
+    width: 100%;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+// Side by Side Project Card
+.project-card--side-by-side {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  height: 500px;
+  min-height: 500px;
+  max-height: 500px;
+  width: 100%;
+  max-width: 1400px;
+  transition: all 0.3s ease;
+  position: relative;
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+  
+  // Left side - Screenshot
+  .project-card__screenshot {
+    flex: 0 0 65% !important;
+    width: 65% !important;
+    max-width: 65% !important;
+    position: relative;
+    overflow: hidden;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 500px;
+    min-height: 500px;
+    max-height: 500px;
+    border-radius: 12px;
+    margin-right: 20px;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+  }
+  
+  // Right side - Project Info
+  .project-card__info {
+    flex: 0 0 35% !important;
+    width: 35% !important;
+    max-width: 35% !important;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background: transparent;
+    overflow-y: auto;
+    max-height: 100%;
+    
+    .project-card__title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 0.75rem;
+      line-height: 1.2;
+    }
+    
+    .project-card__excerpt {
+      font-size: 0.95rem;
+      color: #475569;
+      line-height: 1.5;
+      margin: 0 0 1rem;
+    }
+    
+    .project-card__technologies {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.5rem;
+      
+      .project-card__tech-tag {
+        display: inline-block;
+        padding: 8px 16px;
+        margin: 4px 8px 4px 0;
+        background: rgba(56,189,248,.1);
+        color: #0f172a;
+        border: 1px solid rgba(56,189,248,.3);
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+      cursor: pointer;
+      }
+      
+      .project-card__tech-tag:hover {
+        background: rgba(56,189,248,.15);
+        border-color: rgba(56,189,248,.4);
+        transform: translateY(-1px);
+      }
+    }
+    
+    .project-card__actions {
+      margin-top: auto;
+      
+      .project-card__demo-btn {
+        display: inline-block;
+        width: 100%;
+        padding: 0.8rem 1.2rem;
+        background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        text-align: center;
+      
+        &:hover {
+          transform: translateY(-2px);
+          background: linear-gradient(135deg, #0ea5e9, #0284c7);
+        }
+      }
+    }
+  }
+}
+
+// Navigation Buttons
+.projects__nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 64px;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid rgba(15, 23, 42, 0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #0f172a;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 10;
+  
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 1);
+    border-color: rgba(56, 189, 248, 0.5);
+    transform: translateY(-50%) scale(1.1);
+  }
+  
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: rgba(255, 255, 255, 0.7);
+  }
+  
+  &--prev {
+    left: -80px;
+  }
+  
+  &--next {
+    right: -80px;
+  }
+}
+
+// Simple Project Card - Individual project card styling
+// ----------------------------------------------------
+
+.project-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-card__thumb {
+  display: block;
+  aspect-ratio: 16/9;
+  background: #0b1220;
+}
+
+.project-card__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.project-card__body {
+  padding: 0.75rem 1rem 1rem;
+}
+
+.project-card__title {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.project-card__title a {
+  color: #0f172a;
+  text-decoration: none;
+}
+
+.project-card__title a:hover {
+  color: #38bdf8;
+}
+
+.project-card__cta {
+  display: inline-block;
+  margin-top: 0.25rem;
+  color: #38bdf8;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.project-card__cta:hover { 
+  text-decoration: underline; 
+}
+
+// Responsive design
+// -----------------
+
+// Projects Responsive
+@media (max-width: 1024px) {
+  .project-card--side-by-side {
+    height: 450px;
+    min-height: 450px;
+    max-height: 450px;
+    
+    .project-card__screenshot {
+      height: 450px;
+      min-height: 450px;
+      max-height: 450px;
+    }
+    
+    .project-card__info {
+      padding: 24px;
+      
+      .project-card__title {
+        font-size: 1.3rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .project-card--side-by-side {
+    flex-direction: column !important;
+    height: 400px;
+    min-height: 400px;
+    max-height: 400px;
+    
+    .project-card__screenshot {
+      flex: 0 0 200px !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      height: 200px;
+      min-height: 200px;
+      max-height: 200px;
+    }
+    
+    .project-card__info {
+      flex: 1 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      padding: 20px;
+      overflow-y: auto;
+    }
+  }
+  
+  .projects__nav-btn {
+    width: 56px;
+    height: 56px;
+    font-size: 1.5rem;
+    
+    &--prev { left: -70px; }
+    &--next { right: -70px; }
+  }
+}
+
+// Dark mode support
+// -----------------
+
+// Dark mode for Project Cards
+body.theme-dark .projects__card {
+  background: rgba(30,41,59,.95);
+  border-color: rgba(255,255,255,.12);
+  color: #e2e8f0;
+}
+
+body.theme-dark .projects__title {
+  color: #e2e8f0;
+}
+
+body.theme-dark .projects__subtitle {
+  color: #cbd5e1;
+}
+
+body.theme-dark .projects__loading,
+body.theme-dark .projects__error,
+body.theme-dark .projects__empty {
+  color: #cbd5e1;
+}
+
+body.theme-dark .project-card {
+  background: rgba(30,41,59,.95);
+  color: #e2e8f0;
+}
+
+body.theme-dark .project-card__title a {
+  color: #e2e8f0;
+}
+
+body.theme-dark .project-card__title a:hover {
+  color: #38bdf8;
+}
+
+body.theme-dark .project-card__cta {
+  color: #38bdf8;
+}
+
+body.theme-dark .project-card__cta:hover {
+  color: #60a5fa;
+}
+
+body.theme-dark .project-card__tech-tag:hover {
+  background: rgba(56,189,248,.15);
+  border-color: rgba(56,189,248,.4);
+  color: #ffffff !important;
+}
+
+body.theme-dark .project-card__demo-btn {
+  background: rgba(56,189,248,.9);
+  color: #ffffff !important;
+  border-color: rgba(56,189,248,.3);
+}
+
+body.theme-dark .project-card__demo-btn:hover {
+  background: rgba(56,189,248,1);
+  border-color: rgba(56,189,248,.5);
+  color: #ffffff !important;
+}
+
+
