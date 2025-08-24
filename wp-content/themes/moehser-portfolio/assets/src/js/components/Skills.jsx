@@ -83,10 +83,10 @@ const SkillCard = ({ card, isSpecial = false }) => (
   >
     <h3 className="skill-card__title">{card.title}</h3>
     
-    {/* Top row (cards 1-3): Show skills list only */}
+    {/* Top row (cards 1-3): Show skills list only - max 3 items */}
     {!isSpecial && card.skills_list && (
       <ul className="skill-card__list">
-        {card.skills_list.split(',').map((skill, index) => (
+        {card.skills_list.split(',').slice(0, 3).map((skill, index) => (
           <li key={index}>{skill.trim()}</li>
         ))}
       </ul>

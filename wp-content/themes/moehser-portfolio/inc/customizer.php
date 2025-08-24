@@ -178,17 +178,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'type' => 'text',
     ]);
 
-    $wp_customize->add_setting('moehser_skills_card1_description', [
-        'default' => '',
-        'sanitize_callback' => 'wp_kses_post',
-    ]);
-    $wp_customize->add_control('moehser_skills_card1_description', [
-        'label' => __('Skills Card 1 - Description (disabled for top row)', 'moehser-portfolio'),
-        'description' => __('Top row cards use skills lists instead', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'textarea',
-        'input_attrs' => ['disabled' => 'disabled'],
-    ]);
+
 
     $wp_customize->add_setting('moehser_skills_card1_tags', [
         'default' => 'React, JavaScript, CSS, HTML',
@@ -206,7 +196,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]);
     $wp_customize->add_control('moehser_skills_card1_skills_list', [
         'label' => __('Skills Card 1 - Skills List (comma separated)', 'moehser-portfolio'),
-        'description' => __('Leave empty if you only want to show description', 'moehser-portfolio'),
+        'description' => __('Max 3 items for consistent card height. Example: React, Vue, TypeScript', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'textarea',
     ]);
@@ -222,17 +212,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'type' => 'text',
     ]);
 
-    $wp_customize->add_setting('moehser_skills_card2_description', [
-        'default' => '',
-        'sanitize_callback' => 'wp_kses_post',
-    ]);
-    $wp_customize->add_control('moehser_skills_card2_description', [
-        'label' => __('Skills Card 2 - Description (disabled for top row)', 'moehser-portfolio'),
-        'description' => __('Top row cards use skills lists instead', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'textarea',
-        'input_attrs' => ['disabled' => 'disabled'],
-    ]);
+ 
 
     $wp_customize->add_setting('moehser_skills_card2_tags', [
         'default' => 'Node.js, PHP, MySQL, WordPress',
@@ -250,7 +230,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]);
     $wp_customize->add_control('moehser_skills_card2_skills_list', [
         'label' => __('Skills Card 2 - Skills List (comma separated)', 'moehser-portfolio'),
-        'description' => __('Leave empty if you only want to show description', 'moehser-portfolio'),
+        'description' => __('Max 3 items for consistent card height. Example: Node.js, PHP, MySQL', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'textarea',
     ]);
@@ -266,17 +246,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'type' => 'text',
     ]);
 
-    $wp_customize->add_setting('moehser_skills_card3_description', [
-        'default' => '',
-        'sanitize_callback' => 'wp_kses_post',
-    ]);
-    $wp_customize->add_control('moehser_skills_card3_description', [
-        'label' => __('Skills Card 3 - Description (disabled for top row)', 'moehser-portfolio'),
-        'description' => __('Top row cards use skills lists instead', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'textarea',
-        'input_attrs' => ['disabled' => 'disabled'],
-    ]);
+
 
     $wp_customize->add_setting('moehser_skills_card3_tags', [
         'default' => 'Figma, Adobe XD, User Research',
@@ -294,8 +264,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]);
     $wp_customize->add_control('moehser_skills_card3_skills_list', [
         'label' => __('Skills Card 3 - Skills List (comma separated)', 'moehser-portfolio'),
-        'description' => __('Leave empty if you only want to show description', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
+        'description' => __('Max 3 items for consistent card height. Example: Figma, Adobe XD, User Research', 'moehser-portfolio'),
         'type' => 'textarea',
     ]);
 
