@@ -2,7 +2,7 @@
 // ======
 
 // CSS custom properties and variables
-// -----------------------------------
+// ------------------------------
 
 :root {
   --header-height: 64px;
@@ -136,7 +136,7 @@
 }
 
 // Media queries and accessibility preferences
-// -------------------------------------------
+// ------------------------------
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
