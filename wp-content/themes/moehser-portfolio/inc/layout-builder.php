@@ -24,7 +24,7 @@ function moehser_register_simple_layout_builder($wp_customize) {
 		$wp_customize->add_setting($setting_id, [
 			'default'           => 1,
 			'sanitize_callback' => function ($v) { return (int) (bool) $v; },
-			'transport'         => 'refresh',
+			'transport'         => 'postMessage',
 		]);
 		$wp_customize->add_control($setting_id, [
 			'label'       => sprintf(__('Show %s Section', 'moehser-portfolio'), $label),
@@ -37,7 +37,7 @@ function moehser_register_simple_layout_builder($wp_customize) {
 	$wp_customize->add_setting('moehser_sections_order', [
 		'default'           => 'about,skills,projects',
 		'sanitize_callback' => 'moehser_sanitize_sections_order',
-		'transport'         => 'refresh',
+		'transport'         => 'postMessage',
 	]);
 	$wp_customize->add_control('moehser_sections_order', [
 		'label'       => __('Sections Order', 'moehser-portfolio'),
