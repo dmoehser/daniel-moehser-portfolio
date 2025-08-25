@@ -1,4 +1,4 @@
-// Layout Controls Sync
+// Layout & Sections Controls Sync
 // ====================
 (function() {
   // Controls-frame sync
