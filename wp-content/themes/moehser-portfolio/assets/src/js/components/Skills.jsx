@@ -114,9 +114,12 @@ export default function Skills() {
 
   const title = typeof window !== 'undefined' && window.__SKILLS_TITLE__ ? decodeHtmlEntities(window.__SKILLS_TITLE__) : '';
   const subtitle = typeof window !== 'undefined' && window.__SKILLS_SUBTITLE__ ? decodeHtmlEntities(window.__SKILLS_SUBTITLE__) : '';
+  // Determine layout mode from Customizer (defaults to fixed grid)
+  const layoutMode = typeof window !== 'undefined' && window.__SKILLS_LAYOUT_MODE__ ? window.__SKILLS_LAYOUT_MODE__ : 'fixed_grid';
+  const isAdaptiveLayout = layoutMode === 'adaptive_grid';
 
   return (
-    <section className="skills" id="skills">
+    <section className={`skills ${isAdaptiveLayout ? 'skills--adaptive' : 'skills--fixed'}`} id="skills">
       <div className="skills__inner">
         <header className="skills__header">
           <h2 className="skills__title">{title}</h2>
