@@ -167,6 +167,22 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'type' => 'text',
     ]);
 
+    // Skills Layout Mode
+    $wp_customize->add_setting('moehser_skills_layout_mode', [
+        'default' => 'fixed_grid',
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp_customize->add_control('moehser_skills_layout_mode', [
+        'label' => __('Skills Layout Mode', 'moehser-portfolio'),
+        'description' => __('Choose between fixed grid layout or adaptive responsive layout that automatically adjusts to screen size and content', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'select',
+        'choices' => [
+            'fixed_grid' => __('Fixed Grid (3+2 arrangement)', 'moehser-portfolio'),
+            'adaptive_grid' => __('Adaptive Grid (responsive layout)', 'moehser-portfolio'),
+        ],
+    ]);
+
     // Skills Card 1
     $wp_customize->add_setting('moehser_skills_card1_title', [
         'default' => __('Frontend Development', 'moehser-portfolio'),
@@ -186,7 +202,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]);
     $wp_customize->add_control('moehser_skills_card1_tags', [
         'label' => __('Skills Card 1 - Tags (comma separated)', 'moehser-portfolio'),
-        'description' => __('Max 3 tags for consistent layout. Example: React, Vue, TypeScript', 'moehser-portfolio'),
+        'description' => __('Tags for this skill card. In Fixed Grid mode, max 3 tags are allowed.', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'text',
     ]);
@@ -197,7 +213,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]);
     $wp_customize->add_control('moehser_skills_card1_skills_list', [
         'label' => __('Skills Card 1 - Skills List (comma separated)', 'moehser-portfolio'),
-        'description' => __('Max 3 items for consistent card height. Example: React, Vue, TypeScript', 'moehser-portfolio'),
+        'description' => __('Skills list for this card. In Fixed Grid mode, max 3 items are allowed.', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'textarea',
     ]);
@@ -221,7 +237,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]);
     $wp_customize->add_control('moehser_skills_card2_tags', [
         'label' => __('Skills Card 2 - Tags (comma separated)', 'moehser-portfolio'),
-        'description' => __('Max 3 tags for consistent layout. Example: Node.js, PHP, MySQL', 'moehser-portfolio'),
+        'description' => __('Tags for this skill card. In Fixed Grid mode, max 3 tags are allowed.', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'text',
     ]);
@@ -232,7 +248,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]);
     $wp_customize->add_control('moehser_skills_card2_skills_list', [
         'label' => __('Skills Card 2 - Skills List (comma separated)', 'moehser-portfolio'),
-        'description' => __('Max 3 items for consistent card height. Example: Node.js, PHP, MySQL', 'moehser-portfolio'),
+        'description' => __('Skills list for this card. In Fixed Grid mode, max 3 items are allowed.', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'textarea',
     ]);
@@ -256,7 +272,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]);
     $wp_customize->add_control('moehser_skills_card3_tags', [
         'label' => __('Skills Card 3 - Tags (comma separated)', 'moehser-portfolio'),
-        'description' => __('Max 3 tags for consistent layout. Example: Figma, Adobe XD, User Research', 'moehser-portfolio'),
+        'description' => __('Tags for this skill card. In Fixed Grid mode, max 3 tags are allowed.', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'text',
     ]);
@@ -267,7 +283,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]);
     $wp_customize->add_control('moehser_skills_card3_skills_list', [
         'label' => __('Skills Card 3 - Skills List (comma separated)', 'moehser-portfolio'),
-        'description' => __('Max 3 items for consistent card height. Example: Figma, Adobe XD, User Research', 'moehser-portfolio'),
+        'description' => __('Skills list for this card. In Fixed Grid mode, max 3 items are allowed.', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'textarea',
     ]);
@@ -359,6 +375,7 @@ add_action('wp_head', function () {
     // Skills Settings
     $skills_title = get_theme_mod('moehser_skills_title', 'Skills');
     $skills_subtitle = get_theme_mod('moehser_skills_subtitle', 'Technologies & tools I work with');
+    $skills_layout_mode = get_theme_mod('moehser_skills_layout_mode', 'fixed_grid');
     
     // Skills Cards
     $skills_card1_title = get_theme_mod('moehser_skills_card1_title', 'Frontend Development');
@@ -399,6 +416,7 @@ add_action('wp_head', function () {
     // Skills Settings to frontend
     echo 'window.__SKILLS_TITLE__ = "' . esc_js($skills_title) . '";';
     echo 'window.__SKILLS_SUBTITLE__ = "' . esc_js($skills_subtitle) . '";';
+    echo 'window.__SKILLS_LAYOUT_MODE__ = "' . esc_js($skills_layout_mode) . '";';
     
     // Skills Cards to frontend
     echo 'window.__SKILLS_CARD1__ = { title: "' . esc_js($skills_card1_title) . '", description: "' . esc_js($skills_card1_description) . '", tags: "' . esc_js($skills_card1_tags) . '", skills_list: "' . esc_js($skills_card1_skills_list) . '" };';
