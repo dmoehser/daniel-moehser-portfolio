@@ -171,6 +171,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     $wp_customize->add_setting('moehser_skills_layout_mode', [
         'default' => 'fixed_grid',
         'sanitize_callback' => 'sanitize_text_field',
+        'transport' => 'postMessage',
     ]);
     $wp_customize->add_control('moehser_skills_layout_mode', [
         'label' => __('Skills Layout Mode', 'moehser-portfolio'),
@@ -191,6 +192,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     $wp_customize->add_setting('moehser_skills_card1_enabled', [
         'default' => 1,
         'sanitize_callback' => 'absint',
+        'transport' => 'postMessage',
     ]);
     $wp_customize->add_control('moehser_skills_card1_enabled', [
         'label' => __('Enable Card 1 (Adaptive mode only)', 'moehser-portfolio'),
@@ -202,6 +204,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     $wp_customize->add_setting('moehser_skills_card2_enabled', [
         'default' => 1,
         'sanitize_callback' => 'absint',
+        'transport' => 'postMessage',
     ]);
     $wp_customize->add_control('moehser_skills_card2_enabled', [
         'label' => __('Enable Card 2 (Adaptive mode only)', 'moehser-portfolio'),
@@ -213,6 +216,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     $wp_customize->add_setting('moehser_skills_card3_enabled', [
         'default' => 1,
         'sanitize_callback' => 'absint',
+        'transport' => 'postMessage',
     ]);
     $wp_customize->add_control('moehser_skills_card3_enabled', [
         'label' => __('Enable Card 3 (Adaptive mode only)', 'moehser-portfolio'),
@@ -224,6 +228,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     $wp_customize->add_setting('moehser_skills_card4_enabled', [
         'default' => 1,
         'sanitize_callback' => 'absint',
+        'transport' => 'postMessage',
     ]);
     $wp_customize->add_control('moehser_skills_card4_enabled', [
         'label' => __('Enable Card 4 (Adaptive mode only)', 'moehser-portfolio'),
@@ -235,6 +240,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     $wp_customize->add_setting('moehser_skills_card5_enabled', [
         'default' => 1,
         'sanitize_callback' => 'absint',
+        'transport' => 'postMessage',
     ]);
     $wp_customize->add_control('moehser_skills_card5_enabled', [
         'label' => __('Enable Card 5 (Adaptive mode only)', 'moehser-portfolio'),
