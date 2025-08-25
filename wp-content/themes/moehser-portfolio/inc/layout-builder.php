@@ -112,5 +112,13 @@ function moehser_enqueue_layout_builder_controls_js() {
         '1.0.0',
         true
     );
+    // Skills notes toggling per layout mode
+    wp_enqueue_script(
+        'moehser-skills-notes-controls',
+        get_theme_file_uri('assets/src/js/features/layout-builder/skills-notes.js'),
+        ['customize-controls', 'jquery'],
+        '1.0.0',
+        true
+    );
 }
 add_action('customize_controls_enqueue_scripts', 'moehser_enqueue_layout_builder_controls_js');
