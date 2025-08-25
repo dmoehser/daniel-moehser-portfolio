@@ -289,8 +289,13 @@ body.theme-dark {
     min-height: 280px;
     max-height: none;
   }
-  .skill-card__list {}
-  .tags {}
+  // Gentle overflow handling without truncation
+  .skill-card__list {
+    max-height: none;
+  }
+  .tags {
+    max-height: none;
+  }
 }
 
 // Fixed mode

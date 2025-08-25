@@ -86,7 +86,10 @@ const SkillCard = ({ card, isSpecial = false }) => (
     {/* Top row (cards 1-3): Show skills list only - max 3 items */}
     {!isSpecial && card.skills_list && (
       <ul className="skill-card__list">
-        {card.skills_list.split(',').slice(0, 3).map((skill, index) => (
+        {(isAdaptiveLayout
+          ? card.skills_list.split(',')
+          : card.skills_list.split(',').slice(0, 3)
+        ).map((skill, index) => (
           <li key={index}>{skill.trim()}</li>
         ))}
       </ul>
@@ -98,7 +101,7 @@ const SkillCard = ({ card, isSpecial = false }) => (
     )}
     
     <div className="tags">
-      {card.tags.slice(0, 3).map((tag, index) => (
+      {(isAdaptiveLayout ? card.tags : card.tags.slice(0, 3)).map((tag, index) => (
         <span key={index} className="animated-border">{tag}</span>
       ))}
     </div>
@@ -117,6 +120,18 @@ export default function Skills() {
   // Determine layout mode from Customizer (defaults to fixed grid)
   const layoutMode = typeof window !== 'undefined' && window.__SKILLS_LAYOUT_MODE__ ? window.__SKILLS_LAYOUT_MODE__ : 'fixed_grid';
   const isAdaptiveLayout = layoutMode === 'adaptive_grid';
+  const enabledMap = typeof window !== 'undefined' && window.__SKILLS_CARDS_ENABLED__ ? window.__SKILLS_CARDS_ENABLED__ : { c1: true, c2: true, c3: true, c4: true, c5: true };
+
+  // Compute cards to render depending on mode
+  const cardsForFixed = { top: topRowCards, bottom: bottomRowCards };
+  const cardsForAdaptive = skillCards.filter((c) => {
+    if (c.id === 1) return !!enabledMap.c1;
+    if (c.id === 2) return !!enabledMap.c2;
+    if (c.id === 3) return !!enabledMap.c3;
+    if (c.id === 4) return !!enabledMap.c4;
+    if (c.id === 5) return !!enabledMap.c5;
+    return true;
+  });
 
   return (
     <section className={`skills ${isAdaptiveLayout ? 'skills--adaptive' : 'skills--fixed'}`} id="skills">
@@ -127,17 +142,26 @@ export default function Skills() {
         </header>
 
         <div className="skills__content">
-          <div className="skills__top-row">
-            {topRowCards.map(card => (
-              <SkillCard key={card.id} card={card} isSpecial={false} />
-            ))}
-          </div>
-
-          <div className="skills__bottom-row">
-            {bottomRowCards.map(card => (
-              <SkillCard key={card.id} card={card} isSpecial={true} />
-            ))}
-          </div>
+          {isAdaptiveLayout ? (
+            <div className="skills__top-row">
+              {cardsForAdaptive.map(card => (
+                <SkillCard key={card.id} card={card} isSpecial={card.id >= 4} />
+              ))}
+            </div>
+          ) : (
+            <>
+              <div className="skills__top-row">
+                {cardsForFixed.top.map(card => (
+                  <SkillCard key={card.id} card={card} isSpecial={false} />
+                ))}
+              </div>
+              <div className="skills__bottom-row">
+                {cardsForFixed.bottom.map(card => (
+                  <SkillCard key={card.id} card={card} isSpecial={true} />
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </section>

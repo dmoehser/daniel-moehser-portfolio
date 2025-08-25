@@ -183,6 +183,66 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         ],
     ]);
 
+    // Enable/Disable cards (only when adaptive mode is active)
+    $enable_control_active_cb = function () {
+        return get_theme_mod('moehser_skills_layout_mode', 'fixed_grid') === 'adaptive_grid';
+    };
+
+    $wp_customize->add_setting('moehser_skills_card1_enabled', [
+        'default' => 1,
+        'sanitize_callback' => 'absint',
+    ]);
+    $wp_customize->add_control('moehser_skills_card1_enabled', [
+        'label' => __('Enable Card 1 (Adaptive mode only)', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'checkbox',
+        'active_callback' => $enable_control_active_cb,
+    ]);
+
+    $wp_customize->add_setting('moehser_skills_card2_enabled', [
+        'default' => 1,
+        'sanitize_callback' => 'absint',
+    ]);
+    $wp_customize->add_control('moehser_skills_card2_enabled', [
+        'label' => __('Enable Card 2 (Adaptive mode only)', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'checkbox',
+        'active_callback' => $enable_control_active_cb,
+    ]);
+
+    $wp_customize->add_setting('moehser_skills_card3_enabled', [
+        'default' => 1,
+        'sanitize_callback' => 'absint',
+    ]);
+    $wp_customize->add_control('moehser_skills_card3_enabled', [
+        'label' => __('Enable Card 3 (Adaptive mode only)', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'checkbox',
+        'active_callback' => $enable_control_active_cb,
+    ]);
+
+    $wp_customize->add_setting('moehser_skills_card4_enabled', [
+        'default' => 1,
+        'sanitize_callback' => 'absint',
+    ]);
+    $wp_customize->add_control('moehser_skills_card4_enabled', [
+        'label' => __('Enable Card 4 (Adaptive mode only)', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'checkbox',
+        'active_callback' => $enable_control_active_cb,
+    ]);
+
+    $wp_customize->add_setting('moehser_skills_card5_enabled', [
+        'default' => 1,
+        'sanitize_callback' => 'absint',
+    ]);
+    $wp_customize->add_control('moehser_skills_card5_enabled', [
+        'label' => __('Enable Card 5 (Adaptive mode only)', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'checkbox',
+        'active_callback' => $enable_control_active_cb,
+    ]);
+
     // Skills Card 1
     $wp_customize->add_setting('moehser_skills_card1_title', [
         'default' => __('Frontend Development', 'moehser-portfolio'),
@@ -376,6 +436,11 @@ add_action('wp_head', function () {
     $skills_title = get_theme_mod('moehser_skills_title', 'Skills');
     $skills_subtitle = get_theme_mod('moehser_skills_subtitle', 'Technologies & tools I work with');
     $skills_layout_mode = get_theme_mod('moehser_skills_layout_mode', 'fixed_grid');
+    $skills_card1_enabled = get_theme_mod('moehser_skills_card1_enabled', 1);
+    $skills_card2_enabled = get_theme_mod('moehser_skills_card2_enabled', 1);
+    $skills_card3_enabled = get_theme_mod('moehser_skills_card3_enabled', 1);
+    $skills_card4_enabled = get_theme_mod('moehser_skills_card4_enabled', 1);
+    $skills_card5_enabled = get_theme_mod('moehser_skills_card5_enabled', 1);
     
     // Skills Cards
     $skills_card1_title = get_theme_mod('moehser_skills_card1_title', 'Frontend Development');
@@ -417,6 +482,7 @@ add_action('wp_head', function () {
     echo 'window.__SKILLS_TITLE__ = "' . esc_js($skills_title) . '";';
     echo 'window.__SKILLS_SUBTITLE__ = "' . esc_js($skills_subtitle) . '";';
     echo 'window.__SKILLS_LAYOUT_MODE__ = "' . esc_js($skills_layout_mode) . '";';
+    echo 'window.__SKILLS_CARDS_ENABLED__ = { c1: ' . ($skills_card1_enabled ? 'true' : 'false') . ', c2: ' . ($skills_card2_enabled ? 'true' : 'false') . ', c3: ' . ($skills_card3_enabled ? 'true' : 'false') . ', c4: ' . ($skills_card4_enabled ? 'true' : 'false') . ', c5: ' . ($skills_card5_enabled ? 'true' : 'false') . ' };';
     
     // Skills Cards to frontend
     echo 'window.__SKILLS_CARD1__ = { title: "' . esc_js($skills_card1_title) . '", description: "' . esc_js($skills_card1_description) . '", tags: "' . esc_js($skills_card1_tags) . '", skills_list: "' . esc_js($skills_card1_skills_list) . '" };';
