@@ -88,7 +88,8 @@ function moehser_enqueue_layout_builder_js() {
 	}
 
 	// Enqueue live-updates.js AFTER main React bundle so sections exist
-	$deps = ['moehser-portfolio-main'];
+	// Also ensure Customizer preview API is available
+	$deps = ['moehser-portfolio-main', 'customize-preview'];
 	wp_enqueue_script(
 		'moehser-layout-builder',
 		get_theme_file_uri('assets/src/js/features/layout-builder/live-updates.js'),
