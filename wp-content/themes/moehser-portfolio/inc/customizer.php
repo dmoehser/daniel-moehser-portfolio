@@ -195,7 +195,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'transport' => 'postMessage',
     ]);
     $wp_customize->add_control('moehser_skills_card1_enabled', [
-        'label' => __('Enable Card 1 (Adaptive mode only)', 'moehser-portfolio'),
+        'label' => __('Enable Card 1 – List Card', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'checkbox',
         'active_callback' => $enable_control_active_cb,
@@ -207,7 +207,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'transport' => 'postMessage',
     ]);
     $wp_customize->add_control('moehser_skills_card2_enabled', [
-        'label' => __('Enable Card 2 (Adaptive mode only)', 'moehser-portfolio'),
+        'label' => __('Enable Card 2 – List Card', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'checkbox',
         'active_callback' => $enable_control_active_cb,
@@ -219,7 +219,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'transport' => 'postMessage',
     ]);
     $wp_customize->add_control('moehser_skills_card3_enabled', [
-        'label' => __('Enable Card 3 (Adaptive mode only)', 'moehser-portfolio'),
+        'label' => __('Enable Card 3 – List Card', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'checkbox',
         'active_callback' => $enable_control_active_cb,
@@ -231,7 +231,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'transport' => 'postMessage',
     ]);
     $wp_customize->add_control('moehser_skills_card4_enabled', [
-        'label' => __('Enable Card 4 (Adaptive mode only)', 'moehser-portfolio'),
+        'label' => __('Enable Card 4 – Description Card', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'checkbox',
         'active_callback' => $enable_control_active_cb,
@@ -243,7 +243,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'transport' => 'postMessage',
     ]);
     $wp_customize->add_control('moehser_skills_card5_enabled', [
-        'label' => __('Enable Card 5 (Adaptive mode only)', 'moehser-portfolio'),
+        'label' => __('Enable Card 5 – Description Card', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'checkbox',
         'active_callback' => $enable_control_active_cb,
