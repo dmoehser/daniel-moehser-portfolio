@@ -99,3 +99,18 @@ function moehser_enqueue_layout_builder_js() {
 	);
 }
 add_action('wp_enqueue_scripts', 'moehser_enqueue_layout_builder_js');
+
+/**
+ * Enqueue a Customizer controls-side script to sync 'Show Skills Section'
+ * with Adaptive mode card enablement, so the checkbox state updates in the UI.
+ */
+function moehser_enqueue_layout_builder_controls_js() {
+    wp_enqueue_script(
+        'moehser-layout-builder-controls',
+        get_theme_file_uri('assets/src/js/features/layout-builder/controls-sync.js'),
+        ['customize-controls'],
+        '1.0.0',
+        true
+    );
+}
+add_action('customize_controls_enqueue_scripts', 'moehser_enqueue_layout_builder_controls_js');
