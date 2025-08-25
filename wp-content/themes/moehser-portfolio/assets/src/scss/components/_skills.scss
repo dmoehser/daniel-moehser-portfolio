@@ -279,8 +279,16 @@ body.theme-dark {
   .skills__bottom-row {
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   }
-  .skill-card--standard {}
-  .skill-card--special {}
+  .skill-card--standard {
+    height: auto;
+    min-height: 260px;
+    max-height: none;
+  }
+  .skill-card--special {
+    height: auto;
+    min-height: 280px;
+    max-height: none;
+  }
   .skill-card__list {}
   .tags {}
 }
