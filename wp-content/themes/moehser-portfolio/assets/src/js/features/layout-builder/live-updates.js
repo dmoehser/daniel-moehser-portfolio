@@ -234,6 +234,44 @@
                 }
             });
         });
+
+        // Sync Skills section checkbox with Adaptive mode card enablement
+        const skillsState = {
+            layoutMode: (window.__SKILLS_LAYOUT_MODE__ || 'fixed_grid'),
+            enabled: Object.assign({ c1:true,c2:true,c3:true,c4:true,c5:true }, (window.__SKILLS_CARDS_ENABLED__ || {}))
+        };
+
+        function syncSkillsVisibilitySetting() {
+            if (!customize) return;
+            const anyEnabled = Object.values(skillsState.enabled).some(Boolean);
+            if (skillsState.layoutMode === 'adaptive_grid') {
+                customize('moehser_show_skills', function(setting) {
+                    setting.set(anyEnabled);
+                });
+            }
+        }
+
+        // Listen to layout mode changes
+        customize('moehser_skills_layout_mode', function(setting) {
+            setting.bind(function(newValue) {
+                skillsState.layoutMode = newValue || 'fixed_grid';
+                syncSkillsVisibilitySetting();
+            });
+        });
+
+        // Listen to per-card enable flags (only visible in adaptive but we bind regardless)
+        ['c1','c2','c3','c4','c5'].forEach((key, idx) => {
+            const settingId = `moehser_skills_card${idx+1}_enabled`;
+            customize(settingId, function(setting) {
+                setting.bind(function(newValue) {
+                    skillsState.enabled[key] = Boolean(newValue);
+                    syncSkillsVisibilitySetting();
+                });
+            });
+        });
+
+        // Initial sync
+        syncSkillsVisibilitySetting();
     }
 
     // Utility: Debounce function
