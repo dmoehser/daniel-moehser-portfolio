@@ -266,3 +266,28 @@ body.theme-dark {
     min-height: 240px;
   }
 }
+
+// Mode hooks
+// -----------
+
+// Adaptive mode
+// --------------
+.skills--adaptive {
+  .skills__top-row {}
+  .skills__bottom-row {}
+  .skill-card--standard {}
+  .skill-card--special {}
+  .skill-card__list {}
+  .tags {}
+}
+
+// Fixed mode
+// -----------
+.skills--fixed {
+  .skills__top-row {}
+  .skills__bottom-row {}
+  .skill-card--standard {}
+  .skill-card--special {}
+  .skill-card__list {}
+  .tags {}
+}
