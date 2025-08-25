@@ -38,9 +38,11 @@
             applyLayout();
         }
         
-        // Listen for Customizer changes
+        // Listen for Customizer changes (ensure preview channel is ready)
         if (window.wp && window.wp.customize) {
-            setupCustomizerListeners();
+            window.wp.customize.bind('preview-ready', function() {
+                setupCustomizerListeners();
+            });
         }
         
         // Listen for window resize
@@ -245,29 +247,32 @@
             if (!customize) return;
             const anyEnabled = Object.values(skillsState.enabled).some(Boolean);
             if (skillsState.layoutMode === 'adaptive_grid') {
-                customize('moehser_show_skills', function(setting) {
+                const setting = customize('moehser_show_skills');
+                if (setting && typeof setting.set === 'function') {
                     setting.set(anyEnabled);
-                });
+                }
             }
         }
 
         // Listen to layout mode changes
-        customize('moehser_skills_layout_mode', function(setting) {
-            setting.bind(function(newValue) {
+        const layoutSetting = customize('moehser_skills_layout_mode');
+        if (layoutSetting) {
+            layoutSetting.bind(function(newValue) {
                 skillsState.layoutMode = newValue || 'fixed_grid';
                 syncSkillsVisibilitySetting();
             });
-        });
+        }
 
         // Listen to per-card enable flags (only visible in adaptive but we bind regardless)
         ['c1','c2','c3','c4','c5'].forEach((key, idx) => {
             const settingId = `moehser_skills_card${idx+1}_enabled`;
-            customize(settingId, function(setting) {
+            const setting = customize(settingId);
+            if (setting) {
                 setting.bind(function(newValue) {
                     skillsState.enabled[key] = Boolean(newValue);
                     syncSkillsVisibilitySetting();
                 });
-            });
+            }
         });
 
         // Initial sync
