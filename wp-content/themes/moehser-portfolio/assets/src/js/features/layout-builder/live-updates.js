@@ -249,7 +249,8 @@
             if (skillsState.layoutMode === 'adaptive_grid') {
                 const setting = customize('moehser_show_skills');
                 if (setting && typeof setting.set === 'function') {
-                    setting.set(anyEnabled);
+                    // Use 1/0 to match sanitize callback (absint)
+                    setting.set(anyEnabled ? 1 : 0);
                 }
             }
         }
@@ -261,6 +262,8 @@
                 skillsState.layoutMode = newValue || 'fixed_grid';
                 syncSkillsVisibilitySetting();
             });
+            // Initialize current value
+            skillsState.layoutMode = layoutSetting.get() || 'fixed_grid';
         }
 
         // Listen to per-card enable flags (only visible in adaptive but we bind regardless)
@@ -272,10 +275,12 @@
                     skillsState.enabled[key] = Boolean(newValue);
                     syncSkillsVisibilitySetting();
                 });
+                // Initialize current value
+                skillsState.enabled[key] = Boolean(setting.get());
             }
         });
 
-        // Initial sync
+        // Initial sync with current control values
         syncSkillsVisibilitySetting();
     }
 
