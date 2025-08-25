@@ -306,6 +306,44 @@ body.theme-dark {
   }
 }
 
+// Adaptive layout tweaks by count
+// -------------------------------
+.skills--adaptive.count-4 {
+  .skills__top-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .skills__top-row > .skill-card:nth-child(4) {
+    grid-column: 1 / span 2;
+  }
+}
+
+.skills--adaptive.count-5 {
+  .skills__top-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  .skills--adaptive.count-4,
+  .skills--adaptive.count-5 {
+    .skills__top-row {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .skills__top-row > .skill-card:nth-child(4) {
+      grid-column: auto;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .skills--adaptive.count-4,
+  .skills--adaptive.count-5 {
+    .skills__top-row {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
 // Fixed mode
 // -----------
 .skills--fixed {

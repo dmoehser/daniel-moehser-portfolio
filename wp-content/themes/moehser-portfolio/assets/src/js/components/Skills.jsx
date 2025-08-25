@@ -152,8 +152,11 @@ export default function Skills() {
     return null;
   }
 
+  // Count for adaptive layout tweaks
+  const activeCount = isAdaptiveLayout ? cardsForAdaptive.length : (cardsForFixed.top.length + cardsForFixed.bottom.length);
+
   return (
-    <section className={`skills ${isAdaptiveLayout ? 'skills--adaptive' : 'skills--fixed'}`} id="skills">
+    <section className={`skills ${isAdaptiveLayout ? 'skills--adaptive' : 'skills--fixed'} ${isAdaptiveLayout ? `count-${activeCount}` : ''}`} id="skills">
       <div className="skills__inner">
         <header className="skills__header">
           <h2 className="skills__title">{title}</h2>
