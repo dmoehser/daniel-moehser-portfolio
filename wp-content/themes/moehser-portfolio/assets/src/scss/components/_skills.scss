@@ -273,8 +273,12 @@ body.theme-dark {
 // Adaptive mode
 // --------------
 .skills--adaptive {
-  .skills__top-row {}
-  .skills__bottom-row {}
+  .skills__top-row {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+  .skills__bottom-row {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
   .skill-card--standard {}
   .skill-card--special {}
   .skill-card__list {}
