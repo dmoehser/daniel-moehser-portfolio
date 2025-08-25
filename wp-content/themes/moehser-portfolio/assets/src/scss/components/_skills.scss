@@ -275,6 +275,8 @@ body.theme-dark {
 .skills--adaptive {
   .skills__top-row {
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-auto-flow: row dense;
+    gap: 32px;
   }
   .skills__bottom-row {
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -296,6 +298,8 @@ body.theme-dark {
     -webkit-box-orient: unset;
     text-overflow: initial;
     max-height: none;
+    word-break: break-word;
+    hyphens: auto;
   }
   // Gentle overflow handling without truncation
   .skill-card__list {
@@ -303,6 +307,12 @@ body.theme-dark {
   }
   .tags {
     max-height: none;
+    // allow long tags to wrap
+    .animated-border {
+      white-space: normal;
+      word-break: break-word;
+      hyphens: auto;
+    }
   }
 }
 
@@ -337,6 +347,7 @@ body.theme-dark {
   .skills--adaptive.count-5 {
     .skills__top-row {
       grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
     }
     .skills__top-row > .skill-card:nth-child(4) { grid-column: auto; }
     .skills__top-row > .skill-card:nth-child(5) { grid-column: auto; }
@@ -348,6 +359,7 @@ body.theme-dark {
   .skills--adaptive.count-5 {
     .skills__top-row {
       grid-template-columns: 1fr;
+      gap: 16px;
     }
   }
 }
