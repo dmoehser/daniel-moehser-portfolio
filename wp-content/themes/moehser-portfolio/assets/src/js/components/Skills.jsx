@@ -3,7 +3,7 @@
 // Skills section with animated skill cards
 // ------------------------------
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 // Animation constants
@@ -132,6 +132,25 @@ export default function Skills() {
     if (c.id === 5) return !!enabledMap.c5;
     return true;
   });
+
+  // Sync with Layout Builder: hide/show skills section dynamically in adaptive mode
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const api = window.MoehserLayoutBuilder;
+    if (!api) return;
+    if (isAdaptiveLayout) {
+      if (cardsForAdaptive.length === 0) {
+        if (typeof api.hideSection === 'function') api.hideSection('skills');
+      } else {
+        if (typeof api.showSection === 'function') api.showSection('skills');
+      }
+    }
+  }, [isAdaptiveLayout, cardsForAdaptive.length]);
+
+  // In adaptive mode, if no cards are enabled, do not render the section at all
+  if (isAdaptiveLayout && cardsForAdaptive.length === 0) {
+    return null;
+  }
 
   return (
     <section className={`skills ${isAdaptiveLayout ? 'skills--adaptive' : 'skills--fixed'}`} id="skills">
