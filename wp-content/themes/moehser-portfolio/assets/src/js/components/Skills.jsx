@@ -75,7 +75,7 @@ const getSkillCards = () => {
 
 // Reusable skill card component
 // -----------------------------
-const SkillCard = ({ card, isSpecial = false }) => (
+const SkillCard = ({ card, isSpecial = false, isAdaptive = false }) => (
   <motion.div
     className={`skill-card interactive enhanced skill-card--${isSpecial ? 'special' : 'standard'}`}
     whileHover={ANIMATION.hover}
@@ -86,7 +86,7 @@ const SkillCard = ({ card, isSpecial = false }) => (
     {/* Top row (cards 1-3): Show skills list only - max 3 items */}
     {!isSpecial && card.skills_list && (
       <ul className="skill-card__list">
-        {(isAdaptiveLayout
+        {(isAdaptive
           ? card.skills_list.split(',')
           : card.skills_list.split(',').slice(0, 3)
         ).map((skill, index) => (
@@ -101,7 +101,7 @@ const SkillCard = ({ card, isSpecial = false }) => (
     )}
     
     <div className="tags">
-      {(isAdaptiveLayout ? card.tags : card.tags.slice(0, 3)).map((tag, index) => (
+      {(isAdaptive ? card.tags : card.tags.slice(0, 3)).map((tag, index) => (
         <span key={index} className="animated-border">{tag}</span>
       ))}
     </div>
@@ -145,19 +145,19 @@ export default function Skills() {
           {isAdaptiveLayout ? (
             <div className="skills__top-row">
               {cardsForAdaptive.map(card => (
-                <SkillCard key={card.id} card={card} isSpecial={card.id >= 4} />
+                <SkillCard key={card.id} card={card} isSpecial={card.id >= 4} isAdaptive={true} />
               ))}
             </div>
           ) : (
             <>
               <div className="skills__top-row">
                 {cardsForFixed.top.map(card => (
-                  <SkillCard key={card.id} card={card} isSpecial={false} />
+                  <SkillCard key={card.id} card={card} isSpecial={false} isAdaptive={false} />
                 ))}
               </div>
               <div className="skills__bottom-row">
                 {cardsForFixed.bottom.map(card => (
-                  <SkillCard key={card.id} card={card} isSpecial={true} />
+                  <SkillCard key={card.id} card={card} isSpecial={true} isAdaptive={false} />
                 ))}
               </div>
             </>
