@@ -289,6 +289,14 @@ body.theme-dark {
     min-height: 280px;
     max-height: none;
   }
+  .skill-card__description {
+    overflow: visible;
+    display: block;
+    -webkit-line-clamp: unset;
+    -webkit-box-orient: unset;
+    text-overflow: initial;
+    max-height: none;
+  }
   // Gentle overflow handling without truncation
   .skill-card__list {
     max-height: none;
