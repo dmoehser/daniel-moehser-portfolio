@@ -258,6 +258,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'label' => __('Skills Card 1 - Title', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'text',
+        'priority' => 100,
     ]);
 
 
@@ -271,6 +272,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'description' => __('Tags for this skill card. In Fixed Grid mode, max 3 tags are allowed.', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'text',
+        'priority' => 120,
     ]);
 
     $wp_customize->add_setting('moehser_skills_card1_skills_list', [
@@ -282,6 +284,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'description' => __('Skills list for this card. In Fixed Grid mode, max 3 items are allowed.', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'textarea',
+        'priority' => 110,
     ]);
 
     // Skills Card 2
@@ -293,6 +296,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'label' => __('Skills Card 2 - Title', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'text',
+        'priority' => 200,
     ]);
 
  
@@ -306,6 +310,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'description' => __('Tags for this skill card. In Fixed Grid mode, max 3 tags are allowed.', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'text',
+        'priority' => 220,
     ]);
 
     $wp_customize->add_setting('moehser_skills_card2_skills_list', [
@@ -317,6 +322,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'description' => __('Skills list for this card. In Fixed Grid mode, max 3 items are allowed.', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'textarea',
+        'priority' => 210,
     ]);
 
     // Skills Card 3
@@ -328,6 +334,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'label' => __('Skills Card 3 - Title', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'text',
+        'priority' => 300,
     ]);
 
 
@@ -341,6 +348,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'description' => __('Tags for this skill card. In Fixed Grid mode, max 3 tags are allowed.', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'text',
+        'priority' => 320,
     ]);
 
     $wp_customize->add_setting('moehser_skills_card3_skills_list', [
@@ -352,6 +360,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'description' => __('Skills list for this card. In Fixed Grid mode, max 3 items are allowed.', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'textarea',
+        'priority' => 310,
     ]);
 
     // Skills Card 4
@@ -363,6 +372,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'label' => __('Skills Card 4 - Title', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'text',
+        'priority' => 400,
     ]);
 
     $wp_customize->add_setting('moehser_skills_card4_description', [
@@ -373,6 +383,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'label' => __('Skills Card 4 - Description', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'textarea',
+        'priority' => 410,
     ]);
 
     $wp_customize->add_setting('moehser_skills_card4_tags', [
@@ -383,6 +394,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'label' => __('Skills Card 4 - Tags (comma separated)', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'text',
+        'priority' => 420,
     ]);
 
 
@@ -396,6 +408,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'label' => __('Skills Card 5 - Title', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'text',
+        'priority' => 500,
     ]);
 
     $wp_customize->add_setting('moehser_skills_card5_description', [
@@ -406,6 +419,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'label' => __('Skills Card 5 - Description', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'textarea',
+        'priority' => 510,
     ]);
 
     $wp_customize->add_setting('moehser_skills_card5_tags', [
@@ -416,6 +430,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'label' => __('Skills Card 5 - Tags (comma separated)', 'moehser-portfolio'),
         'section' => 'moehser_skills',
         'type' => 'text',
+        'priority' => 520,
     ]);
 
 
