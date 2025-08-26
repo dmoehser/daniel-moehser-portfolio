@@ -184,6 +184,25 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         ],
     ]);
 
+    // Adaptive density (spacing/font sizing)
+    $wp_customize->add_setting('moehser_skills_density', [
+        'default' => 'normal',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport' => 'postMessage',
+    ]);
+    $wp_customize->add_control('moehser_skills_density', [
+        'label' => __('Adaptive Density', 'moehser-portfolio'),
+        'description' => __('Controls spacing and text size in Adaptive Grid (normal, compact, tight).', 'moehser-portfolio'),
+        'section' => 'moehser_skills',
+        'type' => 'select',
+        'choices' => [
+            'normal' => __('Normal', 'moehser-portfolio'),
+            'compact' => __('Compact', 'moehser-portfolio'),
+            'tight' => __('Tight', 'moehser-portfolio'),
+        ],
+        'active_callback' => function () { return get_theme_mod('moehser_skills_layout_mode', 'fixed_grid') === 'adaptive_grid'; },
+    ]);
+
     // Enable/Disable cards (only when adaptive mode is active)
     $enable_control_active_cb = function () {
         return get_theme_mod('moehser_skills_layout_mode', 'fixed_grid') === 'adaptive_grid';
@@ -503,6 +522,7 @@ add_action('wp_head', function () {
     echo 'window.__SKILLS_TITLE__ = "' . esc_js($skills_title) . '";';
     echo 'window.__SKILLS_SUBTITLE__ = "' . esc_js($skills_subtitle) . '";';
     echo 'window.__SKILLS_LAYOUT_MODE__ = "' . esc_js($skills_layout_mode) . '";';
+    echo 'window.__SKILLS_DENSITY__ = "' . esc_js(get_theme_mod('moehser_skills_density','normal')) . '";';
     echo 'window.__SKILLS_CARDS_ENABLED__ = { c1: ' . ($skills_card1_enabled ? 'true' : 'false') . ', c2: ' . ($skills_card2_enabled ? 'true' : 'false') . ', c3: ' . ($skills_card3_enabled ? 'true' : 'false') . ', c4: ' . ($skills_card4_enabled ? 'true' : 'false') . ', c5: ' . ($skills_card5_enabled ? 'true' : 'false') . ' };';
     
     // Skills Cards to frontend

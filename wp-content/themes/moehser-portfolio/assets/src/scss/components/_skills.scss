@@ -273,6 +273,107 @@ body.theme-dark {
 // Adaptive mode
 // --------------
 .skills--adaptive {
+  // Keep within 100vh by capping inner height
+  .skills__inner {
+    height: calc(100vh - 120px - 4vh);
+    overflow: hidden; // clamp visual area to section
+    display: flex;
+    flex-direction: column;
+  }
+  // Only scroll the content if it would overflow
+  .skills__content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: visible; // allow card glows within section
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding-bottom: 32px; // bottom gap
+    position: relative;
+  }
+  // Scrollable viewport wrapper (external scrollbar mirrors this)
+  .skills__viewport.is-adaptive {
+    height: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding-right: 20px; // increased buffer for hover glow
+    padding-left: 14px; // a bit more left buffer
+    padding-top: 8px;
+    padding-bottom: 8px;
+    scrollbar-width: none; // Firefox
+    -ms-overflow-style: none; // IE/Edge
+  }
+  .skills__viewport.is-adaptive::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
+  // External scrollbar (outside to the right)
+  .skills__scrollbar {
+    position: absolute;
+    top: 50%;
+    right: -10px; // outside
+    transform: translateY(-50%);
+    height: 45%;
+    width: 6px;
+    background: rgba(148,163,184,.20);
+    border-radius: 999px;
+    opacity: 0;
+    transition: opacity .2s ease;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .skills__scrollbar.show { opacity: .9; }
+  .skills__scrollbar-fill {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: var(--sb-fill, 20%);
+    background: rgba(148,163,184,.35);
+    border-radius: 999px;
+  }
+  .skills__scrollbar-thumb {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: var(--sb-thumb, 10%);
+    top: var(--sb-top, 0%);
+    background: linear-gradient(180deg, #3b82f6, #8b5cf6);
+    opacity: .8;
+    border-radius: 999px;
+    box-shadow: 0 0 6px rgba(59,130,246,.25);
+    will-change: top, height;
+  }
+  // Always-visible custom scrollbar (overlay)
+  .custom-scrollbar {
+    display: none; // temporarily disable per request
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 50%; // shortened per request
+    width: 6px;
+    background: transparent; // track is filled via .fill only
+    border-radius: 999px;
+    opacity: 0;
+    transition: opacity .2s ease;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .custom-scrollbar.show { opacity: .9; }
+  .custom-scrollbar .fill {
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%;
+    background: rgba(148,163,184,.25); // filled portion
+    border-radius: 999px;
+  }
+  .custom-scrollbar .thumb {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(180deg, #3b82f6, #8b5cf6); // match top bar
+    opacity: .75; // slightly stronger
+    border-radius: 999px;
+    box-shadow: 0 0 6px rgba(59,130,246,.25);
+    will-change: transform, height;
+  }
   .skills__top-row {
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     grid-auto-flow: row dense;

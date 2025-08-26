@@ -3,7 +3,7 @@
 // Skills section with animated skill cards
 // ------------------------------
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
 // Animation constants
@@ -121,6 +121,49 @@ export default function Skills() {
   const layoutMode = typeof window !== 'undefined' && window.__SKILLS_LAYOUT_MODE__ ? window.__SKILLS_LAYOUT_MODE__ : 'fixed_grid';
   const isAdaptiveLayout = layoutMode === 'adaptive_grid';
   const enabledMap = typeof window !== 'undefined' && window.__SKILLS_CARDS_ENABLED__ ? window.__SKILLS_CARDS_ENABLED__ : { c1: true, c2: true, c3: true, c4: true, c5: true };
+  const density = typeof window !== 'undefined' && window.__SKILLS_DENSITY__ ? window.__SKILLS_DENSITY__ : 'normal';
+  const contentRef = useRef(null);
+  const scrollbarRef = useRef(null);
+  const [hasOverflow, setHasOverflow] = useState(false);
+
+  // Custom external scrollbar: sync values via CSS variables
+  useEffect(() => {
+    const el = contentRef.current;
+    const bar = scrollbarRef.current;
+    if (!el || !bar || !isAdaptiveLayout) return;
+    const update = () => {
+      const hasOverflow = el.scrollHeight > el.clientHeight + 1;
+      setHasOverflow(hasOverflow);
+      if (!hasOverflow) {
+        bar.classList.remove('show');
+        bar.style.removeProperty('--sb-fill');
+        bar.style.removeProperty('--sb-top');
+        bar.style.removeProperty('--sb-thumb');
+        return;
+      }
+      // Colored bar should start at 80% and grow to 100%
+      const scrolledNorm = (el.scrollHeight - el.clientHeight) > 0
+        ? (el.scrollTop / (el.scrollHeight - el.clientHeight))
+        : 0;
+      const coloredPct = Math.min(100, Math.max(0, scrolledNorm * 100));
+      // Set CSS vars: colored bar height, top fixed to 0
+      bar.style.setProperty('--sb-thumb', `${coloredPct}%`);
+      bar.style.setProperty('--sb-top', `0%`);
+      // Optional: no grey fill progression needed now
+      bar.style.setProperty('--sb-fill', `0%`);
+      bar.classList.add('show');
+    };
+    update();
+    el.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => {
+      el.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+      ro.disconnect();
+    };
+  }, [isAdaptiveLayout]);
 
   // Compute cards to render depending on mode
   const cardsForFixed = { top: topRowCards, bottom: bottomRowCards };
@@ -156,7 +199,7 @@ export default function Skills() {
   const activeCount = isAdaptiveLayout ? cardsForAdaptive.length : (cardsForFixed.top.length + cardsForFixed.bottom.length);
 
   return (
-    <section className={`skills ${isAdaptiveLayout ? 'skills--adaptive' : 'skills--fixed'} ${isAdaptiveLayout ? `count-${activeCount}` : ''}`} id="skills">
+    <section className={`skills ${isAdaptiveLayout ? 'skills--adaptive' : 'skills--fixed'} ${isAdaptiveLayout ? `count-${activeCount}` : ''} ${isAdaptiveLayout ? `density-${density}` : ''}`} id="skills">
       <div className="skills__inner">
         <header className="skills__header">
           <h2 className="skills__title">{title}</h2>
@@ -164,26 +207,34 @@ export default function Skills() {
         </header>
 
         <div className="skills__content">
-          {isAdaptiveLayout ? (
-            <div className="skills__top-row">
-              {cardsForAdaptive.map(card => (
-                <SkillCard key={card.id} card={card} isSpecial={card.id >= 4} isAdaptive={true} />
-              ))}
+          {isAdaptiveLayout && (
+            <div className="skills__scrollbar" ref={scrollbarRef} aria-hidden="true">
+              <div className="skills__scrollbar-fill" />
+              <div className="skills__scrollbar-thumb" />
             </div>
-          ) : (
-            <>
-              <div className="skills__top-row">
-                {cardsForFixed.top.map(card => (
-                  <SkillCard key={card.id} card={card} isSpecial={false} isAdaptive={false} />
-                ))}
-              </div>
-              <div className="skills__bottom-row">
-                {cardsForFixed.bottom.map(card => (
-                  <SkillCard key={card.id} card={card} isSpecial={true} isAdaptive={false} />
-                ))}
-              </div>
-            </>
           )}
+          <div className={`skills__viewport ${isAdaptiveLayout ? 'is-adaptive' : ''}`} ref={contentRef}>
+            {isAdaptiveLayout ? (
+              <div className="skills__top-row">
+                {cardsForAdaptive.map(card => (
+                  <SkillCard key={card.id} card={card} isSpecial={card.id >= 4} isAdaptive={true} />
+                ))}
+              </div>
+            ) : (
+              <>
+                <div className="skills__top-row">
+                  {cardsForFixed.top.map(card => (
+                    <SkillCard key={card.id} card={card} isSpecial={false} isAdaptive={false} />
+                  ))}
+                </div>
+                <div className="skills__bottom-row">
+                  {cardsForFixed.bottom.map(card => (
+                    <SkillCard key={card.id} card={card} isSpecial={true} isAdaptive={false} />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </section>
