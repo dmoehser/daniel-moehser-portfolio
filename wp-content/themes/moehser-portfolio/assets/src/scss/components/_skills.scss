@@ -17,6 +17,17 @@
   padding: 120px 0 4vh 0;
   box-sizing: border-box;
   z-index: 1;
+  // Scrollbar & layout variables
+  // ----------------------------
+  --sb-track-height: 45%;
+  --sb-width: 6px;
+  --sb-right-offset: -10px;
+  --sb-track-bg: rgba(148,163,184,.20);
+  --sb-fill-bg: rgba(148,163,184,.35);
+  --sb-thumb-bg: linear-gradient(180deg, #3b82f6, #8b5cf6);
+  --gap-lg: 32px;
+  --gap-md: 24px;
+  --gap-sm: 16px;
 }
 
 .skills__inner {
@@ -309,11 +320,11 @@ body.theme-dark {
   .skills__scrollbar {
     position: absolute;
     top: 50%;
-    right: -10px; // outside
+    right: var(--sb-right-offset, -10px); // outside
     transform: translateY(-50%);
-    height: 45%;
-    width: 6px;
-    background: rgba(148,163,184,.20);
+    height: var(--sb-track-height, 45%);
+    width: var(--sb-width, 6px);
+    background: var(--sb-track-bg, rgba(148,163,184,.20));
     border-radius: 999px;
     opacity: 0;
     transition: opacity .2s ease;
@@ -326,7 +337,7 @@ body.theme-dark {
     top: 0; left: 0;
     width: 100%;
     height: var(--sb-fill, 20%);
-    background: rgba(148,163,184,.35);
+    background: var(--sb-fill-bg, rgba(148,163,184,.35));
     border-radius: 999px;
   }
   .skills__scrollbar-thumb {
@@ -335,7 +346,7 @@ body.theme-dark {
     width: 100%;
     height: var(--sb-thumb, 10%);
     top: var(--sb-top, 0%);
-    background: linear-gradient(180deg, #3b82f6, #8b5cf6);
+    background: var(--sb-thumb-bg, linear-gradient(180deg, #3b82f6, #8b5cf6));
     opacity: .8;
     border-radius: 999px;
     box-shadow: 0 0 6px rgba(59,130,246,.25);
@@ -378,7 +389,7 @@ body.theme-dark {
   .skills__top-row {
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     grid-auto-flow: row dense;
-    gap: 32px;
+    gap: var(--gap-lg, 32px);
   }
   .skills__bottom-row {
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -450,7 +461,7 @@ body.theme-dark {
   .skills--adaptive.count-5 {
     .skills__top-row {
       grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
+      gap: var(--gap-md, 24px);
     }
     .skills__top-row > .skill-card:nth-child(4) { grid-column: auto; }
     .skills__top-row > .skill-card:nth-child(5) { grid-column: auto; }
@@ -464,7 +475,7 @@ body.theme-dark {
   .skills--adaptive.count-5 {
     .skills__top-row {
       grid-template-columns: 1fr;
-      gap: 16px;
+      gap: var(--gap-sm, 16px);
     }
     .skills__top-row > .skill-card { grid-column: auto; }
   }
@@ -476,7 +487,7 @@ body.theme-dark {
   .skills--adaptive {
     .skills__top-row {
       grid-template-columns: 1fr;
-      gap: 16px;
+      gap: var(--gap-sm, 16px);
       grid-auto-columns: 1fr; // prevent implicit extra columns
     }
     .skills__top-row > .skill-card { grid-column: auto; }
