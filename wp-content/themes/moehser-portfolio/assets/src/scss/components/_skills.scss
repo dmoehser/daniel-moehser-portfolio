@@ -457,6 +457,40 @@ body.theme-dark {
   }
 }
 
+// Mobile stacking for 4/5 cards
+// ------------------------------
+@media (max-width: 900px) {
+  .skills--adaptive.count-4,
+  .skills--adaptive.count-5 {
+    .skills__top-row {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .skills__top-row > .skill-card { grid-column: auto; }
+  }
+}
+
+// Mobile stacking for all adaptive
+// -------------------------------
+@media (max-width: 900px) {
+  .skills--adaptive {
+    .skills__top-row {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      grid-auto-columns: 1fr; // prevent implicit extra columns
+    }
+    .skills__top-row > .skill-card { grid-column: auto; }
+    // neutralize earlier span rules with higher specificity
+    &.count-4 {
+      .skills__top-row > .skill-card:nth-child(4) { grid-column: auto; }
+    }
+    &.count-5 {
+      .skills__top-row > .skill-card:nth-child(-n+3) { grid-column: auto; }
+      .skills__top-row > .skill-card:nth-child(n+4) { grid-column: auto; }
+    }
+  }
+}
+
 @media (max-width: 768px) {
   .skills--adaptive.count-4,
   .skills--adaptive.count-5 {
