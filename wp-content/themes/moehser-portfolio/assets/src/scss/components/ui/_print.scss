@@ -3,6 +3,8 @@
 
 @media print {
   @page { margin: 12mm; }
+  // Make the first page (Hero) landscape
+  @page :first { size: landscape; }
   html, body { background: #ffffff !important; }
   // Hide UI
   // -------
@@ -79,6 +81,22 @@
     height: auto !important;
     overflow: visible !important;
     display: block !important;
+  }
+  // Ensure containers do not exceed printable area
+  .section-inner,
+  .skills__inner,
+  .about__inner,
+  .projects__inner {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding-left: 8mm !important;
+    padding-right: 8mm !important;
+  }
+  .section-content,
+  .section-card {
+    width: 100% !important;
+    max-width: 100% !important;
   }
   #skills .skills__inner { height: auto !important; overflow: visible !important; }
   #skills .skills__viewport { height: auto !important; overflow: visible !important; }
