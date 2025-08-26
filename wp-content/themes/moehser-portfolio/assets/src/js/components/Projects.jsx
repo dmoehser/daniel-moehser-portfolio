@@ -207,6 +207,7 @@ export default function Projects() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPrint, setIsPrint] = useState(false);
 
   // Get customizer values
   const projectsTitle = typeof window !== 'undefined' 
@@ -229,6 +230,29 @@ export default function Projects() {
         ? window.__SHOW_ONLY_ACTIVE_PROJECTS__ 
         : true)
     : true;
+
+  useEffect(() => {
+    // Detect print mode via events and media query
+    const mq = window.matchMedia ? window.matchMedia('print') : null;
+    const handleBeforePrint = () => setIsPrint(true);
+    const handleAfterPrint = () => setIsPrint(false);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('beforeprint', handleBeforePrint);
+      window.addEventListener('afterprint', handleAfterPrint);
+      if (mq && typeof mq.addEventListener === 'function') {
+        mq.addEventListener('change', (e) => setIsPrint(e.matches));
+      }
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('beforeprint', handleBeforePrint);
+        window.removeEventListener('afterprint', handleAfterPrint);
+        if (mq && typeof mq.removeEventListener === 'function') {
+          mq.removeEventListener('change', (e) => setIsPrint(e.matches));
+        }
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -408,42 +432,59 @@ export default function Projects() {
 
               <div className="projects__slider projects__slider--side-by-side">
                 <div className="projects__slider-container">
-                  <AnimatePresence mode="wait" initial={false}>
-                    <motion.div
-                      key={currentSlide}
-                      className="projects__slide"
-                      initial={ANIMATION.SLIDE.hidden}
-                      animate={ANIMATION.SLIDE.show}
-                      exit={ANIMATION.SLIDE.exit}
-                      transition={ANIMATION.SPRING}
-                    >
-                      <div className="project-card project-card--side-by-side">
-                        {/* Left side - Screenshot */}
-                        <div className="project-card__screenshot">
-                          {renderProjectScreenshot(projects[currentSlide])}
-                        </div>
-                        
-                        {/* Right side - Project Info */}
-                        <div className="project-card__info">
-                          <h3 className="project-card__title">
-                            {projects[currentSlide].title}
-                          </h3>
-                          
-                          {renderProjectExcerpt(projects[currentSlide]) && (
-                            <p className="project-card__excerpt">
-                              {renderProjectExcerpt(projects[currentSlide])}
-                            </p>
-                          )}
-                          
-                          {renderProjectTechnologies(projects[currentSlide])}
-                          
-                          <div className="project-card__actions">
-                            {renderProjectActions(projects[currentSlide], handleProjectClick)}
+                  {isPrint ? (
+                    // Print: render all projects stacked
+                    projects.map((proj, idx) => (
+                      <div key={idx} className="projects__slide">
+                        <div className="project-card project-card--side-by-side">
+                          <div className="project-card__screenshot">
+                            {renderProjectScreenshot(proj)}
+                          </div>
+                          <div className="project-card__info">
+                            <h3 className="project-card__title">{proj.title}</h3>
+                            {renderProjectExcerpt(proj) && (
+                              <p className="project-card__excerpt">{renderProjectExcerpt(proj)}</p>
+                            )}
+                            {renderProjectTechnologies(proj)}
+                            <div className="project-card__actions">
+                              {renderProjectActions(proj, handleProjectClick)}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </motion.div>
-                  </AnimatePresence>
+                    ))
+                  ) : (
+                    <AnimatePresence mode="wait" initial={false}>
+                      <motion.div
+                        key={currentSlide}
+                        className="projects__slide"
+                        initial={ANIMATION.SLIDE.hidden}
+                        animate={ANIMATION.SLIDE.show}
+                        exit={ANIMATION.SLIDE.exit}
+                        transition={ANIMATION.SPRING}
+                      >
+                        <div className="project-card project-card--side-by-side">
+                          <div className="project-card__screenshot">
+                            {renderProjectScreenshot(projects[currentSlide])}
+                          </div>
+                          <div className="project-card__info">
+                            <h3 className="project-card__title">
+                              {projects[currentSlide].title}
+                            </h3>
+                            {renderProjectExcerpt(projects[currentSlide]) && (
+                              <p className="project-card__excerpt">
+                                {renderProjectExcerpt(projects[currentSlide])}
+                              </p>
+                            )}
+                            {renderProjectTechnologies(projects[currentSlide])}
+                            <div className="project-card__actions">
+                              {renderProjectActions(projects[currentSlide], handleProjectClick)}
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    </AnimatePresence>
+                  )}
                 </div>
               </div>
 
