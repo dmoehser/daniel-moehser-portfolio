@@ -118,6 +118,15 @@
     margin-right: 0 !important;
   }
 
+  // Force-visible states for motion elements (when animations not run)
+  // -----------------------------------------------------------------
+  #hero, #skills, #about, #projects,
+  #hero *, #skills *, #about *, #projects * {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
   // Skills tune
   // -----------
   #skills .skills__scrollbar,
