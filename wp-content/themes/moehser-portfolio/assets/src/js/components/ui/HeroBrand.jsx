@@ -26,9 +26,30 @@ const BRAND = {
 
 export default function HeroBrand() {
   const [brandTyped, setBrandTyped] = useState('');
+  const [isPrint, setIsPrint] = useState(false);
 
-  // Type brand logo once on mount; respect prefers-reduced-motion
+  // Detect print mode: show full brand immediately for print
   useEffect(() => {
+    const mq = typeof window !== 'undefined' && window.matchMedia ? window.matchMedia('print') : null;
+    const before = () => setIsPrint(true);
+    const after = () => setIsPrint(false);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('beforeprint', before);
+      window.addEventListener('afterprint', after);
+      if (mq && typeof mq.addEventListener === 'function') mq.addEventListener('change', e => setIsPrint(e.matches));
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('beforeprint', before);
+        window.removeEventListener('afterprint', after);
+        if (mq && typeof mq.removeEventListener === 'function') mq.removeEventListener('change', e => setIsPrint(e.matches));
+      }
+    };
+  }, []);
+
+  // Type brand logo once on mount; respect prefers-reduced-motion and print
+  useEffect(() => {
+    if (isPrint) { setBrandTyped(BRAND.FULL); return; }
     const prefersReducedMotion = typeof window !== 'undefined' && 
       window.matchMedia && 
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -46,7 +67,7 @@ export default function HeroBrand() {
     }, ANIMATION.TYPING_SPEED);
     
     return () => clearInterval(timer);
-  }, []);
+  }, [isPrint]);
 
   // Scroll to hero section
   const scrollTo = (id) => {
@@ -77,7 +98,7 @@ export default function HeroBrand() {
   };
 
   // Check if typing animation is complete
-  const isTypingComplete = brandTyped.length >= BRAND.FULL.length;
+  const isTypingComplete = isPrint || brandTyped.length >= BRAND.FULL.length;
 
   return (
     <div className="hero__brand">

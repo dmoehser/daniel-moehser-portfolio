@@ -22,6 +22,7 @@ export default function Hero() {
   const [stage, setStage] = useState(0); // 0: cursor, 1: typing h1, 2: paragraph
   const [h1Text, setH1Text] = useState('');
   const [pText, setPText] = useState('');
+  const [isPrint, setIsPrint] = useState(false);
 
   const fullH1 = 'Hello!';
   const name = 'Daniel Moehser';
@@ -42,13 +43,39 @@ export default function Hero() {
     return pText;
   };
 
+  // Detect print mode and set full content immediately
   useEffect(() => {
-    // Show blinking cursor near image for initial delay, then start typing
-    const t = setTimeout(() => setStage(1), TIMING.CURSOR_DELAY);
-    return () => clearTimeout(t);
+    const mq = typeof window !== 'undefined' && window.matchMedia ? window.matchMedia('print') : null;
+    const before = () => setIsPrint(true);
+    const after = () => setIsPrint(false);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('beforeprint', before);
+      window.addEventListener('afterprint', after);
+      if (mq && typeof mq.addEventListener === 'function') mq.addEventListener('change', e => setIsPrint(e.matches));
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('beforeprint', before);
+        window.removeEventListener('afterprint', after);
+        if (mq && typeof mq.removeEventListener === 'function') mq.removeEventListener('change', e => setIsPrint(e.matches));
+      }
+    };
   }, []);
 
   useEffect(() => {
+    if (isPrint) {
+      setStage(2);
+      setH1Text(fullH1);
+      setPText(fullP);
+      return; // skip timers
+    }
+    // Show blinking cursor near image for initial delay, then start typing
+    const t = setTimeout(() => setStage(1), TIMING.CURSOR_DELAY);
+    return () => clearTimeout(t);
+  }, [isPrint]);
+
+  useEffect(() => {
+    if (isPrint) return; // skip typing in print
     if (stage === 1 && h1Text.length < fullH1.length) {
       const t = setTimeout(() => setH1Text(fullH1.slice(0, h1Text.length + 1)), TIMING.H1_TYPING_SPEED);
       return () => clearTimeout(t);
@@ -56,14 +83,15 @@ export default function Hero() {
       const t = setTimeout(() => setStage(2), TIMING.H1_PAUSE);
       return () => clearTimeout(t);
     }
-  }, [stage, h1Text]);
+  }, [stage, h1Text, isPrint]);
 
   useEffect(() => {
+    if (isPrint) return; // skip typing in print
     if (stage === 2 && pText.length < fullP.length) {
       const t = setTimeout(() => setPText(fullP.slice(0, pText.length + 1)), TIMING.P_TYPING_SPEED);
       return () => clearTimeout(t);
     }
-  }, [stage, pText]);
+  }, [stage, pText, isPrint]);
 
   return (
     <>
