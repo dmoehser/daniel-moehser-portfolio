@@ -30,15 +30,6 @@ add_action('rest_api_init', function () {
 			return rest_ensure_response($result);
 		},
 	]);
-	
-	// Endpoint for about content (deprecated)
-	register_rest_route('moehser/v1', '/about', [
-		'methods' => 'GET',
-		'permission_callback' => '__return_true',
-		'callback' => function ($request) {
-			return new WP_Error('about_cpt_removed', 'About CPT has been deprecated. Use Pages.', ['status' => 410]);
-		},
-	]);
 
 	// Endpoint for projects
 	register_rest_route('moehser/v1', '/projects', [
