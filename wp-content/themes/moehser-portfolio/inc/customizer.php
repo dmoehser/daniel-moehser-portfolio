@@ -93,6 +93,20 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'type' => 'textarea',
     ]);
 
+    // About content source page
+    $wp_customize->add_setting('moehser_about_page_id', [
+        'default' => 0,
+        'sanitize_callback' => 'absint',
+        'transport' => 'postMessage',
+    ]);
+    $wp_customize->add_control('moehser_about_page_id', [
+        'label' => __('About Content Page', 'moehser-portfolio'),
+        'description' => __('Select the WordPress page used as the About content. The page\'s content will be rendered in the About section.', 'moehser-portfolio'),
+        'section' => 'moehser_about',
+        'type' => 'dropdown-pages',
+        'allow_addition' => true,
+    ]);
+
     // Section: Projects Settings
     $wp_customize->add_section('moehser_projects', [
         'title' => __('Projects Settings', 'moehser-portfolio'),
@@ -466,6 +480,15 @@ add_action('wp_head', function () {
     // About texts
     $about_title = get_theme_mod('moehser_about_title', 'About Me');
     $about_subtitle = get_theme_mod('moehser_about_subtitle', 'My story & experience');
+    $about_page_id = (int) get_theme_mod('moehser_about_page_id', 0);
+    $about_html = '';
+    if ($about_page_id > 0) {
+        $about_post = get_post($about_page_id);
+        if ($about_post && $about_post->post_status === 'publish') {
+            // Apply standard content filters so shortcodes/blocks are rendered
+            $about_html = apply_filters('the_content', $about_post->post_content);
+        }
+    }
     
     // Projects Settings
     $show_only_active_projects = get_theme_mod('moehser_show_only_active_projects', 1);
@@ -512,6 +535,7 @@ add_action('wp_head', function () {
     // About texts to frontend
     echo 'window.__ABOUT_TITLE__ = "' . esc_js($about_title) . '";';
     echo 'window.__ABOUT_SUBTITLE__ = "' . esc_js($about_subtitle) . '";';
+    echo 'window.__ABOUT_HTML__ = ' . wp_json_encode($about_html) . ';';
     
     // Projects Settings to frontend
     echo 'window.__SHOW_ONLY_ACTIVE_PROJECTS__ = ' . ($show_only_active_projects ? 'true' : 'false') . ';';
