@@ -31,44 +31,12 @@ add_action('rest_api_init', function () {
 		},
 	]);
 	
-	// Endpoint for about content
+	// Endpoint for about content (deprecated)
 	register_rest_route('moehser/v1', '/about', [
 		'methods' => 'GET',
 		'permission_callback' => '__return_true',
 		'callback' => function ($request) {
-			$about_posts = get_posts([
-				'post_type' => 'about',
-				'post_status' => 'publish',
-				'numberposts' => 1,
-				'orderby' => 'date',
-				'order' => 'DESC'
-			]);
-			
-			if (empty($about_posts)) {
-				return rest_ensure_response([
-					'title' => 'Über mich',
-					'subtitle' => 'Web Developer & Designer',
-					'content' => 'Hier können Sie Ihren About-Text bearbeiten.',
-					'skills_list' => 'React, WordPress, Docker, Node.js',
-					'cta_text' => 'Kontakt aufnehmen',
-					'cta_url' => '#contact'
-				]);
-			}
-			
-			$about = $about_posts[0];
-			$meta = get_post_meta($about->ID);
-			
-			return rest_ensure_response([
-				'id' => $about->ID,
-				'title' => $about->post_title,
-				'subtitle' => isset($meta['_about_subtitle'][0]) ? $meta['_about_subtitle'][0] : '',
-				'content' => $about->post_content,
-				'excerpt' => $about->post_excerpt,
-				'skills_list' => isset($meta['_about_skills_list'][0]) ? $meta['_about_skills_list'][0] : '',
-				'cta_text' => isset($meta['_about_cta_text'][0]) ? $meta['_about_cta_text'][0] : '',
-				'cta_url' => isset($meta['_about_cta_url'][0]) ? $meta['_about_cta_url'][0] : '',
-				'featured_image' => get_the_post_thumbnail_url($about->ID, 'full')
-			]);
+			return new WP_Error('about_cpt_removed', 'About CPT has been deprecated. Use Pages.', ['status' => 410]);
 		},
 	]);
 
