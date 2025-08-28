@@ -90,14 +90,37 @@
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
-    padding-left: 8mm !important;
-    padding-right: 8mm !important;
+    padding-left: 10mm !important;
+    padding-right: 10mm !important;
   }
   .section-content,
   .section-card {
     width: 100% !important;
     max-width: 100% !important;
   }
+
+  // Typography improvements (print)
+  // -------------------------------
+  body { font-size: 11.5pt; line-height: 1.4; }
+  p, li { line-height: 1.4; }
+  h1, h2, h3 { page-break-after: avoid; break-after: avoid; }
+
+  // Show target URLs for links (skip buttons)
+  // ----------------------------------------
+  a[href^="http"]:after {
+    content: " (" attr(href) ")";
+    font-weight: normal;
+    color: #444;
+  }
+  .project-card__demo-btn:after,
+  .hero__quick-btn:after,
+  .animated-border:after { content: none !important; }
+
+  // About section print tweaks
+  // --------------------------
+  #about .about__card { break-inside: avoid-page; page-break-inside: avoid; }
+  #about .about__content-text p { orphans: 3; widows: 3; }
+  #about ul, #about ol { break-inside: avoid; page-break-inside: avoid; }
   #skills .skills__inner { height: auto !important; overflow: visible !important; }
   #skills .skills__viewport { height: auto !important; overflow: visible !important; }
 
