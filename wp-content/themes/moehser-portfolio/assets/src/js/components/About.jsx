@@ -32,8 +32,14 @@ const ANIMATION = {
 
 export default function About() {
   // Get customizer values from WordPress
-  const aboutTitle = typeof window !== 'undefined' ? window.__ABOUT_TITLE__ || 'About Me' : 'About Me';
-  const aboutSubtitle = typeof window !== 'undefined' ? window.__ABOUT_SUBTITLE__ || 'My story & experience' : 'My story & experience';
+  const aboutTitle = typeof window !== 'undefined' ? (window.__ABOUT_TITLE__ || '') : '';
+  const aboutSubtitle = typeof window !== 'undefined' ? (window.__ABOUT_SUBTITLE__ || '') : '';
+  const aboutHTML = typeof window !== 'undefined' ? (window.__ABOUT_HTML__ || '') : '';
+
+  // If no About content is provided, do not render the section
+  if (!aboutHTML || aboutHTML.trim() === '') {
+    return null;
+  }
 
   return (
     <section className="about section-base" id="about">
@@ -81,24 +87,7 @@ export default function About() {
                 transition={{ duration: ANIMATION.TIMING.BASE, delay: ANIMATION.TIMING.DELAY_LARGE }}
               >
                 <div className="about__text">
-                  <div className="about__content-text">
-                    <p>
-                      Hallo! Ich bin Daniel Moehser, ein leidenschaftlicher Web Developer mit Fokus auf moderne Web-Technologien und benutzerfreundliche Lösungen. Mit über 5 Jahren Erfahrung in der Web-Entwicklung habe ich mich auf die Erstellung von performanten, skalierbaren und benutzerfreundlichen Webanwendungen spezialisiert.
-                    </p>
-                    <p>
-                      Mein Ansatz kombiniert solide technische Grundlagen mit einem Auge für Design und Benutzererfahrung. Ich glaube an sauberen, wartbaren Code und moderne Entwicklungspraktiken. Jedes Projekt beginnt mit einer gründlichen Analyse der Anforderungen, gefolgt von einem durchdachten technischen Konzept.
-                    </p>
-                    <p>
-                      <strong>Warum mit mir arbeiten?</strong>
-                    </p>
-                    <ul>
-                      <li>☑ Moderne Technologien (React, Node.js, WordPress)</li>
-                      <li>☑ Fokus auf Performance und SEO</li>
-                      <li>☑ Responsive Design für alle Geräte</li>
-                      <li>☑ Klare Kommunikation und transparente Prozesse</li>
-                      <li>☑ Langfristige Wartung und Support</li>
-                    </ul>
-                  </div>
+                  <div className="about__content-text" dangerouslySetInnerHTML={{ __html: aboutHTML }} />
                 </div>
               </motion.div>
             </div>
