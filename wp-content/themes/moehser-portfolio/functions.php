@@ -35,13 +35,11 @@ require_once get_theme_file_path('inc/api.php');
 
 
 // Register custom post types
-require_once get_theme_file_path('inc/cpt-about.php');
 require_once get_theme_file_path('inc/cpt-project.php'); // Schritt 1: Grundlegende Projekt-Funktionen aktiviert
 require_once get_theme_file_path('inc/setup-projects.php'); // Aktiviert: Erstellt Beispiel-Projekte falls keine vorhanden sind
 
 
 // Setup default content
-require_once get_theme_file_path('inc/setup-about.php');
 
 // Theme Customizer (UI Settings)
 require_once get_theme_file_path('inc/customizer.php');
