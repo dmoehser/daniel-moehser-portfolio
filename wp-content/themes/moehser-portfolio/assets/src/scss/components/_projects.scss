@@ -128,7 +128,7 @@
   position: relative;
   
   &:hover {
-    transform: translateY(-2px);
+    transform: none;
   }
   
   // Left side - Screenshot
@@ -208,7 +208,7 @@
       .project-card__tech-tag:hover {
         background: rgba(56,189,248,.15);
         border-color: rgba(56,189,248,.4);
-        transform: translateY(-1px);
+        transform: none;
       }
     }
     
@@ -231,7 +231,7 @@
         text-align: center;
       
         &:hover {
-          transform: translateY(-2px);
+          transform: none;
           background: linear-gradient(135deg, #0ea5e9, #0284c7);
         }
       }
