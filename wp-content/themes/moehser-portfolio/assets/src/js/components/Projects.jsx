@@ -217,6 +217,8 @@ export default function Projects() {
   const [error, setError] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPrint, setIsPrint] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
   const [shouldFocusOnSlide, setShouldFocusOnSlide] = useState(false);
   const currentSlideTitleRef = useRef(null);
   const touchStartRef = useRef({ x: 0, y: 0, time: 0 });
@@ -250,6 +252,7 @@ export default function Projects() {
   useEffect(() => {
     // Detect print mode via events and media query
     const mq = window.matchMedia ? window.matchMedia('print') : null;
+    const rmq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
     const handleBeforePrint = () => setIsPrint(true);
     const handleAfterPrint = () => setIsPrint(false);
     if (typeof window !== 'undefined') {
@@ -258,6 +261,12 @@ export default function Projects() {
       if (mq && typeof mq.addEventListener === 'function') {
         mq.addEventListener('change', (e) => setIsPrint(e.matches));
       }
+      if (rmq) {
+        setReducedMotion(Boolean(rmq.matches));
+        if (typeof rmq.addEventListener === 'function') {
+          rmq.addEventListener('change', (e) => setReducedMotion(Boolean(e.matches)));
+        }
+      }
     }
     return () => {
       if (typeof window !== 'undefined') {
@@ -265,6 +274,9 @@ export default function Projects() {
         window.removeEventListener('afterprint', handleAfterPrint);
         if (mq && typeof mq.removeEventListener === 'function') {
           mq.removeEventListener('change', (e) => setIsPrint(e.matches));
+        }
+        if (rmq && typeof rmq.removeEventListener === 'function') {
+          rmq.removeEventListener('change', (e) => setReducedMotion(Boolean(e.matches)));
         }
       }
     };
@@ -302,7 +314,7 @@ export default function Projects() {
 
   // Auto-play functionality
   useEffect(() => {
-    if (!autoplay || projects.length <= 1) {
+    if (!autoplay || projects.length <= 1 || isPaused || reducedMotion || isPrint) {
       return;
     }
 
@@ -314,12 +326,20 @@ export default function Projects() {
           return prevSlide + 1; // Go to next project
         }
       });
-    }, autoplayDelay * 1000);
+    }, Math.max(1, autoplayDelay) * 1000);
+
+    const handleVisibility = () => {
+      if (document.hidden) {
+        clearInterval(autoplayTimer);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
 
     return () => {
+      document.removeEventListener('visibilitychange', handleVisibility);
       clearInterval(autoplayTimer);
     };
-  }, [autoplay, autoplayDelay, projects.length, currentSlide]);
+  }, [autoplay, autoplayDelay, projects.length, currentSlide, isPaused, reducedMotion, isPrint]);
 
   // Keyboard navigation for projects
   useEffect(() => {
@@ -509,6 +529,10 @@ export default function Projects() {
                 onTouchStart={onTouchStart}
                 onTouchMove={onTouchMove}
                 onTouchEnd={onTouchEnd}
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
+                onFocus={() => setIsPaused(true)}
+                onBlur={() => setIsPaused(false)}
               >
                 <div className="projects__slider-container">
                   {/* Live region for announcing slide changes */}
