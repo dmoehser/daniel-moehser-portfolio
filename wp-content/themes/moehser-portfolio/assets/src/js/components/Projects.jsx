@@ -4,7 +4,7 @@
 // Projects section with slider and customizer integration
 // ------------------------------
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Animation constants for consistent motion
@@ -217,6 +217,8 @@ export default function Projects() {
   const [error, setError] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPrint, setIsPrint] = useState(false);
+  const [shouldFocusOnSlide, setShouldFocusOnSlide] = useState(false);
+  const currentSlideTitleRef = useRef(null);
 
   // Get customizer values
   const projectsTitle = typeof window !== 'undefined' 
@@ -343,11 +345,21 @@ export default function Projects() {
 
   const goToPreviousSlide = () => {
     setCurrentSlide(Math.max(0, currentSlide - 1));
+    setShouldFocusOnSlide(true);
   };
 
   const goToNextSlide = () => {
     setCurrentSlide(Math.min(projects.length - 1, currentSlide + 1));
+    setShouldFocusOnSlide(true);
   };
+
+  // Focus newly active slide title for accessibility
+  useEffect(() => {
+    if (shouldFocusOnSlide && currentSlideTitleRef.current) {
+      currentSlideTitleRef.current.focus();
+      setShouldFocusOnSlide(false);
+    }
+  }, [shouldFocusOnSlide, currentSlide]);
 
   const handleProjectClick = (project) => {
     if (project.project_url_external) {
@@ -437,17 +449,51 @@ export default function Projects() {
                   onClick={goToPreviousSlide}
                   disabled={currentSlide === 0}
                   aria-label="Previous project"
+                  aria-controls="projects-slider"
+                  aria-disabled={currentSlide === 0 ? 'true' : 'false'}
                 >
                   ←
                 </button>
               )}
 
-              <div className="projects__slider projects__slider--side-by-side">
+              <div
+                className="projects__slider projects__slider--side-by-side"
+                id="projects-slider"
+                role="region"
+                aria-roledescription="carousel"
+                aria-labelledby="projects-heading"
+                aria-live="off"
+              >
                 <div className="projects__slider-container">
+                  {/* Live region for announcing slide changes */}
+                  {!isPrint && projects.length > 0 && (
+                    <div
+                      aria-live="polite"
+                      style={{
+                        position: 'absolute',
+                        width: '1px',
+                        height: '1px',
+                        margin: '-1px',
+                        padding: 0,
+                        border: 0,
+                        overflow: 'hidden',
+                        clip: 'rect(0 0 0 0)',
+                        whiteSpace: 'nowrap'
+                      }}
+                    >
+                      {`Showing project ${currentSlide + 1} of ${projects.length}: ${projects[currentSlide].title}`}
+                    </div>
+                  )}
                   {isPrint ? (
                     // Print: render all projects stacked
                     projects.map((proj, idx) => (
-                      <div key={idx} className="projects__slide">
+                      <div
+                        key={idx}
+                        className="projects__slide"
+                        role="group"
+                        aria-roledescription="slide"
+                        aria-label={`Slide ${idx + 1} of ${projects.length}`}
+                      >
                         <div className="project-card project-card--side-by-side">
                           <div className="project-card__screenshot">
                             {renderProjectScreenshot(proj, { isPriority: false })}
@@ -470,6 +516,9 @@ export default function Projects() {
                       <motion.div
                         key={currentSlide}
                         className="projects__slide"
+                        role="group"
+                        aria-roledescription="slide"
+                        aria-label={`Slide ${currentSlide + 1} of ${projects.length}`}
                         initial={ANIMATION.SLIDE.hidden}
                         animate={ANIMATION.SLIDE.show}
                         exit={ANIMATION.SLIDE.exit}
@@ -480,7 +529,11 @@ export default function Projects() {
                             {renderProjectScreenshot(projects[currentSlide], { isPriority: true })}
                           </div>
                           <div className="project-card__info">
-                            <h3 className="project-card__title">
+                            <h3
+                              className="project-card__title"
+                              ref={currentSlideTitleRef}
+                              tabIndex={-1}
+                            >
                               {projects[currentSlide].title}
                             </h3>
                             {renderProjectExcerpt(projects[currentSlide]) && (
@@ -507,6 +560,8 @@ export default function Projects() {
                   onClick={goToNextSlide}
                   disabled={currentSlide === projects.length - 1}
                   aria-label="Next project"
+                  aria-controls="projects-slider"
+                  aria-disabled={currentSlide === projects.length - 1 ? 'true' : 'false'}
                 >
                   →
                 </button>
