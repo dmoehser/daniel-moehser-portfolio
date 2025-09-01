@@ -245,8 +245,8 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 64px;
-  height: 64px;
+  width: 72px; // bigger hit area
+  height: 72px; // bigger hit area
   background: rgba(255, 255, 255, 0.95);
   border: 2px solid rgba(15, 23, 42, 0.15);
   border-radius: 50%;

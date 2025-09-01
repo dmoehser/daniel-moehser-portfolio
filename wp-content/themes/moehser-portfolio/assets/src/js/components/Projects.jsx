@@ -219,6 +219,8 @@ export default function Projects() {
   const [isPrint, setIsPrint] = useState(false);
   const [shouldFocusOnSlide, setShouldFocusOnSlide] = useState(false);
   const currentSlideTitleRef = useRef(null);
+  const touchStartRef = useRef({ x: 0, y: 0, time: 0 });
+  const touchActiveRef = useRef(false);
 
   // Get customizer values
   const projectsTitle = typeof window !== 'undefined' 
@@ -361,6 +363,47 @@ export default function Projects() {
     }
   }, [shouldFocusOnSlide, currentSlide]);
 
+  // Touch swipe handlers (horizontal)
+  const onTouchStart = (e) => {
+    if (isPrint || projects.length <= 1) return;
+    const t = e.touches && e.touches[0] ? e.touches[0] : null;
+    if (!t) return;
+    touchActiveRef.current = true;
+    touchStartRef.current = { x: t.clientX, y: t.clientY, time: Date.now() };
+  };
+
+  const onTouchMove = (e) => {
+    if (!touchActiveRef.current) return;
+    const t = e.touches && e.touches[0] ? e.touches[0] : null;
+    if (!t) return;
+    const dx = t.clientX - touchStartRef.current.x;
+    const dy = t.clientY - touchStartRef.current.y;
+    // If horizontal intent is clear, prevent vertical scroll jank
+    if (Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      e.preventDefault();
+    }
+  };
+
+  const onTouchEnd = (e) => {
+    if (!touchActiveRef.current) return;
+    touchActiveRef.current = false;
+    const t = e.changedTouches && e.changedTouches[0] ? e.changedTouches[0] : null;
+    if (!t) return;
+    const dx = t.clientX - touchStartRef.current.x;
+    const dy = t.clientY - touchStartRef.current.y;
+    const dt = Date.now() - touchStartRef.current.time;
+    const horizontal = Math.abs(dx) > Math.abs(dy) * 1.2;
+    const fastEnough = dt < 600; // swipe should be reasonably quick
+    const farEnough = Math.abs(dx) > 40; // minimum distance
+    if (horizontal && fastEnough && farEnough) {
+      if (dx < 0 && currentSlide < projects.length - 1) {
+        goToNextSlide();
+      } else if (dx > 0 && currentSlide > 0) {
+        goToPreviousSlide();
+      }
+    }
+  };
+
   const handleProjectClick = (project) => {
     if (project.project_url_external) {
       if (project.project_demo_mode === 'iframe') {
@@ -463,6 +506,9 @@ export default function Projects() {
                 aria-roledescription="carousel"
                 aria-labelledby="projects-heading"
                 aria-live="off"
+                onTouchStart={onTouchStart}
+                onTouchMove={onTouchMove}
+                onTouchEnd={onTouchEnd}
               >
                 <div className="projects__slider-container">
                   {/* Live region for announcing slide changes */}
