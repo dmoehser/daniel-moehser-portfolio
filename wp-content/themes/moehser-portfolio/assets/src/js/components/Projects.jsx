@@ -221,6 +221,9 @@ export default function Projects() {
   const navPosition = typeof window !== 'undefined' 
     ? window.__PROJECTS_NAV_POSITION__ || 'outside' 
     : 'outside';
+  const layoutMode = typeof window !== 'undefined'
+    ? window.__PROJECTS_LAYOUT_MODE__ || 'side_by_side'
+    : 'side_by_side';
   const autoplay = typeof window !== 'undefined' 
     ? window.__PROJECTS_AUTOPLAY__ || false 
     : false;
@@ -418,7 +421,7 @@ export default function Projects() {
                 delay: ANIMATION.TIMING.DELAY 
               }}
               viewport={{ once: true }}
-              className="projects__body section-body"
+              className={`projects__body section-body projects__body--layout-${layoutMode}`}
             >
               {/* Left Navigation Arrow */}
               {projects.length > 1 && (

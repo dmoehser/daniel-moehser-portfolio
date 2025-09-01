@@ -150,6 +150,22 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'type' => 'text',
     ]);
 
+    // Projects Layout Mode (future-proof, currently only side-by-side)
+    $wp_customize->add_setting('moehser_projects_layout_mode', [
+        'default' => 'side_by_side',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport' => 'postMessage',
+    ]);
+    $wp_customize->add_control('moehser_projects_layout_mode', [
+        'label' => __('Projects Layout Mode', 'moehser-portfolio'),
+        'description' => __('Choose how projects are visually arranged. Currently only Side by side is available.', 'moehser-portfolio'),
+        'section' => 'moehser_projects',
+        'type' => 'select',
+        'choices' => [
+            'side_by_side' => __('Side by side (image left, details right)', 'moehser-portfolio'),
+        ],
+    ]);
+
     // Section: Skills Settings
     $wp_customize->add_section('moehser_skills', [
         'title' => __('Skills Settings', 'moehser-portfolio'),
@@ -541,6 +557,7 @@ add_action('wp_head', function () {
     echo 'window.__SHOW_ONLY_ACTIVE_PROJECTS__ = ' . ($show_only_active_projects ? 'true' : 'false') . ';';
     echo 'window.__PROJECTS_TITLE__ = "' . esc_js($projects_title) . '";';
     echo 'window.__PROJECTS_SUBTITLE__ = "' . esc_js($projects_subtitle) . '";';
+    echo 'window.__PROJECTS_LAYOUT_MODE__ = "' . esc_js(get_theme_mod('moehser_projects_layout_mode', 'side_by_side')) . '";';
     
     // Skills Settings to frontend
     echo 'window.__SKILLS_TITLE__ = "' . esc_js($skills_title) . '";';
