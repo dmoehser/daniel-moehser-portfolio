@@ -161,6 +161,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'description' => __('Choose how projects are visually arranged. Currently only Side by side is available.', 'moehser-portfolio'),
         'section' => 'moehser_projects',
         'type' => 'select',
+        'priority' => 1,
         'choices' => [
             'side_by_side' => __('Side by side (image left, details right)', 'moehser-portfolio'),
         ],
