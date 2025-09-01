@@ -66,6 +66,10 @@ add_action('rest_api_init', function () {
 			if (!empty($projects)) {
 				foreach ($projects as $project) {
 					$meta = get_post_meta($project->ID);
+					$featured_id = get_post_thumbnail_id($project->ID);
+					$featured_wide = $featured_id ? wp_get_attachment_image_src($featured_id, 'project_wide') : false;
+					$featured_wide_2x = $featured_id ? wp_get_attachment_image_src($featured_id, 'project_wide_2x') : false;
+					$featured_srcset = $featured_id ? wp_get_attachment_image_srcset($featured_id, 'project_wide') : '';
 					$result[] = [
 						'id' => $project->ID,
 						'title' => $project->post_title,
@@ -76,6 +80,9 @@ add_action('rest_api_init', function () {
 						'modified' => $project->post_modified,
 						'status' => $project->post_status,
 						'featured_image' => get_the_post_thumbnail_url($project->ID, 'full'),
+						'featured_image_wide' => $featured_wide ? $featured_wide[0] : '',
+						'featured_image_wide_2x' => $featured_wide_2x ? $featured_wide_2x[0] : '',
+						'featured_image_srcset' => $featured_srcset ?: '',
 						'project_screenshot' => isset($meta['project_screenshot'][0]) ? $meta['project_screenshot'][0] : '',
 						'project_technologies' => isset($meta['project_technologies'][0]) ? $meta['project_technologies'][0] : '',
 						'project_status' => isset($meta['project_status'][0]) ? $meta['project_status'][0] : 'active',
@@ -103,6 +110,11 @@ add_action('rest_api_init', function () {
 
 			$meta = get_post_meta($project_id);
 			
+			$featured_id = get_post_thumbnail_id($project->ID);
+			$featured_wide = $featured_id ? wp_get_attachment_image_src($featured_id, 'project_wide') : false;
+			$featured_wide_2x = $featured_id ? wp_get_attachment_image_src($featured_id, 'project_wide_2x') : false;
+			$featured_srcset = $featured_id ? wp_get_attachment_image_srcset($featured_id, 'project_wide') : '';
+
 			return rest_ensure_response([
 				'id' => $project->ID,
 				'title' => $project->post_title,
@@ -112,6 +124,9 @@ add_action('rest_api_init', function () {
 				'date' => $project->post_date,
 				'modified' => $project->post_modified,
 				'featured_image' => get_the_post_thumbnail_url($project->ID, 'full'),
+				'featured_image_wide' => $featured_wide ? $featured_wide[0] : '',
+				'featured_image_wide_2x' => $featured_wide_2x ? $featured_wide_2x[0] : '',
+				'featured_image_srcset' => $featured_srcset ?: '',
 				'project_technologies' => isset($meta['project_technologies'][0]) ? $meta['project_technologies'][0] : '',
 				'project_status' => isset($meta['project_status'][0]) ? $meta['project_status'][0] : 'active',
 				'project_url_external' => isset($meta['project_url'][0]) ? $meta['project_url'][0] : '',

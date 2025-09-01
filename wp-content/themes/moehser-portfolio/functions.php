@@ -4,6 +4,9 @@
 add_action('after_setup_theme', function () {
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
+    // Project images: unified wide crop for consistent UI & better LCP
+    add_image_size('project_wide', 1440, 810, true);      // 16:9, desktop
+    add_image_size('project_wide_2x', 2880, 1620, true);  // 2x for retina
     // Register navigation menu locations used by the React header
     register_nav_menus([
         'header_primary' => __('Header Primary', 'moehser-portfolio'),

@@ -56,10 +56,12 @@ const renderProjectScreenshot = (project) => {
     );
   }
   
-  if (project.featured_image) {
+  if (project.featured_image_wide || project.featured_image) {
     return (
       <img 
-        src={project.featured_image} 
+        src={project.featured_image_wide || project.featured_image}
+        srcSet={project.featured_image_srcset || undefined}
+        sizes="(max-width: 768px) 100vw, 65vw"
         alt={project.title}
         loading="lazy"
       />
