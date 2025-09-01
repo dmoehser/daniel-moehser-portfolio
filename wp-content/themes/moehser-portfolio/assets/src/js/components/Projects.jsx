@@ -45,13 +45,16 @@ const renderProjectExcerpt = (project) => {
 
 // Helper function to render project screenshot
 // ------------------------------
-const renderProjectScreenshot = (project) => {
+const renderProjectScreenshot = (project, opts = {}) => {
+  const isPriority = Boolean(opts.isPriority);
   if (project.project_screenshot) {
     return (
       <img 
         src={project.project_screenshot} 
         alt={project.title}
-        loading="lazy"
+        loading={isPriority ? undefined : 'lazy'}
+        decoding={isPriority ? 'async' : undefined}
+        fetchPriority={isPriority ? 'high' : undefined}
       />
     );
   }
@@ -61,9 +64,11 @@ const renderProjectScreenshot = (project) => {
       <img 
         src={project.featured_image_wide || project.featured_image}
         srcSet={project.featured_image_srcset || undefined}
-        sizes="(max-width: 768px) 100vw, 65vw"
+        sizes="(max-width: 1024px) 100vw, 65vw"
         alt={project.title}
-        loading="lazy"
+        loading={isPriority ? undefined : 'lazy'}
+        decoding={isPriority ? 'async' : undefined}
+        fetchPriority={isPriority ? 'high' : undefined}
       />
     );
   }
@@ -443,7 +448,7 @@ export default function Projects() {
                       <div key={idx} className="projects__slide">
                         <div className="project-card project-card--side-by-side">
                           <div className="project-card__screenshot">
-                            {renderProjectScreenshot(proj)}
+                            {renderProjectScreenshot(proj, { isPriority: false })}
                           </div>
                           <div className="project-card__info">
                             <h3 className="project-card__title">{proj.title}</h3>
@@ -470,7 +475,7 @@ export default function Projects() {
                       >
                         <div className="project-card project-card--side-by-side">
                           <div className="project-card__screenshot">
-                            {renderProjectScreenshot(projects[currentSlide])}
+                            {renderProjectScreenshot(projects[currentSlide], { isPriority: true })}
                           </div>
                           <div className="project-card__info">
                             <h3 className="project-card__title">
