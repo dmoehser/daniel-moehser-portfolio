@@ -177,6 +177,7 @@
     background: transparent;
     overflow-y: auto;
     max-height: 100%;
+    line-height: 1.6;
     
     .project-card__title {
       font-size: 1.5rem;
@@ -189,8 +190,9 @@
     .project-card__excerpt {
       font-size: 0.95rem;
       color: #475569;
-      line-height: 1.5;
+      line-height: 1.6;
       margin: 0 0 1rem;
+      max-width: 65ch;
     }
     
     .project-card__technologies {
