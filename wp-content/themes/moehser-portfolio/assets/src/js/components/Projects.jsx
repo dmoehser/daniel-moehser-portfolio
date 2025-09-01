@@ -47,6 +47,7 @@ const renderProjectExcerpt = (project) => {
 // ------------------------------
 const renderProjectScreenshot = (project, opts = {}) => {
   const isPriority = Boolean(opts.isPriority);
+  const onLoad = typeof opts.onLoad === 'function' ? opts.onLoad : undefined;
   if (project.project_screenshot) {
     return (
       <img 
@@ -55,6 +56,7 @@ const renderProjectScreenshot = (project, opts = {}) => {
         loading={isPriority ? undefined : 'lazy'}
         decoding={isPriority ? 'async' : undefined}
         fetchPriority={isPriority ? 'high' : undefined}
+        onLoad={onLoad}
       />
     );
   }
@@ -71,6 +73,7 @@ const renderProjectScreenshot = (project, opts = {}) => {
         loading={isPriority ? undefined : 'lazy'}
         decoding={isPriority ? 'async' : undefined}
         fetchPriority={isPriority ? 'high' : undefined}
+        onLoad={onLoad}
       />
     );
   }
@@ -223,6 +226,12 @@ export default function Projects() {
   const currentSlideTitleRef = useRef(null);
   const touchStartRef = useRef({ x: 0, y: 0, time: 0 });
   const touchActiveRef = useRef(false);
+  const [imageLoaded, setImageLoaded] = useState({});
+
+  const markImageLoaded = (projectId) => {
+    if (!projectId) return;
+    setImageLoaded((prev) => ({ ...prev, [projectId]: true }));
+  };
 
   // Get customizer values
   const projectsTitle = typeof window !== 'undefined' 
@@ -594,29 +603,52 @@ export default function Projects() {
                         exit={ANIMATION.SLIDE.exit}
                         transition={ANIMATION.SPRING}
                       >
-                        <div className="project-card project-card--side-by-side">
-                          <div className="project-card__screenshot">
-                            {renderProjectScreenshot(projects[currentSlide], { isPriority: true })}
-                          </div>
-                          <div className="project-card__info">
-                            <h3
-                              className="project-card__title"
-                              ref={currentSlideTitleRef}
-                              tabIndex={-1}
-                            >
-                              {projects[currentSlide].title}
-                            </h3>
-                            {renderProjectExcerpt(projects[currentSlide]) && (
-                              <p className="project-card__excerpt">
-                                {renderProjectExcerpt(projects[currentSlide])}
-                              </p>
-                            )}
-                            {renderProjectTechnologies(projects[currentSlide])}
-                            <div className="project-card__actions">
-                              {renderProjectActions(projects[currentSlide], handleProjectClick)}
+                        {(() => {
+                          const current = projects[currentSlide];
+                          const isImgLoaded = Boolean(imageLoaded[current?.id]);
+                          return (
+                            <div className="project-card project-card--side-by-side">
+                              <div className="project-card__screenshot">
+                                {renderProjectScreenshot(current, { isPriority: true, onLoad: () => markImageLoaded(current?.id) })}
+                                {!isImgLoaded && (
+                                  <div className="skeleton skeleton--image" aria-hidden="true"></div>
+                                )}
+                              </div>
+                              <div className="project-card__info">
+                                <h3
+                                  className="project-card__title"
+                                  ref={currentSlideTitleRef}
+                                  tabIndex={-1}
+                                >
+                                  {current.title}
+                                </h3>
+                                {renderProjectExcerpt(current) && (
+                                  isImgLoaded ? (
+                                    <p className="project-card__excerpt">
+                                      {renderProjectExcerpt(current)}
+                                    </p>
+                                  ) : (
+                                    <div aria-hidden="true">
+                                      <div className="skeleton skeleton--text-line" style={{ width: '85%' }}></div>
+                                      <div className="skeleton skeleton--text-line" style={{ width: '70%' }}></div>
+                                      <div className="skeleton skeleton--text-line" style={{ width: '60%' }}></div>
+                                    </div>
+                                  )
+                                )}
+                                {isImgLoaded ? renderProjectTechnologies(current) : (
+                                  <div aria-hidden="true" style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem' }}>
+                                    <div className="skeleton skeleton--tag" style={{ width: '80px' }}></div>
+                                    <div className="skeleton skeleton--tag" style={{ width: '100px' }}></div>
+                                    <div className="skeleton skeleton--tag" style={{ width: '64px' }}></div>
+                                  </div>
+                                )}
+                                <div className="project-card__actions">
+                                  {renderProjectActions(current, handleProjectClick)}
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        </div>
+                          );
+                        })()}
                       </motion.div>
                     </AnimatePresence>
                   )}
