@@ -65,6 +65,8 @@ const renderProjectScreenshot = (project, opts = {}) => {
         src={project.featured_image_wide || project.featured_image}
         srcSet={project.featured_image_srcset || undefined}
         sizes="(max-width: 1024px) 100vw, 65vw"
+        width={project.featured_image_wide_w || undefined}
+        height={project.featured_image_wide_h || undefined}
         alt={project.title}
         loading={isPriority ? undefined : 'lazy'}
         decoding={isPriority ? 'async' : undefined}
