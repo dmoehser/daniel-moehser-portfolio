@@ -200,6 +200,8 @@
       flex-wrap: wrap;
       gap: 0.4rem;
       margin-bottom: 1.5rem;
+      overflow-x: hidden;
+      padding-bottom: 4px;
       
       .project-card__tech-tag {
         display: inline-block;
@@ -213,7 +215,9 @@
         font-weight: 500;
         text-decoration: none;
         transition: all 0.3s ease;
-      cursor: pointer;
+        cursor: pointer;
+        flex: 0 0 auto;
+        white-space: nowrap;
       }
       
       .project-card__tech-tag:hover {
