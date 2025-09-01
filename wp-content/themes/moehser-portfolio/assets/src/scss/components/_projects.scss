@@ -200,8 +200,13 @@
       flex-wrap: wrap;
       gap: 0.4rem;
       margin-bottom: 1.5rem;
-      overflow-x: hidden;
+      overflow-x: auto;
       padding-bottom: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(148,163,184,.4) transparent;
+      &::-webkit-scrollbar { height: 8px; }
+      &::-webkit-scrollbar-track { background: transparent; }
+      &::-webkit-scrollbar-thumb { background: rgba(148,163,184,.4); border-radius: 8px; }
       
       .project-card__tech-tag {
         display: inline-block;
