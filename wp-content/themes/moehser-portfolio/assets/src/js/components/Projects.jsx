@@ -701,22 +701,27 @@ export default function Projects() {
                 />
                 {layoutMode === 'grid' && (
                   <div className="projects__view-toggle">
-                    <button
-                      className={`projects__toggle-btn ${!listView ? 'is-active' : ''}`}
-                      aria-pressed={!listView}
-                      onClick={() => setListView(false)}
-                      title="Grid"
-                    >
-                      <img src={viewGridIcon} alt="" aria-hidden="true" />
-                    </button>
-                    <button
-                      className={`projects__toggle-btn ${listView ? 'is-active' : ''}`}
-                      aria-pressed={listView}
-                      onClick={() => setListView(true)}
-                      title="List"
-                    >
-                      <img src={viewListIcon} alt="" aria-hidden="true" />
-                    </button>
+                    {listView ? (
+                      <button
+                        className="projects__toggle-btn"
+                        aria-pressed="false"
+                        onClick={() => setListView(false)}
+                        title="Grid"
+                        aria-label="Switch to grid view"
+                      >
+                        <img src={viewGridIcon} alt="" aria-hidden="true" />
+                      </button>
+                    ) : (
+                      <button
+                        className="projects__toggle-btn"
+                        aria-pressed="false"
+                        onClick={() => setListView(true)}
+                        title="List"
+                        aria-label="Switch to list view"
+                      >
+                        <img src={viewListIcon} alt="" aria-hidden="true" />
+                      </button>
+                    )}
                   </div>
                 )}
               </motion.div>
