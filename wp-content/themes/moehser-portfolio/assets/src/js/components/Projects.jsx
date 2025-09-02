@@ -672,7 +672,7 @@ export default function Projects() {
   );
 
   return (
-    <section className="projects section-base" id="projects">
+    <section className={`projects section-base ${layoutMode === 'grid' ? 'projects--flow' : ''}`.trim()} id="projects">
       <div className="projects__inner section-inner">
         <div className="projects__content section-content">
           <div className="projects__card section-card">

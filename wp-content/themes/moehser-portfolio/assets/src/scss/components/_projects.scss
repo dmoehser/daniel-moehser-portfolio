@@ -17,6 +17,68 @@
   z-index: 1;
 }
 
+// Natural flow for grid mode
+.projects.projects--flow {
+  min-height: auto;
+  padding-top: 80px;
+}
+.projects.projects--flow .projects__card {
+  overflow: visible;
+}
+.projects.projects--flow .project-card--side-by-side.project-card--list {
+  height: auto;
+  min-height: 0;
+  max-height: none;
+}
+// In flow mode keep screenshot height stable; let text drive card height
+.projects.projects--flow .project-card--side-by-side.project-card--list .project-card__screenshot {
+  height: 280px;
+  min-height: 280px;
+  max-height: 280px;
+}
+.projects.projects--flow .project-card--side-by-side.project-card--list .project-card__info {
+  height: auto;
+  min-height: 0;
+  max-height: none;
+}
+
+// Breakpoints for list view proportions/heights in flow mode
+@media (min-width: 900px) {
+  .projects.projects--flow .project-card--side-by-side.project-card--list .project-card__screenshot {
+    height: 320px;
+    min-height: 320px;
+    max-height: 320px;
+  }
+  .projects.projects--flow .project-card--side-by-side.project-card--list .project-card__screenshot {
+    flex: 0 0 45% !important;
+    width: 45% !important;
+    max-width: 45% !important;
+  }
+  .projects.projects--flow .project-card--side-by-side.project-card--list .project-card__info {
+    flex: 0 0 55% !important;
+    width: 55% !important;
+    max-width: 55% !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .projects.projects--flow .project-card--side-by-side.project-card--list .project-card__screenshot {
+    height: 360px;
+    min-height: 360px;
+    max-height: 360px;
+  }
+  .projects.projects--flow .project-card--side-by-side.project-card--list .project-card__screenshot {
+    flex: 0 0 50% !important;
+    width: 50% !important;
+    max-width: 50% !important;
+  }
+  .projects.projects--flow .project-card--side-by-side.project-card--list .project-card__info {
+    flex: 0 0 50% !important;
+    width: 50% !important;
+    max-width: 50% !important;
+  }
+}
+
 .projects__inner {
   width: min(1280px, 92vw);
   margin: 0 auto;
