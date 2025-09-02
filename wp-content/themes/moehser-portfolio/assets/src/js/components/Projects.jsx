@@ -8,6 +8,25 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import githubIcon from '../../img/github.svg';
 
+// Utilities
+// ------------------------------
+const waitForPrintStability = async (extraDelayMs = 250) => {
+  try {
+    if (typeof window !== 'undefined' && document && document.readyState !== 'complete') {
+      await new Promise((resolve) => window.addEventListener('load', resolve, { once: true }));
+    }
+    if (typeof document !== 'undefined' && document.fonts && typeof document.fonts.ready?.then === 'function') {
+      await document.fonts.ready;
+    }
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    if (extraDelayMs > 0) {
+      await new Promise((r) => setTimeout(r, extraDelayMs));
+    }
+  } catch (e) {
+    // noop
+  }
+};
+
 // Animation constants for consistent motion
 // ------------------------------
 const ANIMATION = {
@@ -381,7 +400,6 @@ export default function Projects() {
             .filter(Boolean);
           if (urls.length === 0) {
             setPrintReady(true);
-            if (pendingPrintRef.current) setTimeout(() => { try { window.print(); } catch {} }, 50);
           } else {
             let remaining = urls.length;
             urls.forEach((u) => {
@@ -390,7 +408,6 @@ export default function Projects() {
                 remaining -= 1;
                 if (remaining <= 0) {
                   setPrintReady(true);
-                  if (pendingPrintRef.current) setTimeout(() => { try { window.print(); } catch {} }, 50);
                 }
               };
               img.onload = done;
@@ -400,7 +417,6 @@ export default function Projects() {
           }
         } catch {
           setPrintReady(true);
-          if (pendingPrintRef.current) setTimeout(() => { try { window.print(); } catch {} }, 50);
         }
       } catch (err) {
         setError(err.message);
@@ -414,17 +430,15 @@ export default function Projects() {
 
   // When print is requested and data/images are ready, ensure DOM is painted, then trigger print
   useEffect(() => {
-    if (isPrint && printReady && projects.length > 0 && pendingPrintRef.current) {
-      const run = () => {
-        try { window.print(); } catch {}
-      };
-      // Wait for paint flush
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setTimeout(run, 60);
-        });
-      });
-    }
+    let cancelled = false;
+    const triggerPrint = async () => {
+      if (!(isPrint && printReady && projects.length > 0 && pendingPrintRef.current)) return;
+      await waitForPrintStability(300);
+      if (cancelled) return;
+      try { window.print(); } catch {}
+    };
+    triggerPrint();
+    return () => { cancelled = true; };
   }, [isPrint, printReady, projects.length]);
 
   // Auto-play functionality
