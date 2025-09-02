@@ -503,6 +503,24 @@ body.theme-dark .projects__subtitle {
   color: #cbd5e1;
 }
 
+// Dark mode: improve body copy contrast
+body.theme-dark .project-card__excerpt { color: #ffffff; }
+body.theme-dark .project-card__excerpt * { color: inherit; }
+body.theme-dark .project-card__excerpt li { color: inherit; }
+body.theme-dark .project-card__excerpt li::marker { color: #ffffff; }
+body.theme-dark .project-card__excerpt a { color: #38bdf8; }
+body.theme-dark .project-card__excerpt a:hover { color: #60a5fa; }
+body.theme-dark .project-card__info { color: #ffffff; }
+body.theme-dark .project-card__title { color: #ffffff; }
+// Enforce white text across all nested elements in info panel (override lingering light styles)
+body.theme-dark .project-card--side-by-side .project-card__info,
+body.theme-dark .project-card--side-by-side .project-card__info * { color: #ffffff !important; }
+
+// Dark mode: screenshot panel contrast
+body.theme-dark .project-card__screenshot {
+  background: #0b1220;
+}
+
 body.theme-dark .projects__loading,
 body.theme-dark .projects__error,
 body.theme-dark .projects__empty {
@@ -530,10 +548,21 @@ body.theme-dark .project-card__cta:hover {
   color: #60a5fa;
 }
 
-body.theme-dark .project-card__tech-tag:hover {
-  background: rgba(56,189,248,.15);
-  border-color: rgba(56,189,248,.4);
+// Dark mode: tags base + states unified
+body.theme-dark .project-card__technologies .project-card__tech-tag {
+  background: rgba(11,18,32,.75);
+  color: #c7f5d9; // similar to skills
+  border-color: rgba(34,255,136,.25);
+}
+body.theme-dark .project-card__technologies .project-card__tech-tag:hover {
+  background: rgba(11,18,32,.95);
+  border-color: rgba(34,255,136,.4);
   color: #ffffff !important;
+}
+body.theme-dark .project-card__technologies .project-card__tech-tag:focus-visible,
+body.theme-dark .project-card__demo-btn:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
 }
 
 body.theme-dark .project-card__demo-btn {
@@ -546,6 +575,17 @@ body.theme-dark .project-card__demo-btn:hover {
   background: rgba(56,189,248,1);
   border-color: rgba(56,189,248,.5);
   color: #ffffff !important;
+}
+
+// Dark mode: secondary button (GitHub) better contrast
+body.theme-dark .project-card__demo-btn--secondary {
+  background: rgba(255,255,255,.12);
+  color: #ffffff !important;
+  border-color: rgba(255,255,255,.25);
+}
+body.theme-dark .project-card__demo-btn--secondary:hover {
+  background: rgba(255,255,255,.18);
+  border-color: rgba(56,189,248,.5);
 }
 
 
