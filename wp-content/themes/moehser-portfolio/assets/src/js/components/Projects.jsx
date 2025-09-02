@@ -7,6 +7,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import githubIcon from '../../img/github.svg';
+import viewGridIcon from '../../img/view-grid.svg';
+import viewListIcon from '../../img/view-list.svg';
 
 // Utilities
 // ------------------------------
@@ -698,14 +700,14 @@ export default function Projects() {
                   dangerouslySetInnerHTML={{ __html: projectsSubtitle }} 
                 />
                 {layoutMode === 'grid' && (
-                  <div className="projects__view-toggle" style={{ position: 'absolute', top: 8, right: 8, display: 'flex', gap: '8px' }}>
+                  <div className="projects__view-toggle">
                     <button
                       className={`projects__toggle-btn ${!listView ? 'is-active' : ''}`}
                       aria-pressed={!listView}
                       onClick={() => setListView(false)}
                       title="Grid"
                     >
-                      ⬚
+                      <img src={viewGridIcon} alt="" aria-hidden="true" />
                     </button>
                     <button
                       className={`projects__toggle-btn ${listView ? 'is-active' : ''}`}
@@ -713,7 +715,7 @@ export default function Projects() {
                       onClick={() => setListView(true)}
                       title="List"
                     >
-                      ≡
+                      <img src={viewListIcon} alt="" aria-hidden="true" />
                     </button>
                   </div>
                 )}
