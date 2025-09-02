@@ -224,6 +224,47 @@ const renderProjectActions = (project, handleProjectClick) => {
   );
 };
 
+// Helper function to render compact grid actions (GitHub + Live)
+// ------------------------------
+const renderGridActions = (project, handleProjectClick) => {
+  const hasGithub = Boolean(project.project_github_url);
+  const hasExternal = Boolean(project.project_url_external);
+  const two = hasGithub && true; // Live is always present (either external or overlay)
+  return (
+    <div className={`projects__grid-cta-row ${two ? 'projects__grid-cta-row--two' : 'projects__grid-cta-row--one'}`}>
+      {hasGithub ? (
+        <a 
+          href={project.project_github_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="projects__grid-cta-btn projects__grid-cta-btn--secondary"
+          aria-label={`GitHub Repository: ${project.title}`}
+        >
+          <img src={githubIcon} alt="" aria-hidden="true" className="projects__grid-cta-ico" />
+          GitHub
+        </a>
+      ) : null}
+      {hasExternal ? (
+        <a 
+          href={project.project_url_external}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="projects__grid-cta-btn"
+        >
+          Demo
+        </a>
+      ) : (
+        <button 
+          onClick={() => handleProjectClick(project)}
+          className="projects__grid-cta-btn"
+        >
+          Demo
+        </button>
+      )}
+    </div>
+  );
+};
+
 // Reusable section wrapper component
 // ------------------------------
 const ProjectsSectionWrapper = ({ children, className = "" }) => (
@@ -621,16 +662,22 @@ export default function Projects() {
         <article key={p.id} className="projects__grid-card" aria-label={`Projekt: ${p.title}`}>
           <div className="projects__grid-thumb">
             {renderProjectScreenshot(p, { isPriority: false })}
+            <div className="projects__grid-overlay" aria-hidden="true">
+              <div className="projects__grid-overlay-inner">
+                {(p.excerpt && p.excerpt.trim() !== '') || (p.content && p.content.trim() !== '') ? (
+                  <p className="projects__grid-overlay-excerpt">{renderProjectExcerpt(p)}</p>
+                ) : (
+                  <div>
+                    <div className="skeleton skeleton--text-line" style={{ width: '85%' }}></div>
+                    <div className="skeleton skeleton--text-line" style={{ width: '60%' }}></div>
+                  </div>
+                )}
+                {renderProjectTechnologies(p)}
+              </div>
+            </div>
           </div>
           <h3 className="projects__grid-title">{p.title}</h3>
-          {(p.excerpt && p.excerpt.trim() !== '') || (p.content && p.content.trim() !== '') ? (
-            <p className="projects__grid-excerpt">{renderProjectExcerpt(p)}</p>
-          ) : (
-            <div aria-hidden="true">
-              <div className="skeleton skeleton--text-line" style={{ width: '85%' }}></div>
-              <div className="skeleton skeleton--text-line" style={{ width: '60%' }}></div>
-            </div>
-          )}
+          {renderGridActions(p, handleProjectClick)}
         </article>
       ))}
     </div>

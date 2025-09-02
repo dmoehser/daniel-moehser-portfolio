@@ -415,6 +415,70 @@ body.theme-dark .skeleton {
   object-fit: cover;
 }
 
+// Hover overlay
+.projects__grid-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(2,6,23,.75), rgba(2,6,23,.0) 50%);
+  opacity: 0;
+  transition: opacity 180ms ease;
+  display: flex;
+  align-items: flex-end;
+}
+.projects__grid-overlay-inner {
+  padding: 12px;
+  color: #e2e8f0;
+}
+.projects__grid-card:hover .projects__grid-overlay { opacity: 1; }
+body.theme-dark .projects__grid-overlay { background: linear-gradient(to top, rgba(2,6,23,.85), rgba(2,6,23,.0) 50%); }
+
+.projects__grid-overlay-excerpt {
+  margin: 0 0 8px 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Grid CTA row
+.projects__grid-cta-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+.projects__grid-cta-row--two { grid-template-columns: 1fr 1fr; }
+.projects__grid-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0.6rem 0.9rem;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: filter 160ms ease;
+}
+.projects__grid-cta-btn:hover { filter: brightness(1.05); }
+.projects__grid-cta-btn--secondary {
+  background: rgba(15,23,42,.05);
+  color: #0f172a;
+  border: 1px solid rgba(15,23,42,.15);
+}
+.projects__grid-cta-ico { width: 18px; height: 18px; }
+body.theme-dark .projects__grid-cta-btn--secondary {
+  background: transparent;
+  color: #fff;
+  border: 2px solid #94a3b8;
+}
+
 .projects__grid-title {
   margin: 4px 0 0;
   font-size: 1.05rem;
