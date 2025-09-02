@@ -342,6 +342,7 @@ export default function Projects() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [listView, setListView] = useState(false);
   const [isPrint, setIsPrint] = useState(false);
   const [printReady, setPrintReady] = useState(false);
   const pendingPrintRef = useRef(false);
@@ -696,6 +697,26 @@ export default function Projects() {
                   className="projects__subtitle section-subtitle" 
                   dangerouslySetInnerHTML={{ __html: projectsSubtitle }} 
                 />
+                {layoutMode === 'grid' && (
+                  <div className="projects__view-toggle" style={{ position: 'absolute', top: 8, right: 8, display: 'flex', gap: '8px' }}>
+                    <button
+                      className={`projects__toggle-btn ${!listView ? 'is-active' : ''}`}
+                      aria-pressed={!listView}
+                      onClick={() => setListView(false)}
+                      title="Grid"
+                    >
+                      ⬚
+                    </button>
+                    <button
+                      className={`projects__toggle-btn ${listView ? 'is-active' : ''}`}
+                      aria-pressed={listView}
+                      onClick={() => setListView(true)}
+                      title="List"
+                    >
+                      ≡
+                    </button>
+                  </div>
+                )}
               </motion.div>
             )}
 
@@ -740,7 +761,35 @@ export default function Projects() {
             </div>
 
             {layoutMode === 'grid' ? (
-              renderGrid()
+              listView ? (
+                <div className="projects__list">
+                  {projects.map((proj) => (
+                    <div key={proj.id} className="project-card project-card--side-by-side project-card--list" style={{ marginBottom: '16px' }}>
+                      <div className="project-card__screenshot">
+                        {renderProjectScreenshot(proj, { isPriority: false })}
+                      </div>
+                      <div className="project-card__info">
+                        <h3 className="project-card__title">{proj.title}</h3>
+                        {(proj.excerpt && proj.excerpt.trim() !== '') || (proj.content && proj.content.trim() !== '') ? (
+                          <div className="project-card__excerpt" dangerouslySetInnerHTML={{ __html: (proj.excerpt && proj.excerpt.trim() !== '' ? proj.excerpt : proj.content) }} />
+                        ) : (
+                          <div aria-hidden="true">
+                            <div className="skeleton skeleton--text-line" style={{ width: '85%' }}></div>
+                            <div className="skeleton skeleton--text-line" style={{ width: '70%' }}></div>
+                            <div className="skeleton skeleton--text-line" style={{ width: '60%' }}></div>
+                          </div>
+                        )}
+                        {renderProjectTechnologies(proj)}
+                        <div className="project-card__actions">
+                          {renderProjectActions(proj, handleProjectClick)}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                renderGrid()
+              )
             ) : (
               <motion.div
                 initial={ANIMATION.FADE_IN.hidden}

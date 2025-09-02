@@ -318,6 +318,31 @@
   }
 }
 
+// List view compact variant
+.project-card--side-by-side.project-card--list {
+  height: 360px;
+  min-height: 360px;
+  max-height: 360px;
+}
+.project-card--side-by-side.project-card--list .project-card__screenshot {
+  flex: 0 0 40% !important;
+  width: 40% !important;
+  max-width: 40% !important;
+  height: 360px;
+  min-height: 360px;
+  max-height: 360px;
+}
+.project-card--side-by-side.project-card--list .project-card__info {
+  flex: 0 0 60% !important;
+  width: 60% !important;
+  max-width: 60% !important;
+  padding: 8px 8px 8px 0;
+}
+.project-card--side-by-side.project-card--list .project-card__title { font-size: 1.1rem; margin-bottom: 0.5rem; }
+.project-card--side-by-side.project-card--list .project-card__excerpt { font-size: 0.9rem; line-height: 1.5; }
+.project-card--side-by-side.project-card--list .project-card__technologies .project-card__tech-tag { padding: 6px 12px; font-size: 0.85rem; }
+.project-card--side-by-side.project-card--list .project-card__cta-row .project-card__demo-btn { padding: 0.6rem 1rem; font-size: 0.85rem; }
+
 @keyframes projects-skeleton-shimmer {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
