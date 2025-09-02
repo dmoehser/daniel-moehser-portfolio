@@ -97,6 +97,8 @@
   .section-card {
     width: 100% !important;
     max-width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
   }
 
   // Typography improvements (print)
@@ -129,6 +131,12 @@
   #projects .projects__nav-btn { display: none !important; }
   #projects .projects__header { display: none !important; }
   #projects .projects__slider--side-by-side { overflow: visible !important; }
+  #projects .projects__inner,
+  #projects .projects__content,
+  #projects .projects__card {
+    height: auto !important;
+    overflow: visible !important;
+  }
   #projects .projects__slider--side-by-side .projects__slider-container {
     display: block !important;
     transform: none !important;
