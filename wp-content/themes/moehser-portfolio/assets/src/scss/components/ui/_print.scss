@@ -130,7 +130,7 @@
   // ------------------------------------------
   #projects .projects__nav-btn { display: none !important; }
   #projects .projects__header { display: none !important; }
-  #projects .projects__slider--side-by-side { overflow: visible !important; }
+  #projects .projects__slider--side-by-side { display: none !important; }
   #projects .projects__inner,
   #projects .projects__content,
   #projects .projects__card {
@@ -145,10 +145,7 @@
   #projects .projects__slider--side-by-side .projects__slide {
     flex: none !important;
     width: 100% !important;
-    display: block !important;
-    break-inside: avoid-page;
-    page-break-inside: avoid;
-    margin: 0 0 16px 0 !important;
+    display: block !important;    margin: 0 0 16px 0 !important;
   }
   /* Start each slide on a new page except the first */
   #projects .projects__slider--side-by-side .projects__slide + .projects__slide {
@@ -165,8 +162,6 @@
   #projects .projects__print-stack .projects__slide {
     display: block !important;
     width: 100% !important;
-    break-inside: avoid-page;
-    page-break-inside: avoid;
     margin: 0 0 16px 0 !important;
   }
   #projects .projects__print-stack .projects__slide + .projects__slide {

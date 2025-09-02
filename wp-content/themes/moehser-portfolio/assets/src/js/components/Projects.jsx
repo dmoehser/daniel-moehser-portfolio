@@ -381,14 +381,9 @@ export default function Projects() {
         }
         const data = await response.json();
         
-        // Filter projects based on status if showOnlyActiveProjects is enabled
-        let filteredProjects = data;
+        // Always show only active projects (including print mode)
+        const filteredProjects = data.filter(project => project.project_status === 'active');
         
-        if (showOnlyActiveProjects) {
-          filteredProjects = data.filter(project => 
-            project.project_status === 'active'
-          );
-        }
         
         // Keep API order (date DESC)
         setProjects(filteredProjects);
@@ -426,7 +421,7 @@ export default function Projects() {
     };
 
     fetchProjects();
-  }, [showOnlyActiveProjects]);
+  }, [showOnlyActiveProjects, isPrint]);
 
   // When print is requested and data/images are ready, ensure DOM is painted, then trigger print
   useEffect(() => {
@@ -440,6 +435,9 @@ export default function Projects() {
     triggerPrint();
     return () => { cancelled = true; };
   }, [isPrint, printReady, projects.length]);
+
+  // After render: no-op when printing (debug logs removed)
+  useEffect(() => {}, [isPrint, printReady, projects.length]);
 
   // Auto-play functionality
   useEffect(() => {
@@ -634,48 +632,52 @@ export default function Projects() {
               </motion.div>
             )}
 
-            {isPrint ? (
-              <div className={`projects__body section-body projects__body--layout-${layoutMode}`}>
-                <div className="projects__print-stack">
-                  {projects.map((proj, idx) => (
-                    <div
-                      key={idx}
-                      className="projects__slide"
-                      role="group"
-                      aria-roledescription="slide"
-                      aria-label={`Slide ${idx + 1} of ${projects.length}`}
-                    >
-                      <div className="project-card project-card--side-by-side">
-                        <h1 className="print-project-heading">{projectsTitle}</h1>
-                        <div className="project-card__screenshot">
-                          {renderProjectScreenshot(proj, { isPriority: true, isPrint: true })}
-                        </div>
-                        <div className="project-card__info">
-                          <h3 className="project-card__title">{proj.title}</h3>
-                          {(proj.excerpt || proj.content) && (
-                            <div className="project-card__excerpt" dangerouslySetInnerHTML={{ __html: (proj.excerpt && proj.excerpt.trim() !== '' ? proj.excerpt : proj.content) }} />
-                          )}
-                          {renderProjectTechnologies(proj)}
-                          <div className="project-card__actions">
-                            {renderProjectActions(proj, handleProjectClick)}
-                          </div>
+            {
+              /* Always render print stack hidden; print CSS will show it */
+            }
+            <div className={`projects__body section-body projects__body--layout-${layoutMode}`}>
+              <div className="projects__print-stack" style={{ display: 'none' }}>
+                {projects.map((proj, idx) => (
+                  <div
+                    key={proj.id || idx}
+                    className="projects__slide"
+                    role="group"
+                    aria-roledescription="slide"
+                    aria-label={`Slide ${idx + 1} of ${projects.length}`}
+                  >
+                    <div className="project-card project-card--side-by-side">
+                      <h1 className="print-project-heading">{projectsTitle}</h1>
+                      <div className="project-card__screenshot">
+                        {renderProjectScreenshot(proj, { isPriority: true, isPrint: true })}
+                      </div>
+                      <div className="project-card__info">
+                        <h3 className="project-card__title">{proj.title}</h3>
+                        {(proj.excerpt || proj.content) && (
+                          <div className="project-card__excerpt" dangerouslySetInnerHTML={{ __html: (proj.excerpt && proj.excerpt.trim() !== '' ? proj.excerpt : proj.content) }} />
+                        )}
+                        {renderProjectTechnologies(proj)}
+                        <div className="project-card__actions">
+                          {renderProjectActions(proj, handleProjectClick)}
                         </div>
                       </div>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
-            ) : (
-              <motion.div
-                initial={ANIMATION.FADE_IN.hidden}
-                whileInView={ANIMATION.FADE_IN.show}
-                transition={{ 
-                  duration: ANIMATION.TIMING.BASE, 
-                  delay: ANIMATION.TIMING.DELAY 
-                }}
-                viewport={{ once: true }}
-                className={`projects__body section-body projects__body--layout-${layoutMode}`}
-              >
+            </div>
+            {
+              /* Normal interactive slider for screen */
+            }
+            <motion.div
+              initial={ANIMATION.FADE_IN.hidden}
+              whileInView={ANIMATION.FADE_IN.show}
+              transition={{ 
+                duration: ANIMATION.TIMING.BASE, 
+                delay: ANIMATION.TIMING.DELAY 
+              }}
+              viewport={{ once: true }}
+              className={`projects__body section-body projects__body--layout-${layoutMode}`}
+            >
               {/* Left Navigation Arrow */}
               {projects.length > 1 && (
                 <button 
@@ -830,7 +832,6 @@ export default function Projects() {
                 </button>
               )}
             </motion.div>
-            )}
           </div>
         </div>
       </div>
