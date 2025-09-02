@@ -512,6 +512,19 @@ body.theme-dark .skeleton {
   object-fit: cover;
 }
 
+// Grid hover frame (active)
+.projects__grid-card:hover {
+  border-color: rgba(56,189,248,.65);
+  box-shadow: 0 0 0 3px rgba(56,189,248,.22);
+}
+body.theme-dark .projects__grid-card {
+  border-color: rgba(255,255,255,.12);
+}
+body.theme-dark .projects__grid-card:hover {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 3px rgba(56,189,248,.35);
+}
+
 // Hover overlay
 // (text overlay removed on request)
 
