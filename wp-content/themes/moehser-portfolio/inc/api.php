@@ -90,6 +90,7 @@ add_action('rest_api_init', function () {
 						'project_status' => isset($meta['project_status'][0]) ? $meta['project_status'][0] : 'active',
 						'project_url_external' => isset($meta['project_url'][0]) ? $meta['project_url'][0] : '',
 						'project_demo_mode' => isset($meta['project_demo_mode'][0]) ? $meta['project_demo_mode'][0] : 'iframe',
+						'project_github_url' => isset($meta['project_github_url'][0]) ? $meta['project_github_url'][0] : '',
 					];
 				}
 			}
@@ -133,6 +134,7 @@ add_action('rest_api_init', function () {
 				'project_status' => isset($meta['project_status'][0]) ? $meta['project_status'][0] : 'active',
 				'project_url_external' => isset($meta['project_url'][0]) ? $meta['project_url'][0] : '',
 				'project_demo_mode' => isset($meta['project_demo_mode'][0]) ? $meta['project_demo_mode'][0] : 'iframe',
+				'project_github_url' => isset($meta['project_github_url'][0]) ? $meta['project_github_url'][0] : '',
 			]);
 		},
 	]);

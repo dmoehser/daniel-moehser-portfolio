@@ -121,24 +121,50 @@ const renderProjectActions = (project, handleProjectClick) => {
   
   if (project.project_demo_mode === 'iframe') {
     return (
-      <button 
-        onClick={() => handleProjectClick(project)}
-        className="project-card__demo-btn"
-      >
-        Live Preview
-      </button>
+      <div className="project-card__cta-row">
+        <button 
+          onClick={() => handleProjectClick(project)}
+          className="project-card__demo-btn"
+        >
+          Live Preview
+        </button>
+        {project.project_github_url ? (
+          <a 
+            href={project.project_github_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="project-card__demo-btn project-card__demo-btn--secondary"
+            aria-label={`GitHub Repository: ${project.title}`}
+          >
+            GitHub
+          </a>
+        ) : null}
+      </div>
     );
   }
   
   return (
-    <a 
-      href={project.project_url_external}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="project-card__demo-btn"
-    >
-      Live Demo
-    </a>
+    <div className="project-card__cta-row">
+      <a 
+        href={project.project_url_external}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="project-card__demo-btn"
+      >
+        Live Demo
+      </a>
+      {project.project_github_url ? (
+        <a 
+          href={project.project_github_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="project-card__demo-btn project-card__demo-btn--secondary"
+          aria-label={`GitHub Repository: ${project.title}`}
+        >
+          GitHub
+        </a>
+      ) : null}
+    </div>
   );
 };
 
