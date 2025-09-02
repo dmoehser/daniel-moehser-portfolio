@@ -147,6 +147,24 @@
     break-before: page;
     page-break-before: always;
   }
+
+  // Print stack (rendered outside slider in print mode)
+  // ---------------------------------------------------
+  #projects .projects__print-stack {
+    display: block !important;
+    width: 100% !important;
+  }
+  #projects .projects__print-stack .projects__slide {
+    display: block !important;
+    width: 100% !important;
+    break-inside: avoid-page;
+    page-break-inside: avoid;
+    margin: 0 0 16px 0 !important;
+  }
+  #projects .projects__print-stack .projects__slide + .projects__slide {
+    break-before: page;
+    page-break-before: always;
+  }
   // Make side-by-side card printable (vertical)
   #projects .project-card--side-by-side {
     display: block !important;

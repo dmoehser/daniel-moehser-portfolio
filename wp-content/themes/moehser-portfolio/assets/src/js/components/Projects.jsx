@@ -74,9 +74,9 @@ const renderProjectScreenshot = (project, opts = {}) => {
       <img 
         src={project.project_screenshot} 
         alt={project.title}
-        loading={isPriority ? undefined : 'lazy'}
-        decoding={isPriority ? 'async' : undefined}
-        fetchPriority={isPriority ? 'high' : undefined}
+        loading={isPrintImg ? undefined : (isPriority ? undefined : 'lazy')}
+        decoding={isPrintImg ? 'sync' : (isPriority ? 'async' : undefined)}
+        fetchPriority={isPrintImg ? 'high' : (isPriority ? 'high' : undefined)}
         onLoad={onLoad}
       />
     );
@@ -92,9 +92,9 @@ const renderProjectScreenshot = (project, opts = {}) => {
         width={project.featured_image_wide_w || undefined}
         height={project.featured_image_wide_h || undefined}
         alt={project.title}
-        loading={isPriority ? undefined : 'lazy'}
-        decoding={isPriority ? 'async' : undefined}
-        fetchPriority={isPriority ? 'high' : undefined}
+        loading={isPrintImg ? undefined : (isPriority ? undefined : 'lazy')}
+        decoding={isPrintImg ? 'sync' : (isPriority ? 'async' : undefined)}
+        fetchPriority={isPrintImg ? 'high' : (isPriority ? 'high' : undefined)}
         onLoad={onLoad}
       />
     );
@@ -610,30 +610,72 @@ export default function Projects() {
       <div className="projects__inner section-inner">
         <div className="projects__content section-content">
           <div className="projects__card section-card">
-            <motion.div
-              initial={ANIMATION.FADE_IN.hidden}
-              whileInView={ANIMATION.FADE_IN.show}
-              transition={{ duration: ANIMATION.TIMING.BASE }}
-              viewport={{ once: true }}
-              className="projects__header section-header"
-            >
-              <h2 className="projects__title section-title">{projectsTitle}</h2>
-              <p 
-                className="projects__subtitle section-subtitle" 
-                dangerouslySetInnerHTML={{ __html: projectsSubtitle }} 
-              />
-            </motion.div>
+            {isPrint ? (
+              <div className="projects__header section-header">
+                <h2 className="projects__title section-title">{projectsTitle}</h2>
+                <p 
+                  className="projects__subtitle section-subtitle" 
+                  dangerouslySetInnerHTML={{ __html: projectsSubtitle }} 
+                />
+              </div>
+            ) : (
+              <motion.div
+                initial={ANIMATION.FADE_IN.hidden}
+                whileInView={ANIMATION.FADE_IN.show}
+                transition={{ duration: ANIMATION.TIMING.BASE }}
+                viewport={{ once: true }}
+                className="projects__header section-header"
+              >
+                <h2 className="projects__title section-title">{projectsTitle}</h2>
+                <p 
+                  className="projects__subtitle section-subtitle" 
+                  dangerouslySetInnerHTML={{ __html: projectsSubtitle }} 
+                />
+              </motion.div>
+            )}
 
-            <motion.div
-              initial={ANIMATION.FADE_IN.hidden}
-              whileInView={ANIMATION.FADE_IN.show}
-              transition={{ 
-                duration: ANIMATION.TIMING.BASE, 
-                delay: ANIMATION.TIMING.DELAY 
-              }}
-              viewport={{ once: true }}
-              className={`projects__body section-body projects__body--layout-${layoutMode}`}
-            >
+            {isPrint ? (
+              <div className={`projects__body section-body projects__body--layout-${layoutMode}`}>
+                <div className="projects__print-stack">
+                  {projects.map((proj, idx) => (
+                    <div
+                      key={idx}
+                      className="projects__slide"
+                      role="group"
+                      aria-roledescription="slide"
+                      aria-label={`Slide ${idx + 1} of ${projects.length}`}
+                    >
+                      <div className="project-card project-card--side-by-side">
+                        <h1 className="print-project-heading">{projectsTitle}</h1>
+                        <div className="project-card__screenshot">
+                          {renderProjectScreenshot(proj, { isPriority: true, isPrint: true })}
+                        </div>
+                        <div className="project-card__info">
+                          <h3 className="project-card__title">{proj.title}</h3>
+                          {(proj.excerpt || proj.content) && (
+                            <div className="project-card__excerpt" dangerouslySetInnerHTML={{ __html: (proj.excerpt && proj.excerpt.trim() !== '' ? proj.excerpt : proj.content) }} />
+                          )}
+                          {renderProjectTechnologies(proj)}
+                          <div className="project-card__actions">
+                            {renderProjectActions(proj, handleProjectClick)}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <motion.div
+                initial={ANIMATION.FADE_IN.hidden}
+                whileInView={ANIMATION.FADE_IN.show}
+                transition={{ 
+                  duration: ANIMATION.TIMING.BASE, 
+                  delay: ANIMATION.TIMING.DELAY 
+                }}
+                viewport={{ once: true }}
+                className={`projects__body section-body projects__body--layout-${layoutMode}`}
+              >
               {/* Left Navigation Arrow */}
               {projects.length > 1 && (
                 <button 
@@ -788,6 +830,7 @@ export default function Projects() {
                 </button>
               )}
             </motion.div>
+            )}
           </div>
         </div>
       </div>
