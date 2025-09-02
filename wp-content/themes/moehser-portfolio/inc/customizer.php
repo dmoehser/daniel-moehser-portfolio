@@ -167,23 +167,6 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         ],
     ]);
 
-    // Projects Side-by-side ratio (image/info)
-    $wp_customize->add_setting('moehser_projects_ratio', [
-        'default' => '65_35',
-        'sanitize_callback' => 'sanitize_text_field',
-        'transport' => 'postMessage',
-    ]);
-    $wp_customize->add_control('moehser_projects_ratio', [
-        'label' => __('Side by side ratio', 'moehser-portfolio'),
-        'description' => __('Choose width ratio for image and info columns', 'moehser-portfolio'),
-        'section' => 'moehser_projects',
-        'type' => 'select',
-        'choices' => [
-            '65_35' => __('Image 65% / Info 35% (current)', 'moehser-portfolio'),
-            '55_45' => __('Image 55% / Info 45%', 'moehser-portfolio'),
-            '45_55' => __('Image 45% / Info 55%', 'moehser-portfolio'),
-        ],
-    ]);
 
     // Section: Skills Settings
     $wp_customize->add_section('moehser_skills', [
@@ -577,7 +560,6 @@ add_action('wp_head', function () {
     echo 'window.__PROJECTS_TITLE__ = "' . esc_js($projects_title) . '";';
     echo 'window.__PROJECTS_SUBTITLE__ = "' . esc_js($projects_subtitle) . '";';
     echo 'window.__PROJECTS_LAYOUT_MODE__ = "' . esc_js(get_theme_mod('moehser_projects_layout_mode', 'side_by_side')) . '";';
-    echo 'window.__PROJECTS_RATIO__ = "' . esc_js(get_theme_mod('moehser_projects_ratio', '65_35')) . '";';
     
     // Skills Settings to frontend
     echo 'window.__SKILLS_TITLE__ = "' . esc_js($skills_title) . '";';
