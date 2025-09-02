@@ -304,6 +304,35 @@
   }
 }
 
+// Ratio variant: Image 45% / Info 55%
+.project-card--side-by-side.ratio-45_55 {
+  .project-card__screenshot {
+    flex: 0 0 45% !important;
+    width: 45% !important;
+    max-width: 45% !important;
+  }
+  .project-card__info {
+    flex: 0 0 55% !important;
+    width: 55% !important;
+    max-width: 55% !important;
+  }
+}
+
+// Ratio variant: Image 55% / Info 45% (consistent cover)
+.project-card--side-by-side.ratio-55_45 {
+  .project-card__screenshot {
+    flex: 0 0 55% !important;
+    width: 55% !important;
+    max-width: 55% !important;
+    img { object-fit: cover; }
+  }
+  .project-card__info {
+    flex: 0 0 45% !important;
+    width: 45% !important;
+    max-width: 45% !important;
+  }
+}
+
 @keyframes projects-skeleton-shimmer {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }

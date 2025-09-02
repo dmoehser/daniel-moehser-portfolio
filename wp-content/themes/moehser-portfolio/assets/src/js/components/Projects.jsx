@@ -49,6 +49,7 @@ const renderProjectExcerpt = (project) => {
 const renderProjectScreenshot = (project, opts = {}) => {
   const isPriority = Boolean(opts.isPriority);
   const onLoad = typeof opts.onLoad === 'function' ? opts.onLoad : undefined;
+  const ratio = typeof opts.layoutRatio === 'string' ? opts.layoutRatio : '65_35';
   if (project.project_screenshot) {
     return (
       <img 
@@ -67,7 +68,11 @@ const renderProjectScreenshot = (project, opts = {}) => {
       <img 
         src={project.featured_image_wide || project.featured_image}
         srcSet={project.featured_image_srcset || undefined}
-        sizes="(max-width: 1024px) 100vw, 65vw"
+        sizes={
+          ratio === '45_55' ? "(max-width: 1024px) 100vw, 45vw" :
+          ratio === '55_45' ? "(max-width: 1024px) 100vw, 55vw" :
+          "(max-width: 1024px) 100vw, 65vw"
+        }
         width={project.featured_image_wide_w || undefined}
         height={project.featured_image_wide_h || undefined}
         alt={project.title}
@@ -292,6 +297,9 @@ export default function Projects() {
   const layoutMode = typeof window !== 'undefined'
     ? window.__PROJECTS_LAYOUT_MODE__ || 'side_by_side'
     : 'side_by_side';
+  const layoutRatio = typeof window !== 'undefined'
+    ? window.__PROJECTS_RATIO__ || '65_35'
+    : '65_35';
   const autoplay = typeof window !== 'undefined' 
     ? window.__PROJECTS_AUTOPLAY__ || false 
     : false;
@@ -619,9 +627,9 @@ export default function Projects() {
                         aria-roledescription="slide"
                         aria-label={`Slide ${idx + 1} of ${projects.length}`}
                       >
-                        <div className="project-card project-card--side-by-side">
+                        <div className={`project-card project-card--side-by-side ratio-${layoutRatio}`}>
                           <div className="project-card__screenshot">
-                            {renderProjectScreenshot(proj, { isPriority: false })}
+                            {renderProjectScreenshot(proj, { isPriority: false, layoutRatio })}
                           </div>
                           <div className="project-card__info">
                             <h3 className="project-card__title">{proj.title}</h3>
@@ -653,9 +661,9 @@ export default function Projects() {
                           const current = projects[currentSlide];
                           const isImgLoaded = Boolean(imageLoaded[current?.id]);
                           return (
-                            <div className="project-card project-card--side-by-side">
+                            <div className={`project-card project-card--side-by-side ratio-${layoutRatio}`}>
                               <div className="project-card__screenshot">
-                                {renderProjectScreenshot(current, { isPriority: true, onLoad: () => markImageLoaded(current?.id) })}
+                                {renderProjectScreenshot(current, { isPriority: true, onLoad: () => markImageLoaded(current?.id), layoutRatio })}
                                 {!isImgLoaded && (
                                   <div className="skeleton skeleton--image" aria-hidden="true"></div>
                                 )}
