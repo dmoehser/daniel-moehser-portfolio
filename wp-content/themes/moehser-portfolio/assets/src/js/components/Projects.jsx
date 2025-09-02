@@ -77,6 +77,13 @@ const renderProjectScreenshot = (project, opts = {}) => {
         loading={isPrintImg ? undefined : (isPriority ? undefined : 'lazy')}
         decoding={isPrintImg ? 'sync' : (isPriority ? 'async' : undefined)}
         fetchPriority={isPrintImg ? 'high' : (isPriority ? 'high' : undefined)}
+        onError={(e) => {
+          try {
+            const img = e.currentTarget;
+            img.onerror = null;
+            img.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" width="640" height="360"><rect width="100%" height="100%" fill="%23f1f5f9"/><g fill="%2394a3b8" font-family="Arial,Helvetica,sans-serif" font-size="24" text-anchor="middle"><text x="50%" y="50%">Image not available</text></g></svg>';
+          } catch {}
+        }}
         onLoad={onLoad}
       />
     );
@@ -95,6 +102,14 @@ const renderProjectScreenshot = (project, opts = {}) => {
         loading={isPrintImg ? undefined : (isPriority ? undefined : 'lazy')}
         decoding={isPrintImg ? 'sync' : (isPriority ? 'async' : undefined)}
         fetchPriority={isPrintImg ? 'high' : (isPriority ? 'high' : undefined)}
+        onError={(e) => {
+          try {
+            const img = e.currentTarget;
+            img.onerror = null;
+            img.removeAttribute('srcset');
+            img.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" width="640" height="360"><rect width="100%" height="100%" fill="%23f1f5f9"/><g fill="%2394a3b8" font-family="Arial,Helvetica,sans-serif" font-size="24" text-anchor="middle"><text x="50%" y="50%">Image not available</text></g></svg>';
+          } catch {}
+        }}
         onLoad={onLoad}
       />
     );
@@ -652,8 +667,14 @@ export default function Projects() {
                       </div>
                       <div className="project-card__info">
                         <h3 className="project-card__title">{proj.title}</h3>
-                        {(proj.excerpt || proj.content) && (
+                        {(proj.excerpt && proj.excerpt.trim() !== '') || (proj.content && proj.content.trim() !== '') ? (
                           <div className="project-card__excerpt" dangerouslySetInnerHTML={{ __html: (proj.excerpt && proj.excerpt.trim() !== '' ? proj.excerpt : proj.content) }} />
+                        ) : (
+                          <div aria-hidden="true">
+                            <div className="skeleton skeleton--text-line" style={{ width: '85%' }}></div>
+                            <div className="skeleton skeleton--text-line" style={{ width: '70%' }}></div>
+                            <div className="skeleton skeleton--text-line" style={{ width: '60%' }}></div>
+                          </div>
                         )}
                         {renderProjectTechnologies(proj)}
                         <div className="project-card__actions">
@@ -787,24 +808,16 @@ export default function Projects() {
                                 >
                                   {current.title}
                                 </h3>
-                                {(current.excerpt || current.content) && (
-                                  isImgLoaded ? (
-                                    <div className="project-card__excerpt" dangerouslySetInnerHTML={{ __html: (current.excerpt && current.excerpt.trim() !== '' ? current.excerpt : current.content) }} />
-                                  ) : (
-                                    <div aria-hidden="true">
-                                      <div className="skeleton skeleton--text-line" style={{ width: '85%' }}></div>
-                                      <div className="skeleton skeleton--text-line" style={{ width: '70%' }}></div>
-                                      <div className="skeleton skeleton--text-line" style={{ width: '60%' }}></div>
-                                    </div>
-                                  )
-                                )}
-                                {isImgLoaded ? renderProjectTechnologies(current) : (
-                                  <div aria-hidden="true" style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem' }}>
-                                    <div className="skeleton skeleton--tag" style={{ width: '80px' }}></div>
-                                    <div className="skeleton skeleton--tag" style={{ width: '100px' }}></div>
-                                    <div className="skeleton skeleton--tag" style={{ width: '64px' }}></div>
+                                {(current.excerpt && current.excerpt.trim() !== '') || (current.content && current.content.trim() !== '') ? (
+                                  <div className="project-card__excerpt" dangerouslySetInnerHTML={{ __html: (current.excerpt && current.excerpt.trim() !== '' ? current.excerpt : current.content) }} />
+                                ) : (
+                                  <div aria-hidden="true">
+                                    <div className="skeleton skeleton--text-line" style={{ width: '85%' }}></div>
+                                    <div className="skeleton skeleton--text-line" style={{ width: '70%' }}></div>
+                                    <div className="skeleton skeleton--text-line" style={{ width: '60%' }}></div>
                                   </div>
                                 )}
+                                {renderProjectTechnologies(current)}
                                 <div className="project-card__actions">
                                   {renderProjectActions(current, handleProjectClick)}
                                 </div>
