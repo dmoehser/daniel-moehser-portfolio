@@ -127,6 +127,7 @@
   // Projects: show all slides, stack vertically
   // ------------------------------------------
   #projects .projects__nav-btn { display: none !important; }
+  #projects .projects__header { display: none !important; }
   #projects .projects__slider--side-by-side { overflow: visible !important; }
   #projects .projects__slider--side-by-side .projects__slider-container {
     display: block !important;
@@ -140,6 +141,11 @@
     break-inside: avoid-page;
     page-break-inside: avoid;
     margin: 0 0 16px 0 !important;
+  }
+  /* Start each slide on a new page except the first */
+  #projects .projects__slider--side-by-side .projects__slide + .projects__slide {
+    break-before: page;
+    page-break-before: always;
   }
   // Make side-by-side card printable (vertical)
   #projects .project-card--side-by-side {
@@ -158,6 +164,9 @@
     max-height: none !important;
     margin-right: 0 !important;
   }
+  #projects .project-card--side-by-side .project-card__screenshot img { width: 100% !important; height: auto !important; object-fit: contain !important; }
+  #projects .project-card__actions { display: none !important; }
+  #projects .print-project-heading { font-size: 18pt !important; margin: 0 0 8pt 0 !important; color: #000 !important; }
 
   // Force-visible states for motion elements (when animations not run)
   // -----------------------------------------------------------------

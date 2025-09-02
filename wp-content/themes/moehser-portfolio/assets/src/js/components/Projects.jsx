@@ -49,6 +49,7 @@ const renderProjectExcerpt = (project) => {
 const renderProjectScreenshot = (project, opts = {}) => {
   const isPriority = Boolean(opts.isPriority);
   const onLoad = typeof opts.onLoad === 'function' ? opts.onLoad : undefined;
+  const isPrintImg = Boolean(opts.isPrint);
   if (project.project_screenshot) {
     return (
       <img 
@@ -63,11 +64,12 @@ const renderProjectScreenshot = (project, opts = {}) => {
   }
   
   if (project.featured_image_wide || project.featured_image) {
+    const srcPrint = project.featured_image_wide_2x || project.featured_image_wide || project.featured_image;
     return (
       <img 
-        src={project.featured_image_wide || project.featured_image}
+        src={isPrintImg ? srcPrint : (project.featured_image_wide || project.featured_image)}
         srcSet={project.featured_image_srcset || undefined}
-        sizes={"(max-width: 1024px) 100vw, 60vw"}
+        sizes={isPrintImg ? "100vw" : "(max-width: 1024px) 100vw, 60vw"}
         width={project.featured_image_wide_w || undefined}
         height={project.featured_image_wide_h || undefined}
         alt={project.title}
@@ -266,6 +268,8 @@ export default function Projects() {
   const [error, setError] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPrint, setIsPrint] = useState(false);
+  const [printReady, setPrintReady] = useState(false);
+  const pendingPrintRef = useRef(false);
   const [isPaused, setIsPaused] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [shouldFocusOnSlide, setShouldFocusOnSlide] = useState(false);
@@ -308,9 +312,21 @@ export default function Projects() {
     // Detect print mode via events and media query
     const mq = window.matchMedia ? window.matchMedia('print') : null;
     const rmq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
-    const handleBeforePrint = () => setIsPrint(true);
-    const handleAfterPrint = () => setIsPrint(false);
+    const handleBeforePrint = () => {
+      pendingPrintRef.current = true;
+      setIsPrint(true);
+    };
+    const handleAfterPrint = () => {
+      pendingPrintRef.current = false;
+      setIsPrint(false);
+    };
     if (typeof window !== 'undefined') {
+      // If print dialog already open at mount
+      const mq = window.matchMedia && window.matchMedia('print');
+      if (mq && typeof mq.matches === 'boolean' && mq.matches) {
+        pendingPrintRef.current = true;
+        setIsPrint(true);
+      }
       window.addEventListener('beforeprint', handleBeforePrint);
       window.addEventListener('afterprint', handleAfterPrint);
       if (mq && typeof mq.addEventListener === 'function') {
@@ -357,6 +373,35 @@ export default function Projects() {
         
         // Keep API order (date DESC)
         setProjects(filteredProjects);
+
+        // Preload main images early so Print has them ready
+        try {
+          const urls = filteredProjects
+            .map(p => p.featured_image_wide_2x || p.featured_image_wide || p.project_screenshot || p.featured_image)
+            .filter(Boolean);
+          if (urls.length === 0) {
+            setPrintReady(true);
+            if (pendingPrintRef.current) setTimeout(() => { try { window.print(); } catch {} }, 50);
+          } else {
+            let remaining = urls.length;
+            urls.forEach((u) => {
+              const img = new Image();
+              const done = () => {
+                remaining -= 1;
+                if (remaining <= 0) {
+                  setPrintReady(true);
+                  if (pendingPrintRef.current) setTimeout(() => { try { window.print(); } catch {} }, 50);
+                }
+              };
+              img.onload = done;
+              img.onerror = done;
+              img.src = u;
+            });
+          }
+        } catch {
+          setPrintReady(true);
+          if (pendingPrintRef.current) setTimeout(() => { try { window.print(); } catch {} }, 50);
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -366,6 +411,21 @@ export default function Projects() {
 
     fetchProjects();
   }, [showOnlyActiveProjects]);
+
+  // When print is requested and data/images are ready, ensure DOM is painted, then trigger print
+  useEffect(() => {
+    if (isPrint && printReady && projects.length > 0 && pendingPrintRef.current) {
+      const run = () => {
+        try { window.print(); } catch {}
+      };
+      // Wait for paint flush
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setTimeout(run, 60);
+        });
+      });
+    }
+  }, [isPrint, printReady, projects.length]);
 
   // Auto-play functionality
   useEffect(() => {
@@ -503,7 +563,7 @@ export default function Projects() {
   };
 
   // Early returns for different states
-  if (loading) {
+  if ((loading && !isPrint) || (isPrint && (!printReady || loading))) {
     return (
       <ProjectsLoading 
         projectsTitle={projectsTitle}
@@ -512,7 +572,7 @@ export default function Projects() {
     );
   }
 
-  if (error) {
+  if (error && !isPrint) {
     return (
       <ProjectsError 
         projectsTitle={projectsTitle}
@@ -522,7 +582,7 @@ export default function Projects() {
     );
   }
 
-  if (projects.length === 0) {
+  if (projects.length === 0 && !isPrint) {
     return (
       <ProjectsEmpty 
         projectsTitle={projectsTitle}
@@ -620,8 +680,9 @@ export default function Projects() {
                         aria-label={`Slide ${idx + 1} of ${projects.length}`}
                       >
                         <div className="project-card project-card--side-by-side">
+                          <h1 className="print-project-heading">{projectsTitle}</h1>
                           <div className="project-card__screenshot">
-                            {renderProjectScreenshot(proj, { isPriority: false })}
+                            {renderProjectScreenshot(proj, { isPriority: false, isPrint: true })}
                           </div>
                           <div className="project-card__info">
                             <h3 className="project-card__title">{proj.title}</h3>
