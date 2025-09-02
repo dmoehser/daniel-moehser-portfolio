@@ -416,32 +416,7 @@ body.theme-dark .skeleton {
 }
 
 // Hover overlay
-.projects__grid-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(2,6,23,.75), rgba(2,6,23,.0) 50%);
-  opacity: 0;
-  transition: opacity 180ms ease;
-  display: flex;
-  align-items: flex-end;
-}
-.projects__grid-overlay-inner {
-  padding: 12px;
-  color: #e2e8f0;
-}
-.projects__grid-card:hover .projects__grid-overlay { opacity: 1; }
-body.theme-dark .projects__grid-overlay { background: linear-gradient(to top, rgba(2,6,23,.85), rgba(2,6,23,.0) 50%); }
-
-.projects__grid-overlay-excerpt {
-  margin: 0 0 8px 0;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+// (text overlay removed on request)
 
 // Grid CTA row
 .projects__grid-cta-row {

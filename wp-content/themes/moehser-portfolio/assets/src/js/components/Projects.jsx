@@ -662,19 +662,6 @@ export default function Projects() {
         <article key={p.id} className="projects__grid-card" aria-label={`Projekt: ${p.title}`}>
           <div className="projects__grid-thumb">
             {renderProjectScreenshot(p, { isPriority: false })}
-            <div className="projects__grid-overlay" aria-hidden="true">
-              <div className="projects__grid-overlay-inner">
-                {(p.excerpt && p.excerpt.trim() !== '') || (p.content && p.content.trim() !== '') ? (
-                  <p className="projects__grid-overlay-excerpt">{renderProjectExcerpt(p)}</p>
-                ) : (
-                  <div>
-                    <div className="skeleton skeleton--text-line" style={{ width: '85%' }}></div>
-                    <div className="skeleton skeleton--text-line" style={{ width: '60%' }}></div>
-                  </div>
-                )}
-                {renderProjectTechnologies(p)}
-              </div>
-            </div>
           </div>
           <h3 className="projects__grid-title">{p.title}</h3>
           {renderGridActions(p, handleProjectClick)}
