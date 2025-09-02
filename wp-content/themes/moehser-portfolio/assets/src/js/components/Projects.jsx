@@ -6,6 +6,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import githubIcon from '../../img/github.svg';
 
 // Animation constants for consistent motion
 // ------------------------------
@@ -109,26 +110,10 @@ const renderProjectTechnologies = (project) => {
 // ------------------------------
 const renderProjectActions = (project, handleProjectClick) => {
   if (!project.project_url_external) {
+    const hasGithub = Boolean(project.project_github_url);
     return (
-      <button 
-        onClick={() => handleProjectClick(project)}
-        className="project-card__demo-btn"
-      >
-        Live Preview
-      </button>
-    );
-  }
-  
-  if (project.project_demo_mode === 'iframe') {
-    return (
-      <div className="project-card__cta-row">
-        <button 
-          onClick={() => handleProjectClick(project)}
-          className="project-card__demo-btn"
-        >
-          Live Preview
-        </button>
-        {project.project_github_url ? (
+      <div className={`project-card__cta-row ${hasGithub ? 'project-card__cta-row--two' : 'project-card__cta-row--one'}`}>
+        {hasGithub ? (
           <a 
             href={project.project_github_url}
             target="_blank"
@@ -136,15 +121,61 @@ const renderProjectActions = (project, handleProjectClick) => {
             className="project-card__demo-btn project-card__demo-btn--secondary"
             aria-label={`GitHub Repository: ${project.title}`}
           >
+            <img src={githubIcon} alt="" aria-hidden="true" className="project-card__cta-ico" />
             GitHub
           </a>
         ) : null}
+        <button 
+          onClick={() => handleProjectClick(project)}
+          className="project-card__demo-btn"
+        >
+          Live Preview
+        </button>
       </div>
     );
   }
   
+  if (project.project_demo_mode === 'iframe') {
+    const hasGithub = Boolean(project.project_github_url);
+    return (
+      <div className={`project-card__cta-row ${hasGithub ? 'project-card__cta-row--two' : 'project-card__cta-row--one'}`}>
+        {hasGithub ? (
+          <a 
+            href={project.project_github_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="project-card__demo-btn project-card__demo-btn--secondary"
+            aria-label={`GitHub Repository: ${project.title}`}
+          >
+            <img src={githubIcon} alt="" aria-hidden="true" className="project-card__cta-ico" />
+            GitHub
+          </a>
+        ) : null}
+        <button 
+          onClick={() => handleProjectClick(project)}
+          className="project-card__demo-btn"
+        >
+          Live Preview
+        </button>
+      </div>
+    );
+  }
+  
+  const hasGithub = Boolean(project.project_github_url);
   return (
-    <div className="project-card__cta-row">
+    <div className={`project-card__cta-row ${hasGithub ? 'project-card__cta-row--two' : 'project-card__cta-row--one'}`}>
+      {hasGithub ? (
+        <a 
+          href={project.project_github_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="project-card__demo-btn project-card__demo-btn--secondary"
+          aria-label={`GitHub Repository: ${project.title}`}
+        >
+          <img src={githubIcon} alt="" aria-hidden="true" className="project-card__cta-ico" />
+          GitHub
+        </a>
+      ) : null}
       <a 
         href={project.project_url_external}
         target="_blank"
@@ -153,17 +184,6 @@ const renderProjectActions = (project, handleProjectClick) => {
       >
         Live Demo
       </a>
-      {project.project_github_url ? (
-        <a 
-          href={project.project_github_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="project-card__demo-btn project-card__demo-btn--secondary"
-          aria-label={`GitHub Repository: ${project.title}`}
-        >
-          GitHub
-        </a>
-      ) : null}
     </div>
   );
 };

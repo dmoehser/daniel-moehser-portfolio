@@ -236,13 +236,17 @@
       margin-top: auto;
       
       .project-card__cta-row {
-        display: flex;
+        display: grid;
+        grid-template-columns: 1fr;
         gap: 10px;
+      }
+      .project-card__cta-row--two {
+        grid-template-columns: 1fr 1fr; // two equal halves together equal former full width
       }
 
       .project-card__demo-btn {
         display: inline-block;
-        width: auto;
+        width: 100%;
         padding: 0.8rem 1.2rem;
         background: linear-gradient(135deg, #38bdf8, #0ea5e9);
         color: white;
@@ -265,11 +269,21 @@
         background: rgba(15,23,42,.05);
         color: #0f172a;
         border: 1px solid rgba(15,23,42,.15);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
         
         &:hover {
           background: rgba(15,23,42,.08);
           border-color: rgba(56,189,248,.4);
         }
+      }
+
+      .project-card__cta-ico {
+        width: 18px;
+        height: 18px;
+        display: inline-block;
       }
     }
   }
