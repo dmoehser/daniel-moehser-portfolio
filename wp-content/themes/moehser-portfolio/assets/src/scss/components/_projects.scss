@@ -579,13 +579,15 @@ body.theme-dark .project-card__demo-btn:hover {
 
 // Dark mode: secondary button (GitHub) better contrast
 body.theme-dark .project-card__demo-btn--secondary {
-  background: rgba(255,255,255,.12);
+  background: transparent !important; // outlined style like X
   color: #ffffff !important;
-  border-color: rgba(255,255,255,.25);
+  border: 2px solid #94a3b8 !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,.3);
+  .project-card__cta-ico { filter: invert(1) brightness(1.2) contrast(1.1); }
 }
 body.theme-dark .project-card__demo-btn--secondary:hover {
-  background: rgba(255,255,255,.18);
-  border-color: rgba(56,189,248,.5);
+  background: rgba(148,163,184,.15) !important;
+  border-color: #60a5fa !important;
 }
 
 
