@@ -170,6 +170,7 @@
     flex: 0 0 40% !important;
     width: 40% !important;
     max-width: 40% !important;
+    min-width: 0; // prevent flex overflow into padding
     padding: 0;
     display: flex;
     flex-direction: column;
@@ -286,6 +287,16 @@
         display: inline-block;
       }
     }
+  }
+
+  // Robust text wrapping inside info panel
+  .project-card__info .project-card__title,
+  .project-card__info .project-card__excerpt {
+    overflow-wrap: break-word; // prefer natural wrapping, break long tokens only
+    word-break: break-word; // legacy fallback
+    hyphens: none; // avoid hyphenated look ("abgehackt")
+    white-space: normal;
+    max-width: 100%;
   }
   .skeleton.skeleton--text-line {
     height: 12px;
