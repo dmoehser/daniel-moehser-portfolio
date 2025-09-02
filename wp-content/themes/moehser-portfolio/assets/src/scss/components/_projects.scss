@@ -189,11 +189,14 @@
     }
     
     .project-card__excerpt {
-      font-size: 0.95rem;
+      font-size: 0.97rem;
       color: #475569;
-      line-height: 1.6;
+      line-height: 1.7;
       margin: 0 0 1rem;
-      max-width: 65ch;
+      max-width: 70ch;
+      p { margin: 0 0 0.75em; }
+      ul, ol { padding-left: 1.2em; margin: 0.5em 0; }
+      li { margin: 0.25em 0; }
     }
     
     .project-card__technologies {
@@ -201,14 +204,11 @@
       flex-wrap: wrap;
       gap: 0.4rem;
       margin-bottom: 1.5rem;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(148,163,184,.4) transparent;
-      &::-webkit-scrollbar { height: 8px; }
-      &::-webkit-scrollbar-track { background: transparent; }
-      &::-webkit-scrollbar-thumb { background: rgba(148,163,184,.4); border-radius: 8px; }
-      
+      overflow: visible;
+      padding-bottom: 0;
+      align-items: flex-start;
+      white-space: normal;
+
       .project-card__tech-tag {
         display: inline-block;
         padding: 8px 16px;
@@ -223,7 +223,10 @@
         transition: all 0.3s ease;
         cursor: pointer;
         flex: 0 0 auto;
-        white-space: nowrap;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        max-width: 100%;
       }
       
       .project-card__tech-tag:hover {

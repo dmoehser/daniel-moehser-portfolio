@@ -625,8 +625,8 @@ export default function Projects() {
                           </div>
                           <div className="project-card__info">
                             <h3 className="project-card__title">{proj.title}</h3>
-                            {renderProjectExcerpt(proj) && (
-                              <p className="project-card__excerpt">{renderProjectExcerpt(proj)}</p>
+                            { (proj.excerpt || proj.content) && (
+                              <div className="project-card__excerpt" dangerouslySetInnerHTML={{ __html: (proj.excerpt && proj.excerpt.trim() !== '' ? proj.excerpt : proj.content) }} />
                             )}
                             {renderProjectTechnologies(proj)}
                             <div className="project-card__actions">
@@ -668,11 +668,9 @@ export default function Projects() {
                                 >
                                   {current.title}
                                 </h3>
-                                {renderProjectExcerpt(current) && (
+                                {(current.excerpt || current.content) && (
                                   isImgLoaded ? (
-                                    <p className="project-card__excerpt">
-                                      {renderProjectExcerpt(current)}
-                                    </p>
+                                    <div className="project-card__excerpt" dangerouslySetInnerHTML={{ __html: (current.excerpt && current.excerpt.trim() !== '' ? current.excerpt : current.content) }} />
                                   ) : (
                                     <div aria-hidden="true">
                                       <div className="skeleton skeleton--text-line" style={{ width: '85%' }}></div>
