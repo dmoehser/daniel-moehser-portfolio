@@ -433,7 +433,7 @@ export default function Projects() {
     let cancelled = false;
     const triggerPrint = async () => {
       if (!(isPrint && printReady && projects.length > 0 && pendingPrintRef.current)) return;
-      await waitForPrintStability(300);
+      await waitForPrintStability(4000);
       if (cancelled) return;
       try { window.print(); } catch {}
     };
