@@ -150,7 +150,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'type' => 'text',
     ]);
 
-    // Projects Layout Mode (future-proof, currently only side-by-side)
+    // Projects Layout Mode (add grid)
     $wp_customize->add_setting('moehser_projects_layout_mode', [
         'default' => 'side_by_side',
         'sanitize_callback' => 'sanitize_text_field',
@@ -158,12 +158,13 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]);
     $wp_customize->add_control('moehser_projects_layout_mode', [
         'label' => __('Projects Layout Mode', 'moehser-portfolio'),
-        'description' => __('Choose how projects are visually arranged. Currently only Side by side is available.', 'moehser-portfolio'),
+        'description' => __('Choose how projects are arranged: side-by-side for focus, grid for overview.', 'moehser-portfolio'),
         'section' => 'moehser_projects',
         'type' => 'select',
         'priority' => 1,
         'choices' => [
             'side_by_side' => __('Side by side (image left, details right)', 'moehser-portfolio'),
+            'grid' => __('Grid (tiled cards, overview)', 'moehser-portfolio'),
         ],
     ]);
 
@@ -512,6 +513,7 @@ add_action('wp_head', function () {
     $show_only_active_projects = get_theme_mod('moehser_show_only_active_projects', 1);
     $projects_title = get_theme_mod('moehser_projects_title', 'Projekte');
     $projects_subtitle = get_theme_mod('moehser_projects_subtitle', 'Subtitle below the main title');
+    $projects_layout_mode = get_theme_mod('moehser_projects_layout_mode', 'side_by_side');
     
     // Skills Settings
     $skills_title = get_theme_mod('moehser_skills_title', 'Skills');
@@ -559,7 +561,7 @@ add_action('wp_head', function () {
     echo 'window.__SHOW_ONLY_ACTIVE_PROJECTS__ = ' . ($show_only_active_projects ? 'true' : 'false') . ';';
     echo 'window.__PROJECTS_TITLE__ = "' . esc_js($projects_title) . '";';
     echo 'window.__PROJECTS_SUBTITLE__ = "' . esc_js($projects_subtitle) . '";';
-    echo 'window.__PROJECTS_LAYOUT_MODE__ = "' . esc_js(get_theme_mod('moehser_projects_layout_mode', 'side_by_side')) . '";';
+    echo 'window.__PROJECTS_LAYOUT_MODE__ = "' . esc_js($projects_layout_mode) . '";';
     
     // Skills Settings to frontend
     echo 'window.__SKILLS_TITLE__ = "' . esc_js($skills_title) . '";';

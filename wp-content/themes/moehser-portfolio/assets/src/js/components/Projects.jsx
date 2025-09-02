@@ -399,7 +399,6 @@ export default function Projects() {
         // Always show only active projects (including print mode)
         const filteredProjects = data.filter(project => project.project_status === 'active');
         
-        
         // Keep API order (date DESC)
         setProjects(filteredProjects);
 
@@ -450,9 +449,6 @@ export default function Projects() {
     triggerPrint();
     return () => { cancelled = true; };
   }, [isPrint, printReady, projects.length]);
-
-  // After render: no-op when printing (debug logs removed)
-  useEffect(() => {}, [isPrint, printReady, projects.length]);
 
   // Auto-play functionality
   useEffect(() => {
@@ -618,6 +614,28 @@ export default function Projects() {
     );
   }
 
+  // Grid mode render (simple): image + title + excerpt, no tags/CTAs
+  const renderGrid = () => (
+    <div className="projects__grid">
+      {projects.map((p) => (
+        <article key={p.id} className="projects__grid-card" aria-label={`Projekt: ${p.title}`}>
+          <div className="projects__grid-thumb">
+            {renderProjectScreenshot(p, { isPriority: false })}
+          </div>
+          <h3 className="projects__grid-title">{p.title}</h3>
+          {(p.excerpt && p.excerpt.trim() !== '') || (p.content && p.content.trim() !== '') ? (
+            <p className="projects__grid-excerpt">{renderProjectExcerpt(p)}</p>
+          ) : (
+            <div aria-hidden="true">
+              <div className="skeleton skeleton--text-line" style={{ width: '85%' }}></div>
+              <div className="skeleton skeleton--text-line" style={{ width: '60%' }}></div>
+            </div>
+          )}
+        </article>
+      ))}
+    </div>
+  );
+
   return (
     <section className="projects section-base" id="projects">
       <div className="projects__inner section-inner">
@@ -686,165 +704,168 @@ export default function Projects() {
                 ))}
               </div>
             </div>
-            {
-              /* Normal interactive slider for screen */
-            }
-            <motion.div
-              initial={ANIMATION.FADE_IN.hidden}
-              whileInView={ANIMATION.FADE_IN.show}
-              transition={{ 
-                duration: ANIMATION.TIMING.BASE, 
-                delay: ANIMATION.TIMING.DELAY 
-              }}
-              viewport={{ once: true }}
-              className={`projects__body section-body projects__body--layout-${layoutMode}`}
-            >
-              {/* Left Navigation Arrow */}
-              {projects.length > 1 && (
-                <button 
-                  className="projects__nav-btn projects__nav-btn--prev"
-                  onClick={goToPreviousSlide}
-                  disabled={currentSlide === 0}
-                  aria-label="Previous project"
-                  aria-controls="projects-slider"
-                  aria-disabled={currentSlide === 0 ? 'true' : 'false'}
-                >
-                  ←
-                </button>
-              )}
 
-              <div
-                className="projects__slider projects__slider--side-by-side"
-                id="projects-slider"
-                role="region"
-                aria-roledescription="carousel"
-                aria-labelledby="projects-heading"
-                aria-live="off"
-                onTouchStart={onTouchStart}
-                onTouchMove={onTouchMove}
-                onTouchEnd={onTouchEnd}
-                onMouseEnter={() => setIsPaused(true)}
-                onMouseLeave={() => setIsPaused(false)}
-                onFocus={() => setIsPaused(true)}
-                onBlur={() => setIsPaused(false)}
+            {layoutMode === 'grid' ? (
+              renderGrid()
+            ) : (
+              <motion.div
+                initial={ANIMATION.FADE_IN.hidden}
+                whileInView={ANIMATION.FADE_IN.show}
+                transition={{ 
+                  duration: ANIMATION.TIMING.BASE, 
+                  delay: ANIMATION.TIMING.DELAY 
+                }}
+                viewport={{ once: true }}
+                className={`projects__body section-body projects__body--layout-${layoutMode}`}
               >
-                <div className="projects__slider-container">
-                  {/* Live region for announcing slide changes */}
-                  {!isPrint && projects.length > 0 && (
-                    <div
-                      aria-live="polite"
-                      style={{
-                        position: 'absolute',
-                        width: '1px',
-                        height: '1px',
-                        margin: '-1px',
-                        padding: 0,
-                        border: 0,
-                        overflow: 'hidden',
-                        clip: 'rect(0 0 0 0)',
-                        whiteSpace: 'nowrap'
-                      }}
-                    >
-                      {`Showing project ${currentSlide + 1} of ${projects.length}: ${projects[currentSlide].title}`}
-                    </div>
-                  )}
-                  {isPrint ? (
-                    // Print: render all projects stacked
-                    projects.map((proj, idx) => (
+                {/* Left Navigation Arrow */}
+                {projects.length > 1 && (
+                  <button 
+                    className="projects__nav-btn projects__nav-btn--prev"
+                    onClick={goToPreviousSlide}
+                    disabled={currentSlide === 0}
+                    aria-label="Previous project"
+                    aria-controls="projects-slider"
+                    aria-disabled={currentSlide === 0 ? 'true' : 'false'}
+                  >
+                    ←
+                  </button>
+                )}
+
+                <div
+                  className="projects__slider projects__slider--side-by-side"
+                  id="projects-slider"
+                  role="region"
+                  aria-roledescription="carousel"
+                  aria-labelledby="projects-heading"
+                  aria-live="off"
+                  onTouchStart={onTouchStart}
+                  onTouchMove={onTouchMove}
+                  onTouchEnd={onTouchEnd}
+                  onMouseEnter={() => setIsPaused(true)}
+                  onMouseLeave={() => setIsPaused(false)}
+                  onFocus={() => setIsPaused(true)}
+                  onBlur={() => setIsPaused(false)}
+                >
+                  <div className="projects__slider-container">
+                    {/* Live region for announcing slide changes */}
+                    {!isPrint && projects.length > 0 && (
                       <div
-                        key={idx}
-                        className="projects__slide"
-                        role="group"
-                        aria-roledescription="slide"
-                        aria-label={`Slide ${idx + 1} of ${projects.length}`}
+                        aria-live="polite"
+                        style={{
+                          position: 'absolute',
+                          width: '1px',
+                          height: '1px',
+                          margin: '-1px',
+                          padding: 0,
+                          border: 0,
+                          overflow: 'hidden',
+                          clip: 'rect(0 0 0 0)',
+                          whiteSpace: 'nowrap'
+                        }}
                       >
-                        <div className="project-card project-card--side-by-side">
-                          <h1 className="print-project-heading">{projectsTitle}</h1>
-                          <div className="project-card__screenshot">
-                            {renderProjectScreenshot(proj, { isPriority: false, isPrint: true })}
-                          </div>
-                          <div className="project-card__info">
-                            <h3 className="project-card__title">{proj.title}</h3>
-                            { (proj.excerpt || proj.content) && (
-                              <div className="project-card__excerpt" dangerouslySetInnerHTML={{ __html: (proj.excerpt && proj.excerpt.trim() !== '' ? proj.excerpt : proj.content) }} />
-                            )}
-                            {renderProjectTechnologies(proj)}
-                            <div className="project-card__actions">
-                              {renderProjectActions(proj, handleProjectClick)}
+                        {`Showing project ${currentSlide + 1} of ${projects.length}: ${projects[currentSlide].title}`}
+                      </div>
+                    )}
+                    {isPrint ? (
+                      // Print: render all projects stacked
+                      projects.map((proj, idx) => (
+                        <div
+                          key={idx}
+                          className="projects__slide"
+                          role="group"
+                          aria-roledescription="slide"
+                          aria-label={`Slide ${idx + 1} of ${projects.length}`}
+                        >
+                          <div className="project-card project-card--side-by-side">
+                            <h1 className="print-project-heading">{projectsTitle}</h1>
+                            <div className="project-card__screenshot">
+                              {renderProjectScreenshot(proj, { isPriority: false, isPrint: true })}
+                            </div>
+                            <div className="project-card__info">
+                              <h3 className="project-card__title">{proj.title}</h3>
+                              { (proj.excerpt || proj.content) && (
+                                <div className="project-card__excerpt" dangerouslySetInnerHTML={{ __html: (proj.excerpt && proj.excerpt.trim() !== '' ? proj.excerpt : proj.content) }} />
+                              )}
+                              {renderProjectTechnologies(proj)}
+                              <div className="project-card__actions">
+                                {renderProjectActions(proj, handleProjectClick)}
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))
-                  ) : (
-                    <AnimatePresence mode="wait" initial={false}>
-                      <motion.div
-                        key={currentSlide}
-                        className="projects__slide"
-                        role="group"
-                        aria-roledescription="slide"
-                        aria-label={`Slide ${currentSlide + 1} of ${projects.length}`}
-                        initial={ANIMATION.SLIDE.hidden}
-                        animate={ANIMATION.SLIDE.show}
-                        exit={ANIMATION.SLIDE.exit}
-                        transition={ANIMATION.SPRING}
-                      >
-                        {(() => {
-                          const current = projects[currentSlide];
-                          const isImgLoaded = Boolean(imageLoaded[current?.id]);
-                          return (
-                            <div className="project-card project-card--side-by-side">
-                              <div className="project-card__screenshot">
-                                {renderProjectScreenshot(current, { isPriority: true, onLoad: () => markImageLoaded(current?.id) })}
-                                {!isImgLoaded && (
-                                  <div className="skeleton skeleton--image" aria-hidden="true"></div>
-                                )}
-                              </div>
-                              <div className="project-card__info">
-                                <h3
-                                  className="project-card__title"
-                                  ref={currentSlideTitleRef}
-                                  tabIndex={-1}
-                                >
-                                  {current.title}
-                                </h3>
-                                {(current.excerpt && current.excerpt.trim() !== '') || (current.content && current.content.trim() !== '') ? (
-                                  <div className="project-card__excerpt" dangerouslySetInnerHTML={{ __html: (current.excerpt && current.excerpt.trim() !== '' ? current.excerpt : current.content) }} />
-                                ) : (
-                                  <div aria-hidden="true">
-                                    <div className="skeleton skeleton--text-line" style={{ width: '85%' }}></div>
-                                    <div className="skeleton skeleton--text-line" style={{ width: '70%' }}></div>
-                                    <div className="skeleton skeleton--text-line" style={{ width: '60%' }}></div>
+                      ))
+                    ) : (
+                      <AnimatePresence mode="wait" initial={false}>
+                        <motion.div
+                          key={currentSlide}
+                          className="projects__slide"
+                          role="group"
+                          aria-roledescription="slide"
+                          aria-label={`Slide ${currentSlide + 1} of ${projects.length}`}
+                          initial={ANIMATION.SLIDE.hidden}
+                          animate={ANIMATION.SLIDE.show}
+                          exit={ANIMATION.SLIDE.exit}
+                          transition={ANIMATION.SPRING}
+                        >
+                          {(() => {
+                            const current = projects[currentSlide];
+                            const isImgLoaded = Boolean(imageLoaded[current?.id]);
+                            const isFirstSlide = currentSlide === 0;
+                            return (
+                              <div className="project-card project-card--side-by-side">
+                                <div className="project-card__screenshot">
+                                  {renderProjectScreenshot(current, { isPriority: true, onLoad: () => markImageLoaded(current?.id) })}
+                                  {!isImgLoaded && !isFirstSlide && (
+                                    <div className="skeleton skeleton--image" aria-hidden="true"></div>
+                                  )}
+                                </div>
+                                <div className="project-card__info">
+                                  <h3
+                                    className="project-card__title"
+                                    ref={currentSlideTitleRef}
+                                    tabIndex={-1}
+                                  >
+                                    {current.title}
+                                  </h3>
+                                  {(current.excerpt && current.excerpt.trim() !== '') || (current.content && current.content.trim() !== '') ? (
+                                    <div className="project-card__excerpt" dangerouslySetInnerHTML={{ __html: (current.excerpt && current.excerpt.trim() !== '' ? current.excerpt : current.content) }} />
+                                  ) : (
+                                    <div aria-hidden="true">
+                                      <div className="skeleton skeleton--text-line" style={{ width: '85%' }}></div>
+                                      <div className="skeleton skeleton--text-line" style={{ width: '70%' }}></div>
+                                      <div className="skeleton skeleton--text-line" style={{ width: '60%' }}></div>
+                                    </div>
+                                  )}
+                                  {renderProjectTechnologies(current)}
+                                  <div className="project-card__actions">
+                                    {renderProjectActions(current, handleProjectClick)}
                                   </div>
-                                )}
-                                {renderProjectTechnologies(current)}
-                                <div className="project-card__actions">
-                                  {renderProjectActions(current, handleProjectClick)}
                                 </div>
                               </div>
-                            </div>
-                          );
-                        })()}
-                      </motion.div>
-                    </AnimatePresence>
-                  )}
+                            );
+                          })()}
+                        </motion.div>
+                      </AnimatePresence>
+                    )}
+                  </div>
                 </div>
-              </div>
 
-              {/* Right Navigation Arrow */}
-              {projects.length > 1 && (
-                <button 
-                  className="projects__nav-btn projects__nav-btn--next"
-                  onClick={goToNextSlide}
-                  disabled={currentSlide === projects.length - 1}
-                  aria-label="Next project"
-                  aria-controls="projects-slider"
-                  aria-disabled={currentSlide === projects.length - 1 ? 'true' : 'false'}
-                >
-                  →
-                </button>
-              )}
-            </motion.div>
+                {/* Right Navigation Arrow */}
+                {projects.length > 1 && (
+                  <button 
+                    className="projects__nav-btn projects__nav-btn--next"
+                    onClick={goToNextSlide}
+                    disabled={currentSlide === projects.length - 1}
+                    aria-label="Next project"
+                    aria-controls="projects-slider"
+                    aria-disabled={currentSlide === projects.length - 1 ? 'true' : 'false'}
+                  >
+                    →
+                  </button>
+                )}
+              </motion.div>
+            )}
           </div>
         </div>
       </div>
