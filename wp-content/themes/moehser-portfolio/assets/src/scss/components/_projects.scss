@@ -713,6 +713,29 @@ body.theme-dark .projects__grid-card {
     &--prev { left: -70px; }
     &--next { right: -70px; }
   }
+
+  // Mobile tuning for list view in flow mode (better image/text proportion)
+  .projects.projects--flow .project-card--side-by-side.project-card--list {
+    flex-direction: column !important;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+  }
+  .projects.projects--flow .project-card--side-by-side.project-card--list .project-card__screenshot {
+    flex: 0 0 240px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 240px;
+    min-height: 240px;
+    max-height: 240px;
+    margin-right: 0;
+  }
+  .projects.projects--flow .project-card--side-by-side.project-card--list .project-card__info {
+    flex: 1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 16px;
+  }
 }
 
 // Dark mode support
