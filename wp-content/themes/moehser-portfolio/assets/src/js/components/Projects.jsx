@@ -146,7 +146,8 @@ const renderProjectTechnologies = (project) => {
 
 // Helper function to render project actions
 // ------------------------------
-const renderProjectActions = (project, handleProjectClick) => {
+const renderProjectActions = (project, handleProjectClick, opts = {}) => {
+  const primaryLabel = opts.primaryLabel || 'Demo';
   if (!project.project_url_external) {
     const hasGithub = Boolean(project.project_github_url);
     return (
@@ -167,7 +168,7 @@ const renderProjectActions = (project, handleProjectClick) => {
           onClick={() => handleProjectClick(project)}
           className="project-card__demo-btn"
         >
-          Live Preview
+          {primaryLabel}
         </button>
       </div>
     );
@@ -193,7 +194,7 @@ const renderProjectActions = (project, handleProjectClick) => {
           onClick={() => handleProjectClick(project)}
           className="project-card__demo-btn"
         >
-          Live Preview
+          {primaryLabel}
         </button>
       </div>
     );
@@ -220,7 +221,7 @@ const renderProjectActions = (project, handleProjectClick) => {
         rel="noopener noreferrer"
         className="project-card__demo-btn"
       >
-        Live Demo
+        {primaryLabel}
       </a>
     </div>
   );
@@ -758,7 +759,7 @@ export default function Projects() {
                         )}
                         {renderProjectTechnologies(proj)}
                         <div className="project-card__actions">
-                          {renderProjectActions(proj, handleProjectClick)}
+                          {renderProjectActions(proj, handleProjectClick, { primaryLabel: 'Demo' })}
                         </div>
                       </div>
                     </div>
@@ -788,7 +789,7 @@ export default function Projects() {
                         )}
                         {renderProjectTechnologies(proj)}
                         <div className="project-card__actions">
-                          {renderProjectActions(proj, handleProjectClick)}
+                          {renderProjectActions(proj, handleProjectClick, { primaryLabel: 'Demo' })}
                         </div>
                       </div>
                     </div>
@@ -929,7 +930,7 @@ export default function Projects() {
                                   )}
                                   {renderProjectTechnologies(current)}
                                   <div className="project-card__actions">
-                                    {renderProjectActions(current, handleProjectClick)}
+                                    {renderProjectActions(current, handleProjectClick, { primaryLabel: 'Demo' })}
                                   </div>
                                 </div>
                               </div>

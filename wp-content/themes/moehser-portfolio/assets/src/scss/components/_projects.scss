@@ -336,15 +336,19 @@ body.theme-dark .projects__toggle-btn.is-active { border-color: #38bdf8; box-sha
       }
 
       .project-card__demo-btn {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         width: 100%;
         padding: 0.8rem 1.2rem;
         background: linear-gradient(135deg, #38bdf8, #0ea5e9);
         color: white;
         border: none;
         border-radius: 8px;
-        font-weight: 600;
-        font-size: 0.9rem;
+        font-weight: 700;
+        font-size: 1rem;
+        line-height: 1.1;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         cursor: pointer;
         transition: all 0.3s ease;
         text-decoration: none;
@@ -354,6 +358,12 @@ body.theme-dark .projects__toggle-btn.is-active { border-color: #38bdf8; box-sha
           transform: none;
           background: linear-gradient(135deg, #0ea5e9, #0284c7);
         }
+      }
+      .project-card__demo-btn[type="button"],
+      .project-card__demo-btn[type="submit"],
+      button.project-card__demo-btn {
+        -webkit-appearance: none;
+        appearance: none;
       }
 
       .project-card__demo-btn--secondary {
@@ -571,10 +581,19 @@ body.theme-dark .projects__grid-card:hover {
   border: none;
   background: linear-gradient(135deg, #38bdf8, #0ea5e9);
   color: #fff;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.1;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   cursor: pointer;
   text-decoration: none;
   transition: filter 160ms ease;
+}
+.projects__grid-cta-btn[type="button"],
+.projects__grid-cta-btn[type="submit"],
+button.projects__grid-cta-btn {
+  -webkit-appearance: none;
+  appearance: none;
 }
 .projects__grid-cta-btn:hover { filter: brightness(1.05); }
 .projects__grid-cta-btn--secondary {
