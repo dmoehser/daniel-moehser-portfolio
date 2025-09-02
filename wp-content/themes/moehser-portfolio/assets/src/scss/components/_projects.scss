@@ -381,16 +381,21 @@ body.theme-dark .skeleton {
   .projects__grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (min-width: 900px) {
-  .projects__grid { grid-template-columns: repeat(3, 1fr); }
+  .projects__grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (min-width: 1200px) {
-  .projects__grid { grid-template-columns: repeat(4, 1fr); }
+  .projects__grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 .projects__grid-card {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  position: relative;
+  border: 1px solid rgba(15,23,42,.12);
+  border-radius: 12px;
+  padding: 12px;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
 }
 
 .projects__grid-thumb {
@@ -431,6 +436,19 @@ body.theme-dark .skeleton {
 
 body.theme-dark .projects__grid-title { color: #e2e8f0; }
 body.theme-dark .projects__grid-excerpt { color: #cbd5e1; }
+
+// Hover frame effect
+.projects__grid-card:hover {
+  border-color: rgba(56,189,248,.65);
+  box-shadow: 0 0 0 3px rgba(56,189,248,.22);
+}
+body.theme-dark .projects__grid-card {
+  border-color: rgba(255,255,255,.12);
+}
+body.theme-dark .projects__grid-card:hover {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 3px rgba(56,189,248,.35);
+}
 
 // Simple Project Card - Individual project card styling
 // ----------------------------------------------------
