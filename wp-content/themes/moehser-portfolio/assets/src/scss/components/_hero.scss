@@ -153,6 +153,16 @@
   // Ensure it's rendered in its own layer
   contain: layout style paint !important;
 }
+
+// Hide desktop menu on mobile devices
+@media (max-width: 768px) {
+  .hero__quick {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
 .hero__quick-btn {
   display: inline-flex; align-items: center; gap: 14px; padding: 16px 26px; border-radius: 8px;
   background: linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.62));
