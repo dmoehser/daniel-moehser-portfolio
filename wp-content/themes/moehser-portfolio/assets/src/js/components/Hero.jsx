@@ -132,6 +132,7 @@ export default function Hero() {
             </div>
           </div>
           <div className="hero__copy">
+            {/* Desktop: Typewriter effect with HTML tags */}
             <div className="hero__code">
               <span className="tag">&lt;h1&gt;</span>
               <span className="type h1 hero__monospace">{h1Text}</span>
@@ -145,6 +146,14 @@ export default function Hero() {
               </span>
               {stage === 2 && pText.length < fullP.length && <span className="caret">|</span>}
               <span className="tag">&lt;/p&gt;</span>
+            </div>
+            
+            {/* Mobile: Clean, simple text */}
+            <div className="hero__mobile-text">
+              <h1>Hello!</h1>
+              <p>
+                I'm <span className="hero__name">Daniel Moehser</span> — full‑stack web developer crafting reliable and elegant web experiences.
+              </p>
             </div>
           </div>
         </div>
