@@ -69,6 +69,37 @@ const PRINT = {
   DEFAULT_DELAY: 250
 };
 
+// LocalStorage constants
+// ---------------------
+const STORAGE = {
+  VIEW_MODE_KEY: 'projects_view_mode',
+  DEFAULT_VIEW: false // false = grid, true = list
+};
+
+// LocalStorage helpers
+// -------------------
+const saveViewMode = (isListView) => {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem(STORAGE.VIEW_MODE_KEY, JSON.stringify(isListView));
+    }
+  } catch (error) {
+    // Silent fail for privacy/incognito mode
+  }
+};
+
+const loadViewMode = () => {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const saved = localStorage.getItem(STORAGE.VIEW_MODE_KEY);
+      return saved !== null ? JSON.parse(saved) : STORAGE.DEFAULT_VIEW;
+    }
+  } catch (error) {
+    // Silent fail, return default
+  }
+  return STORAGE.DEFAULT_VIEW;
+};
+
 // Render project excerpt
 // ----------------------
 const renderProjectExcerpt = (project) => {
@@ -361,7 +392,7 @@ export default function Projects() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [listView, setListView] = useState(false);
+  const [listView, setListView] = useState(loadViewMode);
   const [isPrint, setIsPrint] = useState(false);
   const [printReady, setPrintReady] = useState(false);
   const pendingPrintRef = useRef(false);
@@ -376,6 +407,12 @@ export default function Projects() {
   const markImageLoaded = (projectId) => {
     if (!projectId) return;
     setImageLoaded((prev) => ({ ...prev, [projectId]: true }));
+  };
+
+  // Enhanced setListView that persists to localStorage
+  const updateListView = (newListView) => {
+    setListView(newListView);
+    saveViewMode(newListView);
   };
 
   // Get customizer values
@@ -722,7 +759,7 @@ export default function Projects() {
                       <button
                         className="projects__toggle-btn"
                         aria-pressed="false"
-                        onClick={() => setListView(false)}
+                        onClick={() => updateListView(false)}
                         title="Grid"
                         aria-label="Switch to grid view"
                       >
@@ -732,7 +769,7 @@ export default function Projects() {
                       <button
                         className="projects__toggle-btn"
                         aria-pressed="false"
-                        onClick={() => setListView(true)}
+                        onClick={() => updateListView(true)}
                         title="List"
                         aria-label="Switch to list view"
                       >
