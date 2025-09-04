@@ -398,7 +398,20 @@ export default function Projects() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [listView, setListView] = useState(loadViewMode);
+  const [listView, setListView] = useState(() => {
+    // For side_by_side mode, view toggle doesn't apply
+    if (typeof window !== 'undefined') {
+      const mode = window.__PROJECTS_LAYOUT_MODE__ || 'side_by_side';
+      if (mode === 'side_by_side') return false;
+      
+      // For grid/list modes, check saved preference or use mode default
+      const savedView = loadViewMode();
+      if (savedView !== null) return savedView;
+      
+      return mode === 'list'; // list mode defaults to true, grid mode defaults to false
+    }
+    return false;
+  });
   const [isPrint, setIsPrint] = useState(false);
   const [printReady, setPrintReady] = useState(false);
   const pendingPrintRef = useRef(false);
@@ -440,6 +453,11 @@ export default function Projects() {
   const layoutMode = typeof window !== 'undefined'
     ? window.__PROJECTS_LAYOUT_MODE__ || 'side_by_side'
     : 'side_by_side';
+  const showViewToggle = typeof window !== 'undefined'
+    ? (typeof window.__PROJECTS_SHOW_VIEW_TOGGLE__ !== 'undefined' 
+        ? window.__PROJECTS_SHOW_VIEW_TOGGLE__ 
+        : true)
+    : true;
   const autoplay = typeof window !== 'undefined' 
     ? window.__PROJECTS_AUTOPLAY__ || false 
     : false;
@@ -451,6 +469,13 @@ export default function Projects() {
         ? window.__SHOW_ONLY_ACTIVE_PROJECTS__ 
         : true)
     : true;
+
+  // Determine default view based on layout mode
+  const getDefaultView = () => {
+    if (layoutMode === 'list') return true; // list mode defaults to list view
+    if (layoutMode === 'grid') return false; // grid mode defaults to grid view
+    return false; // side_by_side mode doesn't use view toggle
+  };
 
   useEffect(() => {
     // Detect print mode via events and media query
@@ -761,13 +786,13 @@ export default function Projects() {
   );
 
   return (
-    <section className={`projects section-base ${layoutMode === 'grid' ? 'projects--flow' : ''}`.trim()} id="projects">
+    <section className={`projects section-base ${(layoutMode === 'grid' || layoutMode === 'list') ? 'projects--flow' : ''}`.trim()} id="projects">
       <div className="projects__inner section-inner">
         <div className="projects__content section-content">
           <div className="projects__card section-card">
             {/* Toggle buttons positioned in top-right of card */}
             <div className="projects__view-toggle">
-              {layoutMode === 'grid' && (
+              {(layoutMode === 'grid' || layoutMode === 'list') && showViewToggle && (
                 listView ? (
                   <button
                     className="projects__toggle-btn"
@@ -860,7 +885,7 @@ export default function Projects() {
               </div>
             </div>
 
-            {layoutMode === 'grid' ? (
+            {(layoutMode === 'grid' || layoutMode === 'list') ? (
               (listView || isMobile) ? (
                 <div className="projects__list">
                   {projects.map((proj) => (

@@ -150,7 +150,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'type' => 'text',
     ]);
 
-    // Projects Layout Mode (add grid)
+    // Projects Layout Mode (add grid and list)
     $wp_customize->add_setting('moehser_projects_layout_mode', [
         'default' => 'side_by_side',
         'sanitize_callback' => 'sanitize_text_field',
@@ -158,14 +158,33 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]);
     $wp_customize->add_control('moehser_projects_layout_mode', [
         'label' => __('Projects Layout Mode', 'moehser-portfolio'),
-        'description' => __('Choose how projects are arranged: side-by-side for focus, grid for overview.', 'moehser-portfolio'),
+        'description' => __('Choose how projects are displayed: side-by-side for focus, grid/list for overview.', 'moehser-portfolio'),
         'section' => 'moehser_projects',
         'type' => 'select',
         'priority' => 1,
         'choices' => [
             'side_by_side' => __('Side by side (image left, details right)', 'moehser-portfolio'),
-            'grid' => __('Grid (tiled cards, overview)', 'moehser-portfolio'),
+            'grid' => __('Grid with toggle (default: grid view)', 'moehser-portfolio'),
+            'list' => __('List with toggle (default: list view)', 'moehser-portfolio'),
         ],
+    ]);
+
+    // Show Grid/List Toggle Option (only visible when grid or list mode is selected)
+    $wp_customize->add_setting('moehser_projects_show_view_toggle', [
+        'default' => 1,
+        'sanitize_callback' => function ($value) { return (int) (bool) $value; },
+        'transport' => 'postMessage',
+    ]);
+    $wp_customize->add_control('moehser_projects_show_view_toggle', [
+        'label' => __('Show Grid/List Toggle', 'moehser-portfolio'),
+        'description' => __('Allow users to switch between grid and list view', 'moehser-portfolio'),
+        'section' => 'moehser_projects',
+        'type' => 'checkbox',
+        'priority' => 2,
+        'active_callback' => function () {
+            $layout_mode = get_theme_mod('moehser_projects_layout_mode', 'side_by_side');
+            return in_array($layout_mode, ['grid', 'list']);
+        },
     ]);
 
 
@@ -514,6 +533,7 @@ add_action('wp_head', function () {
     $projects_title = get_theme_mod('moehser_projects_title', 'Projekte');
     $projects_subtitle = get_theme_mod('moehser_projects_subtitle', 'Subtitle below the main title');
     $projects_layout_mode = get_theme_mod('moehser_projects_layout_mode', 'side_by_side');
+    $projects_show_view_toggle = get_theme_mod('moehser_projects_show_view_toggle', 1);
     
     // Skills Settings
     $skills_title = get_theme_mod('moehser_skills_title', 'Skills');
@@ -562,6 +582,7 @@ add_action('wp_head', function () {
     echo 'window.__PROJECTS_TITLE__ = "' . esc_js($projects_title) . '";';
     echo 'window.__PROJECTS_SUBTITLE__ = "' . esc_js($projects_subtitle) . '";';
     echo 'window.__PROJECTS_LAYOUT_MODE__ = "' . esc_js($projects_layout_mode) . '";';
+    echo 'window.__PROJECTS_SHOW_VIEW_TOGGLE__ = ' . ($projects_show_view_toggle ? 'true' : 'false') . ';';
     
     // Skills Settings to frontend
     echo 'window.__SKILLS_TITLE__ = "' . esc_js($skills_title) . '";';
