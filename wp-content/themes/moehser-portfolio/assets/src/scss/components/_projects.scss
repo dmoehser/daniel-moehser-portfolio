@@ -48,8 +48,6 @@
     height: 320px;
     min-height: 320px;
     max-height: 320px;
-  }
-  .projects.projects--flow .project-card--side-by-side.project-card--list .project-card__screenshot {
     flex: 0 0 45% !important;
     width: 45% !important;
     max-width: 45% !important;
@@ -66,8 +64,6 @@
     height: 360px;
     min-height: 360px;
     max-height: 360px;
-  }
-  .projects.projects--flow .project-card--side-by-side.project-card--list .project-card__screenshot {
     flex: 0 0 50% !important;
     width: 50% !important;
     max-width: 50% !important;
@@ -450,7 +446,7 @@ body.theme-dark .projects__toggle-btn.is-active { border-color: #38bdf8; box-sha
   width: auto;
   max-width: none;
   padding: 12px 16px 16px 12px;
-  overflow: hidden; // clip inner scroll areas, CTA bleibt sichtbar
+  overflow: hidden; // clip inner scroll; keep CTA visible
   height: 240px;
   min-height: 240px;
   max-height: 240px;
@@ -483,7 +479,7 @@ body.theme-dark .projects__toggle-btn.is-active { border-color: #38bdf8; box-sha
   position: static;
   align-self: stretch;
   width: 100%;
-  margin-top: auto; // bleibt am unteren Rand
+  margin-top: auto; // keep at bottom
 }
 
 // In list view, avoid extra gap before actions; grid gap is enough
@@ -493,7 +489,7 @@ body.theme-dark .projects__toggle-btn.is-active { border-color: #38bdf8; box-sha
   overflow-y: auto;
 }
 .project-card--side-by-side.project-card--list .project-card__technologies { 
-  margin-bottom: 0;
+  margin-bottom: 5px;
   flex: 0 0 auto;
 }
 .project-card--side-by-side.project-card--list .project-card__cta-row { margin-right: 0; width: 100%; }
@@ -617,9 +613,6 @@ body.theme-dark .projects__grid-card:hover {
   box-shadow: 0 0 0 3px rgba(56,189,248,.35);
 }
 
-// Hover overlay
-// (text overlay removed on request)
-
 // Grid CTA row
 .projects__grid-cta-row {
   display: grid;
@@ -695,11 +688,6 @@ body.theme-dark .projects__grid-cta-ico { filter: invert(1) brightness(1.2) cont
 
 body.theme-dark .projects__grid-title { color: #e2e8f0; }
 body.theme-dark .projects__grid-excerpt { color: #cbd5e1; }
-
-// Hover frame effect
-body.theme-dark .projects__grid-card {
-  border-color: rgba(255,255,255,.12);
-}
 
 // Simple Project Card - Individual project card styling
 // ----------------------------------------------------
