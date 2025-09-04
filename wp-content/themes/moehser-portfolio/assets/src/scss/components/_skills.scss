@@ -17,6 +17,17 @@
   padding: 120px 0 4vh 0;
   box-sizing: border-box;
   z-index: 1;
+  // Scrollbar & layout variables
+  // ----------------------------
+  --sb-track-height: 45%;
+  --sb-width: 6px;
+  --sb-right-offset: -10px;
+  --sb-track-bg: rgba(148,163,184,.20);
+  --sb-fill-bg: rgba(148,163,184,.35);
+  --sb-thumb-bg: linear-gradient(180deg, #3b82f6, #8b5cf6);
+  --gap-lg: 32px;
+  --gap-md: 24px;
+  --gap-sm: 16px;
 }
 
 .skills__inner {
@@ -88,23 +99,25 @@
 // --------------------
 
 .skill-card--standard {
+  height: 260px;
   min-height: 260px;
+  max-height: 260px;
 }
 
 .skill-card--special {
+  height: 280px;
   min-height: 280px;
-  height: 100%;
+  max-height: 280px;
 }
 
-.skill-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 
-    0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04),
-    0 0 0 0 rgba(59, 130, 246, 0.5),
-    0 0 0 0 rgba(59, 130, 246, 0.5);
-  border-color: #3b82f6;
-}
+  .skill-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+      0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05),
+      0 0 12px rgba(59, 130, 246, 0.3),
+      0 0 24px rgba(59, 130, 246, 0.15);
+  }
 
 // Card content
 // ------------
@@ -112,8 +125,8 @@
 .skill-card__title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #111827;
-  margin-bottom: 20px;
+  color: #0f172a;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -127,36 +140,48 @@
 
 .skill-card__description {
   font-size: 1.125rem;
-  line-height: 1.7;
-  color: #4b5563;
-  margin-bottom: 24px;
+  line-height: 1.6;
+  color: #374151;
+  margin-bottom: 16px;
   flex-grow: 1;
+  overflow: hidden;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  max-height: 80px;
 }
 
 .skill-card__list {
   list-style: none;
   padding: 0;
-  margin: 0 0 24px 0;
+  margin: 0 0 20px 0;
   flex-grow: 1;
+  overflow: hidden;
+  max-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .skill-card__list li {
-  padding: 8px 0;
-  color: #4b5563;
+  padding: 1px 0;
+  color: #374151;
   position: relative;
-  padding-left: 24px;
+  padding-left: 20px;
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: 1.2;
+  margin: 0;
 }
 
-.skill-card__list li:before {
+.skill-card__list li::before {
   content: "•";
-  color: #3b82f6;
-  font-weight: bold;
-  font-size: 1.25rem;
   position: absolute;
-  left: 0;
-  top: 6px;
+  left: 4px;
+  color: #0f172a;
+  font-weight: bold;
+  font-size: 1.2rem;
 }
 
 // Technology tags
@@ -165,34 +190,44 @@
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   margin-top: auto;
+  flex-shrink: 0;
+  padding-top: 12px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .animated-border {
-  background: #f9fafb;
-  color: #374151;
-  padding: 8px 16px;
-  border-radius: 24px;
+  background: rgba(255,255,255,.65);
+  color: #0f172a;
+  padding: 12px 18px;
+  border-radius: 8px;
   font-size: 0.875rem;
   font-weight: 600;
-  border: 1px solid #e5e7eb;
-  transition: all 0.2s ease;
+  border: 1px solid rgba(15,23,42,.08);
+  border-bottom: 2px solid rgba(15,23,42,.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
 
 .animated-border:hover {
-  background: #3b82f6;
-  color: #ffffff;
-  border-color: #3b82f6;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  background: rgba(255,255,255,.95);
+  border-bottom: 3px solid rgba(15,23,42,.3);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 // Dark mode support
 // -----------------
 
 body.theme-dark {
+  // Dark variables for scrollbar
+  // ----------------------------
+  .skills {
+    --sb-track-bg: rgba(34,197,94,.20);
+    --sb-fill-bg: rgba(34,197,94,.35);
+    --sb-thumb-bg: linear-gradient(180deg, #22c55e, #10b981);
+  }
   .skill-card {
     background: rgba(30,41,59,.95);
     border-color: rgba(255,255,255,.12);
@@ -212,14 +247,16 @@ body.theme-dark {
   }
   
   .animated-border {
-    background: rgba(30,41,59,.95);
-    color: #cbd5e1;
-    border-color: rgba(255,255,255,.12);
+    background: rgba(11,18,32,.7);
+    color: #c7f5d9;
+    border-color: rgba(34,255,136,.25);
+    border-bottom: 2px solid rgba(34,255,136,.3);
     
     &:hover {
-      background: #3b82f6;
-      color: #ffffff;
-      border-color: #3b82f6;
+      background: rgba(11,18,32,.95);
+      border-bottom: 3px solid rgba(34,255,136,.4);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(34,255,136,0.15);
     }
   }
 }
@@ -248,3 +285,240 @@ body.theme-dark {
     min-height: 240px;
   }
 }
+
+// Mode hooks
+// -----------
+
+// Adaptive mode
+// --------------
+.skills--adaptive {
+  // Keep within 100vh by capping inner height
+  .skills__inner {
+    height: calc(100vh - 120px - 4vh);
+    overflow: hidden; // clamp visual area to section
+    display: flex;
+    flex-direction: column;
+  }
+  // Only scroll the content if it would overflow
+  .skills__content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: visible; // allow card glows within section
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding-bottom: 32px; // bottom gap
+    position: relative;
+  }
+  // Scrollable viewport wrapper (external scrollbar mirrors this)
+  .skills__viewport.is-adaptive {
+    height: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding-right: 20px; // increased buffer for hover glow
+    padding-left: 14px; // a bit more left buffer
+    padding-top: 8px;
+    padding-bottom: 8px;
+    scrollbar-width: none; // Firefox
+    -ms-overflow-style: none; // IE/Edge
+  }
+  .skills__viewport.is-adaptive::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
+  // External scrollbar (outside to the right)
+  .skills__scrollbar {
+    position: absolute;
+    top: 50%;
+    right: var(--sb-right-offset, -10px); // outside
+    transform: translateY(-50%);
+    height: var(--sb-track-height, 45%);
+    width: var(--sb-width, 6px);
+    background: var(--sb-track-bg, rgba(148,163,184,.20));
+    border-radius: 999px;
+    opacity: 0;
+    transition: opacity .2s ease;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .skills__scrollbar.show { opacity: .9; }
+  .skills__scrollbar-fill {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: var(--sb-fill, 20%);
+    background: var(--sb-fill-bg, rgba(148,163,184,.35));
+    border-radius: 999px;
+  }
+  .skills__scrollbar-thumb {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: var(--sb-thumb, 10%);
+    top: var(--sb-top, 0%);
+    background: var(--sb-thumb-bg, linear-gradient(180deg, #3b82f6, #8b5cf6));
+    opacity: .8;
+    border-radius: 999px;
+    box-shadow: 0 0 6px rgba(59,130,246,.25);
+    will-change: top, height;
+  }
+  // Always-visible custom scrollbar (overlay)
+  .custom-scrollbar {
+    display: none; // temporarily disable per request
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 50%; // shortened per request
+    width: 6px;
+    background: transparent; // track is filled via .fill only
+    border-radius: 999px;
+    opacity: 0;
+    transition: opacity .2s ease;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .custom-scrollbar.show { opacity: .9; }
+  .custom-scrollbar .fill {
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%;
+    background: rgba(148,163,184,.25); // filled portion
+    border-radius: 999px;
+  }
+  .custom-scrollbar .thumb {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(180deg, #3b82f6, #8b5cf6); // match top bar
+    opacity: .75; // slightly stronger
+    border-radius: 999px;
+    box-shadow: 0 0 6px rgba(59,130,246,.25);
+    will-change: transform, height;
+  }
+  .skills__top-row {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-auto-flow: row dense;
+    gap: var(--gap-lg, 32px);
+  }
+  .skills__bottom-row {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+  .skill-card--standard {
+    height: auto;
+    min-height: 260px;
+    max-height: none;
+  }
+  .skill-card--special {
+    height: auto;
+    min-height: 280px;
+    max-height: none;
+  }
+  .skill-card__description {
+    overflow: visible;
+    display: block;
+    line-clamp: unset;
+    -webkit-line-clamp: unset;
+    -webkit-box-orient: unset;
+    text-overflow: initial;
+    max-height: none;
+    word-break: break-word;
+    hyphens: auto;
+  }
+  // Gentle overflow handling without truncation
+  .skill-card__list {
+    max-height: none;
+  }
+  .tags {
+    max-height: none;
+    // allow long tags to wrap
+    .animated-border {
+      white-space: normal;
+      word-break: break-word;
+      hyphens: auto;
+    }
+  }
+}
+
+// Adaptive layout tweaks by count
+// -------------------------------
+.skills--adaptive.count-4 {
+  .skills__top-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .skills__top-row > .skill-card:nth-child(4) {
+    grid-column: 1 / -1; // full width
+  }
+}
+
+.skills--adaptive.count-5 {
+  .skills__top-row {
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-flow: row dense;
+  }
+  // First row: 3 equal thirds
+  .skills__top-row > .skill-card:nth-child(-n+3) {
+    grid-column: span 2;
+  }
+  // Second row: 2 equal halves
+  .skills__top-row > .skill-card:nth-child(n+4) {
+    grid-column: span 3;
+  }
+}
+
+@media (max-width: 1024px) {
+  .skills--adaptive.count-4,
+  .skills--adaptive.count-5 {
+    .skills__top-row {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--gap-md, 24px);
+    }
+    .skills__top-row > .skill-card:nth-child(4) { grid-column: auto; }
+    .skills__top-row > .skill-card:nth-child(5) { grid-column: auto; }
+  }
+}
+
+// Mobile stacking for 4/5 cards
+// ------------------------------
+@media (max-width: 900px) {
+  .skills--adaptive.count-4,
+  .skills--adaptive.count-5 {
+    .skills__top-row {
+      grid-template-columns: 1fr;
+      gap: var(--gap-sm, 16px);
+    }
+    .skills__top-row > .skill-card { grid-column: auto; }
+  }
+}
+
+// Mobile stacking for all adaptive
+// -------------------------------
+@media (max-width: 900px) {
+  .skills--adaptive {
+    .skills__top-row {
+      grid-template-columns: 1fr;
+      gap: var(--gap-sm, 16px);
+      grid-auto-columns: 1fr; // prevent implicit extra columns
+    }
+    .skills__top-row > .skill-card { grid-column: auto; }
+    // neutralize earlier span rules with higher specificity
+    &.count-4 {
+      .skills__top-row > .skill-card:nth-child(4) { grid-column: auto; }
+    }
+    &.count-5 {
+      .skills__top-row > .skill-card:nth-child(-n+3) { grid-column: auto; }
+      .skills__top-row > .skill-card:nth-child(n+4) { grid-column: auto; }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .skills--adaptive.count-4,
+  .skills--adaptive.count-5 {
+    .skills__top-row {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  }
+}
+
+// Fixed mode
+// -----------
+// No overrides currently

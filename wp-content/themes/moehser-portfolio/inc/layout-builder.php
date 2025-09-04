@@ -24,7 +24,7 @@ function moehser_register_simple_layout_builder($wp_customize) {
 		$wp_customize->add_setting($setting_id, [
 			'default'           => 1,
 			'sanitize_callback' => function ($v) { return (int) (bool) $v; },
-			'transport'         => 'refresh',
+			'transport'         => 'postMessage',
 		]);
 		$wp_customize->add_control($setting_id, [
 			'label'       => sprintf(__('Show %s Section', 'moehser-portfolio'), $label),
@@ -37,7 +37,7 @@ function moehser_register_simple_layout_builder($wp_customize) {
 	$wp_customize->add_setting('moehser_sections_order', [
 		'default'           => 'about,skills,projects',
 		'sanitize_callback' => 'moehser_sanitize_sections_order',
-		'transport'         => 'refresh',
+		'transport'         => 'postMessage',
 	]);
 	$wp_customize->add_control('moehser_sections_order', [
 		'label'       => __('Sections Order', 'moehser-portfolio'),
@@ -88,7 +88,8 @@ function moehser_enqueue_layout_builder_js() {
 	}
 
 	// Enqueue live-updates.js AFTER main React bundle so sections exist
-	$deps = ['moehser-portfolio-main'];
+	// Also ensure Customizer preview API is available
+	$deps = ['moehser-portfolio-main', 'customize-preview'];
 	wp_enqueue_script(
 		'moehser-layout-builder',
 		get_theme_file_uri('assets/src/js/features/layout-builder/live-updates.js'),
@@ -98,3 +99,26 @@ function moehser_enqueue_layout_builder_js() {
 	);
 }
 add_action('wp_enqueue_scripts', 'moehser_enqueue_layout_builder_js');
+
+/**
+ * Enqueue a Customizer controls-side script to sync 'Show Skills Section'
+ * with Adaptive mode card enablement, so the checkbox state updates in the UI.
+ */
+function moehser_enqueue_layout_builder_controls_js() {
+    wp_enqueue_script(
+        'moehser-layout-builder-controls',
+        get_theme_file_uri('assets/src/js/features/layout-builder/controls-sync.js'),
+        ['customize-controls'],
+        '1.0.0',
+        true
+    );
+    // Skills notes toggling per layout mode
+    wp_enqueue_script(
+        'moehser-skills-notes-controls',
+        get_theme_file_uri('assets/src/js/features/layout-builder/skills-notes.js'),
+        ['customize-controls', 'jquery'],
+        '1.0.0',
+        true
+    );
+}
+add_action('customize_controls_enqueue_scripts', 'moehser_enqueue_layout_builder_controls_js');

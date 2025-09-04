@@ -30,47 +30,6 @@ add_action('rest_api_init', function () {
 			return rest_ensure_response($result);
 		},
 	]);
-	
-	// Endpoint for about content
-	register_rest_route('moehser/v1', '/about', [
-		'methods' => 'GET',
-		'permission_callback' => '__return_true',
-		'callback' => function ($request) {
-			$about_posts = get_posts([
-				'post_type' => 'about',
-				'post_status' => 'publish',
-				'numberposts' => 1,
-				'orderby' => 'date',
-				'order' => 'DESC'
-			]);
-			
-			if (empty($about_posts)) {
-				return rest_ensure_response([
-					'title' => 'Über mich',
-					'subtitle' => 'Web Developer & Designer',
-					'content' => 'Hier können Sie Ihren About-Text bearbeiten.',
-					'skills_list' => 'React, WordPress, Docker, Node.js',
-					'cta_text' => 'Kontakt aufnehmen',
-					'cta_url' => '#contact'
-				]);
-			}
-			
-			$about = $about_posts[0];
-			$meta = get_post_meta($about->ID);
-			
-			return rest_ensure_response([
-				'id' => $about->ID,
-				'title' => $about->post_title,
-				'subtitle' => isset($meta['_about_subtitle'][0]) ? $meta['_about_subtitle'][0] : '',
-				'content' => $about->post_content,
-				'excerpt' => $about->post_excerpt,
-				'skills_list' => isset($meta['_about_skills_list'][0]) ? $meta['_about_skills_list'][0] : '',
-				'cta_text' => isset($meta['_about_cta_text'][0]) ? $meta['_about_cta_text'][0] : '',
-				'cta_url' => isset($meta['_about_cta_url'][0]) ? $meta['_about_cta_url'][0] : '',
-				'featured_image' => get_the_post_thumbnail_url($about->ID, 'full')
-			]);
-		},
-	]);
 
 	// Endpoint for projects
 	register_rest_route('moehser/v1', '/projects', [
@@ -107,6 +66,10 @@ add_action('rest_api_init', function () {
 			if (!empty($projects)) {
 				foreach ($projects as $project) {
 					$meta = get_post_meta($project->ID);
+					$featured_id = get_post_thumbnail_id($project->ID);
+					$featured_wide = $featured_id ? wp_get_attachment_image_src($featured_id, 'project_wide') : false;
+					$featured_wide_2x = $featured_id ? wp_get_attachment_image_src($featured_id, 'project_wide_2x') : false;
+					$featured_srcset = $featured_id ? wp_get_attachment_image_srcset($featured_id, 'project_wide') : '';
 					$result[] = [
 						'id' => $project->ID,
 						'title' => $project->post_title,
@@ -117,11 +80,17 @@ add_action('rest_api_init', function () {
 						'modified' => $project->post_modified,
 						'status' => $project->post_status,
 						'featured_image' => get_the_post_thumbnail_url($project->ID, 'full'),
+						'featured_image_wide' => $featured_wide ? $featured_wide[0] : '',
+						'featured_image_wide_2x' => $featured_wide_2x ? $featured_wide_2x[0] : '',
+						'featured_image_srcset' => $featured_srcset ?: '',
+						'featured_image_wide_w' => $featured_wide ? (int) $featured_wide[1] : 0,
+						'featured_image_wide_h' => $featured_wide ? (int) $featured_wide[2] : 0,
 						'project_screenshot' => isset($meta['project_screenshot'][0]) ? $meta['project_screenshot'][0] : '',
 						'project_technologies' => isset($meta['project_technologies'][0]) ? $meta['project_technologies'][0] : '',
 						'project_status' => isset($meta['project_status'][0]) ? $meta['project_status'][0] : 'active',
 						'project_url_external' => isset($meta['project_url'][0]) ? $meta['project_url'][0] : '',
 						'project_demo_mode' => isset($meta['project_demo_mode'][0]) ? $meta['project_demo_mode'][0] : 'iframe',
+						'project_github_url' => isset($meta['project_github_url'][0]) ? $meta['project_github_url'][0] : '',
 					];
 				}
 			}
@@ -144,6 +113,11 @@ add_action('rest_api_init', function () {
 
 			$meta = get_post_meta($project_id);
 			
+			$featured_id = get_post_thumbnail_id($project->ID);
+			$featured_wide = $featured_id ? wp_get_attachment_image_src($featured_id, 'project_wide') : false;
+			$featured_wide_2x = $featured_id ? wp_get_attachment_image_src($featured_id, 'project_wide_2x') : false;
+			$featured_srcset = $featured_id ? wp_get_attachment_image_srcset($featured_id, 'project_wide') : '';
+
 			return rest_ensure_response([
 				'id' => $project->ID,
 				'title' => $project->post_title,
@@ -153,10 +127,14 @@ add_action('rest_api_init', function () {
 				'date' => $project->post_date,
 				'modified' => $project->post_modified,
 				'featured_image' => get_the_post_thumbnail_url($project->ID, 'full'),
+				'featured_image_wide' => $featured_wide ? $featured_wide[0] : '',
+				'featured_image_wide_2x' => $featured_wide_2x ? $featured_wide_2x[0] : '',
+				'featured_image_srcset' => $featured_srcset ?: '',
 				'project_technologies' => isset($meta['project_technologies'][0]) ? $meta['project_technologies'][0] : '',
 				'project_status' => isset($meta['project_status'][0]) ? $meta['project_status'][0] : 'active',
 				'project_url_external' => isset($meta['project_url'][0]) ? $meta['project_url'][0] : '',
 				'project_demo_mode' => isset($meta['project_demo_mode'][0]) ? $meta['project_demo_mode'][0] : 'iframe',
+				'project_github_url' => isset($meta['project_github_url'][0]) ? $meta['project_github_url'][0] : '',
 			]);
 		},
 	]);

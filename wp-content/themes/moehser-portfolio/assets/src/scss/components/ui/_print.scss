@@ -1,0 +1,221 @@
+// Print
+// =====
+
+@media print {
+  @page { margin: 12mm; }
+  // Make the first page (Hero) landscape
+  @page :first { size: landscape; }
+  html, body { background: #ffffff !important; }
+  // Hide UI
+  // -------
+  #site-header,
+  #site-header *,
+  .site-header__inner,
+  .site-header__inner *,
+  .menu,
+  .menu *,
+  .pill,
+  .hero__quick,
+  .hero__quick * ,
+  .hero__brand,
+  .hero__brand * ,
+  .wpadminbar,
+  .scroll-progress-top,
+  .social-dock,
+  .project-iframe-overlay,
+  .fullscreen-preview-overlay { display: none !important; }
+
+  // Ensure header cannot occupy space in print
+  #site-header {
+    position: static !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: none !important;
+    background: transparent !important;
+  }
+
+  // Reset fx
+  // ---------
+  * { transition: none !important; animation: none !important; }
+
+  // Section sizing and page breaks
+  // ------------------------------
+  #hero,
+  #hero,
+  #skills,
+  #about,
+  #projects {
+    min-height: auto !important;
+    height: auto !important;
+    padding: 24px 0 !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  // Start each main section on a new page (except the first on paper)
+  #skills,
+  #about,
+  #projects { break-before: page; page-break-before: always; }
+
+  // Ensure exactly one page per section
+  // -----------------------------------
+  #hero { break-after: page; page-break-after: always; }
+  #skills { break-after: page; page-break-after: always; }
+  #about { break-after: page; page-break-after: always; }
+  #projects { break-after: auto; page-break-after: auto; }
+
+  // Hero cleanup
+  // ------------
+  #hero, #hero * { box-shadow: none !important; }
+  #hero { background: transparent !important; }
+
+  // Reset 100vh/overflow/flex that block pagination
+  .page-scroll,
+  .page-scroll > section,
+  .section-base,
+  .hero,
+  .skills,
+  .about,
+  .projects {
+    min-height: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+    display: block !important;
+  }
+  // Ensure containers do not exceed printable area
+  .section-inner,
+  .skills__inner,
+  .about__inner,
+  .projects__inner {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding-left: 10mm !important;
+    padding-right: 10mm !important;
+  }
+  .section-content,
+  .section-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  // Typography improvements (print)
+  // -------------------------------
+  body { font-size: 11.5pt; line-height: 1.4; }
+  p, li { line-height: 1.4; }
+  h1, h2, h3 { page-break-after: avoid; break-after: avoid; }
+
+  // Show target URLs for links (skip buttons)
+  // ----------------------------------------
+  a[href^="http"]:after {
+    content: " (" attr(href) ")";
+    font-weight: normal;
+    color: #444;
+  }
+  .project-card__demo-btn:after,
+  .hero__quick-btn:after,
+  .animated-border:after { content: none !important; }
+
+  // About section print tweaks
+  // --------------------------
+  #about .about__card { break-inside: avoid-page; page-break-inside: avoid; }
+  #about .about__content-text p { orphans: 3; widows: 3; }
+  #about ul, #about ol { break-inside: avoid; page-break-inside: avoid; }
+  #skills .skills__inner { height: auto !important; overflow: visible !important; }
+  #skills .skills__viewport { height: auto !important; overflow: visible !important; }
+
+  // Projects: show all slides, stack vertically
+  // ------------------------------------------
+  #projects .projects__nav-btn { display: none !important; }
+  #projects .projects__header { display: none !important; }
+  #projects .projects__slider--side-by-side { display: none !important; }
+  #projects .projects__grid { display: none !important; }
+  #projects .projects__inner,
+  #projects .projects__content,
+  #projects .projects__card {
+    height: auto !important;
+    overflow: visible !important;
+  }
+  #projects .projects__slider--side-by-side .projects__slider-container {
+    display: block !important;
+    transform: none !important;
+    width: 100% !important;
+  }
+  #projects .projects__slider--side-by-side .projects__slide {
+    flex: none !important;
+    width: 100% !important;
+    display: block !important;    margin: 0 0 16px 0 !important;
+  }
+  /* Start each slide on a new page except the first */
+  #projects .projects__slider--side-by-side .projects__slide + .projects__slide {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  // Print stack (rendered outside slider in print mode)
+  // ---------------------------------------------------
+  #projects .projects__print-stack {
+    display: block !important;
+    width: 100% !important;
+  }
+  #projects .projects__print-stack .projects__slide {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 0 16px 0 !important;
+  }
+  #projects .projects__print-stack .projects__slide + .projects__slide {
+    break-before: page;
+    page-break-before: always;
+  }
+  // Make side-by-side card printable (vertical)
+  #projects .project-card--side-by-side {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    box-shadow: none !important;
+  }
+  #projects .project-card--side-by-side .project-card__screenshot,
+  #projects .project-card--side-by-side .project-card__info {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin-right: 0 !important;
+  }
+  #projects .project-card--side-by-side .project-card__screenshot img { width: 100% !important; height: auto !important; object-fit: contain !important; }
+  #projects .project-card__actions { display: none !important; }
+  #projects .print-project-heading { font-size: 18pt !important; margin: 0 0 8pt 0 !important; color: #000 !important; }
+
+  // Force-visible states for motion elements (when animations not run)
+  // -----------------------------------------------------------------
+  #hero, #skills, #about, #projects,
+  #hero *, #skills *, #about *, #projects * {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  // Skills tune
+  // -----------
+  #skills .skills__scrollbar,
+  #skills .custom-scrollbar { display: none !important; }
+  #skills .skill-card { box-shadow: none !important; border-color: #ddd !important; }
+  #skills .skills--adaptive .skills__top-row,
+  #skills .skills--fixed .skills__top-row,
+  #skills .skills__bottom-row { grid-template-columns: 1fr !important; gap: 12px !important; }
+  #skills .skill-card--standard,
+  #skills .skill-card--special { height: auto !important; max-height: none !important; }
+  #skills .skill-card__description { line-clamp: unset !important; -webkit-line-clamp: unset !important; display: block !important; max-height: none !important; overflow: visible !important; text-overflow: initial !important; }
+  #skills .skill-card__list { max-height: none !important; overflow: visible !important; }
+  #skills .skill-card { break-inside: avoid-page; page-break-inside: avoid; }
+
+  // Cards should not split across pages
+  // -----------------------------------
+  #skills .skill-card { break-inside: avoid-page; page-break-inside: avoid; }
+}
+
+

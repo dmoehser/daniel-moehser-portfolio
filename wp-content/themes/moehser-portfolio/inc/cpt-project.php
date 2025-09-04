@@ -96,6 +96,19 @@ add_action('init', function () {
             return current_user_can('edit_posts');
         },
     ]);
+
+    // Optional GitHub URL for secondary CTA
+    register_post_meta('project', 'project_github_url', [
+        'show_in_rest' => true,
+        'type' => 'string',
+        'single' => true,
+        'sanitize_callback' => function ($value) {
+            return esc_url_raw($value);
+        },
+        'auth_callback' => function () {
+            return current_user_can('edit_posts');
+        },
+    ]);
 });
 
 // Add custom meta boxes for project management
@@ -117,6 +130,7 @@ function moehser_project_meta_box_callback($post) {
     $technologies = get_post_meta($post->ID, 'project_technologies', true);
     $status = get_post_meta($post->ID, 'project_status', true);
     $url = get_post_meta($post->ID, 'project_url', true);
+    $github_url = get_post_meta($post->ID, 'project_github_url', true);
     $demo_mode = get_post_meta($post->ID, 'project_demo_mode', true);
     $screenshot = get_post_meta($post->ID, 'project_screenshot', true);
 
@@ -129,6 +143,15 @@ function moehser_project_meta_box_callback($post) {
             <td>
                 <input type="url" id="project_url" name="project_url" value="<?php echo esc_attr($url); ?>" class="regular-text" />
                 <p class="description"><?php _e('Live URL of your deployed project (e.g., https://your-app.onrender.com)', 'moehser-portfolio'); ?></p>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">
+                <label for="project_github_url"><?php _e('GitHub URL', 'moehser-portfolio'); ?></label>
+            </th>
+            <td>
+                <input type="url" id="project_github_url" name="project_github_url" value="<?php echo esc_attr($github_url); ?>" class="regular-text" />
+                <p class="description"><?php _e('Repository URL (e.g., https://github.com/username/repo)', 'moehser-portfolio'); ?></p>
             </td>
         </tr>
         <tr>
@@ -216,6 +239,11 @@ add_action('save_post', function ($post_id) {
     // Save project URL
     if (isset($_POST['project_url'])) {
         update_post_meta($post_id, 'project_url', esc_url_raw($_POST['project_url']));
+    }
+
+    // Save GitHub URL
+    if (isset($_POST['project_github_url'])) {
+        update_post_meta($post_id, 'project_github_url', esc_url_raw($_POST['project_github_url']));
     }
 
     // Save project demo mode

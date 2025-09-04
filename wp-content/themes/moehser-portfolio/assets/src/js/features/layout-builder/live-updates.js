@@ -38,9 +38,11 @@
             applyLayout();
         }
         
-        // Listen for Customizer changes
+        // Listen for Customizer changes (ensure preview channel is ready)
         if (window.wp && window.wp.customize) {
-            setupCustomizerListeners();
+            window.wp.customize.bind('preview-ready', function() {
+                setupCustomizerListeners();
+            });
         }
         
         // Listen for window resize
@@ -232,6 +234,88 @@
                     layoutConfig.order = newOrder;
                     applyLayout();
                 }
+            });
+        });
+
+        // Sync Skills section checkbox with Adaptive mode card enablement
+        const skillsState = {
+            layoutMode: (window.__SKILLS_LAYOUT_MODE__ || 'fixed_grid'),
+            enabled: Object.assign({ c1:true,c2:true,c3:true,c4:true,c5:true }, (window.__SKILLS_CARDS_ENABLED__ || {}))
+        };
+
+        function syncSkillsVisibilitySetting() {
+            if (!customize) return;
+            const anyEnabled = Object.values(skillsState.enabled).some(Boolean);
+            if (skillsState.layoutMode === 'adaptive_grid') {
+                const setting = customize('moehser_show_skills');
+                if (setting && typeof setting.set === 'function') {
+                    // Use 1/0 to match sanitize callback (absint)
+                    setting.set(anyEnabled ? 1 : 0);
+                }
+            }
+        }
+
+        // Listen to layout mode changes
+        const layoutSetting = customize('moehser_skills_layout_mode');
+        if (layoutSetting) {
+            layoutSetting.bind(function(newValue) {
+                skillsState.layoutMode = newValue || 'fixed_grid';
+                syncSkillsVisibilitySetting();
+            });
+            // Initialize current value
+            skillsState.layoutMode = layoutSetting.get() || 'fixed_grid';
+        }
+
+        // Listen to per-card enable flags (only visible in adaptive but we bind regardless)
+        ['c1','c2','c3','c4','c5'].forEach((key, idx) => {
+            const settingId = `moehser_skills_card${idx+1}_enabled`;
+            const setting = customize(settingId);
+            if (setting) {
+                setting.bind(function(newValue) {
+                    skillsState.enabled[key] = Boolean(newValue);
+                    syncSkillsVisibilitySetting();
+                });
+                // Initialize current value
+                skillsState.enabled[key] = Boolean(setting.get());
+            }
+        });
+
+        // Initial sync with current control values
+        syncSkillsVisibilitySetting();
+
+        // About content live update (page selector)
+        customize('moehser_about_page_id', function(setting) {
+            setting.bind(function(newValue) {
+                const pageId = parseInt(newValue, 10) || 0;
+                if (!pageId) {
+                    window.__ABOUT_HTML__ = '';
+                    const target = document.querySelector('#about .about__content-text');
+                    if (target) target.innerHTML = '';
+                    if (window.MoehserLayoutBuilder) {
+                        window.MoehserLayoutBuilder.hideSection('about');
+                    }
+                    return;
+                }
+                // Fetch rendered page content via WP REST API
+                fetch(`/wp-json/wp/v2/pages/${pageId}?_fields=content.rendered`)
+                    .then(r => r.ok ? r.json() : Promise.reject())
+                    .then(data => {
+                        const html = data && data.content && data.content.rendered ? data.content.rendered : '';
+                        window.__ABOUT_HTML__ = html;
+                        const target = document.querySelector('#about .about__content-text');
+                        if (target) target.innerHTML = html || '';
+                        if (window.MoehserLayoutBuilder) {
+                            if (html && html.trim()) {
+                                window.MoehserLayoutBuilder.showSection('about');
+                            } else {
+                                window.MoehserLayoutBuilder.hideSection('about');
+                            }
+                        }
+                    })
+                    .catch(() => {
+                        // On error, keep current content; optionally log
+                        // console.warn('Failed to fetch About page content');
+                    });
             });
         });
     }
