@@ -732,6 +732,33 @@ export default function Projects() {
       <div className="projects__inner section-inner">
         <div className="projects__content section-content">
           <div className="projects__card section-card">
+            {/* Toggle buttons positioned in top-right of card */}
+            <div className="projects__view-toggle">
+              {layoutMode === 'grid' && (
+                listView ? (
+                  <button
+                    className="projects__toggle-btn"
+                    aria-pressed="false"
+                    onClick={() => updateListView(false)}
+                    data-tooltip="Grid View"
+                    aria-label="Switch to grid view"
+                  >
+                    <img src={viewGridIcon} alt="" aria-hidden="true" />
+                  </button>
+                ) : (
+                  <button
+                    className="projects__toggle-btn"
+                    aria-pressed="false"
+                    onClick={() => updateListView(true)}
+                    data-tooltip="List View"
+                    aria-label="Switch to list view"
+                  >
+                    <img src={viewListIcon} alt="" aria-hidden="true" />
+                  </button>
+                )
+              )}
+            </div>
+            
             {isPrint ? (
               <div className="projects__header section-header">
                 <h2 className="projects__title section-title">{projectsTitle}</h2>
@@ -753,31 +780,6 @@ export default function Projects() {
                   className="projects__subtitle section-subtitle" 
                   dangerouslySetInnerHTML={{ __html: projectsSubtitle }} 
                 />
-                {layoutMode === 'grid' && (
-                  <div className="projects__view-toggle">
-                    {listView ? (
-                      <button
-                        className="projects__toggle-btn"
-                        aria-pressed="false"
-                        onClick={() => updateListView(false)}
-                        data-tooltip="Grid View"
-                        aria-label="Switch to grid view"
-                      >
-                        <img src={viewGridIcon} alt="" aria-hidden="true" />
-                      </button>
-                    ) : (
-                      <button
-                        className="projects__toggle-btn"
-                        aria-pressed="false"
-                        onClick={() => updateListView(true)}
-                        data-tooltip="List View"
-                        aria-label="Switch to list view"
-                      >
-                        <img src={viewListIcon} alt="" aria-hidden="true" />
-                      </button>
-                    )}
-                  </div>
-                )}
               </motion.div>
             )}
 
