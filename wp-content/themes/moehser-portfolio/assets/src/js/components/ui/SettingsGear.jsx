@@ -37,7 +37,7 @@ export default function SettingsGear() {
   }, []);
 
   useEffect(() => {
-    // Close menu when clicking outside
+    // Close menu when clicking outside or pressing ESC
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target) &&
           buttonRef.current && !buttonRef.current.contains(event.target)) {
@@ -45,12 +45,20 @@ export default function SettingsGear() {
       }
     };
 
+    const handleEscapeKey = (event) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+      }
+    };
+
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEscapeKey);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscapeKey);
     };
   }, [isOpen]);
 
@@ -94,7 +102,6 @@ export default function SettingsGear() {
           <button
             className="settings-gear__option"
             onClick={toggleTheme}
-            title={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
           >
             <span className="settings-gear__icon">
               {isDark ? '☀️' : '🌙'}
@@ -107,7 +114,6 @@ export default function SettingsGear() {
           <button
             className="settings-gear__option"
             onClick={openTerminal}
-            title="Open terminal"
           >
             <span className="settings-gear__icon">⌨️</span>
             <span className="settings-gear__label">Terminal</span>
