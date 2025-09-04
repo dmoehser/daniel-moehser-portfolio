@@ -331,14 +331,16 @@ const ProjectsSectionWrapper = ({ children, className = "" }) => (
 
 // Loading state component
 // -----------------------
-const ProjectsLoading = ({ projectsTitle, projectsSubtitle }) => (
+const ProjectsLoading = ({ projectsTitle, projectsSubtitle, hasSubtitle }) => (
   <ProjectsSectionWrapper>
     <div className="projects__header section-header">
       <h2 className="projects__title section-title">{projectsTitle}</h2>
-      <p 
-        className="projects__subtitle section-subtitle" 
-        dangerouslySetInnerHTML={{ __html: projectsSubtitle }} 
-      />
+      {hasSubtitle && (
+        <p 
+          className="projects__subtitle section-subtitle" 
+          dangerouslySetInnerHTML={{ __html: projectsSubtitle }} 
+        />
+      )}
     </div>
     <div className="projects__body section-body">
       <div className="projects__loading section-loading">
@@ -351,14 +353,16 @@ const ProjectsLoading = ({ projectsTitle, projectsSubtitle }) => (
 
 // Error state component
 // ---------------------
-const ProjectsError = ({ projectsTitle, projectsSubtitle, error }) => (
+const ProjectsError = ({ projectsTitle, projectsSubtitle, error, hasSubtitle }) => (
   <ProjectsSectionWrapper>
     <div className="projects__header section-header">
       <h2 className="projects__title section-title">{projectsTitle}</h2>
-      <p 
-        className="projects__subtitle section-subtitle" 
-        dangerouslySetInnerHTML={{ __html: projectsSubtitle }} 
-      />
+      {hasSubtitle && (
+        <p 
+          className="projects__subtitle section-subtitle" 
+          dangerouslySetInnerHTML={{ __html: projectsSubtitle }} 
+        />
+      )}
     </div>
     <div className="projects__body section-body">
       <div className="projects__error section-error">
@@ -370,14 +374,16 @@ const ProjectsError = ({ projectsTitle, projectsSubtitle, error }) => (
 
 // Empty state component
 // ---------------------
-const ProjectsEmpty = ({ projectsTitle, projectsSubtitle }) => (
+const ProjectsEmpty = ({ projectsTitle, projectsSubtitle, hasSubtitle }) => (
   <ProjectsSectionWrapper>
     <div className="projects__header section-header">
       <h2 className="projects__title section-title">{projectsTitle}</h2>
-      <p 
-        className="projects__subtitle section-subtitle" 
-        dangerouslySetInnerHTML={{ __html: projectsSubtitle }} 
-      />
+      {hasSubtitle && (
+        <p 
+          className="projects__subtitle section-subtitle" 
+          dangerouslySetInnerHTML={{ __html: projectsSubtitle }} 
+        />
+      )}
     </div>
     <div className="projects__body section-body">
       <div className="projects__empty section-empty">
@@ -420,8 +426,13 @@ export default function Projects() {
     ? window.__PROJECTS_TITLE__ || 'Projekte' 
     : 'Projekte';
   const projectsSubtitle = typeof window !== 'undefined' 
-    ? window.__PROJECTS_SUBTITLE__ || 'Subtitle below the main title' 
-    : 'Subtitle below the main title';
+    ? window.__PROJECTS_SUBTITLE__ || '' 
+    : '';
+
+  // Check if subtitle should be displayed
+  const hasSubtitle = projectsSubtitle && 
+    projectsSubtitle.trim() !== '' && 
+    projectsSubtitle !== 'Subtitle below the main title';
   const navPosition = typeof window !== 'undefined' 
     ? window.__PROJECTS_NAV_POSITION__ || 'outside' 
     : 'outside';
@@ -689,6 +700,7 @@ export default function Projects() {
       <ProjectsLoading 
         projectsTitle={projectsTitle}
         projectsSubtitle={projectsSubtitle}
+        hasSubtitle={hasSubtitle}
       />
     );
   }
@@ -699,6 +711,7 @@ export default function Projects() {
         projectsTitle={projectsTitle}
         projectsSubtitle={projectsSubtitle}
         error={error}
+        hasSubtitle={hasSubtitle}
       />
     );
   }
@@ -708,6 +721,7 @@ export default function Projects() {
       <ProjectsEmpty 
         projectsTitle={projectsTitle}
         projectsSubtitle={projectsSubtitle}
+        hasSubtitle={hasSubtitle}
       />
     );
   }
@@ -762,10 +776,12 @@ export default function Projects() {
             {isPrint ? (
               <div className="projects__header section-header">
                 <h2 className="projects__title section-title">{projectsTitle}</h2>
-                <p 
-                  className="projects__subtitle section-subtitle" 
-                  dangerouslySetInnerHTML={{ __html: projectsSubtitle }} 
-                />
+                {hasSubtitle && (
+                  <p 
+                    className="projects__subtitle section-subtitle" 
+                    dangerouslySetInnerHTML={{ __html: projectsSubtitle }} 
+                  />
+                )}
               </div>
             ) : (
               <motion.div
@@ -776,10 +792,12 @@ export default function Projects() {
                 className="projects__header section-header"
               >
                 <h2 className="projects__title section-title">{projectsTitle}</h2>
-                <p 
-                  className="projects__subtitle section-subtitle" 
-                  dangerouslySetInnerHTML={{ __html: projectsSubtitle }} 
-                />
+                {hasSubtitle && (
+                  <p 
+                    className="projects__subtitle section-subtitle" 
+                    dangerouslySetInnerHTML={{ __html: projectsSubtitle }} 
+                  />
+                )}
               </motion.div>
             )}
 
