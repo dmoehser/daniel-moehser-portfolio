@@ -278,7 +278,7 @@ body.theme-dark .projects__toggle-btn::after {
     min-height: 500px;
     max-height: 500px;
     border-radius: 12px;
-    margin-right: 20px;
+    margin: 16px 24px 16px 16px;
     
     img {
       width: 100%;
@@ -286,6 +286,8 @@ body.theme-dark .projects__toggle-btn::after {
       object-fit: cover;
       aspect-ratio: 16 / 9;
       transition: transform 0.3s ease;
+      display: block;
+      border-radius: inherit;
     }
     .skeleton.skeleton--image {
       position: absolute;
@@ -826,6 +828,7 @@ body.theme-dark .projects__grid-excerpt { color: #cbd5e1; }
       height: 450px;
       min-height: 450px;
       max-height: 450px;
+      margin: 20px 28px 20px 20px;
     }
     
     .project-card__info {
@@ -852,6 +855,8 @@ body.theme-dark .projects__grid-excerpt { color: #cbd5e1; }
       height: 200px;
       min-height: 200px;
       max-height: 200px;
+      margin: 16px 16px 0 16px;
+      border-radius: 12px;
     }
     
     .project-card__info {
