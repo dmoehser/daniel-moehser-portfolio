@@ -409,6 +409,7 @@ export default function Projects() {
   const touchStartRef = useRef({ x: 0, y: 0, time: 0 });
   const touchActiveRef = useRef(false);
   const [imageLoaded, setImageLoaded] = useState({});
+  const [isMobile, setIsMobile] = useState(false);
 
   const markImageLoaded = (projectId) => {
     if (!projectId) return;
@@ -455,6 +456,8 @@ export default function Projects() {
     // Detect print mode via events and media query
     const mq = window.matchMedia ? window.matchMedia('print') : null;
     const rmq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+    const mobileMq = window.matchMedia ? window.matchMedia('(max-width: 768px)') : null;
+    
     const handleBeforePrint = () => {
       pendingPrintRef.current = true;
       setIsPrint(true);
@@ -463,6 +466,10 @@ export default function Projects() {
       pendingPrintRef.current = false;
       setIsPrint(false);
     };
+    const handleMobileChange = (e) => {
+      setIsMobile(e.matches);
+    };
+    
     if (typeof window !== 'undefined') {
       // If print dialog already open at mount
       const mq = window.matchMedia && window.matchMedia('print');
@@ -470,6 +477,12 @@ export default function Projects() {
         pendingPrintRef.current = true;
         setIsPrint(true);
       }
+      
+      // Set initial mobile state
+      if (mobileMq) {
+        setIsMobile(mobileMq.matches);
+      }
+      
       window.addEventListener('beforeprint', handleBeforePrint);
       window.addEventListener('afterprint', handleAfterPrint);
       if (mq && typeof mq.addEventListener === 'function') {
@@ -481,6 +494,9 @@ export default function Projects() {
           rmq.addEventListener('change', (e) => setReducedMotion(Boolean(e.matches)));
         }
       }
+      if (mobileMq && typeof mobileMq.addEventListener === 'function') {
+        mobileMq.addEventListener('change', handleMobileChange);
+      }
     }
     return () => {
       if (typeof window !== 'undefined') {
@@ -491,6 +507,9 @@ export default function Projects() {
         }
         if (rmq && typeof rmq.removeEventListener === 'function') {
           rmq.removeEventListener('change', (e) => setReducedMotion(Boolean(e.matches)));
+        }
+        if (mobileMq && typeof mobileMq.removeEventListener === 'function') {
+          mobileMq.removeEventListener('change', handleMobileChange);
         }
       }
     };
@@ -842,7 +861,7 @@ export default function Projects() {
             </div>
 
             {layoutMode === 'grid' ? (
-              listView ? (
+              (listView || isMobile) ? (
                 <div className="projects__list">
                   {projects.map((proj) => (
                     <div key={proj.id} className="project-card project-card--side-by-side project-card--list" style={{ marginBottom: '16px' }}>

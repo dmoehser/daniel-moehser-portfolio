@@ -815,6 +815,30 @@ body.theme-dark .projects__grid-excerpt { color: #cbd5e1; }
   text-decoration: underline; 
 }
 
+// Mobile UX Optimization
+// ----------------------
+
+// Force list view on mobile for better UX
+@media (max-width: 768px) {
+  .projects__view-toggle {
+    display: none !important; // Hide grid/list toggle on mobile
+  }
+  
+  // Force list view regardless of user preference
+  .projects__grid {
+    display: none !important;
+  }
+  
+  .projects__list {
+    display: block !important;
+  }
+  
+  // Ensure layoutMode grid still works with forced list display
+  .projects.projects--flow .projects__list {
+    display: block !important;
+  }
+}
+
 // Responsive design
 // -----------------
 
