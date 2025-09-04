@@ -362,6 +362,7 @@ export default function Projects() {
     setImageLoaded((prev) => ({ ...prev, [projectId]: true }));
   };
 
+  // Debug-Effekt wird weiter unten nach den Konstanten eingefügt
 
   // Get customizer values
   const projectsTitle = typeof window !== 'undefined' 
