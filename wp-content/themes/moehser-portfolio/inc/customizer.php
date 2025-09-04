@@ -111,7 +111,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     $wp_customize->add_section('moehser_projects', [
         'title' => __('Projects Settings', 'moehser-portfolio'),
         'description' => __('Configure how projects are displayed and behave', 'moehser-portfolio'),
-        'priority' => 32,
+        'priority' => 33,
     ]);
 
     // Show Only Active Projects
@@ -192,7 +192,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     $wp_customize->add_section('moehser_skills', [
         'title' => __('Skills Settings', 'moehser-portfolio'),
         'description' => __('Configure the skills section content and layout', 'moehser-portfolio'),
-        'priority' => 33,
+        'priority' => 32,
     ]);
 
     // Skills Section Title
