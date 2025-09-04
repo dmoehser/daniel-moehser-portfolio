@@ -1,8 +1,8 @@
 // Projects Component
 // ================
 
-// Projects section with slider and customizer integration
-// ------------------------------
+// Projects with slider & customizer
+// ---------------------------------
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -11,7 +11,7 @@ import viewGridIcon from '../../img/view-grid.svg';
 import viewListIcon from '../../img/view-list.svg';
 
 // Utilities
-// ------------------------------
+// ---------
 const waitForPrintStability = async (extraDelayMs = 250) => {
   try {
     if (typeof window !== 'undefined' && document && document.readyState !== 'complete') {
@@ -29,8 +29,8 @@ const waitForPrintStability = async (extraDelayMs = 250) => {
   }
 };
 
-// Animation constants for consistent motion
-// ------------------------------
+// Animation constants
+// -------------------
 const ANIMATION = {
   FADE_IN: {
     hidden: { opacity: 0, y: 30 },
@@ -53,8 +53,24 @@ const ANIMATION = {
   }
 };
 
-// Helper function to render project excerpt
-// ------------------------------
+// Touch/Swipe constants
+// --------------------
+const TOUCH = {
+  MIN_DISTANCE: 40,
+  MAX_TIME: 600,
+  SCROLL_THRESHOLD: 12,
+  INTENT_RATIO: 1.5
+};
+
+// Print constants
+// ---------------
+const PRINT = {
+  STABILITY_DELAY: 4000,
+  DEFAULT_DELAY: 250
+};
+
+// Render project excerpt
+// ----------------------
 const renderProjectExcerpt = (project) => {
   if (project.excerpt && project.excerpt.trim() !== '') {
     return project.excerpt;
@@ -65,8 +81,8 @@ const renderProjectExcerpt = (project) => {
   return null;
 };
 
-// Helper function to render project screenshot
-// ------------------------------
+// Render project screenshot
+// -------------------------
 const renderProjectScreenshot = (project, opts = {}) => {
   const isPriority = Boolean(opts.isPriority);
   const onLoad = typeof opts.onLoad === 'function' ? opts.onLoad : undefined;
@@ -124,8 +140,8 @@ const renderProjectScreenshot = (project, opts = {}) => {
   );
 };
 
-// Helper function to render project technologies
-// ------------------------------
+// Render project technologies
+// ---------------------------
 const renderProjectTechnologies = (project) => {
   if (!project.project_technologies || 
       typeof project.project_technologies !== 'string' || 
@@ -144,8 +160,8 @@ const renderProjectTechnologies = (project) => {
   );
 };
 
-// Helper function to render project actions
-// ------------------------------
+// Render project actions
+// ----------------------
 const renderProjectActions = (project, handleProjectClick, opts = {}) => {
   const primaryLabel = opts.primaryLabel || 'Demo';
   if (!project.project_url_external) {
@@ -227,8 +243,8 @@ const renderProjectActions = (project, handleProjectClick, opts = {}) => {
   );
 };
 
-// Helper function to render compact grid actions (GitHub + Live)
-// ------------------------------
+// Render compact grid actions
+// ---------------------------
 const renderGridActions = (project, handleProjectClick) => {
   const hasGithub = Boolean(project.project_github_url);
   const hasExternal = Boolean(project.project_url_external);
@@ -268,8 +284,8 @@ const renderGridActions = (project, handleProjectClick) => {
   );
 };
 
-// Reusable section wrapper component
-// ------------------------------
+// Reusable section wrapper
+// ------------------------
 const ProjectsSectionWrapper = ({ children, className = "" }) => (
   <section className={`projects section-base ${className}`.trim()} id="projects">
     <div className="projects__inner section-inner">
@@ -283,7 +299,7 @@ const ProjectsSectionWrapper = ({ children, className = "" }) => (
 );
 
 // Loading state component
-// ------------------------------
+// -----------------------
 const ProjectsLoading = ({ projectsTitle, projectsSubtitle }) => (
   <ProjectsSectionWrapper>
     <div className="projects__header section-header">
@@ -296,14 +312,14 @@ const ProjectsLoading = ({ projectsTitle, projectsSubtitle }) => (
     <div className="projects__body section-body">
       <div className="projects__loading section-loading">
         <div className="loading-spinner"></div>
-        <p>Lade Projekte...</p>
+        <p>Loading projects...</p>
       </div>
     </div>
   </ProjectsSectionWrapper>
 );
 
 // Error state component
-// ------------------------------
+// ---------------------
 const ProjectsError = ({ projectsTitle, projectsSubtitle, error }) => (
   <ProjectsSectionWrapper>
     <div className="projects__header section-header">
@@ -315,14 +331,14 @@ const ProjectsError = ({ projectsTitle, projectsSubtitle, error }) => (
     </div>
     <div className="projects__body section-body">
       <div className="projects__error section-error">
-        <p>Fehler beim Laden der Projekte: {error}</p>
+        <p>Error loading projects: {error}</p>
       </div>
     </div>
   </ProjectsSectionWrapper>
 );
 
 // Empty state component
-// ------------------------------
+// ---------------------
 const ProjectsEmpty = ({ projectsTitle, projectsSubtitle }) => (
   <ProjectsSectionWrapper>
     <div className="projects__header section-header">
@@ -334,7 +350,7 @@ const ProjectsEmpty = ({ projectsTitle, projectsSubtitle }) => (
     </div>
     <div className="projects__body section-body">
       <div className="projects__empty section-empty">
-        <p>Keine Projekte gefunden.</p>
+        <p>No projects found.</p>
       </div>
     </div>
   </ProjectsSectionWrapper>
@@ -361,8 +377,6 @@ export default function Projects() {
     if (!projectId) return;
     setImageLoaded((prev) => ({ ...prev, [projectId]: true }));
   };
-
-  // Debug-Effekt wird weiter unten nach den Konstanten eingefügt
 
   // Get customizer values
   const projectsTitle = typeof window !== 'undefined' 
@@ -489,7 +503,7 @@ export default function Projects() {
     let cancelled = false;
     const triggerPrint = async () => {
       if (!(isPrint && printReady && projects.length > 0 && pendingPrintRef.current)) return;
-      await waitForPrintStability(4000);
+      await waitForPrintStability(PRINT.STABILITY_DELAY);
       if (cancelled) return;
       try { window.print(); } catch {}
     };
@@ -584,7 +598,7 @@ export default function Projects() {
     const dx = t.clientX - touchStartRef.current.x;
     const dy = t.clientY - touchStartRef.current.y;
     // If horizontal intent is clear, prevent vertical scroll jank
-    if (Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+    if (Math.abs(dx) > TOUCH.SCROLL_THRESHOLD && Math.abs(dx) > Math.abs(dy) * TOUCH.INTENT_RATIO) {
       e.preventDefault();
     }
   };
@@ -597,9 +611,9 @@ export default function Projects() {
     const dx = t.clientX - touchStartRef.current.x;
     const dy = t.clientY - touchStartRef.current.y;
     const dt = Date.now() - touchStartRef.current.time;
-    const horizontal = Math.abs(dx) > Math.abs(dy) * 1.2;
-    const fastEnough = dt < 600; // swipe should be reasonably quick
-    const farEnough = Math.abs(dx) > 40; // minimum distance
+    const horizontal = Math.abs(dx) > Math.abs(dy) * TOUCH.INTENT_RATIO;
+    const fastEnough = dt < TOUCH.MAX_TIME; // Swipe should be reasonably quick
+    const farEnough = Math.abs(dx) > TOUCH.MIN_DISTANCE; // Minimum distance
     if (horizontal && fastEnough && farEnough) {
       if (dx < 0 && currentSlide < projects.length - 1) {
         goToNextSlide();
