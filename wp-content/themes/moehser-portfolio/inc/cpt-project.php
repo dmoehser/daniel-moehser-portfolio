@@ -151,7 +151,7 @@ function moehser_project_meta_box_callback($post) {
             </th>
             <td>
                 <input type="url" id="project_github_url" name="project_github_url" value="<?php echo esc_attr($github_url); ?>" class="regular-text" />
-                <p class="description"><?php _e('Repository URL (e.g., https://github.com/username/repo). Optional – zeigt zusätzlichen CTA an.', 'moehser-portfolio'); ?></p>
+                <p class="description"><?php _e('Repository URL (e.g., https://github.com/username/repo)', 'moehser-portfolio'); ?></p>
             </td>
         </tr>
         <tr>
