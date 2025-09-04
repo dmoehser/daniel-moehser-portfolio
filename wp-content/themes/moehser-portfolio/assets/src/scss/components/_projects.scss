@@ -561,8 +561,8 @@ body.theme-dark .projects__toggle-btn::after {
 }
 .project-card--side-by-side.project-card--list .project-card__cta-row { 
   margin-right: 0; 
-  width: calc(100% - 16px);
-  max-width: calc(100% - 16px);
+  width: 100%;
+  max-width: 100%;
 }
 .project-card--side-by-side.project-card--list .project-card__cta-row--two { grid-template-columns: 1fr 1fr; }
 .project-card--side-by-side.project-card--list .project-card__cta-row--one { grid-template-columns: 1fr; }
