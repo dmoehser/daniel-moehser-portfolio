@@ -447,9 +447,6 @@ export default function Projects() {
   const hasSubtitle = projectsSubtitle && 
     projectsSubtitle.trim() !== '' && 
     projectsSubtitle !== 'Subtitle below the main title';
-  const navPosition = typeof window !== 'undefined' 
-    ? window.__PROJECTS_NAV_POSITION__ || 'outside' 
-    : 'outside';
   const layoutMode = typeof window !== 'undefined'
     ? window.__PROJECTS_LAYOUT_MODE__ || 'side_by_side'
     : 'side_by_side';
@@ -588,7 +585,7 @@ export default function Projects() {
     };
 
     fetchProjects();
-  }, [showOnlyActiveProjects, isPrint]);
+  }, [isPrint]);
 
   // When print is requested and data/images are ready, ensure DOM is painted, then trigger print
   useEffect(() => {
@@ -975,35 +972,6 @@ export default function Projects() {
                         {`Showing project ${currentSlide + 1} of ${projects.length}: ${projects[currentSlide].title}`}
                       </div>
                     )}
-                    {isPrint ? (
-                      // Print: render all projects stacked
-                      projects.map((proj, idx) => (
-                        <div
-                          key={idx}
-                          className="projects__slide"
-                          role="group"
-                          aria-roledescription="slide"
-                          aria-label={`Slide ${idx + 1} of ${projects.length}`}
-                        >
-                          <div className="project-card project-card--side-by-side">
-                            <h1 className="print-project-heading">{projectsTitle}</h1>
-                            <div className="project-card__screenshot">
-                              {renderProjectScreenshot(proj, { isPriority: false, isPrint: true })}
-                            </div>
-                            <div className="project-card__info">
-                              <h3 className="project-card__title">{proj.title}</h3>
-                              { (proj.excerpt || proj.content) && (
-                                <div className="project-card__excerpt" dangerouslySetInnerHTML={{ __html: (proj.excerpt && proj.excerpt.trim() !== '' ? proj.excerpt : proj.content) }} />
-                              )}
-                              {renderProjectTechnologies(proj)}
-                              <div className="project-card__actions">
-                                {renderProjectActions(proj, handleProjectClick)}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
                       <AnimatePresence mode="wait" initial={false}>
                         <motion.div
                           key={currentSlide}
@@ -1055,7 +1023,6 @@ export default function Projects() {
                           })()}
                         </motion.div>
                       </AnimatePresence>
-                    )}
                   </div>
                 </div>
 

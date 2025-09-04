@@ -138,21 +138,6 @@
     height: auto !important;
     overflow: visible !important;
   }
-  #projects .projects__slider--side-by-side .projects__slider-container {
-    display: block !important;
-    transform: none !important;
-    width: 100% !important;
-  }
-  #projects .projects__slider--side-by-side .projects__slide {
-    flex: none !important;
-    width: 100% !important;
-    display: block !important;    margin: 0 0 16px 0 !important;
-  }
-  /* Start each slide on a new page except the first */
-  #projects .projects__slider--side-by-side .projects__slide + .projects__slide {
-    break-before: page;
-    page-break-before: always;
-  }
 
   // Print stack (rendered outside slider in print mode)
   // ---------------------------------------------------
