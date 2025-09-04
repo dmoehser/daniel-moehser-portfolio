@@ -362,6 +362,7 @@ export default function Projects() {
     setImageLoaded((prev) => ({ ...prev, [projectId]: true }));
   };
 
+
   // Get customizer values
   const projectsTitle = typeof window !== 'undefined' 
     ? window.__PROJECTS_TITLE__ || 'Projekte' 
