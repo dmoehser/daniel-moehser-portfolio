@@ -760,7 +760,7 @@ export default function Projects() {
                         className="projects__toggle-btn"
                         aria-pressed="false"
                         onClick={() => updateListView(false)}
-                        title="Grid"
+                        data-tooltip="Grid View"
                         aria-label="Switch to grid view"
                       >
                         <img src={viewGridIcon} alt="" aria-hidden="true" />
@@ -770,7 +770,7 @@ export default function Projects() {
                         className="projects__toggle-btn"
                         aria-pressed="false"
                         onClick={() => updateListView(true)}
-                        title="List"
+                        data-tooltip="List View"
                         aria-label="Switch to list view"
                       >
                         <img src={viewListIcon} alt="" aria-hidden="true" />
