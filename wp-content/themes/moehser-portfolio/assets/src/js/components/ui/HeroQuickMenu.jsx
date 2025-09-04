@@ -5,7 +5,6 @@
 // ------------------------------
 
 import React, { useEffect, useState } from 'react';
-import ThemeToggle from './ThemeToggle.jsx';
 
 // Section mapping constants
 // ------------------------------
@@ -145,20 +144,6 @@ export default function HeroQuickMenu() {
           </a>
         );
       })}
-      
-      {/* Theme toggle - controlled by WP Customizer */}
-      <ThemeToggle />
-      
-      {/* Terminal toggle button */}
-      <button 
-        className="hero__quick-btn hero__quick-btn--icon" 
-        type="button" 
-        aria-label="Toggle terminal" 
-        title="Toggle terminal" 
-        onClick={() => window.dispatchEvent(new Event('terminal:toggle'))}
-      >
-        <span aria-hidden>⌘_</span>
-      </button>
     </div>
   );
 }

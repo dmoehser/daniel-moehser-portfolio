@@ -1,0 +1,178 @@
+// Settings Gear Component
+// =======================
+
+// Subtle settings gear positioned bottom-right
+// --------------------------------------------
+
+.settings-gear {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+}
+
+.settings-gear__trigger {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  opacity: 0.6;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    color: #64748b;
+    transition: all 0.2s ease;
+  }
+  
+  &:hover {
+    opacity: 1;
+    transform: rotate(45deg);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    
+    img {
+      color: #0f172a;
+    }
+  }
+}
+
+.settings-gear__menu {
+  position: absolute;
+  bottom: 48px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 12px;
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: 
+    0 10px 25px rgba(15, 23, 42, 0.1),
+    0 4px 12px rgba(15, 23, 42, 0.05);
+  min-width: 160px;
+  padding: 8px;
+  animation: settingsMenuFadeIn 0.15s ease-out;
+  transform-origin: bottom right;
+}
+
+.settings-gear__option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  color: #374151;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: left;
+  
+  &:hover {
+    background: rgba(59, 130, 246, 0.08);
+    color: #1f2937;
+    transform: translateX(2px);
+  }
+  
+  &:active {
+    transform: translateX(2px) scale(0.98);
+  }
+}
+
+.settings-gear__icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-gear__label {
+  flex: 1;
+  line-height: 1.2;
+}
+
+// Animation for menu appearance
+@keyframes settingsMenuFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+// Dark mode support
+body.theme-dark {
+  .settings-gear__trigger {
+    img {
+      color: #94a3b8;
+    }
+    
+    &:hover {
+      background: rgba(30, 41, 59, 0.3);
+      
+      img {
+        color: #e2e8f0;
+      }
+    }
+  }
+  
+  .settings-gear__menu {
+    background: rgba(30, 41, 59, 0.95);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 
+      0 10px 25px rgba(0, 0, 0, 0.3),
+      0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .settings-gear__option {
+    color: #cbd5e1;
+    
+    &:hover {
+      background: rgba(59, 130, 246, 0.15);
+      color: #e2e8f0;
+    }
+  }
+}
+
+// Mobile adjustments
+@media (max-width: 768px) {
+  .settings-gear {
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .settings-gear__trigger {
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+  }
+  
+  .settings-gear__menu {
+    min-width: 140px;
+    bottom: 52px;
+  }
+  
+  .settings-gear__option {
+    padding: 14px 16px;
+    font-size: 0.95rem;
+  }
+}
+
+// Print mode - hide settings gear
+@media print {
+  .settings-gear {
+    display: none !important;
+  }
+}

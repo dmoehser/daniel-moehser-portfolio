@@ -11,6 +11,7 @@ import Projects from './components/Projects.jsx';
 import SocialDock from './components/ui/SocialDock.jsx';
 import Skills from './components/Skills.jsx';
 import ScrollProgress from './components/ui/ScrollProgress.jsx';
+import SettingsGear from './components/ui/SettingsGear.jsx';
 import BackToProjectsButton from './components/ui/BackToProjectsButton.jsx';
 import ArrowNavigation from './features/arrow-navigation/ArrowNavigation.jsx';
 import TerminalManager from './features/terminal/TerminalManager.jsx';
@@ -72,6 +73,7 @@ export default function App() {
       {/* Global UI components */}
       <SocialDock />
       <ScrollProgress />
+      <SettingsGear />
     </>
   );
 }
