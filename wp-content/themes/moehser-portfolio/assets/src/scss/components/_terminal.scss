@@ -5,6 +5,16 @@
 // ------------------------------
 
 .terminal { position: fixed; left: 0; right: 0; bottom: 0; z-index: 9999; }
+
+// Hide terminal on mobile devices
+@media (max-width: 768px) {
+  .terminal {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
 .terminal--dock { transform: translateZ(0); }
 .terminal__dockwrap { position: relative; width: 100%; background: transparent; display: flex; flex-direction: column; height: 44vh; }
 // Terminal shell bar and header
