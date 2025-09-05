@@ -44,7 +44,12 @@ export default function SettingsGear() {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target) &&
           buttonRef.current && !buttonRef.current.contains(event.target)) {
-        setIsOpen(false);
+        if (showPerformance) {
+          setShowPerformance(false);
+          setIsOpen(false);
+        } else {
+          setIsOpen(false);
+        }
       }
     };
 
