@@ -196,7 +196,7 @@ export default function SettingsGear() {
                 <span className="settings-gear__metric-tooltip">Interaction to Next Paint - Time from user interaction to visual response</span>
               </div>
               <span className={`settings-gear__metric-value ${metrics.inp && metrics.inp > 200 ? 'warning' : 'good'}`}>
-                {metrics.inp ? `${Math.round(metrics.inp)}ms` : 'Loading...'}
+                {metrics.inp ? `${Math.round(metrics.inp)}ms` : 'No interaction yet'}
               </span>
             </div>
             

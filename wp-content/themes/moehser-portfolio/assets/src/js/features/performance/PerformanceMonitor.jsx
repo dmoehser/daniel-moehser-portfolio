@@ -52,9 +52,9 @@ const usePerformanceMonitor = () => {
             setMetrics(prev => ({ ...prev, lcp: entry.startTime }));
             break;
           case 'event':
-            if (entry.name === 'first-input') {
-              setMetrics(prev => ({ ...prev, inp: entry.processingEnd - entry.startTime }));
-            }
+            // INP measures ALL user interactions - capture everything
+            const inpValue = entry.processingEnd ? entry.processingEnd - entry.startTime : entry.duration;
+            setMetrics(prev => ({ ...prev, inp: inpValue }));
             break;
           case 'layout-shift':
             if (!entry.hadRecentInput) {
@@ -83,8 +83,33 @@ const usePerformanceMonitor = () => {
       console.warn('Performance monitoring not fully supported:', error);
     }
 
-    return () => observer.disconnect();
-  }, []);
+            return () => observer.disconnect();
+      }, []);
+
+      // Additional event listeners to ensure we catch ALL interactions
+      useEffect(() => {
+        const handleInteraction = (event) => {
+          const startTime = performance.now();
+          requestAnimationFrame(() => {
+            const endTime = performance.now();
+            const inpValue = endTime - startTime;
+            setMetrics(prev => ({ ...prev, inp: inpValue }));
+          });
+        };
+
+        // Listen to ALL possible interaction events
+        const events = ['click', 'keydown', 'keyup', 'mousedown', 'mouseup', 'touchstart', 'touchend', 'pointerdown', 'pointerup', 'scroll', 'resize'];
+        
+        events.forEach(eventType => {
+          document.addEventListener(eventType, handleInteraction, { passive: true });
+        });
+
+        return () => {
+          events.forEach(eventType => {
+            document.removeEventListener(eventType, handleInteraction);
+          });
+        };
+      }, []);
 
   // Monitor bundle size
   useEffect(() => {
