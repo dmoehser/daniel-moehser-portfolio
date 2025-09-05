@@ -171,6 +171,13 @@ body.theme-dark {
 }
 
 // Print mode - hide settings gear
+// Hide on mobile - integrated into mobile menu
+@media (max-width: 768px) {
+  .settings-gear {
+    display: none !important;
+  }
+}
+
 @media print {
   .settings-gear {
     display: none !important;

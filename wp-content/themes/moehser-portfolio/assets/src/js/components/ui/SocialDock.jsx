@@ -4,7 +4,7 @@
 // Quick contact links with social media integration
 // ------------------------------
 
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 // Icon dimensions and social media configuration
 // ------------------------------
@@ -46,16 +46,99 @@ const SOCIAL_LINKS = [
 ];
 
 export default function SocialDock() {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const dockRef = useRef(null);
+
+  // Check if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.matchMedia('(max-width: 768px)').matches);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Handle outside clicks to collapse
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dockRef.current && !dockRef.current.contains(event.target)) {
+        setIsExpanded(false);
+      }
+    };
+
+    if (isExpanded) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isExpanded]);
+
   // Generate icon URL helper function
   const getIconUrl = (iconName) => {
     return new URL(`../../../img/${iconName}`, import.meta.url).toString();
   };
 
+  // Toggle expand/collapse on mobile
+  const toggleExpanded = () => {
+    if (isMobile) {
+      setIsExpanded(!isExpanded);
+    }
+  };
+
   return (
-    <ul className="social-dock" aria-label="Quick contacts">
-      {SOCIAL_LINKS.map((social) => (
-        <li key={social.type}>
+    <div 
+      ref={dockRef}
+      className={`social-dock ${isMobile ? 'social-dock--mobile' : ''} ${isExpanded ? 'social-dock--expanded' : ''}`}
+      aria-label="Quick contacts"
+    >
+      {isMobile ? (
+        // Mobile: Collapsible version
+        <>
+          <button
+            className="social-dock__toggle"
+            onClick={toggleExpanded}
+            aria-label={isExpanded ? 'Close social links' : 'Open social links'}
+            aria-expanded={isExpanded}
+          >
+            <img 
+              src={getIconUrl('email.svg')} 
+              alt="Social links" 
+              width={ICON_DIMENSIONS.WIDTH} 
+              height={ICON_DIMENSIONS.HEIGHT} 
+            />
+          </button>
+          
+          {isExpanded && (
+            <div className="social-dock__links">
+              {SOCIAL_LINKS.map((social) => (
+                <a 
+                  key={social.type}
+                  href={social.href()} 
+                  className={social.className}
+                  aria-label={social.label}
+                  {...(social.external && {
+                    target: "_blank",
+                    rel: "noreferrer"
+                  })}
+                >
+                  <img 
+                    src={getIconUrl(social.icon)} 
+                    alt={social.label} 
+                    width={ICON_DIMENSIONS.WIDTH} 
+                    height={ICON_DIMENSIONS.HEIGHT} 
+                  />
+                </a>
+              ))}
+            </div>
+          )}
+        </>
+      ) : (
+        // Desktop: Original vertical layout
+        SOCIAL_LINKS.map((social) => (
           <a 
+            key={social.type}
             href={social.href()} 
             className={social.className}
             aria-label={social.label}
@@ -71,8 +154,8 @@ export default function SocialDock() {
               height={ICON_DIMENSIONS.HEIGHT} 
             />
           </a>
-        </li>
-      ))}
-    </ul>
+        ))
+      )}
+    </div>
   );
 }

@@ -20,6 +20,7 @@ export default function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [menuItems, setMenuItems] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
+  const [isDark, setIsDark] = useState(false);
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
 
@@ -33,6 +34,14 @@ export default function MobileMenu() {
     window.addEventListener('resize', checkMobile);
     
     return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Initialize theme state
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDarkMode = savedTheme === 'dark' || (!savedTheme && systemPrefersDark);
+    setIsDark(isDarkMode);
   }, []);
 
   // Load WordPress menu
@@ -103,6 +112,49 @@ export default function MobileMenu() {
       document.removeEventListener('keydown', handleEscape);
     };
   }, [isOpen]);
+
+  // Social links configuration
+  const socialLinks = [
+    {
+      type: 'email',
+      label: 'Email',
+      href: () => `mailto:${window.__SOCIAL_EMAIL__ || ''}`,
+      icon: '📧'
+    },
+    {
+      type: 'github',
+      label: 'GitHub',
+      href: () => typeof window !== 'undefined' && window.__SOCIAL_GITHUB__ 
+        ? window.__SOCIAL_GITHUB__ 
+        : 'https://github.com/',
+      icon: '🐙',
+      external: true
+    },
+    {
+      type: 'linkedin',
+      label: 'LinkedIn',
+      href: () => typeof window !== 'undefined' && window.__SOCIAL_LINKEDIN__ 
+        ? window.__SOCIAL_LINKEDIN__ 
+        : 'https://linkedin.com/',
+      icon: '💼',
+      external: true
+    }
+  ];
+
+  // Theme toggle function
+  const toggleTheme = () => {
+    const newTheme = isDark ? 'light' : 'dark';
+    setIsDark(!isDark);
+    localStorage.setItem('theme', newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+    document.body.classList.toggle('theme-dark', newTheme === 'dark');
+  };
+
+  // Terminal toggle function
+  const openTerminal = () => {
+    window.dispatchEvent(new Event('terminal:toggle'));
+    setIsOpen(false);
+  };
 
   // Resolve section ID from href/title
   const resolveSectionId = (href, title) => {
@@ -208,6 +260,7 @@ export default function MobileMenu() {
         </button>
         
         <nav className="mobile-menu__nav">
+          {/* Navigation Links */}
           {pillItems.map((item) => {
             const id = resolveSectionId(item.url, item.title);
             const label = item.title;
@@ -223,6 +276,50 @@ export default function MobileMenu() {
               </a>
             );
           })}
+          
+          {/* Settings Section */}
+          <div className="mobile-menu__divider"></div>
+          <div className="mobile-menu__section">
+            <h3 className="mobile-menu__section-title">Settings</h3>
+            <button
+              className="mobile-menu__action"
+              onClick={toggleTheme}
+            >
+              <span className="mobile-menu__action-icon">
+                {isDark ? '☀️' : '🌙'}
+              </span>
+              <span className="mobile-menu__action-label">
+                {isDark ? 'Light Mode' : 'Dark Mode'}
+              </span>
+            </button>
+            <button
+              className="mobile-menu__action"
+              onClick={openTerminal}
+            >
+              <span className="mobile-menu__action-icon">⌨️</span>
+              <span className="mobile-menu__action-label">Terminal</span>
+            </button>
+          </div>
+          
+          {/* Social Links Section */}
+          <div className="mobile-menu__divider"></div>
+          <div className="mobile-menu__section">
+            <h3 className="mobile-menu__section-title">Connect</h3>
+            {socialLinks.map((social) => (
+              <a
+                key={social.type}
+                href={social.href()}
+                className="mobile-menu__action"
+                {...(social.external && {
+                  target: "_blank",
+                  rel: "noreferrer"
+                })}
+              >
+                <span className="mobile-menu__action-icon">{social.icon}</span>
+                <span className="mobile-menu__action-label">{social.label}</span>
+              </a>
+            ))}
+          </div>
         </nav>
       </div>
     </div>

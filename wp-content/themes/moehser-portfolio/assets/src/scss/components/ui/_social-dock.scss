@@ -17,6 +17,85 @@
   gap: 12px;
 }
 
+// Mobile optimizations
+// -------------------
+
+@media (max-width: 768px) {
+  .social-dock {
+    // Hide on mobile - integrated into mobile menu
+    display: none !important;
+  }
+  
+  // Mobile collapsible version
+  .social-dock--mobile {
+    flex-direction: column;
+    gap: 8px;
+    left: 16px;
+    transform: none;
+  }
+  
+  // Toggle button for mobile
+  .social-dock__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    backdrop-filter: blur(10px);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    
+    &:active {
+      transform: scale(0.95);
+      background: rgba(255, 255, 255, 1);
+    }
+    
+    img {
+      width: 16px;
+      height: 16px;
+      opacity: 0.8;
+    }
+  }
+  
+  // Expanded links container
+  .social-dock__links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    animation: slideUp 0.3s ease-out;
+  }
+  
+  // Smaller social buttons on mobile
+  .social {
+    width: 36px;
+    height: 36px;
+    
+    img {
+      width: 16px;
+      height: 16px;
+    }
+    
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+}
+
+// Animation for mobile expansion
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 // Individual social link styling
 // ------------------------------
 
@@ -60,5 +139,18 @@ body.theme-dark .social {
   &:hover {
     background: rgba(11, 18, 32, 1);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+}
+
+// Dark mode mobile support
+// ------------------------
+@media (max-width: 768px) {
+  body.theme-dark .social-dock__toggle {
+    background: rgba(11, 18, 32, 0.9);
+    border-color: rgba(255, 255, 255, 0.1);
+    
+    &:active {
+      background: rgba(11, 18, 32, 1);
+    }
   }
 }
