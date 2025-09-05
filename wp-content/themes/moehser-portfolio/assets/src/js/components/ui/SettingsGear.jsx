@@ -58,7 +58,7 @@ export default function SettingsGear() {
       }
     };
 
-    if (isOpen) {
+    if (isOpen || showPerformance) {
       document.addEventListener('mousedown', handleClickOutside);
       document.addEventListener('keydown', handleEscapeKey);
     }
@@ -67,7 +67,7 @@ export default function SettingsGear() {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleEscapeKey);
     };
-  }, [isOpen]);
+  }, [isOpen, showPerformance]);
 
   const toggleTheme = () => {
     const body = document.body;
@@ -181,42 +181,40 @@ export default function SettingsGear() {
           
           <div className="settings-gear__performance-metrics">
             <div className="settings-gear__metric">
-              <span className="settings-gear__metric-label">LCP:</span>
+              <div className="settings-gear__metric-info">
+                <span className="settings-gear__metric-label">LCP:</span>
+                <span className="settings-gear__metric-tooltip">Largest Contentful Paint - Time until the largest element loads</span>
+              </div>
               <span className={`settings-gear__metric-value ${metrics.lcp && metrics.lcp > 2500 ? 'warning' : 'good'}`}>
                 {metrics.lcp ? `${Math.round(metrics.lcp)}ms` : 'Loading...'}
               </span>
             </div>
             
             <div className="settings-gear__metric">
-              <span className="settings-gear__metric-label">FID:</span>
+              <div className="settings-gear__metric-info">
+                <span className="settings-gear__metric-label">FID:</span>
+                <span className="settings-gear__metric-tooltip">First Input Delay - Delay before first user interaction</span>
+              </div>
               <span className={`settings-gear__metric-value ${metrics.fid && metrics.fid > 100 ? 'warning' : 'good'}`}>
                 {metrics.fid ? `${Math.round(metrics.fid)}ms` : 'Loading...'}
               </span>
             </div>
             
             <div className="settings-gear__metric">
-              <span className="settings-gear__metric-label">CLS:</span>
+              <div className="settings-gear__metric-info">
+                <span className="settings-gear__metric-label">CLS:</span>
+                <span className="settings-gear__metric-tooltip">Cumulative Layout Shift - Layout stability during loading</span>
+              </div>
               <span className={`settings-gear__metric-value ${metrics.cls && metrics.cls > 0.1 ? 'warning' : 'good'}`}>
                 {metrics.cls ? metrics.cls.toFixed(3) : 'Loading...'}
               </span>
             </div>
             
             <div className="settings-gear__metric">
-              <span className="settings-gear__metric-label">FCP:</span>
-              <span className={`settings-gear__metric-value ${metrics.fcp ? 'good' : 'loading'}`}>
-                {metrics.fcp ? `${Math.round(metrics.fcp)}ms` : 'Loading...'}
-              </span>
-            </div>
-            
-            <div className="settings-gear__metric">
-              <span className="settings-gear__metric-label">TTFB:</span>
-              <span className={`settings-gear__metric-value ${metrics.ttfb ? 'good' : 'loading'}`}>
-                {metrics.ttfb ? `${Math.round(metrics.ttfb)}ms` : 'Loading...'}
-              </span>
-            </div>
-            
-            <div className="settings-gear__metric">
-              <span className="settings-gear__metric-label">Images:</span>
+              <div className="settings-gear__metric-info">
+                <span className="settings-gear__metric-label">Images:</span>
+                <span className="settings-gear__metric-tooltip">Image Loading Progress - Number of loaded images vs total count</span>
+              </div>
               <span className="settings-gear__metric-value">
                 {metrics.loadedImages}/{metrics.imageCount}
               </span>
