@@ -1,0 +1,415 @@
+// Accessibility Styles
+// ===================
+
+// Screen Reader Only
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+// Skip Links
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #000;
+  color: #fff;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 10000;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: top 0.3s ease;
+
+  &:focus {
+    top: 6px;
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+
+  &:hover {
+    background: #333;
+  }
+}
+
+// Focus Management
+.focus-trap {
+  &:focus {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+  }
+}
+
+// High Contrast Mode Support
+@media (prefers-contrast: high) {
+  .btn {
+    border: 2px solid currentColor;
+  }
+
+  .card {
+    border: 1px solid currentColor;
+  }
+
+  .text-muted {
+    color: currentColor !important;
+    opacity: 0.8;
+  }
+}
+
+// Reduced Motion Support
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .smooth-scroll {
+    scroll-behavior: auto !important;
+  }
+}
+
+// Focus Indicators
+.focus-visible {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+}
+
+// Button Focus States
+.btn {
+  &:focus-visible {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+// Link Focus States
+a {
+  &:focus-visible {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+// Form Element Focus States
+input,
+textarea,
+select {
+  &:focus-visible {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+// ARIA Live Regions
+[aria-live] {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+// Carousel Accessibility
+.carousel {
+  &[aria-live="polite"] {
+    position: relative;
+  }
+}
+
+.carousel-slide {
+  &[aria-hidden="true"] {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  &[aria-selected="true"] {
+    visibility: visible;
+    position: relative;
+  }
+}
+
+// Menu Accessibility
+.menu {
+  &[aria-expanded="false"] {
+    display: none;
+  }
+
+  &[aria-expanded="true"] {
+    display: block;
+  }
+}
+
+.menu-item {
+  &:focus {
+    background-color: rgba(0, 0, 0, 0.1);
+    outline: 2px solid #0066cc;
+    outline-offset: -2px;
+  }
+
+  &[aria-selected="true"] {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Dialog Accessibility
+.dialog {
+  &[aria-hidden="true"] {
+    display: none;
+  }
+
+  &[aria-hidden="false"] {
+    display: block;
+  }
+}
+
+// Button States
+.btn {
+  &[aria-pressed="true"] {
+    background-color: #0066cc;
+    color: white;
+  }
+
+  &[aria-expanded="true"] {
+    &::after {
+      content: '▼';
+      margin-left: 8px;
+    }
+  }
+
+  &[aria-expanded="false"] {
+    &::after {
+      content: '▶';
+      margin-left: 8px;
+    }
+  }
+}
+
+// Image Accessibility
+img {
+  &[role="presentation"] {
+    // Decorative images
+  }
+
+  &[alt=""] {
+    // Images with empty alt text (decorative)
+  }
+}
+
+// Link Accessibility
+a {
+  &[aria-describedby] {
+    // Links with additional descriptions
+  }
+
+  &[target="_blank"] {
+    &::after {
+      content: ' (opens in new tab)';
+      position: absolute;
+      left: -10000px;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+  }
+}
+
+// Form Accessibility
+.form-group {
+  position: relative;
+
+  .form-label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+
+    &:focus {
+      border-color: #0066cc;
+      box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+    }
+
+    &[aria-invalid="true"] {
+      border-color: #dc3545;
+    }
+  }
+
+  .form-error {
+    color: #dc3545;
+    font-size: 0.875em;
+    margin-top: 4px;
+  }
+
+  .form-help {
+    color: #666;
+    font-size: 0.875em;
+    margin-top: 4px;
+  }
+}
+
+// Required Field Indicator
+.required {
+  &::after {
+    content: ' *';
+    color: #dc3545;
+  }
+}
+
+// Error States
+.has-error {
+  .form-control {
+    border-color: #dc3545;
+  }
+
+  .form-label {
+    color: #dc3545;
+  }
+}
+
+// Success States
+.has-success {
+  .form-control {
+    border-color: #28a745;
+  }
+
+  .form-label {
+    color: #28a745;
+  }
+}
+
+// Loading States
+.loading {
+  position: relative;
+  pointer-events: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #0066cc;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Dark Mode Accessibility
+@media (prefers-color-scheme: dark) {
+  .skip-link {
+    background: #fff;
+    color: #000;
+
+    &:hover {
+      background: #f0f0f0;
+    }
+  }
+
+  .focus-visible {
+    outline-color: #66b3ff;
+  }
+
+  .btn:focus-visible {
+    outline-color: #66b3ff;
+  }
+
+  a:focus-visible {
+    outline-color: #66b3ff;
+  }
+
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline-color: #66b3ff;
+  }
+}
+
+// Print Styles
+@media print {
+  .skip-link,
+  .sr-only {
+    display: none !important;
+  }
+
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+
+  a[href^="#"]:after {
+    content: "";
+  }
+}
+
+// High DPI Support
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .focus-visible {
+    outline-width: 1px;
+  }
+}
+
+// Mobile Accessibility
+@media (max-width: 768px) {
+  .skip-link {
+    left: 10px;
+    right: 10px;
+    text-align: center;
+  }
+
+  // Ensure touch targets are at least 44px
+  .btn,
+  .menu-item,
+  .form-control {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+// Reduced Data Mode
+@media (prefers-reduced-data: reduce) {
+  .loading {
+    &::after {
+      animation: none;
+    }
+  }
+}
