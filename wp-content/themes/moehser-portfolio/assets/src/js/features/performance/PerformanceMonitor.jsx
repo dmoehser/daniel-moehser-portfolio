@@ -52,7 +52,7 @@ const usePerformanceMonitor = () => {
             setMetrics(prev => ({ ...prev, lcp: entry.startTime }));
             break;
           case 'event':
-            // INP measures ALL user interactions - capture everything
+            // INP measures ALL user interactions
             const inpValue = entry.processingEnd ? entry.processingEnd - entry.startTime : entry.duration;
             setMetrics(prev => ({ ...prev, inp: inpValue }));
             break;
