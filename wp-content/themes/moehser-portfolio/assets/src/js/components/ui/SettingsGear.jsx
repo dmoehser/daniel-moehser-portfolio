@@ -6,12 +6,15 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import gearIcon from '../../../img/settings-gear.svg';
+import { usePerformanceMonitor } from '../../features/performance/PerformanceMonitor.jsx';
 
 export default function SettingsGear() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
+  const [showPerformance, setShowPerformance] = useState(false);
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
+  const metrics = usePerformanceMonitor();
 
   useEffect(() => {
     // Check current theme
@@ -47,7 +50,11 @@ export default function SettingsGear() {
 
     const handleEscapeKey = (event) => {
       if (event.key === 'Escape') {
-        setIsOpen(false);
+        if (showPerformance) {
+          setShowPerformance(false);
+        } else if (isOpen) {
+          setIsOpen(false);
+        }
       }
     };
 
@@ -85,6 +92,26 @@ export default function SettingsGear() {
     setIsOpen(false); // Close menu after action
   };
 
+  // Toggle performance metrics
+  const togglePerformance = () => {
+    setShowPerformance(!showPerformance);
+  };
+
+  // Close performance panel and show settings menu
+  const closePerformance = () => {
+    setShowPerformance(false);
+    // Keep the settings menu open when going back
+    if (!isOpen) {
+      setIsOpen(true);
+    }
+  };
+
+  // Close performance panel completely
+  const closePerformanceCompletely = () => {
+    setShowPerformance(false);
+    setIsOpen(false);
+  };
+
   return (
     <div className="settings-gear">
       <button
@@ -97,7 +124,7 @@ export default function SettingsGear() {
         <img src={gearIcon} alt="" aria-hidden="true" />
       </button>
       
-      {isOpen && (
+      {isOpen && !showPerformance && (
         <div ref={menuRef} className="settings-gear__menu">
           <button
             className="settings-gear__option"
@@ -113,11 +140,88 @@ export default function SettingsGear() {
           
           <button
             className="settings-gear__option"
+            onClick={togglePerformance}
+          >
+            <span className="settings-gear__icon">📊</span>
+            <span className="settings-gear__label">Performance</span>
+          </button>
+          
+          <button
+            className="settings-gear__option"
             onClick={openTerminal}
           >
             <span className="settings-gear__icon">⌨️</span>
             <span className="settings-gear__label">Terminal</span>
           </button>
+        </div>
+      )}
+
+      {/* Performance Metrics Panel */}
+      {showPerformance && (
+        <div className="settings-gear__performance-panel">
+          <div className="settings-gear__performance-header">
+            <button 
+              className="settings-gear__performance-back"
+              onClick={closePerformance}
+              aria-label="Back to settings"
+              title="Back to settings"
+            >
+              ←
+            </button>
+            <h3>Performance Metrics</h3>
+            <button 
+              className="settings-gear__performance-close"
+              onClick={closePerformanceCompletely}
+              aria-label="Close settings"
+              title="Close settings"
+            >
+              ×
+            </button>
+          </div>
+          
+          <div className="settings-gear__performance-metrics">
+            <div className="settings-gear__metric">
+              <span className="settings-gear__metric-label">LCP:</span>
+              <span className={`settings-gear__metric-value ${metrics.lcp && metrics.lcp > 2500 ? 'warning' : 'good'}`}>
+                {metrics.lcp ? `${Math.round(metrics.lcp)}ms` : 'Loading...'}
+              </span>
+            </div>
+            
+            <div className="settings-gear__metric">
+              <span className="settings-gear__metric-label">FID:</span>
+              <span className={`settings-gear__metric-value ${metrics.fid && metrics.fid > 100 ? 'warning' : 'good'}`}>
+                {metrics.fid ? `${Math.round(metrics.fid)}ms` : 'Loading...'}
+              </span>
+            </div>
+            
+            <div className="settings-gear__metric">
+              <span className="settings-gear__metric-label">CLS:</span>
+              <span className={`settings-gear__metric-value ${metrics.cls && metrics.cls > 0.1 ? 'warning' : 'good'}`}>
+                {metrics.cls ? metrics.cls.toFixed(3) : 'Loading...'}
+              </span>
+            </div>
+            
+            <div className="settings-gear__metric">
+              <span className="settings-gear__metric-label">FCP:</span>
+              <span className={`settings-gear__metric-value ${metrics.fcp ? 'good' : 'loading'}`}>
+                {metrics.fcp ? `${Math.round(metrics.fcp)}ms` : 'Loading...'}
+              </span>
+            </div>
+            
+            <div className="settings-gear__metric">
+              <span className="settings-gear__metric-label">TTFB:</span>
+              <span className={`settings-gear__metric-value ${metrics.ttfb ? 'good' : 'loading'}`}>
+                {metrics.ttfb ? `${Math.round(metrics.ttfb)}ms` : 'Loading...'}
+              </span>
+            </div>
+            
+            <div className="settings-gear__metric">
+              <span className="settings-gear__metric-label">Images:</span>
+              <span className="settings-gear__metric-value">
+                {metrics.loadedImages}/{metrics.imageCount}
+              </span>
+            </div>
+          </div>
         </div>
       )}
     </div>

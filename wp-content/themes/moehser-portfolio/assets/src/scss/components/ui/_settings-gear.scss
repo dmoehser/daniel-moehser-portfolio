@@ -112,6 +112,129 @@
   }
 }
 
+// Performance Panel
+// -----------------
+.settings-gear__performance-panel {
+  position: absolute;
+  bottom: 48px;
+  right: 0;
+  width: 280px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 12px;
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: 
+    0 10px 25px rgba(15, 23, 42, 0.1),
+    0 4px 12px rgba(15, 23, 42, 0.05);
+  padding: 16px;
+  animation: settingsMenuFadeIn 0.15s ease-out;
+  transform-origin: bottom right;
+  z-index: 10000;
+}
+
+.settings-gear__performance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  
+  h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+    flex: 1;
+    text-align: center;
+  }
+}
+
+.settings-gear__performance-back {
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 16px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+  
+  &:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #0f172a;
+  }
+}
+
+.settings-gear__performance-close {
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 16px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+  
+  &:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #0f172a;
+  }
+}
+
+.settings-gear__performance-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.settings-gear__metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.settings-gear__metric-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.settings-gear__metric-value {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  
+  &.good {
+    background: rgba(34, 197, 94, 0.1);
+    color: #16a34a;
+  }
+  
+  &.warning {
+    background: rgba(245, 158, 11, 0.1);
+    color: #d97706;
+  }
+  
+  &.loading {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+  }
+}
+
 // Dark mode support
 body.theme-dark {
   .settings-gear__trigger {
@@ -142,6 +265,61 @@ body.theme-dark {
     &:hover {
       background: rgba(59, 130, 246, 0.15);
       color: #e2e8f0;
+    }
+  }
+  
+  .settings-gear__performance-panel {
+    background: rgba(30, 41, 59, 0.95);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 
+      0 10px 25px rgba(0, 0, 0, 0.3),
+      0 4px 12px rgba(0, 0, 0, 0.15);
+    
+    h3 {
+      color: #f1f5f9;
+    }
+    
+    .settings-gear__performance-back {
+      color: #94a3b8;
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #e2e8f0;
+      }
+    }
+    
+    .settings-gear__performance-close {
+      color: #94a3b8;
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #e2e8f0;
+      }
+    }
+    
+    .settings-gear__metric {
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .settings-gear__metric-label {
+      color: #94a3b8;
+    }
+    
+    .settings-gear__metric-value {
+      &.good {
+        background: rgba(34, 197, 94, 0.2);
+        color: #4ade80;
+      }
+      
+      &.warning {
+        background: rgba(245, 158, 11, 0.2);
+        color: #fbbf24;
+      }
+      
+      &.loading {
+        background: rgba(59, 130, 246, 0.2);
+        color: #60a5fa;
+      }
     }
   }
 }

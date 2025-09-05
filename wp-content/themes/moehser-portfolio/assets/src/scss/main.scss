@@ -11,6 +11,9 @@
 @use './components/terminal';
 @use './components/overlays';
 
+// Features
+@use './features/performance';
+
 :root {
   --brand: #0f172a;
 }
