@@ -11,7 +11,7 @@ import React, { useEffect, useState } from 'react';
 const PERFORMANCE_CONFIG = {
   // Core Web Vitals thresholds
   LCP_THRESHOLD: 2500,    // Largest Contentful Paint (ms)
-  FID_THRESHOLD: 100,     // First Input Delay (ms)
+  INP_THRESHOLD: 200,     // Interaction to Next Paint (ms)
   CLS_THRESHOLD: 0.1,     // Cumulative Layout Shift
   
   // Performance budgets
@@ -27,7 +27,7 @@ const PERFORMANCE_CONFIG = {
 const usePerformanceMonitor = () => {
   const [metrics, setMetrics] = useState({
     lcp: null,
-    fid: null,
+    inp: null,
     cls: null,
     fcp: null,
     ttfb: null,
@@ -51,8 +51,10 @@ const usePerformanceMonitor = () => {
           case 'largest-contentful-paint':
             setMetrics(prev => ({ ...prev, lcp: entry.startTime }));
             break;
-          case 'first-input':
-            setMetrics(prev => ({ ...prev, fid: entry.processingStart - entry.startTime }));
+          case 'event':
+            if (entry.name === 'first-input') {
+              setMetrics(prev => ({ ...prev, inp: entry.processingEnd - entry.startTime }));
+            }
             break;
           case 'layout-shift':
             if (!entry.hadRecentInput) {
@@ -76,7 +78,7 @@ const usePerformanceMonitor = () => {
 
     // Observe different performance entry types
     try {
-      observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift', 'paint', 'navigation'] });
+      observer.observe({ entryTypes: ['largest-contentful-paint', 'event', 'layout-shift', 'paint', 'navigation'] });
     } catch (error) {
       console.warn('Performance monitoring not fully supported:', error);
     }
@@ -220,10 +222,10 @@ const getOptimizationSuggestions = (metrics) => {
     });
   }
 
-  if (metrics.fid && metrics.fid > PERFORMANCE_CONFIG.FID_THRESHOLD) {
+  if (metrics.inp && metrics.inp > PERFORMANCE_CONFIG.INP_THRESHOLD) {
     suggestions.push({
       type: 'warning',
-      message: `FID ist ${Math.round(metrics.fid)}ms (Ziel: <${PERFORMANCE_CONFIG.FID_THRESHOLD}ms)`,
+      message: `INP ist ${Math.round(metrics.inp)}ms (Ziel: <${PERFORMANCE_CONFIG.INP_THRESHOLD}ms)`,
       suggestion: 'JavaScript-Code optimieren oder aufteilen'
     });
   }

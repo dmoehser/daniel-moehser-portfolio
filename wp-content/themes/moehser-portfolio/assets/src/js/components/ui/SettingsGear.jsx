@@ -192,11 +192,11 @@ export default function SettingsGear() {
             
             <div className="settings-gear__metric">
               <div className="settings-gear__metric-info">
-                <span className="settings-gear__metric-label">FID:</span>
-                <span className="settings-gear__metric-tooltip">First Input Delay - Delay before first user interaction</span>
+                <span className="settings-gear__metric-label">INP:</span>
+                <span className="settings-gear__metric-tooltip">Interaction to Next Paint - Time from user interaction to visual response</span>
               </div>
-              <span className={`settings-gear__metric-value ${metrics.fid && metrics.fid > 100 ? 'warning' : 'good'}`}>
-                {metrics.fid ? `${Math.round(metrics.fid)}ms` : 'Loading...'}
+              <span className={`settings-gear__metric-value ${metrics.inp && metrics.inp > 200 ? 'warning' : 'good'}`}>
+                {metrics.inp ? `${Math.round(metrics.inp)}ms` : 'Loading...'}
               </span>
             </div>
             
