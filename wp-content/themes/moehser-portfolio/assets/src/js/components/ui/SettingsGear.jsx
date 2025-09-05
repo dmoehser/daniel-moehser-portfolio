@@ -14,6 +14,7 @@ export default function SettingsGear() {
   const [showPerformance, setShowPerformance] = useState(false);
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
+  const performanceRef = useRef(null);
   const metrics = usePerformanceMonitor();
 
   useEffect(() => {
@@ -42,8 +43,12 @@ export default function SettingsGear() {
   useEffect(() => {
     // Close menu when clicking outside or pressing ESC
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target) &&
-          buttonRef.current && !buttonRef.current.contains(event.target)) {
+      // Check if click is outside all relevant elements
+      const isOutsideMenu = !menuRef.current?.contains(event.target);
+      const isOutsideButton = !buttonRef.current?.contains(event.target);
+      const isOutsidePerformance = !performanceRef.current?.contains(event.target);
+      
+      if (isOutsideMenu && isOutsideButton && isOutsidePerformance) {
         if (showPerformance) {
           setShowPerformance(false);
           setIsOpen(false);
@@ -163,7 +168,7 @@ export default function SettingsGear() {
 
       {/* Performance Metrics Panel */}
       {showPerformance && (
-        <div className="settings-gear__performance-panel">
+        <div ref={performanceRef} className="settings-gear__performance-panel">
           <div className="settings-gear__performance-header">
             <button 
               className="settings-gear__performance-back"
