@@ -229,6 +229,16 @@
   }
 }
 
+// Mobile optimizations
+// --------------------
+@media (max-width: 768px) {
+  // Allow about section to grow beyond 100vh on mobile for natural scrolling
+  .about {
+    min-height: auto !important;
+    height: auto !important;
+  }
+}
+
 // Dark mode support
 // -----------------
 
