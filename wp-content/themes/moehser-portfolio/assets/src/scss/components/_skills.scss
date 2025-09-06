@@ -332,12 +332,14 @@ body.theme-dark {
     .animated-border {
       padding: 8px 12px;
       font-size: 0.8rem;
+      cursor: default !important;
+      pointer-events: none !important;
       // Disable hover effects on mobile
       &:hover {
-        background: rgba(255,255,255,.65);
-        border-bottom: 2px solid rgba(15,23,42,.15);
-        transform: none;
-        box-shadow: none;
+        background: rgba(255,255,255,.65) !important;
+        border-bottom: 2px solid rgba(15,23,42,.15) !important;
+        transform: none !important;
+        box-shadow: none !important;
       }
     }
   }
