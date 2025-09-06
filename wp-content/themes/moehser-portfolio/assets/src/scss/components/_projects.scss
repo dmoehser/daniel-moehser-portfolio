@@ -826,6 +826,12 @@ body.theme-dark .projects__grid-excerpt { color: #cbd5e1; }
 
 // Force list view on mobile for better UX
 @media (max-width: 768px) {
+  // Allow projects section to grow beyond 100vh on mobile for natural scrolling
+  .projects {
+    min-height: auto !important;
+    height: auto !important;
+  }
+  
   .projects__view-toggle {
     display: none !important; // Hide grid/list toggle on mobile
   }
