@@ -269,7 +269,14 @@ export default function MobileMenu() {
                 key={item.id} 
                 href={`/#${id || ''}`} 
                 className="mobile-menu__link" 
-                onClick={(e) => handleItemClick(e, id)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  // Close mobile menu first
+                  handleItemClick(e, id);
+                  // Clean URL and navigate without page reload
+                  const cleanUrl = window.location.origin + `/#${id || ''}`;
+                  window.history.replaceState({}, '', cleanUrl);
+                }}
               >
                 {label}
               </a>
