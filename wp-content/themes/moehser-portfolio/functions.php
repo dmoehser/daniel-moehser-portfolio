@@ -27,11 +27,28 @@ add_action('init', function() {
 add_action('wp_footer', function() {
     if (!is_customize_preview()) {
         echo '<script>
+        // Remove customize_changeset_uuid immediately
         if (window.location.search.includes("customize_changeset_uuid")) {
             const url = new URL(window.location);
             url.searchParams.delete("customize_changeset_uuid");
             window.history.replaceState({}, "", url);
         }
+
+        // Watch for URL changes and clean them immediately
+        let lastUrl = window.location.href;
+        const urlWatcher = setInterval(function() {
+            if (window.location.href !== lastUrl) {
+                if (window.location.search.includes("customize_changeset_uuid")) {
+                    const url = new URL(window.location);
+                    url.searchParams.delete("customize_changeset_uuid");
+                    window.history.replaceState({}, "", url);
+                }
+                lastUrl = window.location.href;
+            }
+        }, 50); // Check every 50ms
+
+        // Stop watching after 30 seconds
+        setTimeout(() => clearInterval(urlWatcher), 30000);
         </script>';
     }
 });

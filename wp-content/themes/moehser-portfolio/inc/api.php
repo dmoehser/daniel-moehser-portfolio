@@ -18,11 +18,23 @@ add_action('rest_api_init', function () {
 			$menu_id = $locations[$location];
 			$items = wp_get_nav_menu_items($menu_id) ?: [];
 			$result = array_map(function ($item) {
+				// Clean URL from customize_changeset_uuid parameter
+				$clean_url = $item->url;
+				$original_url = $item->url;
+				
+				// Debug: Log original URL
+				error_log("DEBUG API - Original URL: " . $original_url);
+				
+				if (strpos($clean_url, 'customize_changeset_uuid=') !== false) {
+					$clean_url = remove_query_arg('customize_changeset_uuid', $clean_url);
+					error_log("DEBUG API - Cleaned URL: " . $clean_url);
+				}
+				
 				return [
 					'id' => (int)$item->ID,
 					'parent' => (int)$item->menu_item_parent,
 					'title' => wp_strip_all_tags($item->title),
-					'url' => $item->url,
+					'url' => $clean_url,
 					'target' => $item->target,
 					'attr_title' => $item->attr_title,
 				];
