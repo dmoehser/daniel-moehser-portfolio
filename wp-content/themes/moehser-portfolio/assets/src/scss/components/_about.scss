@@ -237,6 +237,48 @@
     min-height: auto !important;
     height: auto !important;
   }
+  
+  // Improve readability on mobile
+  .about__card {
+    padding: clamp(20px, 3vw, 32px);
+  }
+  
+  .about__title {
+    font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+    line-height: 1.2;
+  }
+  
+  .about__subtitle {
+    font-size: clamp(0.9rem, 1.5vw, 1rem);
+  }
+  
+  .about__content-text {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  
+  .about__content-text p {
+    margin-bottom: 0.8rem;
+  }
+  
+  .about__content-text h3,
+  .about__content-text h4 {
+    margin: 1.2rem 0 0.4rem;
+    font-size: 1.1rem;
+  }
+  
+  .about__skills h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .about__body {
+    gap: clamp(8px, 2vw, 16px);
+  }
+  
+  .about__header {
+    margin-bottom: clamp(8px, 2vw, 16px);
+  }
 }
 
 // Dark mode support
