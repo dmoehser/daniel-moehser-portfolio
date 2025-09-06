@@ -21,19 +21,14 @@ const CRITICAL_RESOURCES = {
   ],
   
   // Critical images - above the fold
-  images: [
-    {
-      href: '/wp-content/themes/moehser-portfolio/assets/dist/assets/hero-bg.jpg',
-      as: 'image',
-      type: 'image/jpeg',
-      priority: 'high'
-    }
-  ],
+  images: [],
   
   // Critical CSS - inline critical styles
   css: [
     {
-      href: '/wp-content/themes/moehser-portfolio/assets/dist/assets/main.css',
+      href: window.location.hostname === 'localhost' && window.location.port === '8080' 
+        ? 'http://localhost:5173/wp-content/themes/moehser-portfolio/assets/src/scss/main.scss'
+        : '/wp-content/themes/moehser-portfolio/assets/dist/assets/main.css',
       as: 'style',
       type: 'text/css',
       priority: 'high'
@@ -43,7 +38,9 @@ const CRITICAL_RESOURCES = {
   // JavaScript - main bundle
   scripts: [
     {
-      href: '/wp-content/themes/moehser-portfolio/assets/dist/assets/main.js',
+      href: window.location.hostname === 'localhost' && window.location.port === '8080' 
+        ? 'http://localhost:5173/wp-content/themes/moehser-portfolio/assets/src/js/main.jsx'
+        : '/wp-content/themes/moehser-portfolio/assets/dist/assets/main.js',
       as: 'script',
       type: 'text/javascript',
       priority: 'high'

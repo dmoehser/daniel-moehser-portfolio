@@ -14,6 +14,28 @@ add_action('after_setup_theme', function () {
     ]);
 });
 
+// Remove customize_changeset_uuid parameter from URLs
+add_action('init', function() {
+    if (isset($_GET['customize_changeset_uuid']) && !is_customize_preview()) {
+        $url = remove_query_arg('customize_changeset_uuid');
+        wp_redirect($url, 301);
+        exit;
+    }
+});
+
+// Client-side cleanup for customize_changeset_uuid
+add_action('wp_footer', function() {
+    if (!is_customize_preview()) {
+        echo '<script>
+        if (window.location.search.includes("customize_changeset_uuid")) {
+            const url = new URL(window.location);
+            url.searchParams.delete("customize_changeset_uuid");
+            window.history.replaceState({}, "", url);
+        }
+        </script>';
+    }
+});
+
 // Register asset loader (Vite)
 require_once get_theme_file_path('inc/vite.php');
 add_action('wp_enqueue_scripts', 'moehser_enqueue_vite_assets');

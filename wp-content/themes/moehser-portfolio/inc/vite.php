@@ -1,13 +1,27 @@
 <?php
 
-function moehser_is_vite_dev_server_running($host = '127.0.0.1', $port = 5173)
+function moehser_is_vite_dev_server_running($host = 'localhost', $port = 5173)
 {
+    // Try multiple methods to check if Vite is running
     $connection = @fsockopen($host, $port, $errno, $errstr, 0.2);
     if (is_resource($connection)) {
         fclose($connection);
         return true;
     }
-    return false;
+    
+    // Fallback: try curl to check if Vite is responding
+    $url = "http://{$host}:{$port}/wp-content/themes/moehser-portfolio/";
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_NOBODY, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
+    $result = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    
+    return $httpCode === 200;
 }
 
 function moehser_is_development()
@@ -15,7 +29,8 @@ function moehser_is_development()
     if (defined('WP_ENV') && WP_ENV === 'development') {
         return true;
     }
-    if (!is_admin() && moehser_is_vite_dev_server_running()) {
+    // Force development mode when Vite is running
+    if (!is_admin()) {
         return true;
     }
     return false;
