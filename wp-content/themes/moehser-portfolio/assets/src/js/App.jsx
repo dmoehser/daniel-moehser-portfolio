@@ -22,13 +22,42 @@ import ProjectOverlayManager from './features/project-overlay/ProjectOverlayMana
 import ProjectOverlay from './components/ui/ProjectOverlay.jsx';
 import FullscreenPreview from './components/ui/FullscreenPreview.jsx';
 import { AnimatePresence } from 'framer-motion';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 export default function App() {
   // Initialize all feature managers
   const { showTerminal } = TerminalManager();
   const { isFullscreenPreview, fullscreenProject } = FullscreenPreviewManager();
   const { projectOverlayUrl } = ProjectOverlayManager();
+
+  // Handle hash navigation
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        const element = document.getElementById(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else {
+        // If no hash or empty hash, scroll to top (hero section)
+        const heroElement = document.getElementById('hero');
+        if (heroElement) {
+          heroElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    };
+
+    // Handle initial hash
+    handleHashChange();
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', handleHashChange);
+
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, []);
 
   return (
     <>
