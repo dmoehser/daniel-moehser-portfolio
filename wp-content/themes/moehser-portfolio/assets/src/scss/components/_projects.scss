@@ -387,19 +387,20 @@ body.theme-dark .projects__toggle-btn::after {
         align-items: center;
         justify-content: center;
         width: 100%;
-        padding: 0.8rem 1.2rem;
+        padding: clamp(0.6rem, 2vw, 0.8rem) clamp(0.8rem, 2.5vw, 1.2rem);
         background: linear-gradient(135deg, #38bdf8, #0ea5e9);
         color: white;
         border: none;
         border-radius: 8px;
         font-weight: 700;
-        font-size: 1rem;
+        font-size: clamp(0.85rem, 2.2vw, 1rem);
         line-height: 1.1;
         font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         cursor: pointer;
         transition: all 0.3s ease;
         text-decoration: none;
         text-align: center;
+        gap: clamp(6px, 1.5vw, 8px);
       
         &:hover {
           transform: none;
@@ -420,7 +421,7 @@ body.theme-dark .projects__toggle-btn::after {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
+        gap: clamp(6px, 1.5vw, 8px);
         
         &:hover {
           background: rgba(15,23,42,.08);
@@ -429,9 +430,10 @@ body.theme-dark .projects__toggle-btn::after {
       }
 
       .project-card__cta-ico {
-        width: 18px;
-        height: 18px;
+        width: clamp(14px, 3.5vw, 18px);
+        height: clamp(14px, 3.5vw, 18px);
         display: inline-block;
+        flex-shrink: 0;
       }
     }
   }
@@ -696,15 +698,15 @@ body.theme-dark .projects__grid-card:hover {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: clamp(6px, 1.5vw, 8px);
   width: 100%;
-  padding: 0.6rem 0.9rem;
+  padding: clamp(0.5rem, 1.8vw, 0.6rem) clamp(0.7rem, 2.2vw, 0.9rem);
   border-radius: 8px;
   border: none;
   background: linear-gradient(135deg, #38bdf8, #0ea5e9);
   color: #fff;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: clamp(0.85rem, 2.2vw, 1rem);
   line-height: 1.1;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   cursor: pointer;
@@ -727,7 +729,11 @@ button.projects__grid-cta-btn {
   background: rgba(15,23,42,.08);
   border-color: rgba(56,189,248,.4);
 }
-.projects__grid-cta-ico { width: 18px; height: 18px; }
+.projects__grid-cta-ico { 
+  width: clamp(14px, 3.5vw, 18px); 
+  height: clamp(14px, 3.5vw, 18px); 
+  flex-shrink: 0;
+}
 body.theme-dark .projects__grid-cta-btn--secondary {
   background: transparent;
   color: #fff;
