@@ -23,32 +23,67 @@ add_action('init', function() {
     }
 });
 
-// Client-side cleanup for customize_changeset_uuid
-add_action('wp_footer', function() {
+// Client-side cleanup for customize_changeset_uuid - robust solution
+add_action('wp_head', function() {
     if (!is_customize_preview()) {
         echo '<script>
-        // Remove customize_changeset_uuid immediately
-        if (window.location.search.includes("customize_changeset_uuid")) {
-            const url = new URL(window.location);
-            url.searchParams.delete("customize_changeset_uuid");
-            window.history.replaceState({}, "", url);
+        // Immediate cleanup function
+        function cleanCustomizeParam() {
+            if (window.location.search.includes("customize_changeset_uuid")) {
+                const url = new URL(window.location);
+                url.searchParams.delete("customize_changeset_uuid");
+                window.history.replaceState({}, "", url);
+                return true;
+            }
+            return false;
         }
 
-        // Watch for URL changes and clean them immediately
-        let lastUrl = window.location.href;
-        const urlWatcher = setInterval(function() {
-            if (window.location.href !== lastUrl) {
-                if (window.location.search.includes("customize_changeset_uuid")) {
-                    const url = new URL(window.location);
-                    url.searchParams.delete("customize_changeset_uuid");
-                    window.history.replaceState({}, "", url);
-                }
-                lastUrl = window.location.href;
-            }
-        }, 50); // Check every 50ms
+        // Run immediately on script load
+        cleanCustomizeParam();
 
-        // Stop watching after 30 seconds
-        setTimeout(() => clearInterval(urlWatcher), 30000);
+        // Run on DOM ready
+        document.addEventListener("DOMContentLoaded", cleanCustomizeParam);
+
+        // Run on window load
+        window.addEventListener("load", cleanCustomizeParam);
+
+        // Watch for URL changes with multiple strategies
+        let lastUrl = window.location.href;
+        let urlWatcher;
+
+        function startUrlWatcher() {
+            if (urlWatcher) clearInterval(urlWatcher);
+            
+            urlWatcher = setInterval(function() {
+                if (window.location.href !== lastUrl) {
+                    if (cleanCustomizeParam()) {
+                        lastUrl = window.location.href;
+                    }
+                }
+            }, 25); // Check every 25ms for faster response
+        }
+
+        // Start watcher immediately
+        startUrlWatcher();
+
+        // Restart watcher on page visibility change (handles tab switching)
+        document.addEventListener("visibilitychange", function() {
+            if (!document.hidden) {
+                cleanCustomizeParam();
+                startUrlWatcher();
+            }
+        });
+
+        // Restart watcher on focus (handles window focus)
+        window.addEventListener("focus", function() {
+            cleanCustomizeParam();
+            startUrlWatcher();
+        });
+
+        // Stop watching after 60 seconds (longer runtime)
+        setTimeout(() => {
+            if (urlWatcher) clearInterval(urlWatcher);
+        }, 60000);
         </script>';
     }
 });
