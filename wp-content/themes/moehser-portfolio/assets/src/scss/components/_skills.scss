@@ -275,6 +275,21 @@ body.theme-dark {
 }
 
 @media (max-width: 768px) {
+  // Allow skills section to grow beyond 100vh on mobile
+  .skills {
+    min-height: auto;
+  }
+  
+  // Disable external scrollbar on mobile for better UX
+  .skills__scrollbar {
+    display: none !important;
+  }
+  
+  .skills__viewport.is-adaptive {
+    overflow-y: visible;
+    height: auto;
+  }
+  
   .skills__top-row,
   .skills__bottom-row {
     grid-template-columns: 1fr;
