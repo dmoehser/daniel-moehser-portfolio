@@ -849,6 +849,73 @@ body.theme-dark .projects__grid-excerpt { color: #cbd5e1; }
   .projects.projects--flow .projects__list {
     display: block !important;
   }
+  
+  // Improve readability on mobile
+  .project-card__title {
+    font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+    line-height: 1.3;
+  }
+  
+  .project-card__excerpt {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  
+  .project-card__tech-tag {
+    font-size: 0.7rem !important;
+    padding: 0.25rem 0.5rem !important;
+    cursor: default !important;
+    pointer-events: none !important;
+    // Disable all interactive effects on mobile
+    &:hover {
+      background: rgba(15,23,42,.08) !important;
+      border-color: rgba(15,23,42,.15) !important;
+      transform: none !important;
+    }
+  }
+  
+  // Improve touch targets for buttons
+  .project-card__cta {
+    min-height: 44px;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    // Disable hover effects on mobile
+    &:hover {
+      text-decoration: none;
+    }
+  }
+  
+  .project-card__demo-btn {
+    min-height: 44px;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    // Disable hover effects on mobile
+    &:hover {
+      background: #3b82f6;
+      border-color: #3b82f6;
+      transform: none;
+      box-shadow: none;
+    }
+  }
+  
+  .project-card__demo-btn--secondary {
+    // Disable hover effects on mobile
+    &:hover {
+      background: #f8fafc;
+      border-color: #e2e8f0;
+      transform: none;
+      box-shadow: none;
+    }
+  }
+  
+  // Disable hover effects on project card links
+  .project-card__title a:hover {
+    color: inherit;
+  }
+  
+  .project-card__excerpt a:hover {
+    color: inherit;
+  }
 }
 
 // Responsive design
