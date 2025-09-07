@@ -1076,14 +1076,16 @@ body.theme-dark .project-card__cta:hover {
 }
 
 // Dark mode: tags base + states unified
-body.theme-dark .project-card__technologies .project-card__tech-tag {
-  background: rgba(11,18,32,.75);
-  color: #c7f5d9; // Similar to skills section
-  border-color: rgba(34,255,136,.25);
+body.theme-dark .project-card__technologies .project-card__tech-tag,
+body.theme-dark .project-card__tech-tag {
+  background: rgba(11,18,32,.75) !important;
+  color: #c7f5d9 !important; // Similar to skills section
+  border-color: rgba(34,255,136,.25) !important;
 }
-body.theme-dark .project-card__technologies .project-card__tech-tag:hover {
-  background: rgba(11,18,32,.95);
-  border-color: rgba(34,255,136,.4);
+body.theme-dark .project-card__technologies .project-card__tech-tag:hover,
+body.theme-dark .project-card__tech-tag:hover {
+  background: rgba(11,18,32,.95) !important;
+  border-color: rgba(34,255,136,.4) !important;
   color: #ffffff !important;
 }
 body.theme-dark .project-card__technologies .project-card__tech-tag:focus-visible,

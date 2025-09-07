@@ -265,7 +265,7 @@ body.theme-dark {
   .skill-card__description {
     color: tokens.$dark-muted;
 
-    // Fett markierter Text im Dark Mode
+    // Text marked in bold in Dark Mode
     strong {
       font-weight: 700;
       color: #f1f5f9;
