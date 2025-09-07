@@ -12,18 +12,10 @@
   --accent: #38bdf8;    // sky-400
 }
 
-// Navigation Menu (Fixed Top-Right)
-// ==================================
-// ARCHITECTURE: Navigation was moved from _hero.scss to _header.scss
-// for better organization. Contains hover effects but no focus outlines.
-// 
-// BEHAVIOR: 
-// - Hover effects: ACTIVE (buttons lift and glow)
-// - Focus outlines: DISABLED (no accessibility rings)
-// - Click interactions: ENABLED (buttons are functional)
+// Navigation Menu
+// ---------------
 
 .hero__quick { 
-  // Fixed positioning in top-right corner
   position: fixed; 
   top: 14px; 
   right: 14px; 
@@ -33,15 +25,12 @@
   cursor: default;
   user-select: none;
   
-  // CRITICAL: Disable all focus effects globally
-  // This prevents white/black blinking frames on focus
   * {
     outline: none !important;
     -webkit-tap-highlight-color: transparent !important;
     -webkit-focus-ring-color: transparent !important;
   }
   
-  // Re-enable interactions specifically for buttons
   .hero__quick-btn {
     pointer-events: auto;
     cursor: pointer;
