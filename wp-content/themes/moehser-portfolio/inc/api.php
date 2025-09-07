@@ -84,7 +84,7 @@ add_action('rest_api_init', function () {
 					$featured_srcset = $featured_id ? wp_get_attachment_image_srcset($featured_id, 'project_wide') : '';
 					$result[] = [
 						'id' => $project->ID,
-						'title' => $project->post_title,
+						'title' => html_entity_decode($project->post_title, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
 						'content' => $project->post_content,
 						'excerpt' => $project->post_excerpt,
 						'slug' => $project->post_name,
@@ -132,7 +132,7 @@ add_action('rest_api_init', function () {
 
 			return rest_ensure_response([
 				'id' => $project->ID,
-				'title' => $project->post_title,
+				'title' => html_entity_decode($project->post_title, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
 				'content' => $project->post_content,
 				'excerpt' => $project->post_excerpt,
 				'slug' => $project->post_name,

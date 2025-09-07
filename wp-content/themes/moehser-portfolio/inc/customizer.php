@@ -70,7 +70,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     // About Section Title
     $wp_customize->add_setting('moehser_about_title', [
         'default' => __('About Me', 'moehser-portfolio'),
-        'sanitize_callback' => 'sanitize_text_field',
+        'sanitize_callback' => 'wp_kses_post',
     ]);
 
     $wp_customize->add_control('moehser_about_title', [
@@ -168,7 +168,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     // Projects Section Title
     $wp_customize->add_setting('moehser_projects_title', [
         'default' => __('Projekte', 'moehser-portfolio'),
-        'sanitize_callback' => 'sanitize_text_field',
+        'sanitize_callback' => 'wp_kses_post',
     ]);
     $wp_customize->add_control('moehser_projects_title', [
         'label' => __('Projects Section Title', 'moehser-portfolio'),
@@ -237,7 +237,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     // Skills Section Title
     $wp_customize->add_setting('moehser_skills_title', [
         'default' => __('Skills', 'moehser-portfolio'),
-        'sanitize_callback' => 'sanitize_text_field',
+        'sanitize_callback' => 'wp_kses_post',
     ]);
     $wp_customize->add_control('moehser_skills_title', [
         'label' => __('Skills Section Title', 'moehser-portfolio'),
@@ -344,7 +344,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     // Skills Card 1
     $wp_customize->add_setting('moehser_skills_card1_title', [
         'default' => __('Frontend Development', 'moehser-portfolio'),
-        'sanitize_callback' => 'sanitize_text_field',
+        'sanitize_callback' => 'wp_kses_post',
     ]);
     $wp_customize->add_control('moehser_skills_card1_title', [
         'label' => __('Skills Card 1 - Title', 'moehser-portfolio'),
@@ -382,7 +382,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     // Skills Card 2
     $wp_customize->add_setting('moehser_skills_card2_title', [
         'default' => __('Backend Development', 'moehser-portfolio'),
-        'sanitize_callback' => 'sanitize_text_field',
+        'sanitize_callback' => 'wp_kses_post',
     ]);
     $wp_customize->add_control('moehser_skills_card2_title', [
         'label' => __('Skills Card 2 - Title', 'moehser-portfolio'),
@@ -420,7 +420,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     // Skills Card 3
     $wp_customize->add_setting('moehser_skills_card3_title', [
         'default' => __('Design & UX', 'moehser-portfolio'),
-        'sanitize_callback' => 'sanitize_text_field',
+        'sanitize_callback' => 'wp_kses_post',
     ]);
     $wp_customize->add_control('moehser_skills_card3_title', [
         'label' => __('Skills Card 3 - Title', 'moehser-portfolio'),
@@ -458,7 +458,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     // Skills Card 4
     $wp_customize->add_setting('moehser_skills_card4_title', [
         'default' => __('DevOps & Tools', 'moehser-portfolio'),
-        'sanitize_callback' => 'sanitize_text_field',
+        'sanitize_callback' => 'wp_kses_post',
     ]);
     $wp_customize->add_control('moehser_skills_card4_title', [
         'label' => __('Skills Card 4 - Title', 'moehser-portfolio'),
@@ -494,7 +494,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     // Skills Card 5
     $wp_customize->add_setting('moehser_skills_card5_title', [
         'default' => __('Mobile Development', 'moehser-portfolio'),
-        'sanitize_callback' => 'sanitize_text_field',
+        'sanitize_callback' => 'wp_kses_post',
     ]);
     $wp_customize->add_control('moehser_skills_card5_title', [
         'label' => __('Skills Card 5 - Title', 'moehser-portfolio'),
@@ -617,13 +617,13 @@ add_action('wp_head', function () {
     
     // Projects Settings to frontend
     echo 'window.__SHOW_ONLY_ACTIVE_PROJECTS__ = ' . ($show_only_active_projects ? 'true' : 'false') . ';';
-    echo 'window.__PROJECTS_TITLE__ = "' . esc_js($projects_title) . '";';
-    echo 'window.__PROJECTS_SUBTITLE__ = "' . esc_js($projects_subtitle) . '";';
+    echo 'window.__PROJECTS_TITLE__ = ' . wp_json_encode($projects_title) . ';';
+    echo 'window.__PROJECTS_SUBTITLE__ = ' . wp_json_encode($projects_subtitle) . ';';
     echo 'window.__PROJECTS_LAYOUT_MODE__ = "' . esc_js($projects_layout_mode) . '";';
     echo 'window.__PROJECTS_SHOW_VIEW_TOGGLE__ = ' . ($projects_show_view_toggle ? 'true' : 'false') . ';';
     
     // Skills Settings to frontend
-    echo 'window.__SKILLS_TITLE__ = "' . esc_js($skills_title) . '";';
+    echo 'window.__SKILLS_TITLE__ = ' . wp_json_encode($skills_title) . ';';
     echo 'window.__SKILLS_SUBTITLE__ = "' . esc_js($skills_subtitle) . '";';
     echo 'window.__SKILLS_LAYOUT_MODE__ = "' . esc_js($skills_layout_mode) . '";';
     echo 'window.__SKILLS_CARDS_ENABLED__ = { c1: ' . ($skills_card1_enabled ? 'true' : 'false') . ', c2: ' . ($skills_card2_enabled ? 'true' : 'false') . ', c3: ' . ($skills_card3_enabled ? 'true' : 'false') . ', c4: ' . ($skills_card4_enabled ? 'true' : 'false') . ', c5: ' . ($skills_card5_enabled ? 'true' : 'false') . ' };';
