@@ -25,20 +25,48 @@
   pointer-events: auto !important;
 }
 
-// DISABLE ALL HOVER EFFECTS FOR HERO QUICK MENU
-.hero__quick *:hover,
-.hero__quick *:focus,
-.hero__quick *:active {
-  background: none !important;
-  border: none !important;
-  box-shadow: none !important;
-  transform: none !important;
-  color: inherit !important;
-  opacity: 1 !important;
-  filter: none !important;
-  transition: none !important;
-  pointer-events: none !important;
-  cursor: default !important;
+// Navigation Menu - Static Design (No Interactions)
+// ------------------------------------------------
+// This navigation is designed to be purely visual/static
+// All interactions are handled by JavaScript scroll behavior
+
+.hero__quick {
+  // Disable all pointer interactions for static design
+  pointer-events: none;
+  
+  // Ensure proper cursor behavior
+  cursor: default;
+  
+  // Prevent text selection
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+// Override accessibility focus styles for static navigation
+// This is intentional - navigation is handled by JavaScript
+.hero__quick a {
+  // Remove focus outlines for static design
+  &:focus,
+  &:focus-visible {
+    outline: none;
+    outline-offset: 0;
+  }
+  
+  // Remove hover effects for static design
+  &:hover,
+  &:active {
+    background: inherit;
+    border: inherit;
+    box-shadow: inherit;
+    transform: inherit;
+    color: inherit;
+    opacity: inherit;
+    filter: inherit;
+    transition: none;
+    text-decoration: inherit;
+  }
 }
 
 .hero__quick-btn {
