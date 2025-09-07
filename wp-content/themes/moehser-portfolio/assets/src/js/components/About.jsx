@@ -35,6 +35,9 @@ export default function About() {
   const aboutTitle = typeof window !== 'undefined' ? (window.__ABOUT_TITLE__ || '') : '';
   const aboutSubtitle = typeof window !== 'undefined' ? (window.__ABOUT_SUBTITLE__ || '') : '';
   const aboutHTML = typeof window !== 'undefined' ? (window.__ABOUT_HTML__ || '') : '';
+  const aboutCtaEnabled = typeof window !== 'undefined' ? (window.__ABOUT_CTA_ENABLED__ || false) : false;
+  const aboutCtaText = typeof window !== 'undefined' ? (window.__ABOUT_CTA_TEXT__ || '') : '';
+  const aboutCtaUrl = typeof window !== 'undefined' ? (window.__ABOUT_CTA_URL__ || '') : '';
 
   // If no About content is provided, do not render the section
   if (!aboutHTML || aboutHTML.trim() === '') {
@@ -95,6 +98,25 @@ export default function About() {
                 <div className="about__text">
                   <div className="about__content-text" dangerouslySetInnerHTML={{ __html: aboutHTML }} />
                 </div>
+                
+                {aboutCtaEnabled && aboutCtaText && aboutCtaUrl && (
+                  <motion.div
+                    className="about__cta"
+                    initial={ANIMATION.FADE_IN.hidden}
+                    whileInView={ANIMATION.FADE_IN.show}
+                    viewport={{ once: true }}
+                    transition={{ duration: ANIMATION.TIMING.BASE, delay: ANIMATION.TIMING.DELAY_LARGE + 0.1 }}
+                  >
+                    <a 
+                      href={aboutCtaUrl} 
+                      className="about__cta-btn"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {aboutCtaText}
+                    </a>
+                  </motion.div>
+                )}
               </motion.div>
             </div>
           </motion.div>

@@ -107,6 +107,45 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'allow_addition' => true,
     ]);
 
+    // About CTA Enable/Disable
+    $wp_customize->add_setting('moehser_about_cta_enabled', [
+        'default' => 0,
+        'sanitize_callback' => 'absint',
+        'transport' => 'postMessage',
+    ]);
+    $wp_customize->add_control('moehser_about_cta_enabled', [
+        'label' => __('Enable CTA Button', 'moehser-portfolio'),
+        'description' => __('Show a call-to-action button below the about content', 'moehser-portfolio'),
+        'section' => 'moehser_about',
+        'type' => 'checkbox',
+    ]);
+
+    // About CTA Button Text
+    $wp_customize->add_setting('moehser_about_cta_text', [
+        'default' => '',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport' => 'postMessage',
+    ]);
+    $wp_customize->add_control('moehser_about_cta_text', [
+        'label' => __('CTA Button Text', 'moehser-portfolio'),
+        'description' => __('Text displayed on the CTA button', 'moehser-portfolio'),
+        'section' => 'moehser_about',
+        'type' => 'text',
+    ]);
+
+    // About CTA Button URL
+    $wp_customize->add_setting('moehser_about_cta_url', [
+        'default' => '',
+        'sanitize_callback' => 'esc_url_raw',
+        'transport' => 'postMessage',
+    ]);
+    $wp_customize->add_control('moehser_about_cta_url', [
+        'label' => __('CTA Button URL', 'moehser-portfolio'),
+        'description' => __('URL the CTA button should link to', 'moehser-portfolio'),
+        'section' => 'moehser_about',
+        'type' => 'url',
+    ]);
+
     // Section: Projects Settings
     $wp_customize->add_section('moehser_projects', [
         'title' => __('Projects Settings', 'moehser-portfolio'),
@@ -567,6 +606,14 @@ add_action('wp_head', function () {
     echo 'window.__ABOUT_TITLE__ = "' . esc_js($about_title) . '";';
     echo 'window.__ABOUT_SUBTITLE__ = "' . esc_js($about_subtitle) . '";';
     echo 'window.__ABOUT_HTML__ = ' . wp_json_encode($about_html) . ';';
+    
+    // About CTA settings
+    $about_cta_enabled = get_theme_mod('moehser_about_cta_enabled', 0);
+    $about_cta_text = get_theme_mod('moehser_about_cta_text', '');
+    $about_cta_url = get_theme_mod('moehser_about_cta_url', '');
+    echo 'window.__ABOUT_CTA_ENABLED__ = ' . ($about_cta_enabled ? 'true' : 'false') . ';';
+    echo 'window.__ABOUT_CTA_TEXT__ = "' . esc_js($about_cta_text) . '";';
+    echo 'window.__ABOUT_CTA_URL__ = "' . esc_js($about_cta_url) . '";';
     
     // Projects Settings to frontend
     echo 'window.__SHOW_ONLY_ACTIVE_PROJECTS__ = ' . ($show_only_active_projects ? 'true' : 'false') . ';';
