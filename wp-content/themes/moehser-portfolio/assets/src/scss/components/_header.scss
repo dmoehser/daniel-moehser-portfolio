@@ -12,11 +12,18 @@
   --accent: #38bdf8;    // sky-400
 }
 
-// Navigation Menu
-// ---------------
-// Navigation with hover effects but no focus outlines
+// Navigation Menu (Fixed Top-Right)
+// ==================================
+// ARCHITECTURE: Navigation was moved from _hero.scss to _header.scss
+// for better organization. Contains hover effects but no focus outlines.
+// 
+// BEHAVIOR: 
+// - Hover effects: ACTIVE (buttons lift and glow)
+// - Focus outlines: DISABLED (no accessibility rings)
+// - Click interactions: ENABLED (buttons are functional)
 
 .hero__quick { 
+  // Fixed positioning in top-right corner
   position: fixed; 
   top: 14px; 
   right: 14px; 
@@ -26,20 +33,22 @@
   cursor: default;
   user-select: none;
   
-  // Disable focus effects but keep hover interactions
+  // CRITICAL: Disable all focus effects globally
+  // This prevents white/black blinking frames on focus
   * {
     outline: none !important;
     -webkit-tap-highlight-color: transparent !important;
     -webkit-focus-ring-color: transparent !important;
   }
   
-  // Enable button interactions
+  // Re-enable interactions specifically for buttons
   .hero__quick-btn {
     pointer-events: auto;
     cursor: pointer;
   }
 }
 
+// Base button styling (Light Mode)
 .hero__quick-btn {
   display: inline-flex; 
   align-items: center; 
@@ -57,12 +66,15 @@
   cursor: pointer;
 }
 
+// HOVER EFFECT: Button lifts up and glows
+// This is the main interactive feedback for users
 .hero__quick-btn:hover { 
   background: linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.7)); 
   transform: translateY(-2px) scale(1.03);
   box-shadow: 0 12px 26px rgba(15,23,42,.12);
 }
 
+// Ghost button variant (transparent background)
 .hero__quick-btn--ghost { 
   background: transparent; 
   color: #0f172a; 
@@ -73,6 +85,7 @@
   background: rgba(15,23,42,.06); 
 }
 
+// Icon-only button variant (square, centered icon)
 .hero__quick-btn--icon { 
   width: 50px; 
   height: 50px; 
@@ -83,7 +96,10 @@
   border-radius: 8px; 
 }
 
-// Dark mode navigation styling
+// Dark Mode Navigation Styling
+// ============================
+// Overrides light mode colors for dark theme
+
 body.theme-dark .hero__quick-btn {
   background: rgba(30,41,59,.95);
   border-color: rgba(255,255,255,.12);
@@ -95,9 +111,9 @@ body.theme-dark .hero__quick-btn:hover {
   border-color: rgba(56,189,248,.4);
 }
 
-body.theme-dark .hero__quick-btn--icon { 
-  color: #c7f5d9; 
-  border-color: rgba(34,255,136,.25); 
+body.theme-dark .hero__quick-btn--icon {
+  color: #c7f5d9;
+  border-color: rgba(34,255,136,.25);
 }
 
 // Mobile optimizations for larger screens
