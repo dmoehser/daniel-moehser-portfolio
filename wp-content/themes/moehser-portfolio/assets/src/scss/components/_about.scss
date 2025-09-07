@@ -293,12 +293,15 @@ body.theme-dark {
     color: tokens.$dark-text;
   }
   
+  // Unified section titles and subtitles
+  // ------------------------------------
   .about__title {
-    color: tokens.$dark-text;
+    color: #ffffff;
+    text-shadow: 0 0 1px rgba(255,255,255,0.1);
   }
   
   .about__subtitle {
-    color: tokens.$dark-muted;
+    color: #e2e8f0;
   }
   
   .about__loading,

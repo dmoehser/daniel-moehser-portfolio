@@ -1019,12 +1019,15 @@ body.theme-dark .projects__card {
   color: tokens.$dark-text;
 }
 
+// Unified section titles and subtitles
+// ------------------------------------
 body.theme-dark .projects__title {
-  color: tokens.$dark-text;
+  color: #ffffff;
+  text-shadow: 0 0 1px rgba(255,255,255,0.1);
 }
 
 body.theme-dark .projects__subtitle {
-  color: tokens.$dark-muted;
+  color: #e2e8f0;
 }
 
 // Dark mode: improve body copy contrast

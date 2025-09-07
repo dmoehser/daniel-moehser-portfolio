@@ -230,6 +230,18 @@ body.theme-dark {
     --sb-fill-bg: rgba(34,197,94,.35);
     --sb-thumb-bg: linear-gradient(180deg, #22c55e, #10b981);
   }
+  
+  // Unified section titles and subtitles
+  // ------------------------------------
+  .skills__title {
+    color: #ffffff;
+    text-shadow: 0 0 1px rgba(255,255,255,0.1);
+  }
+  
+  .skills__subtitle {
+    color: #e2e8f0;
+  }
+  
   .skill-card {
     background: rgba(30,41,59,.95);
     border-color: rgba(255,255,255,.12);
@@ -237,7 +249,8 @@ body.theme-dark {
   }
   
   .skill-card__title {
-    color: tokens.$dark-text;
+    color: #ffffff;
+    text-shadow: 0 0 1px rgba(255,255,255,0.1);
   }
   
   .skill-card__description {
