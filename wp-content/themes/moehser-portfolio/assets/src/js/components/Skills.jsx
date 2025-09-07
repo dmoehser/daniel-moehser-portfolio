@@ -6,6 +6,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
+// Import icons
+import codeIcon from '../../img/code.svg';
+import mysqlIcon from '../../img/mysql.svg';
+import settingsGearIcon from '../../img/settings-gear.svg';
+import paletteIcon from '../../img/palette.svg';
+import wordpressIcon from '../../img/wordpress.svg';
+
 // Animation constants
 // ------------------
 const ANIMATION = {
@@ -82,6 +89,26 @@ const getSkillCards = () => {
   return [];
 };
 
+// Helper function to get icon for card
+// ------------------------------------
+const getCardIcon = (cardTitle) => {
+  const title = cardTitle.toLowerCase().trim();
+  
+  if (title.includes('frontend')) {
+    return codeIcon;
+  } else if (title.includes('backend')) {
+    return mysqlIcon;
+  } else if (title.includes('database')) {
+    return settingsGearIcon;
+  } else if (title.includes('styling') || title.includes('css') || title.includes('design')) {
+    return paletteIcon;
+  } else if (title.includes('wordpress')) {
+    return wordpressIcon;
+  }
+  
+  return codeIcon;
+};
+
 // Reusable skill card component
 // -----------------------------
 const SkillCard = ({ card, isSpecial = false, isAdaptive = false }) => (
@@ -90,7 +117,10 @@ const SkillCard = ({ card, isSpecial = false, isAdaptive = false }) => (
     whileHover={ANIMATION.hover}
     transition={ANIMATION.transition}
   >
-    <h3 className="skill-card__title">{card.title}</h3>
+    <h3 className="skill-card__title">
+      <img src={getCardIcon(card.title)} alt="" className="ico" />
+      {card.title}
+    </h3>
     
     {/* Top row (cards 1-3): Show skills list only - max 3 items */}
     {!isSpecial && card.skills_list && (
