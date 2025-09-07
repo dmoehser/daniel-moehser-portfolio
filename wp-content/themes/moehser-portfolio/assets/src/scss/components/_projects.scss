@@ -427,7 +427,7 @@ body.theme-dark .projects__toggle-btn::after {
         
         &:hover {
           background: rgba(15,23,42,.08);
-          border-color: rgba(34,255,136,.4);
+          border-color: rgba(56,189,248,.4);
         }
       }
 
@@ -678,8 +678,8 @@ body.theme-dark .skeleton {
 
 // Grid hover frame (active)
 .projects__grid-card:hover {
-  border-color: rgba(34,255,136,.65);
-  box-shadow: 0 0 0 3px rgba(34,255,136,.22);
+  border-color: rgba(56,189,248,.65);
+  box-shadow: 0 0 0 3px rgba(56,189,248,.22);
 }
 body.theme-dark .projects__grid-card {
   border-color: rgba(255,255,255,.12);
@@ -742,8 +742,8 @@ body.theme-dark .projects__grid-cta-btn--secondary {
   border: 2px solid #94a3b8;
 }
 body.theme-dark .projects__grid-cta-btn--secondary:hover {
-  background: rgba(148,163,184,.15) !important;
-  border-color: #60a5fa !important;
+  background: rgba(34,255,136,.15) !important;
+  border-color: #4ade80 !important;
 }
 body.theme-dark .projects__grid-cta-ico { filter: invert(1) brightness(1.2) contrast(1.1); }
 
