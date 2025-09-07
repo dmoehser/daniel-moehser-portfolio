@@ -35,6 +35,7 @@ services:
         define('WP_DEBUG_DISPLAY', false);
     volumes:
       - ./wp-content:/var/www/html/wp-content
+      - ./php.ini:/usr/local/etc/php/conf.d/custom.ini
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest

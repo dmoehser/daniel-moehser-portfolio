@@ -22,6 +22,15 @@ const decodeHtmlEntities = (text) => {
   return textarea.value;
 };
 
+// Helper function to parse bold text syntax
+// -----------------------------------------
+const parseBoldText = (text) => {
+  if (!text) return '';
+
+  // Replace **text** with <strong>text</strong>
+  return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+};
+
 // Skill card data from Customizer
 // --------------------------------
 const getSkillCards = () => {
@@ -97,7 +106,10 @@ const SkillCard = ({ card, isSpecial = false, isAdaptive = false }) => (
     
     {/* Bottom row (cards 4-5): Show description only */}
     {isSpecial && card.description && (
-      <p className="skill-card__description">{card.description}</p>
+      <p
+        className="skill-card__description"
+        dangerouslySetInnerHTML={{ __html: parseBoldText(card.description) }}
+      />
     )}
     
     <div className="tags">

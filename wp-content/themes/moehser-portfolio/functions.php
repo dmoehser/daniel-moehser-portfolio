@@ -112,8 +112,8 @@ require_once get_theme_file_path('inc/api.php');
 
 
 // Register custom post types
-require_once get_theme_file_path('inc/cpt-project.php'); // Schritt 1: Grundlegende Projekt-Funktionen aktiviert
-require_once get_theme_file_path('inc/setup-projects.php'); // Aktiviert: Erstellt Beispiel-Projekte falls keine vorhanden sind
+require_once get_theme_file_path('inc/cpt-project.php'); // Step 1: Basic project functions activated
+require_once get_theme_file_path('inc/setup-projects.php'); // Activated: Creates example projects if none exist
 
 
 // Setup default content
@@ -132,6 +132,54 @@ add_action('wp_enqueue_scripts', function () {
 		[],
 		null
 	);
+});
+
+// Increase upload limits for avatar images
+add_filter('upload_size_limit', function($limit) {
+    // Increase limit to 5MB for all uploads in Customizer and Admin
+    if (is_customize_preview() || is_admin()) {
+        return 5 * 1024 * 1024; // 5MB
+    }
+    return $limit;
+});
+
+// Additional WordPress Media Library filter
+add_filter('wp_handle_upload', function($upload) {
+    // Allow larger files for images in general
+    if (strpos($upload['type'], 'image/') === 0) {
+        $max_image_size = 5 * 1024 * 1024; // 5MB for images
+        if ($upload['file'] && filesize($upload['file']) <= $max_image_size) {
+            return $upload;
+        }
+    }
+    return $upload;
+});
+
+// Additional filter for WordPress Media Library
+add_filter('wp_handle_upload_prefilter', function($file) {
+    // Special handling for avatar uploads
+    if (isset($_REQUEST['customize_theme']) && strpos($file['name'], 'avatar') !== false) {
+        // Allow up to 5MB for avatar files
+        $max_size = 5 * 1024 * 1024; // 5MB in bytes
+
+        if ($file['size'] > $max_size) {
+            $file['error'] = sprintf(
+                'Avatar file is too large (%s). Maximum allowed size: %s.',
+                size_format($file['size']),
+                size_format($max_size)
+            );
+        }
+    }
+    return $file;
+});
+
+// Increase PHP memory limit for Customizer
+add_action('customize_register', function($wp_customize) {
+    if (is_customize_preview()) {
+        if (function_exists('wp_raise_memory_limit')) {
+            wp_raise_memory_limit('admin');
+        }
+    }
 });
 
 
