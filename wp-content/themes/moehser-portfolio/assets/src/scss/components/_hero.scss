@@ -387,10 +387,3 @@ body.theme-dark .theme-toggle__btn--hero {
 .brand-base { color: #0f172a; }
 .brand-accent { color: #38bdf8; }
 .brand-caret { color: #0f172a; opacity: .6; animation: blinkCursor 900ms steps(2,end) infinite; }
-
-// Fixed Social Dock bottom-left
-.social-dock {
-  position: fixed; left: 16px; bottom: 16px; z-index: 10; margin: 0; padding: 0; list-style: none;
-  display: flex; flex-direction: column; gap: 14px;
-}
-
