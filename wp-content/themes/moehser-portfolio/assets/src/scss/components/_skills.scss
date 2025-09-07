@@ -373,7 +373,7 @@ body.theme-dark {
   // Keep within 100vh by capping inner height
   .skills__inner {
     height: calc(100vh - 120px - 4vh);
-    overflow: hidden; // clamp visual area to section
+    overflow: visible; // allow hover effects to show
     display: flex;
     flex-direction: column;
   }
@@ -384,7 +384,7 @@ body.theme-dark {
     overflow: visible; // allow card glows within section
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
-    padding-bottom: 32px; // bottom gap
+    padding: 20px 0 32px 0; // top and bottom gap for hover effects
     position: relative;
   }
   // Scrollable viewport wrapper (external scrollbar mirrors this)

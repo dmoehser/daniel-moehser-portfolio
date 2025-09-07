@@ -76,7 +76,7 @@
 .section-inner {
   width: min(1280px, 92vw);
   margin: 0 auto;
-  padding: 0 1.25rem;
+  padding: 20px 1.25rem; // Added top/bottom padding for hover effects
   position: relative;
   z-index: 2; // Lower than header
   overflow: visible;

@@ -17,7 +17,7 @@
 
 #site-header {
   position: sticky;
-  top: 0;
+  top: 16px; // Move header further down from top edge
   z-index: 1000;
   height: var(--header-height);
   color: var(--header-fg);
@@ -34,7 +34,7 @@
     // Unified container (same as section-inner but with header-specific overrides)
     width: min(1280px, 92vw);
     margin: 0 auto;
-    padding: 8px 12px; // Header-specific padding (override 1.25rem)
+    padding: 20px 12px; // Further increased top padding to move menu down
     position: relative;
     z-index: 2;
     overflow: visible;
@@ -67,19 +67,11 @@
     border-bottom: 2px solid rgba(15,23,42,.15);
     color: #0f172a;
   }
-  .pill:hover {
-    background: rgba(255,255,255,.85);
-    border-bottom: 2px solid rgba(15,23,42,.25);
-  }
   body.theme-dark .pill {
     background: rgba(11,18,32,.7);
     color: #e2e8f0;
     border-color: rgba(255,255,255,.08);
     border-bottom: 2px solid rgba(255,255,255,.15);
-  }
-  body.theme-dark .pill:hover {
-    background: rgba(11,18,32,.85);
-    border-bottom: 2px solid rgba(255,255,255,.25);
   }
   .menu__link:focus-visible {
     color: #fff;
