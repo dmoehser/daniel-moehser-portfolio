@@ -400,9 +400,9 @@ body.theme-dark .theme-toggle__btn--hero {
   box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 10px 30px rgba(15,23,42,.12), 0 1px 0 rgba(15,23,42,.06);
 }
 .social:hover { filter: brightness(1.05); }
-body.theme-dark .social { color: #e2e8f0; background: linear-gradient(180deg, rgba(30,41,59,.9), rgba(30,41,59,.78)); border-color: rgba(56,189,248,.2); box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 10px 30px rgba(0,0,0,.3); }
+body.theme-dark .social { color: #e2e8f0; background: linear-gradient(180deg, rgba(30,41,59,.9), rgba(30,41,59,.78)); border-color: rgba(34,255,136,.25); box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 10px 30px rgba(0,0,0,.3); }
 body.theme-dark .social:hover {
-  border-color: rgba(56,189,248,.4);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 10px 30px rgba(0,0,0,.4);
+  border-color: rgba(34,255,136,.4);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 10px 30px rgba(34,197,94,.3);
 }
 
