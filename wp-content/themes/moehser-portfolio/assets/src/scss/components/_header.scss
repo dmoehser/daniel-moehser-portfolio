@@ -12,6 +12,105 @@
   --accent: #38bdf8;    // sky-400
 }
 
+// Navigation Menu 
+// ----------------
+
+.hero__quick { 
+  position: fixed !important; 
+  top: 14px !important; 
+  right: 14px !important; 
+  display: flex !important; 
+  gap: 12px; 
+  z-index: 1000 !important;
+  pointer-events: auto !important;
+}
+
+// DISABLE ALL HOVER EFFECTS FOR HERO QUICK MENU
+.hero__quick *:hover,
+.hero__quick *:focus,
+.hero__quick *:active {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+  color: inherit !important;
+  opacity: 1 !important;
+  filter: none !important;
+  transition: none !important;
+  pointer-events: none !important;
+  cursor: default !important;
+}
+
+.hero__quick-btn {
+  display: inline-flex; 
+  align-items: center; 
+  gap: 14px; 
+  padding: 16px 26px; 
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.62));
+  color: #0f172a; 
+  text-decoration: none; 
+  font-weight: 800; 
+  font-size: 1rem;
+  border: 1px solid rgba(15,23,42,.10);
+  backdrop-filter: saturate(140%) blur(8px);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  cursor: pointer;
+}
+
+.hero__quick-btn:hover { 
+  background: linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.7)); 
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 12px 26px rgba(15,23,42,.12);
+}
+
+.hero__quick-btn--ghost { 
+  background: transparent; 
+  color: #0f172a; 
+  border-color: rgba(15,23,42,.25); 
+}
+
+.hero__quick-btn--ghost:hover { 
+  background: rgba(15,23,42,.06); 
+}
+
+.hero__quick-btn--icon { 
+  width: 50px; 
+  height: 50px; 
+  display: grid; 
+  place-items: center; 
+  padding: 0; 
+  font-size: 22px; 
+  border-radius: 8px; 
+}
+
+// Dark mode navigation styling
+body.theme-dark .hero__quick-btn {
+  background: rgba(30,41,59,.95);
+  border-color: rgba(255,255,255,.12);
+  color: #e2e8f0;
+}
+
+body.theme-dark .hero__quick-btn:hover {
+  background: rgba(30,41,59,.98);
+  border-color: rgba(56,189,248,.4);
+}
+
+body.theme-dark .hero__quick-btn--icon { 
+  color: #c7f5d9; 
+  border-color: rgba(34,255,136,.25); 
+}
+
+// Mobile optimizations for larger screens
+@media (max-width: 768px) {
+  .hero__quick {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
+
 // Header structure and layout
 // ---------------------------
 

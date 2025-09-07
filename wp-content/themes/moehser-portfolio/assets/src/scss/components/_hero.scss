@@ -159,57 +159,10 @@
 .blob--1 { left: -60px; top: -40px; background: rgba(255,255,255,0.75); }
 .blob--2 { right: -60px; top: 40px; background: rgba(255,255,255,0.55); }
 
-// Hero quick menu and navigation
-// ------------------------------
+// Navigation moved to _header.scss for better organization
 
-// Menu - Completely independent from Layout Builder
-.hero__quick { 
-  position: fixed !important; 
-  top: 14px !important; 
-  right: 14px !important; 
-  display: flex !important; 
-  gap: 12px; 
-  z-index: 999999 !important; 
-  pointer-events: auto !important;
-  // Ensure it's outside any layout containers
-  position: fixed !important;
-  // Force it to be above everything
-  isolation: isolate !important;
-  // Prevent any transforms from affecting it
-  transform: none !important;
-  // Ensure it's not clipped by any parent containers
-  clip-path: none !important;
-  // Force hardware acceleration
-  will-change: transform !important;
-  // Ensure it's rendered in its own layer
-  contain: layout style paint !important;
-}
-
-// DISABLE ALL HOVER EFFECTS FOR HERO QUICK MENU
-.hero__quick *:hover,
-.hero__quick *:focus,
-.hero__quick *:active {
-  background: none !important;
-  border: none !important;
-  box-shadow: none !important;
-  transform: none !important;
-  color: inherit !important;
-  opacity: 1 !important;
-  filter: none !important;
-  transition: none !important;
-  pointer-events: none !important;
-  cursor: default !important;
-}
-
-// Mobile optimizations for larger screens
+// Mobile optimizations
 @media (max-width: 768px) {
-  .hero__quick {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-  }
-  
   // Mobile header bar with glassmorphism effect
   .hero__brand {
     position: fixed;
@@ -314,27 +267,6 @@
     animation-duration: 1000ms;
   }
 }
-.hero__quick-btn {
-  display: inline-flex; align-items: center; gap: 14px; padding: 16px 26px; border-radius: 8px;
-  background: linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.62));
-  color: #0f172a; text-decoration: none; font-weight: 800; font-size: 1rem;
-  border: 1px solid rgba(15,23,42,.10);
-  backdrop-filter: saturate(140%) blur(8px);
-  -webkit-backdrop-filter: saturate(140%) blur(8px);
-  cursor: pointer;
-}
-.hero__quick-btn:hover { background: linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.7)); }
-.hero__quick-btn--ghost { background: transparent; color: #0f172a; border-color: rgba(15,23,42,.25); }
-.hero__quick-btn--ghost:hover { background: rgba(15,23,42,.06); }
-.hero__quick-btn--icon { width: 50px; height: 50px; display: grid; place-items: center; padding: 0; font-size: 22px; border-radius: 8px; }
-body.theme-dark .hero__quick-btn--icon { color: #c7f5d9; border-color: rgba(34,255,136,.25); }
-body.theme-dark .hero__quick-btn {
-  background: linear-gradient(180deg, rgba(11,18,32,.85), rgba(11,18,32,.78));
-  color: #e2e8f0; border-color: rgba(255,255,255,.10);
-}
-body.theme-dark .hero__quick-btn:hover { 
-  background: linear-gradient(180deg, rgba(11,18,32,.92), rgba(11,18,32,.82)); 
-}
 
 // Dark mode - Unified with other sections
 // (background now handled in main.scss)
@@ -369,17 +301,6 @@ body.theme-dark .blob--2 {
   background: rgba(30,41,59,.55);
 }
 
-// Dark mode menu buttons - Updated colors
-body.theme-dark .hero__quick-btn {
-  background: rgba(30,41,59,.95);
-  border-color: rgba(255,255,255,.12);
-  color: #e2e8f0;
-}
-
-body.theme-dark .hero__quick-btn:hover {
-  background: rgba(30,41,59,.98);
-  border-color: rgba(56,189,248,.4);
-}
 
 // Dark mode logo colors - Updated
 body.theme-dark .hero__brand-link {
@@ -415,15 +336,6 @@ body.theme-dark .hero__mobile-text .hero__name {
   color: var(--accent);
 }
 
-// Hero Quick Menu Styling
-.hero__quick-btn {
-  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-}
-
-.hero__quick-btn:hover {
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 12px 26px rgba(15,23,42,.12);
-}
 
 // Theme toggle button styling
 // ---------------------------
