@@ -163,7 +163,6 @@ export default function Skills() {
   const layoutMode = typeof window !== 'undefined' && window.__SKILLS_LAYOUT_MODE__ ? window.__SKILLS_LAYOUT_MODE__ : 'fixed_grid';
   const isAdaptiveLayout = layoutMode === 'adaptive_grid';
   const enabledMap = typeof window !== 'undefined' && window.__SKILLS_CARDS_ENABLED__ ? window.__SKILLS_CARDS_ENABLED__ : { c1: true, c2: true, c3: true, c4: true, c5: true };
-  const density = typeof window !== 'undefined' && window.__SKILLS_DENSITY__ ? window.__SKILLS_DENSITY__ : 'normal';
   const contentRef = useRef(null);
   const scrollbarRef = useRef(null);
   const [hasOverflow, setHasOverflow] = useState(false);
@@ -241,7 +240,7 @@ export default function Skills() {
   const activeCount = isAdaptiveLayout ? cardsForAdaptive.length : (cardsForFixed.top.length + cardsForFixed.bottom.length);
 
   return (
-    <section className={`skills ${isAdaptiveLayout ? 'skills--adaptive' : 'skills--fixed'} ${isAdaptiveLayout ? `count-${activeCount}` : ''} ${isAdaptiveLayout ? `density-${density}` : ''}`} id="skills">
+    <section className={`skills ${isAdaptiveLayout ? 'skills--adaptive' : 'skills--fixed'} ${isAdaptiveLayout ? `count-${activeCount}` : ''}`} id="skills">
       <div className="skills__inner">
         <header className="skills__header">
           <h2 className="skills__title">{title}</h2>
