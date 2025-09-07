@@ -53,31 +53,37 @@ export default function About() {
             transition={{ duration: ANIMATION.TIMING.BASE }}
           >
             <div className="about__card section-card">
-              <motion.div
-                className="about__header section-header"
-                initial={ANIMATION.FADE_IN.hidden}
-                whileInView={ANIMATION.FADE_IN.show}
-                viewport={{ once: true }}
-                transition={{ duration: ANIMATION.TIMING.BASE, delay: ANIMATION.TIMING.DELAY_MEDIUM }}
-              >
-                <motion.h2
-                  className="about__title section-title"
-                  initial={ANIMATION.TITLE.hidden}
-                  whileInView={ANIMATION.TITLE.show}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{ duration: ANIMATION.TIMING.BASE }}
+              {(aboutTitle || aboutSubtitle) && (
+                <motion.div
+                  className="about__header section-header"
+                  initial={ANIMATION.FADE_IN.hidden}
+                  whileInView={ANIMATION.FADE_IN.show}
+                  viewport={{ once: true }}
+                  transition={{ duration: ANIMATION.TIMING.BASE, delay: ANIMATION.TIMING.DELAY_MEDIUM }}
                 >
-                  {aboutTitle}
-                </motion.h2>
-                <motion.p
-                  className="about__subtitle section-subtitle"
-                  initial={ANIMATION.TITLE.hidden}
-                  whileInView={ANIMATION.TITLE.show}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{ duration: ANIMATION.TIMING.BASE, delay: ANIMATION.TIMING.DELAY_SMALL }}
-                  dangerouslySetInnerHTML={{ __html: aboutSubtitle }}
-                />
-              </motion.div>
+                  {aboutTitle && (
+                    <motion.h2
+                      className="about__title section-title"
+                      initial={ANIMATION.TITLE.hidden}
+                      whileInView={ANIMATION.TITLE.show}
+                      viewport={{ once: true, amount: 0.3 }}
+                      transition={{ duration: ANIMATION.TIMING.BASE }}
+                    >
+                      {aboutTitle}
+                    </motion.h2>
+                  )}
+                  {aboutSubtitle && (
+                    <motion.p
+                      className="about__subtitle section-subtitle"
+                      initial={ANIMATION.TITLE.hidden}
+                      whileInView={ANIMATION.TITLE.show}
+                      viewport={{ once: true, amount: 0.3 }}
+                      transition={{ duration: ANIMATION.TIMING.BASE, delay: ANIMATION.TIMING.DELAY_SMALL }}
+                      dangerouslySetInnerHTML={{ __html: aboutSubtitle }}
+                    />
+                  )}
+                </motion.div>
+              )}
 
               <motion.div
                 className="about__body section-body about__body--grid"

@@ -502,6 +502,15 @@ add_action('wp_head', function () {
     $about_subtitle = get_theme_mod('moehser_about_subtitle', '');
     $about_page_id = (int) get_theme_mod('moehser_about_page_id', 0);
     $about_html = '';
+    
+    // If no custom title is set, use the page title
+    if (empty($about_title) && $about_page_id > 0) {
+        $about_post = get_post($about_page_id);
+        if ($about_post && $about_post->post_status === 'publish') {
+            $about_title = $about_post->post_title;
+        }
+    }
+    
     if ($about_page_id > 0) {
         $about_post = get_post($about_page_id);
         if ($about_post && $about_post->post_status === 'publish') {

@@ -67,17 +67,21 @@
 
 .about__title {
   margin: 0 0 8px;
+  font-family: 'Poppins', sans-serif;
   font-size: clamp(2rem, 4vw, 3.2rem);
-  font-weight: 900;
+  font-weight: 700;
   color: #0f172a;
   line-height: 1.1;
+  letter-spacing: -0.01em;
 }
 
 .about__subtitle {
   margin: 0;
+  font-family: 'Poppins', sans-serif;
   color: #64748b;
   font-size: clamp(0.95rem, 1.7vw, 1.15rem);
-  font-weight: 600;
+  font-weight: 500;
+  letter-spacing: 0.01em;
 }
 
 .about__body {
@@ -116,9 +120,12 @@
 }
 
 .about__content-text {
+  font-family: 'Poppins', sans-serif;
   font-size: 1.125rem;
   line-height: 1.7;
   color: #374151;
+  font-weight: 400;
+  letter-spacing: 0.01em;
 }
 
 .about__content-text p {
@@ -128,7 +135,10 @@
 .about__content-text h3,
 .about__content-text h4 {
   margin: 1.5rem 0 0.5rem;
+  font-family: 'Poppins', sans-serif;
   color: #0f172a;
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 
 // Skills section within about
