@@ -46,7 +46,7 @@
     gap: .75rem; // Header-specific gap
   }
 
-  .menu {
+  .menu { 
     list-style: none;
     padding: 0;
     margin: 0;
@@ -54,7 +54,39 @@
     gap: 1.25rem;
   }
 
-  .menu__link { text-decoration: none; font-weight: 700; outline: none; }
+  .menu__link { 
+    text-decoration: none; 
+    font-weight: 700; 
+    outline: none;
+    // DEBUG: Add blue border to identify menu links
+    border: 2px solid blue !important;
+    // Remove all hover effects
+    transition: none !important;
+    cursor: default !important;
+    pointer-events: none !important;
+  }
+  
+  // COMPLETELY DISABLE ALL HOVER EFFECTS FOR NAVIGATION
+  .menu__link:hover,
+  .menu__link:focus,
+  .menu__link:active,
+  .pill:hover,
+  .pill:focus,
+  .pill:active,
+  .hero__quick-btn:hover,
+  .hero__quick-btn:focus,
+  .hero__quick-btn:active {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    transform: none !important;
+    color: inherit !important;
+    opacity: 1 !important;
+    filter: none !important;
+    transition: none !important;
+    pointer-events: none !important;
+    cursor: default !important;
+  }
 
 // Navigation pills styling
 // ------------------------
@@ -69,6 +101,12 @@
     transition: none !important;
     cursor: default !important;
     pointer-events: none !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    // DEBUG: Add red border to identify pill elements
+    border: 3px solid red !important;
   }
   body.theme-dark .pill {
     background: rgba(11,18,32,.7);

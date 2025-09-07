@@ -185,6 +185,22 @@
   contain: layout style paint !important;
 }
 
+// DISABLE ALL HOVER EFFECTS FOR HERO QUICK MENU
+.hero__quick *:hover,
+.hero__quick *:focus,
+.hero__quick *:active {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+  color: inherit !important;
+  opacity: 1 !important;
+  filter: none !important;
+  transition: none !important;
+  pointer-events: none !important;
+  cursor: default !important;
+}
+
 // Mobile optimizations for larger screens
 @media (max-width: 768px) {
   .hero__quick {
