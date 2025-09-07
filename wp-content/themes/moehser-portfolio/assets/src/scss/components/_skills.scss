@@ -114,11 +114,11 @@
 
   .skill-card:hover {
     transform: translateY(-4px);
-    box-shadow: 
+    box-shadow:
       0 10px 15px -3px rgba(0, 0, 0, 0.1),
       0 4px 6px -2px rgba(0, 0, 0, 0.05),
-      0 0 12px rgba(34, 255, 136, 0.3),
-      0 0 24px rgba(34, 255, 136, 0.15);
+      0 0 12px rgba(59, 130, 246, 0.3),
+      0 0 24px rgba(59, 130, 246, 0.15);
   }
 
 // Card content
@@ -259,10 +259,18 @@ body.theme-dark {
   
   .skill-card__list li {
     color: tokens.$dark-muted;
-    
+
     &::before {
       color: #ffffff !important;
     }
+  }
+
+  .skill-card:hover {
+    box-shadow:
+      0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05),
+      0 0 12px rgba(34, 197, 94, 0.3),
+      0 0 24px rgba(34, 197, 94, 0.15);
   }
   
   .animated-border {
