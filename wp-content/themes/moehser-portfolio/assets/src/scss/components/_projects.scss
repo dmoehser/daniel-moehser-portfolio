@@ -1,6 +1,8 @@
 // Projects Component
 // =================
 
+@use '../utils/tokens';
+
 // Project section - Using unified base classes
 .projects {
   min-height: 100vh;
@@ -138,8 +140,8 @@
   transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
 }
 .projects__toggle-btn img { width: 22px; height: 22px; display: block; }
-.projects__toggle-btn:hover { background: #fff; border-color: rgba(56,189,248,.4); box-shadow: 0 1px 2px rgba(15,23,42,.08); }
-.projects__toggle-btn.is-active { border-color: rgba(56,189,248,.6); box-shadow: 0 0 0 2px rgba(56,189,248,.25); }
+.projects__toggle-btn:hover { background: #fff; border-color: rgba(34,255,136,.4); box-shadow: 0 1px 2px rgba(15,23,42,.08); }
+.projects__toggle-btn.is-active { border-color: rgba(34,255,136,.6); box-shadow: 0 0 0 2px rgba(34,255,136,.25); }
 
 // Custom tooltip for toggle buttons
 // ---------------------------------
@@ -172,8 +174,8 @@
 
 // Dark mode tooltip
 body.theme-dark .projects__toggle-btn { background: rgba(30,41,59,.9); border-color: rgba(255,255,255,.12); }
-body.theme-dark .projects__toggle-btn:hover { background: rgba(30,41,59,1); border-color: #60a5fa; }
-body.theme-dark .projects__toggle-btn.is-active { border-color: #38bdf8; box-shadow: 0 0 0 2px rgba(56,189,248,.35); }
+body.theme-dark .projects__toggle-btn:hover { background: rgba(30,41,59,1); border-color: #4ade80; }
+body.theme-dark .projects__toggle-btn.is-active { border-color: #22c55e; box-shadow: 0 0 0 2px rgba(34,255,136,.35); }
 body.theme-dark .projects__toggle-btn::after {
   background: rgba(255,255,255,.95);
   color: #0f172a;
@@ -364,8 +366,8 @@ body.theme-dark .projects__toggle-btn::after {
       }
       
       .project-card__tech-tag:hover {
-        background: rgba(56,189,248,.15);
-        border-color: rgba(56,189,248,.4);
+        background: rgba(34,255,136,.15);
+        border-color: rgba(34,255,136,.4);
         transform: none;
       }
     }
@@ -404,7 +406,7 @@ body.theme-dark .projects__toggle-btn::after {
       
         &:hover {
           transform: none;
-          background: linear-gradient(135deg, #0ea5e9, #0284c7);
+          background: linear-gradient(135deg, #22c55e, #16a34a);
         }
       }
       .project-card__demo-btn[type="button"],
@@ -425,7 +427,7 @@ body.theme-dark .projects__toggle-btn::after {
         
         &:hover {
           background: rgba(15,23,42,.08);
-          border-color: rgba(56,189,248,.4);
+          border-color: rgba(34,255,136,.4);
         }
       }
 
@@ -610,7 +612,7 @@ body.theme-dark .skeleton {
   
   &:hover:not(:disabled) {
     background: rgba(255, 255, 255, 1);
-    border-color: rgba(56, 189, 248, 0.5);
+    border-color: rgba(34, 255, 136, 0.5);
     transform: translateY(-50%) scale(1.1);
   }
   
@@ -676,15 +678,15 @@ body.theme-dark .skeleton {
 
 // Grid hover frame (active)
 .projects__grid-card:hover {
-  border-color: rgba(56,189,248,.65);
-  box-shadow: 0 0 0 3px rgba(56,189,248,.22);
+  border-color: rgba(34,255,136,.65);
+  box-shadow: 0 0 0 3px rgba(34,255,136,.22);
 }
 body.theme-dark .projects__grid-card {
   border-color: rgba(255,255,255,.12);
 }
 body.theme-dark .projects__grid-card:hover {
-  border-color: #38bdf8;
-  box-shadow: 0 0 0 3px rgba(56,189,248,.35);
+  border-color: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34,255,136,.35);
 }
 
 // Grid CTA row
@@ -806,7 +808,7 @@ body.theme-dark .projects__grid-excerpt { color: #cbd5e1; }
 }
 
 .project-card__title a:hover {
-  color: #38bdf8;
+  color: #22c55e;
 }
 
 .project-card__cta {
@@ -891,8 +893,8 @@ body.theme-dark .projects__grid-excerpt { color: #cbd5e1; }
     font-size: 0.9rem;
     // Disable hover effects on mobile
     &:hover {
-      background: #3b82f6;
-      border-color: #3b82f6;
+      background: #22c55e;
+      border-color: #22c55e;
       transform: none;
       box-shadow: none;
     }
@@ -1014,15 +1016,15 @@ body.theme-dark .projects__grid-excerpt { color: #cbd5e1; }
 body.theme-dark .projects__card {
   background: rgba(30,41,59,.95);
   border-color: rgba(255,255,255,.12);
-  color: #e2e8f0;
+  color: tokens.$dark-text;
 }
 
 body.theme-dark .projects__title {
-  color: #e2e8f0;
+  color: tokens.$dark-text;
 }
 
 body.theme-dark .projects__subtitle {
-  color: #cbd5e1;
+  color: tokens.$dark-muted;
 }
 
 // Dark mode: improve body copy contrast
@@ -1031,7 +1033,7 @@ body.theme-dark .project-card__excerpt * { color: inherit; }
 body.theme-dark .project-card__excerpt li { color: inherit; }
 body.theme-dark .project-card__excerpt li::marker { color: #ffffff; }
 body.theme-dark .project-card__excerpt a { color: #38bdf8; }
-body.theme-dark .project-card__excerpt a:hover { color: #60a5fa; }
+body.theme-dark .project-card__excerpt a:hover { color: #4ade80; }
 body.theme-dark .project-card__info { color: #ffffff; }
 body.theme-dark .project-card__title { color: #ffffff; }
 // Enforce white text across all nested elements in info panel (override lingering light styles)
@@ -1051,7 +1053,7 @@ body.theme-dark .projects__empty {
 
 body.theme-dark .project-card {
   background: rgba(30,41,59,.95);
-  color: #e2e8f0;
+  color: tokens.$dark-text;
 }
 
 body.theme-dark .project-card__title a {
@@ -1059,7 +1061,7 @@ body.theme-dark .project-card__title a {
 }
 
 body.theme-dark .project-card__title a:hover {
-  color: #38bdf8;
+  color: #22c55e;
 }
 
 body.theme-dark .project-card__cta {
@@ -1067,7 +1069,7 @@ body.theme-dark .project-card__cta {
 }
 
 body.theme-dark .project-card__cta:hover {
-  color: #60a5fa;
+  color: #4ade80;
 }
 
 // Dark mode: tags base + states unified
@@ -1094,8 +1096,8 @@ body.theme-dark .project-card__demo-btn {
 }
 
 body.theme-dark .project-card__demo-btn:hover {
-  background: rgba(56,189,248,1);
-  border-color: rgba(56,189,248,.5);
+  background: rgba(34,255,136,1);
+  border-color: rgba(34,255,136,.5);
   color: #ffffff !important;
 }
 
@@ -1108,8 +1110,8 @@ body.theme-dark .project-card__demo-btn--secondary {
   .project-card__cta-ico { filter: invert(1) brightness(1.2) contrast(1.1); }
 }
 body.theme-dark .project-card__demo-btn--secondary:hover {
-  background: rgba(148,163,184,.15) !important;
-  border-color: #60a5fa !important;
+  background: rgba(34,255,136,.15) !important;
+  border-color: #4ade80 !important;
 }
 
 

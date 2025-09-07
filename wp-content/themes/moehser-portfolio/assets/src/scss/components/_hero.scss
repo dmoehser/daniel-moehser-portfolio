@@ -320,10 +320,8 @@ body.theme-dark .hero__quick-btn:hover {
   background: linear-gradient(180deg, rgba(11,18,32,.92), rgba(11,18,32,.82)); 
 }
 
-// Dark mode - Updated to match Skills color palette
-body.theme-dark .hero {
-  background: rgba(15,23,42,.95);
-}
+// Dark mode - Unified with other sections
+// (background now handled in main.scss)
 
 body.theme-dark .hero__code {
   color: #e2e8f0;

@@ -1,6 +1,8 @@
 // Skills Section
 // =============
 
+@use '../utils/tokens';
+
 // Skills section with animated skill cards
 // ------------------------------
 
@@ -115,8 +117,8 @@
     box-shadow: 
       0 10px 15px -3px rgba(0, 0, 0, 0.1),
       0 4px 6px -2px rgba(0, 0, 0, 0.05),
-      0 0 12px rgba(59, 130, 246, 0.3),
-      0 0 24px rgba(59, 130, 246, 0.15);
+      0 0 12px rgba(34, 255, 136, 0.3),
+      0 0 24px rgba(34, 255, 136, 0.15);
   }
 
 // Card content
@@ -231,19 +233,23 @@ body.theme-dark {
   .skill-card {
     background: rgba(30,41,59,.95);
     border-color: rgba(255,255,255,.12);
-    color: #e2e8f0;
+    color: tokens.$dark-text;
   }
   
   .skill-card__title {
-    color: #e2e8f0;
+    color: tokens.$dark-text;
   }
   
   .skill-card__description {
-    color: #cbd5e1;
+    color: tokens.$dark-muted;
   }
   
   .skill-card__list li {
-    color: #cbd5e1;
+    color: tokens.$dark-muted;
+    
+    &::before {
+      color: #ffffff !important;
+    }
   }
   
   .animated-border {

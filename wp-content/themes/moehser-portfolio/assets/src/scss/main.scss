@@ -40,6 +40,29 @@ body {
 body.theme-dark {
   background: tokens.$dark-bg;
   color: tokens.$dark-text;
+  
+  // Unified section backgrounds
+  // ---------------------------
+  .hero,
+  .skills,
+  .about,
+  .projects {
+    background: tokens.$dark-bg-section;
+  }
+  
+  // Enhanced white text for better contrast
+  // --------------------------------------
+  h1, h2, h3, h4, h5, h6 {
+    color: #ffffff;
+    text-shadow: 0 0 1px rgba(255,255,255,0.1);
+  }
+  
+  .hero__code,
+  .hero__mobile-text h1,
+  .hero__mobile-text .hero__name {
+    color: #ffffff;
+    text-shadow: 0 0 1px rgba(255,255,255,0.1);
+  }
 
   // Hero components
   .hero__brand-link { 
@@ -81,27 +104,31 @@ body.theme-dark {
 
   // SVG Icons - ensure visibility in dark mode
   // -------------------------------------------
+  
+  // All SVG elements
   svg {
-    color: #ffffff;
-    fill: currentColor;
+    color: #ffffff !important;
+    fill: currentColor !important;
   }
   
-  // SVG images loaded as <img> tags
+  // SVG images loaded as <img> tags - clean white
   img[src$=".svg"] {
-    filter: brightness(0) invert(1);
+    filter: brightness(0) invert(1) !important;
   }
   
-  // Specific icon adjustments
-  .social-icon,
-  .tech-icon,
-  .ui-icon {
-    svg {
-      color: #ffffff;
-    }
-    
-    img[src$=".svg"] {
-      filter: brightness(0) invert(1);
-    }
+  // Social dock icons specifically
+  .social img[src$=".svg"] {
+    filter: brightness(0) invert(1) !important;
+  }
+  
+  // Settings gear icon
+  .settings-gear img[src$=".svg"] {
+    filter: brightness(0) invert(1) !important;
+  }
+  
+  // Project view toggle icons
+  .projects__toggle-btn img[src$=".svg"] {
+    filter: brightness(0) invert(1) !important;
   }
 }
 

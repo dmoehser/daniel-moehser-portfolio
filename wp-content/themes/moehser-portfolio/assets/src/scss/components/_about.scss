@@ -1,6 +1,8 @@
 // About Component
 // ===============
 
+@use '../utils/tokens';
+
 // About section - Using unified base classes
 .about {
   min-height: 100vh;
@@ -288,40 +290,40 @@ body.theme-dark {
   .about__card {
     background: rgba(30,41,59,.95);
     border-color: rgba(255,255,255,.12);
-    color: #e2e8f0;
+    color: tokens.$dark-text;
   }
   
   .about__title {
-    color: #e2e8f0;
+    color: tokens.$dark-text;
   }
   
   .about__subtitle {
-    color: #cbd5e1;
+    color: tokens.$dark-muted;
   }
   
   .about__loading,
   .about__error {
-    color: #cbd5e1;
+    color: tokens.$dark-muted;
   }
   
   .about__skill-tag {
     background: rgba(30,41,59,.95);
-    color: #cbd5e1;
+    color: tokens.$dark-muted;
     border-color: rgba(255,255,255,.12);
     
     &:hover {
-      background: #3b82f6;
+      background: #22c55e;
       color: #ffffff;
-      border-color: #3b82f6;
+      border-color: #22c55e;
     }
   }
   
   .about__cta-btn {
-    background: #3b82f6;
+    background: #22c55e;
     color: #ffffff;
     
     &:hover {
-      background: #2563eb;
+      background: #16a34a;
     }
   }
 }

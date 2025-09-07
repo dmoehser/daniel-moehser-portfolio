@@ -12,12 +12,14 @@ $color-muted: #475569;      // secondary text
 $color-brand: #0f172a;      // brand primary
 $color-accent: #38bdf8;     // accent for interactive elements
 
-// Dark mode palette
-// -----------------
-$dark-bg: #0b1220;          // deep navy
-$dark-text: #c7f5d9;        // soft neon green text
-$dark-muted: #89cda3;       // muted green
-$dark-accent: #22ff88;      // glow green accents
+// Dark mode palette - X/Twitter inspired backgrounds
+// -------------------------------------------------
+$dark-bg: #15202b;          // main background (X-like)
+$dark-bg-section: #192734;  // section backgrounds (slightly lighter)
+$dark-bg-card: #1e2732;     // card backgrounds (subtle contrast)
+$dark-text: #c7f5d9;        // keep original green text
+$dark-muted: #89cda3;       // keep original muted green
+$dark-accent: #22ff88;      // keep original green accent
 
 // Spacing scale
 // -------------
