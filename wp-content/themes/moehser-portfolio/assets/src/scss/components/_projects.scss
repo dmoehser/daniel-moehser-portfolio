@@ -140,8 +140,8 @@
   transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
 }
 .projects__toggle-btn img { width: 22px; height: 22px; display: block; }
-.projects__toggle-btn:hover { background: #fff; border-color: rgba(34,255,136,.4); box-shadow: 0 1px 2px rgba(15,23,42,.08); }
-.projects__toggle-btn.is-active { border-color: rgba(34,255,136,.6); box-shadow: 0 0 0 2px rgba(34,255,136,.25); }
+.projects__toggle-btn:hover { background: #fff; border-color: rgba(56,189,248,.4); box-shadow: 0 1px 2px rgba(15,23,42,.08); }
+.projects__toggle-btn.is-active { border-color: rgba(56,189,248,.6); box-shadow: 0 0 0 2px rgba(56,189,248,.25); }
 
 // Custom tooltip for toggle buttons
 // ---------------------------------
