@@ -78,6 +78,31 @@ body.theme-dark {
     border-color: rgba(255,255,255,0.08); 
     color: tokens.$dark-text; 
   }
+
+  // SVG Icons - ensure visibility in dark mode
+  // -------------------------------------------
+  svg {
+    color: #ffffff;
+    fill: currentColor;
+  }
+  
+  // SVG images loaded as <img> tags
+  img[src$=".svg"] {
+    filter: brightness(0) invert(1);
+  }
+  
+  // Specific icon adjustments
+  .social-icon,
+  .tech-icon,
+  .ui-icon {
+    svg {
+      color: #ffffff;
+    }
+    
+    img[src$=".svg"] {
+      filter: brightness(0) invert(1);
+    }
+  }
 }
 
 h1 {
