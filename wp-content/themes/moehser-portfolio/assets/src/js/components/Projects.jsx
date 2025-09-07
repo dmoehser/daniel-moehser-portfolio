@@ -262,14 +262,12 @@ const renderProjectActions = (project, handleProjectClick, opts = {}) => {
           GitHub
         </a>
       ) : null}
-      <a 
-        href={project.project_url_external}
-        target="_blank"
-        rel="noopener noreferrer"
+      <button 
         className="project-card__demo-btn"
+        onClick={() => handleProjectClick(project)}
       >
         {primaryLabel}
-      </a>
+      </button>
     </div>
   );
 };
@@ -295,14 +293,12 @@ const renderGridActions = (project, handleProjectClick) => {
         </a>
       ) : null}
       {hasExternal ? (
-        <a 
-          href={project.project_url_external}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button 
+          onClick={() => handleProjectClick(project)}
           className="projects__grid-cta-btn"
         >
           Demo
-        </a>
+        </button>
       ) : (
         <button 
           onClick={() => handleProjectClick(project)}

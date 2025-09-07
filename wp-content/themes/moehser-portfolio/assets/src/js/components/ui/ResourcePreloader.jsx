@@ -136,7 +136,7 @@ const useResourcePreloader = () => {
     const preloadProjectImages = async () => {
       try {
         // Fetch projects data
-        const response = await fetch('/wp-json/wp/v2/projects?per_page=3&_fields=id,title,project_screenshot,featured_image_wide');
+        const response = await fetch('/wp-json/moehser/v1/projects?per_page=3&_fields=id,title,project_screenshot,featured_image_wide');
 
         if (response.ok) {
           const projects = await response.json();
