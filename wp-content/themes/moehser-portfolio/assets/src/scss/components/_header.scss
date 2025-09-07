@@ -14,6 +14,7 @@
 
 // Navigation Menu
 // ---------------
+// Navigation with hover effects but no focus outlines
 
 .hero__quick { 
   position: fixed; 
@@ -25,14 +26,14 @@
   cursor: default;
   user-select: none;
   
-  // Disable all focus effects for static navigation
+  // Disable focus effects but keep hover interactions
   * {
     outline: none !important;
     -webkit-tap-highlight-color: transparent !important;
     -webkit-focus-ring-color: transparent !important;
   }
   
-  // Re-enable interactions for buttons
+  // Enable button interactions
   .hero__quick-btn {
     pointer-events: auto;
     cursor: pointer;
