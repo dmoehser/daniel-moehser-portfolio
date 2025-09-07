@@ -205,6 +205,11 @@
   transition: all 0.2s ease;
   position: relative;
   
+  // Dark mode: White question mark cursor
+  body.theme-dark & {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><text x="8" y="12" text-anchor="middle" font-family="Arial, sans-serif" font-size="clamp(12px, 1.2vw, 14px)" fill="%23ffffff">?</text></svg>'), help;
+  }
+  
   &:last-child {
     border-bottom: none;
   }
