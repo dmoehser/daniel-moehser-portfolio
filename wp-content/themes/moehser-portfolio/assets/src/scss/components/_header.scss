@@ -12,60 +12,30 @@
   --accent: #38bdf8;    // sky-400
 }
 
-// Navigation Menu 
-// ----------------
+// Navigation Menu
+// ---------------
 
 .hero__quick { 
-  position: fixed !important; 
-  top: 14px !important; 
-  right: 14px !important; 
-  display: flex !important; 
+  position: fixed; 
+  top: 14px; 
+  right: 14px; 
+  display: flex; 
   gap: 12px; 
-  z-index: 1000 !important;
-  pointer-events: auto !important;
-}
-
-// Navigation Menu - Static Design (No Interactions)
-// ------------------------------------------------
-// This navigation is designed to be purely visual/static
-// All interactions are handled by JavaScript scroll behavior
-
-.hero__quick {
-  // Disable all pointer interactions for static design
-  pointer-events: none;
-  
-  // Ensure proper cursor behavior
+  z-index: 1000;
   cursor: default;
-  
-  // Prevent text selection
   user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-}
-
-// Override accessibility focus styles for static navigation
-// This is intentional - navigation is handled by JavaScript
-.hero__quick a {
-  // Remove focus outlines for static design
-  &:focus,
-  &:focus-visible {
-    outline: none;
-    outline-offset: 0;
+  
+  // Disable all focus effects for static navigation
+  * {
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-focus-ring-color: transparent !important;
   }
   
-  // Remove hover effects for static design
-  &:hover,
-  &:active {
-    background: inherit;
-    border: inherit;
-    box-shadow: inherit;
-    transform: inherit;
-    color: inherit;
-    opacity: inherit;
-    filter: inherit;
-    transition: none;
-    text-decoration: inherit;
+  // Re-enable interactions for buttons
+  .hero__quick-btn {
+    pointer-events: auto;
+    cursor: pointer;
   }
 }
 

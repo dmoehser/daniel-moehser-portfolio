@@ -159,8 +159,6 @@
 .blob--1 { left: -60px; top: -40px; background: rgba(255,255,255,0.75); }
 .blob--2 { right: -60px; top: 40px; background: rgba(255,255,255,0.55); }
 
-// Navigation moved to _header.scss for better organization
-
 // Mobile optimizations
 @media (max-width: 768px) {
   // Mobile header bar with glassmorphism effect
