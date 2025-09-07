@@ -11,11 +11,10 @@ import React, { useEffect, useState } from 'react';
 const PERFORMANCE_CONFIG = {
   // Core Web Vitals thresholds
   LCP_THRESHOLD: 2500,    // Largest Contentful Paint (ms)
-  INP_THRESHOLD: 200,     // Interaction to Next Paint (ms)
+  INP_THRESHOLD: 200,     // Interaction to Next Paint (ms) - modern metric
   CLS_THRESHOLD: 0.1,     // Cumulative Layout Shift
   
   // Performance budgets
-  BUNDLE_SIZE_LIMIT: 500,  // KB
   IMAGE_SIZE_LIMIT: 200,   // KB per image
   
   // Monitoring intervals
@@ -29,113 +28,112 @@ const usePerformanceMonitor = () => {
     lcp: null,
     inp: null,
     cls: null,
-    fcp: null,
-    ttfb: null,
-    bundleSize: null,
     imageCount: 0,
-    loadedImages: 0,
-    isMonitoring: false
+    loadedImages: 0
   });
 
-  // Monitor Core Web Vitals
-  useEffect(() => {
-    if (typeof window === 'undefined' || !('PerformanceObserver' in window)) {
+  // Fallback LCP measurement using resource timing
+  // ----------------------------------------------
+  const measureLCPFallback = () => {
+    if (typeof window === 'undefined' || !window.performance) return;
+    
+    const navigation = performance.getEntriesByType('navigation')[0];
+    if (!navigation) return;
+    
+    // Try to get LCP from existing entries first
+    const lcpEntries = performance.getEntriesByType('largest-contentful-paint');
+    if (lcpEntries.length > 0) {
+      const latestLCP = lcpEntries[lcpEntries.length - 1];
+      setMetrics(prev => ({ ...prev, lcp: latestLCP.startTime }));
       return;
     }
-
-    const observer = new PerformanceObserver((list) => {
-      const entries = list.getEntries();
-      
-      entries.forEach((entry) => {
-        switch (entry.entryType) {
-          case 'largest-contentful-paint':
-            setMetrics(prev => ({ ...prev, lcp: entry.startTime }));
-            break;
-          case 'event':
-            // INP measures ALL user interactions
-            const inpValue = entry.processingEnd ? entry.processingEnd - entry.startTime : entry.duration;
-            setMetrics(prev => ({ ...prev, inp: inpValue }));
-            break;
-          case 'layout-shift':
-            if (!entry.hadRecentInput) {
-              setMetrics(prev => ({ 
-                ...prev, 
-                cls: (prev.cls || 0) + entry.value 
-              }));
-            }
-            break;
-          case 'paint':
-            if (entry.name === 'first-contentful-paint') {
-              setMetrics(prev => ({ ...prev, fcp: entry.startTime }));
-            }
-            break;
-          case 'navigation':
-            setMetrics(prev => ({ ...prev, ttfb: entry.responseStart - entry.requestStart }));
-            break;
-        }
-      });
-    });
-
-    // Observe different performance entry types
-    try {
-      observer.observe({ entryTypes: ['largest-contentful-paint', 'event', 'layout-shift', 'paint', 'navigation'] });
-    } catch (error) {
-      console.warn('Performance monitoring not fully supported:', error);
+    
+    // Fallback: estimate LCP based on load timing
+    const loadTime = navigation.loadEventEnd - navigation.navigationStart;
+    if (loadTime > 0) {
+      setMetrics(prev => ({ ...prev, lcp: loadTime }));
+      return;
     }
+    
+    // Last resort: use DOMContentLoaded timing
+    const domContentLoaded = navigation.domContentLoadedEventEnd - navigation.navigationStart;
+    if (domContentLoaded > 0) {
+      setMetrics(prev => ({ ...prev, lcp: domContentLoaded }));
+    }
+  };
 
-            return () => observer.disconnect();
-      }, []);
+  // Monitor Core Web Vitals with robust fallbacks
+  // ----------------------------------------------
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
 
-      // Additional event listeners to ensure we catch ALL interactions
-      useEffect(() => {
-        const handleInteraction = (event) => {
-          const startTime = performance.now();
-          requestAnimationFrame(() => {
-            const endTime = performance.now();
-            const inpValue = endTime - startTime;
-            setMetrics(prev => ({ ...prev, inp: inpValue }));
+    let observer = null;
+    let fallbackTimer = null;
+
+    // Try to use PerformanceObserver first
+    if ('PerformanceObserver' in window) {
+      try {
+        observer = new PerformanceObserver((list) => {
+          const entries = list.getEntries();
+          
+          entries.forEach((entry) => {
+            switch (entry.entryType) {
+              case 'largest-contentful-paint':
+                setMetrics(prev => ({ ...prev, lcp: entry.startTime }));
+                break;
+              case 'first-input':
+                // INP measurement - first input delay
+                const inpValue = entry.processingStart - entry.startTime;
+                setMetrics(prev => ({ ...prev, inp: inpValue }));
+                break;
+              case 'layout-shift':
+                if (!entry.hadRecentInput) {
+                  setMetrics(prev => ({ 
+                    ...prev, 
+                    cls: (prev.cls || 0) + entry.value 
+                  }));
+                }
+                break;
+            }
           });
-        };
-
-        // Listen to ALL possible interaction events
-        const events = ['click', 'keydown', 'keyup', 'mousedown', 'mouseup', 'touchstart', 'touchend', 'pointerdown', 'pointerup', 'scroll', 'resize'];
-        
-        events.forEach(eventType => {
-          document.addEventListener(eventType, handleInteraction, { passive: true });
         });
 
-        return () => {
-          events.forEach(eventType => {
-            document.removeEventListener(eventType, handleInteraction);
-          });
-        };
-      }, []);
+        // Observe different performance entry types
+        observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift'] });
+      } catch (error) {
+        console.warn('PerformanceObserver not supported:', error);
+      }
+    }
 
-  // Monitor bundle size
-  useEffect(() => {
-    const checkBundleSize = () => {
-      const scripts = document.querySelectorAll('script[src]');
-      let totalSize = 0;
-      
-      scripts.forEach(script => {
-        const src = script.src;
-        if (src.includes('main.js') || src.includes('bundle')) {
-          // Estimate bundle size (this is approximate)
-          totalSize += 500; // Estimated size in KB
-        }
-      });
-      
-      setMetrics(prev => ({ ...prev, bundleSize: totalSize }));
+    // Fallback measurements if PerformanceObserver fails
+    // -------------------------------------------------
+    const setupFallbacks = () => {
+      // LCP fallback - always try after page load
+      fallbackTimer = setTimeout(() => {
+        measureLCPFallback();
+      }, 2000); // Wait 2 seconds for content to load
+
     };
 
-    // Check bundle size after page load
+    // Set up fallbacks after a short delay
+    const fallbackSetupTimer = setTimeout(setupFallbacks, 1000);
+
+    // Also try to measure LCP immediately if page is already loaded
     if (document.readyState === 'complete') {
-      checkBundleSize();
+      measureLCPFallback();
     } else {
-      window.addEventListener('load', checkBundleSize);
-      return () => window.removeEventListener('load', checkBundleSize);
+      window.addEventListener('load', measureLCPFallback, { once: true });
     }
+
+    return () => {
+      if (observer) observer.disconnect();
+      if (fallbackTimer) clearTimeout(fallbackTimer);
+      if (fallbackSetupTimer) clearTimeout(fallbackSetupTimer);
+      window.removeEventListener('load', measureLCPFallback);
+    };
   }, []);
+
+
 
   // Monitor image loading
   useEffect(() => {
@@ -263,13 +261,6 @@ const getOptimizationSuggestions = (metrics) => {
     });
   }
 
-  if (metrics.bundleSize && metrics.bundleSize > PERFORMANCE_CONFIG.BUNDLE_SIZE_LIMIT) {
-    suggestions.push({
-      type: 'info',
-      message: `Bundle-Größe: ${metrics.bundleSize}KB (Ziel: <${PERFORMANCE_CONFIG.BUNDLE_SIZE_LIMIT}KB)`,
-      suggestion: 'Code-Splitting oder Tree-Shaking implementieren'
-    });
-  }
 
   return suggestions;
 };
@@ -307,9 +298,9 @@ export default function PerformanceMonitor() {
             </div>
             
             <div className="metric">
-              <span className="metric-label">FID:</span>
-              <span className={`metric-value ${metrics.fid && metrics.fid > PERFORMANCE_CONFIG.FID_THRESHOLD ? 'warning' : 'good'}`}>
-                {metrics.fid ? `${Math.round(metrics.fid)}ms` : 'Loading...'}
+              <span className="metric-label">INP:</span>
+              <span className={`metric-value ${metrics.inp && metrics.inp > PERFORMANCE_CONFIG.INP_THRESHOLD ? 'warning' : 'good'}`}>
+                {metrics.inp ? `${Math.round(metrics.inp)}ms` : 'No interaction yet'}
               </span>
             </div>
             
@@ -320,19 +311,6 @@ export default function PerformanceMonitor() {
               </span>
             </div>
             
-            <div className="metric">
-              <span className="metric-label">FCP:</span>
-              <span className={`metric-value ${metrics.fcp ? 'good' : 'loading'}`}>
-                {metrics.fcp ? `${Math.round(metrics.fcp)}ms` : 'Loading...'}
-              </span>
-            </div>
-            
-            <div className="metric">
-              <span className="metric-label">TTFB:</span>
-              <span className={`metric-value ${metrics.ttfb ? 'good' : 'loading'}`}>
-                {metrics.ttfb ? `${Math.round(metrics.ttfb)}ms` : 'Loading...'}
-              </span>
-            </div>
             
             <div className="metric">
               <span className="metric-label">Images:</span>
