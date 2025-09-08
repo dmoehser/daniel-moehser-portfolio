@@ -182,4 +182,43 @@ add_action('customize_register', function($wp_customize) {
     }
 });
 
+// Include projects reorder functionality
+require_once get_template_directory() . '/inc/projects-reorder.php';
+require_once get_template_directory() . '/inc/setup-menu-order.php';
+
+// AJAX handler for project reordering
+add_action('wp_ajax_reorder_projects', 'handle_project_reorder');
+function handle_project_reorder() {
+    // Verify nonce
+    if (!wp_verify_nonce($_POST['nonce'], 'reorder_projects_nonce')) {
+        wp_die('Security check failed');
+    }
+    
+    // Check user permissions
+    if (!current_user_can('edit_posts')) {
+        wp_die('Insufficient permissions');
+    }
+    
+    $project_ids = json_decode(stripslashes($_POST['project_ids']), true);
+    
+    if (!is_array($project_ids)) {
+        wp_send_json_error('Invalid project IDs');
+        return;
+    }
+    
+    foreach ($project_ids as $index => $project_id) {
+        $project_id = intval($project_id);
+        if ($project_id <= 0) {
+            continue;
+        }
+        
+        wp_update_post([
+            'ID' => $project_id,
+            'menu_order' => $index
+        ]);
+    }
+    
+    wp_send_json_success('Projects reordered successfully');
+}
+
 

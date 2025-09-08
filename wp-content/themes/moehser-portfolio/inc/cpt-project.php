@@ -23,7 +23,7 @@ add_action('init', function () {
         'rewrite' => ['slug' => 'projects'],
         'menu_position' => 20,
         'menu_icon' => 'dashicons-portfolio',
-        'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'custom-fields'],
+        'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'custom-fields', 'page-attributes'],
         'show_in_menu' => true,
         'capability_type' => 'post',
         'hierarchical' => false,

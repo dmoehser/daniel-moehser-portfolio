@@ -49,9 +49,9 @@ add_action('rest_api_init', function () {
 		'permission_callback' => '__return_true',
 		'callback' => function ($request) {
 			$status = $request->get_param('status');
-			// Always order by date DESC (newest first)
-			$orderby = 'date';
-			$order = 'DESC';
+			// Order by menu_order ASC (custom order), then by date DESC as fallback
+			$orderby = 'menu_order';
+			$order = 'ASC';
 			
 			$args = [
 				'post_type' => 'project',
@@ -91,6 +91,7 @@ add_action('rest_api_init', function () {
 						'date' => $project->post_date,
 						'modified' => $project->post_modified,
 						'status' => $project->post_status,
+						'menu_order' => $project->menu_order,
 						'featured_image' => get_the_post_thumbnail_url($project->ID, 'full'),
 						'featured_image_wide' => $featured_wide ? $featured_wide[0] : '',
 						'featured_image_wide_2x' => $featured_wide_2x ? $featured_wide_2x[0] : '',
@@ -148,6 +149,36 @@ add_action('rest_api_init', function () {
 				'project_demo_mode' => isset($meta['project_demo_mode'][0]) ? $meta['project_demo_mode'][0] : 'iframe',
 				'project_github_url' => isset($meta['project_github_url'][0]) ? $meta['project_github_url'][0] : '',
 			]);
+		},
+	]);
+
+	// Endpoint for reordering projects
+	register_rest_route('moehser/v1', '/projects/reorder', [
+		'methods' => 'POST',
+		'permission_callback' => function () {
+			return current_user_can('edit_posts');
+		},
+		'callback' => function ($request) {
+			$project_ids = $request->get_json_params();
+			
+			if (!is_array($project_ids)) {
+				return new WP_Error('invalid_data', 'Invalid project IDs array', ['status' => 400]);
+			}
+			
+			foreach ($project_ids as $index => $project_id) {
+				$project_id = intval($project_id);
+				if ($project_id <= 0) {
+					continue;
+				}
+				
+				// Update menu_order for each project
+				wp_update_post([
+					'ID' => $project_id,
+					'menu_order' => $index
+				]);
+			}
+			
+			return rest_ensure_response(['success' => true, 'message' => 'Projects reordered successfully']);
 		},
 	]);
 });
