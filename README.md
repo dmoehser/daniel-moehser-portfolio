@@ -15,7 +15,7 @@ View source code: [https://github.com/dmoehser/daniel-moehser-portfolio](https:/
 ## Features
 
 - **Custom WordPress Theme**: Built from scratch with modern PHP and SCSS
-- **Dynamic Project Management**: Custom Post Types for easy project updates
+- **Dynamic Project Management**: Custom Post Types with drag & drop reordering
 - **Interactive UI**: Smooth animations, hover effects, and responsive design
 - **Dark/Light Mode**: Toggle between themes with persistent user preference
 - **Project Showcase**: Grid and list views with detailed project information
@@ -50,6 +50,7 @@ moehser-portfolio/
 │   ├── customizer.php         # WordPress Customizer
 │   ├── cpt-project.php        # Custom Post Type
 │   ├── api.php               # REST API endpoints
+│   ├── projects-reorder.php  # Drag & drop reordering
 │   └── setup-projects.php    # Project setup
 ├── wp-content/
 │   └── uploads/
@@ -69,6 +70,7 @@ moehser-portfolio/
 
 ### Dynamic Project Management
 - **Custom Post Types**: Easy project addition and editing
+- **Drag & Drop Reordering**: Visual project reordering with AJAX saving
 - **Custom Fields**: Project metadata and configuration
 - **REST API**: Custom endpoints for frontend data
 - **Admin Interface**: User-friendly project management
@@ -96,6 +98,7 @@ moehser-portfolio/
 - **Advanced CSS**: SCSS, animations, and responsive design
 - **JavaScript ES6+**: Modules, async/await, and DOM manipulation
 - **REST API Development**: Custom endpoints and data management
+- **Drag & Drop Interfaces**: Native HTML5 drag & drop with AJAX integration
 - **Performance Optimization**: Asset optimization and caching
 - **SEO Best Practices**: Meta tags, structured data, and clean URLs
 - **User Experience**: Intuitive navigation and interactive design
