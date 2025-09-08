@@ -195,59 +195,57 @@ const renderProjectTechnologies = (project) => {
 // ----------------------
 const renderProjectActions = (project, handleProjectClick, opts = {}) => {
   const primaryLabel = opts.primaryLabel || 'Demo';
-  if (!project.project_url_external) {
-    const hasGithub = Boolean(project.project_github_url);
-    return (
-      <div className={`project-card__cta-row ${hasGithub ? 'project-card__cta-row--two' : 'project-card__cta-row--one'}`}>
-        {hasGithub ? (
-          <a 
-            href={project.project_github_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="project-card__demo-btn project-card__demo-btn--secondary"
-            aria-label={`GitHub Repository: ${project.title}`}
-          >
-            <img src={githubIcon} alt="" aria-hidden="true" className="project-card__cta-ico" />
-            GitHub
-          </a>
-        ) : null}
-        <button 
-          onClick={() => handleProjectClick(project)}
-          className="project-card__demo-btn"
-        >
-          {primaryLabel}
-        </button>
-      </div>
-    );
-  }
-  
-  if (project.project_demo_mode === 'iframe') {
-    const hasGithub = Boolean(project.project_github_url);
-    return (
-      <div className={`project-card__cta-row ${hasGithub ? 'project-card__cta-row--two' : 'project-card__cta-row--one'}`}>
-        {hasGithub ? (
-          <a 
-            href={project.project_github_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="project-card__demo-btn project-card__demo-btn--secondary"
-            aria-label={`GitHub Repository: ${project.title}`}
-          >
-            <img src={githubIcon} alt="" aria-hidden="true" className="project-card__cta-ico" />
-            GitHub
-          </a>
-        ) : null}
-        <button 
-          onClick={() => handleProjectClick(project)}
-          className="project-card__demo-btn"
-        >
-          {primaryLabel}
-        </button>
-      </div>
-    );
-  }
-  
   const hasGithub = Boolean(project.project_github_url);
+  const hasDemo = Boolean(project.project_url_external);
+  
+  if (!hasDemo && !hasGithub) {
+    return null; // No buttons to show
+  }
+  
+  if (!hasDemo) {
+    // Only GitHub button - use secondary styling (gray with blue border)
+    return (
+      <div className="project-card__cta-row project-card__cta-row--one">
+        <a 
+          href={project.project_github_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="project-card__demo-btn project-card__demo-btn--secondary"
+          aria-label={`GitHub Repository: ${project.title}`}
+        >
+          <img src={githubIcon} alt="" aria-hidden="true" className="project-card__cta-ico" />
+          GitHub
+        </a>
+      </div>
+    );
+  }
+  
+  // Both GitHub and Demo buttons
+  if (project.project_demo_mode === 'iframe') {
+    return (
+      <div className={`project-card__cta-row ${hasGithub ? 'project-card__cta-row--two' : 'project-card__cta-row--one'}`}>
+        {hasGithub ? (
+          <a 
+            href={project.project_github_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="project-card__demo-btn project-card__demo-btn--secondary"
+            aria-label={`GitHub Repository: ${project.title}`}
+          >
+            <img src={githubIcon} alt="" aria-hidden="true" className="project-card__cta-ico" />
+            GitHub
+          </a>
+        ) : null}
+        <button 
+          onClick={() => handleProjectClick(project)}
+          className="project-card__demo-btn"
+        >
+          {primaryLabel}
+        </button>
+      </div>
+    );
+  }
+  
   return (
     <div className={`project-card__cta-row ${hasGithub ? 'project-card__cta-row--two' : 'project-card__cta-row--one'}`}>
       {hasGithub ? (
@@ -277,9 +275,32 @@ const renderProjectActions = (project, handleProjectClick, opts = {}) => {
 const renderGridActions = (project, handleProjectClick) => {
   const hasGithub = Boolean(project.project_github_url);
   const hasExternal = Boolean(project.project_url_external);
-  const two = hasGithub && true; // Live is always present (either external or overlay)
+  
+  if (!hasExternal && !hasGithub) {
+    return null; // No buttons to show
+  }
+  
+  if (!hasExternal) {
+    // Only GitHub button - use secondary styling (gray with blue border)
+    return (
+      <div className="projects__grid-cta-row projects__grid-cta-row--one">
+        <a 
+          href={project.project_github_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="projects__grid-cta-btn projects__grid-cta-btn--secondary"
+          aria-label={`GitHub Repository: ${project.title}`}
+        >
+          <img src={githubIcon} alt="" aria-hidden="true" className="projects__grid-cta-ico" />
+          GitHub
+        </a>
+      </div>
+    );
+  }
+  
+  // Both GitHub and Demo buttons
   return (
-    <div className={`projects__grid-cta-row ${two ? 'projects__grid-cta-row--two' : 'projects__grid-cta-row--one'}`}>
+    <div className={`projects__grid-cta-row ${hasGithub ? 'projects__grid-cta-row--two' : 'projects__grid-cta-row--one'}`}>
       {hasGithub ? (
         <a 
           href={project.project_github_url}
@@ -292,21 +313,12 @@ const renderGridActions = (project, handleProjectClick) => {
           GitHub
         </a>
       ) : null}
-      {hasExternal ? (
-        <button 
-          onClick={() => handleProjectClick(project)}
-          className="projects__grid-cta-btn"
-        >
-          Demo
-        </button>
-      ) : (
-        <button 
-          onClick={() => handleProjectClick(project)}
-          className="projects__grid-cta-btn"
-        >
-          Demo
-        </button>
-      )}
+      <button 
+        onClick={() => handleProjectClick(project)}
+        className="projects__grid-cta-btn"
+      >
+        Demo
+      </button>
     </div>
   );
 };
