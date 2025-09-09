@@ -67,6 +67,14 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'priority' => 30,
     ]);
 
+
+    // Section: Imprint Settings
+    $wp_customize->add_section('moehser_imprint', [
+        'title' => __('Imprint Page', 'moehser-portfolio'),
+        'description' => __('Configure the Imprint page content', 'moehser-portfolio'),
+        'priority' => 60,
+    ]);
+
     // About Section Title
     $wp_customize->add_setting('moehser_about_title', [
         'default' => __('About Me', 'moehser-portfolio'),
@@ -144,6 +152,19 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'description' => __('URL the CTA button should link to', 'moehser-portfolio'),
         'section' => 'moehser_about',
         'type' => 'url',
+    ]);
+
+    // Imprint content source page
+    $wp_customize->add_setting('moehser_imprint_page_id', [
+        'default' => 0,
+        'sanitize_callback' => 'absint',
+        'transport' => 'postMessage',
+    ]);
+    $wp_customize->add_control('moehser_imprint_page_id', [
+        'label' => __('Imprint Content Page', 'moehser-portfolio'),
+        'description' => __('Select a page to use as imprint content source', 'moehser-portfolio'),
+        'section' => 'moehser_imprint',
+        'type' => 'dropdown-pages',
     ]);
 
     // Section: Projects Settings
@@ -614,6 +635,22 @@ add_action('wp_head', function () {
     echo 'window.__ABOUT_CTA_ENABLED__ = ' . ($about_cta_enabled ? 'true' : 'false') . ';';
     echo 'window.__ABOUT_CTA_TEXT__ = "' . esc_js($about_cta_text) . '";';
     echo 'window.__ABOUT_CTA_URL__ = "' . esc_js($about_cta_url) . '";';
+    
+    // Imprint Settings to frontend
+    $imprint_page_id = get_theme_mod('moehser_imprint_page_id', 0);
+    $imprint_title = __('Impressum', 'moehser-portfolio');
+    $imprint_content = '';
+    
+    if ($imprint_page_id > 0) {
+        $imprint_page = get_post($imprint_page_id);
+        if ($imprint_page) {
+            $imprint_title = $imprint_page->post_title;
+            $imprint_content = apply_filters('the_content', $imprint_page->post_content);
+        }
+    }
+    
+    echo 'window.__IMPRINT_TITLE__ = ' . wp_json_encode($imprint_title) . ';';
+    echo 'window.__IMPRINT_HTML__ = ' . wp_json_encode($imprint_content) . ';';
     
     // Projects Settings to frontend
     echo 'window.__SHOW_ONLY_ACTIVE_PROJECTS__ = ' . ($show_only_active_projects ? 'true' : 'false') . ';';

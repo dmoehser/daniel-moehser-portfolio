@@ -121,6 +121,9 @@ require_once get_theme_file_path('inc/setup-projects.php'); // Activated: Create
 // Theme Customizer (UI Settings)
 require_once get_theme_file_path('inc/customizer.php');
 
+// Page Meta Boxes (Footer Settings per Page)
+require_once get_theme_file_path('inc/page-meta-boxes.php');
+
 // Layout Builder (PHP-only)
 require_once get_theme_file_path('inc/layout-builder.php');
 

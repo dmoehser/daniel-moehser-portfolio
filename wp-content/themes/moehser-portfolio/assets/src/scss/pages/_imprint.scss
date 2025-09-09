@@ -1,0 +1,218 @@
+// Imprint Page Styles
+// ===================
+
+// Imprint page layout and components
+// ------------------------------
+
+.imprint-page {
+  min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+// Header with logo and back button
+// ------------------------------
+.imprint-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  backdrop-filter: blur(10px);
+  
+  &__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  &__logo {
+    a {
+      text-decoration: none;
+      color: var(--color-text);
+      font-weight: 600;
+      font-size: 1.25rem;
+      transition: color 0.2s ease;
+      
+      &:hover {
+        color: var(--color-primary);
+      }
+    }
+  }
+  
+  &__back-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: var(--color-primary);
+      color: white;
+      border-color: var(--color-primary);
+      transform: translateY(-1px);
+    }
+    
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+// Main content area
+// ------------------------------
+.imprint-main {
+  padding: 2rem 0;
+}
+
+// Imprint section (reusing existing section styles)
+// ------------------------------
+.imprint {
+  // Inherits from .section-base
+  
+  &__inner {
+    // Inherits from .section-inner
+    
+    &--spaced {
+      padding: 3rem 2rem;
+    }
+  }
+  
+  &__content {
+    // Inherits from .section-content
+    
+    &--centered {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+  }
+  
+  &__card {
+    // Inherits from .section-card
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    padding: 3rem;
+    box-shadow: var(--shadow-card);
+  }
+  
+  &__header {
+    // Inherits from .section-header
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  &__title {
+    // Inherits from .section-title
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0;
+  }
+  
+  &__body {
+    // Inherits from .section-body
+  }
+  
+  &__text {
+    line-height: 1.7;
+  }
+  
+  &__content-text {
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin: 2rem 0 1rem 0;
+      
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+    
+    p {
+      margin: 1rem 0;
+      color: var(--color-text-secondary);
+      
+      strong {
+        color: var(--color-text);
+        font-weight: 600;
+      }
+    }
+    
+    a {
+      color: var(--color-primary);
+      text-decoration: none;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// Responsive design
+// ------------------------------
+@media (max-width: 768px) {
+  .imprint-header {
+    &__inner {
+      padding: 1rem;
+    }
+    
+    &__back-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      
+      svg {
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+  
+  .imprint {
+    &__inner--spaced {
+      padding: 2rem 1rem;
+    }
+    
+    &__card {
+      padding: 2rem 1.5rem;
+    }
+    
+    &__title {
+      font-size: 2rem;
+    }
+    
+    &__content-text {
+      h3 {
+        font-size: 1.25rem;
+      }
+    }
+  }
+}
+
+// Dark mode support
+// ------------------------------
+.theme-dark {
+  .imprint-header {
+    background: var(--color-bg-dark);
+    border-bottom-color: var(--color-border-dark);
+  }
+  
+  .imprint__card {
+    background: var(--color-card-dark);
+    border-color: var(--color-border-dark);
+  }
+}

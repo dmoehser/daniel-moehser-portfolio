@@ -8,7 +8,7 @@
   position: fixed;
   bottom: 24px;
   right: 24px;
-  z-index: 9999;
+  z-index: 15; // Höher als Footer (z-index: 5)
 }
 
 .settings-gear__trigger {
@@ -130,7 +130,7 @@
   padding: 16px;
   animation: settingsMenuFadeIn 0.15s ease-out;
   transform-origin: bottom right;
-  z-index: 10000;
+  z-index: 16; // Höher als Zahnrad
 }
 
 .settings-gear__performance-header {
@@ -248,7 +248,7 @@
   white-space: normal;
   width: 240px;
   word-wrap: break-word;
-  z-index: 10001;
+  z-index: 17; // Höchste Priorität
   opacity: 0;
   visibility: hidden;
   transition: all 0.2s ease;

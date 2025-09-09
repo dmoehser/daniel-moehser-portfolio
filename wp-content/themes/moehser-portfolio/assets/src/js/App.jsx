@@ -8,6 +8,7 @@ import Hero from './components/Hero.jsx';
 import Terminal from './components/Terminal.jsx';
 import About from './components/About.jsx';
 import Projects from './components/Projects.jsx';
+import Imprint from './components/Imprint.jsx';
 import SocialDock from './components/ui/SocialDock.jsx';
 import Skills from './components/Skills.jsx';
 import ScrollProgress from './components/ui/ScrollProgress.jsx';
@@ -21,14 +22,24 @@ import FullscreenPreviewManager from './features/fullscreen-preview/FullscreenPr
 import ProjectOverlayManager from './features/project-overlay/ProjectOverlayManager.jsx';
 import ProjectOverlay from './components/ui/ProjectOverlay.jsx';
 import FullscreenPreview from './components/ui/FullscreenPreview.jsx';
+import Footer from './components/ui/Footer.jsx';
 import { AnimatePresence } from 'framer-motion';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function App() {
+  // Check if we're on the imprint page
+  const [isImprintPage, setIsImprintPage] = useState(false);
+  
   // Initialize all feature managers
   const { showTerminal } = TerminalManager();
   const { isFullscreenPreview, fullscreenProject } = FullscreenPreviewManager();
   const { projectOverlayUrl } = ProjectOverlayManager();
+
+  // Check if we're on imprint page
+  useEffect(() => {
+    const path = window.location.pathname;
+    setIsImprintPage(path.includes('/imprint'));
+  }, []);
 
   // Handle hash navigation
   useEffect(() => {
@@ -58,6 +69,16 @@ export default function App() {
       window.removeEventListener('hashchange', handleHashChange);
     };
   }, []);
+
+  // Render imprint page if on imprint route
+  if (isImprintPage) {
+    return (
+      <>
+        <Imprint />
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>

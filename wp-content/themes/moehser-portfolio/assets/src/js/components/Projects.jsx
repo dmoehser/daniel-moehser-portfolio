@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import githubIcon from '../../img/github.svg';
 import viewGridIcon from '../../img/view-grid.svg';
 import viewListIcon from '../../img/view-list.svg';
+import Footer from './ui/Footer.jsx';
 
 // Utilities
 // ---------
@@ -1052,6 +1053,9 @@ export default function Projects() {
           </div>
         </div>
       </div>
+      
+      {/* Footer at end of Projects section */}
+      <Footer show={true} />
     </section>
   );
 }

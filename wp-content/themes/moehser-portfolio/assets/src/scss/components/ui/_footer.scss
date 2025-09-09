@@ -1,0 +1,76 @@
+// Footer Component
+// ===============
+
+// Sticky footer for Projects section only
+// ----------------------------------------
+
+.site-footer {
+  background: transparent;
+  width: 100%;
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  min-height: 30px;
+  margin-top: 0.5rem;
+  
+  &__inner {
+    max-width: 100%;
+    margin: 0;
+    padding: 0.25rem 2rem;
+  }
+  
+  &__content {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    min-height: 30px;
+    padding: 0.25rem 0;
+    width: 100%;
+  }
+  
+  &__nav {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+  }
+  
+  &__link {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #0f172a;
+    text-decoration: none;
+    padding: 16px 26px;
+    border-radius: 8px;
+    position: relative;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    background: linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.62));
+    border: 1px solid rgba(15,23,42,.10);
+    backdrop-filter: saturate(140%) blur(8px);
+    -webkit-backdrop-filter: saturate(140%) blur(8px);
+    
+    &:hover {
+      background: linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.7));
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 12px 26px rgba(15,23,42,.12);
+      color: #0f172a;
+    }
+  }
+}
+
+// Dark mode support
+// -----------------
+
+.theme-dark {
+  .site-footer__link {
+    background: rgba(30,41,59,.95);
+    color: #e2e8f0;
+    border-color: rgba(255,255,255,.12);
+    
+    &:hover {
+      background: rgba(30,41,59,.98);
+      border-color: rgba(34,197,94,.4);
+      box-shadow: 0 12px 26px rgba(34,197,94,.15);
+      color: #e2e8f0;
+    }
+  }
+}

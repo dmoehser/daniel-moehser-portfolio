@@ -8,15 +8,41 @@
   min-height: 100vh;
   width: 100%;
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  flex-direction: column; // Vertikale Anordnung
+  align-items: center;
+  justify-content: space-between; // Content oben, Footer unten
   background: transparent;
   scroll-snap-align: start;
   scroll-margin-top: 80px;
   position: relative;
-  padding: 120px 0 4vh 0;
+  padding: 120px 0 0 0; // Kein padding-bottom mehr
   box-sizing: border-box;
   z-index: 1;
+}
+
+.projects__inner {
+  width: min(1280px, 92vw);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  position: relative;
+  z-index: 2;
+  overflow: visible;
+  flex: 0 0 auto; // Nimmt nur den benötigten Raum ein
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+// Footer in Projects-Section soll volle Breite haben
+.projects .site-footer {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  left: 0;
+  right: 0;
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  margin-top: auto; // Footer nach unten drücken
 }
 
 // Natural flow for grid mode
@@ -122,10 +148,10 @@
   right: 8px;
   display: flex;
   gap: 8px;
+  z-index: 10; // Höher als Footer
   min-width: 36px;
   height: 36px;
   justify-content: flex-end;
-  z-index: 10;
 }
 .projects__toggle-btn {
   width: 36px;

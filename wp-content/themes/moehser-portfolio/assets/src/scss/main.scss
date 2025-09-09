@@ -12,6 +12,9 @@
 @use './components/terminal';
 @use './components/overlays';
 
+// Pages
+@use './pages/imprint';
+
 // Features
 @use './features/performance';
 @use './features/accessibility';

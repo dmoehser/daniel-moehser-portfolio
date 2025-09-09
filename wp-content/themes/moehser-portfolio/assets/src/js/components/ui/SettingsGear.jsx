@@ -102,6 +102,7 @@ export default function SettingsGear() {
     setIsOpen(false); // Close menu after action
   };
 
+
   // Toggle performance metrics
   const togglePerformance = () => {
     setShowPerformance(!showPerformance);
