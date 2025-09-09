@@ -19,6 +19,9 @@ export default function ArrowNavigation({ projectOverlayUrl, isFullscreenPreview
     const onArrowNav = (e) => {
       if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
       
+      // Disable on mobile devices
+      if (window.innerWidth <= 768) return;
+      
       // Avoid navigation when overlays are active
       const hasActiveOverlay = typeof window !== 'undefined' && 
         (window.__terminalOpen || projectOverlayUrl || isFullscreenPreview);
@@ -70,9 +73,16 @@ export default function ArrowNavigation({ projectOverlayUrl, isFullscreenPreview
       }, NAVIGATION.SCROLL_LOCK_DURATION);
     };
 
+    const handleResize = () => {
+      // Re-evaluate mobile state on resize
+    };
+
     window.addEventListener('keydown', onArrowNav);
+    window.addEventListener('resize', handleResize);
+    
     return () => {
       window.removeEventListener('keydown', onArrowNav);
+      window.removeEventListener('resize', handleResize);
       if (scrollLockTimer) clearTimeout(scrollLockTimer);
     };
   }, [projectOverlayUrl, isFullscreenPreview]);

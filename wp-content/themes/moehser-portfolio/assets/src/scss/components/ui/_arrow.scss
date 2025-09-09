@@ -138,32 +138,6 @@ body.theme-dark .hero-arrow__container:hover .hero-arrow__icon {
 // -----------------
 @media (max-width: 768px) {
   .hero-arrow {
-    bottom: 24px;
-  }
-  
-  .hero-arrow__container {
-    width: 48px;
-    height: 48px;
-  }
-  
-  .hero-arrow__icon {
-    width: 18px;
-    height: 18px;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero-arrow {
-    bottom: 20px;
-  }
-  
-  .hero-arrow__container {
-    width: 44px;
-    height: 44px;
-  }
-  
-  .hero-arrow__icon {
-    width: 16px;
-    height: 16px;
+    display: none;
   }
 }
