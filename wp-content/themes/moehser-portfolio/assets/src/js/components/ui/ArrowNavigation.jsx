@@ -1,16 +1,14 @@
-// Arrow Navigation Component
-// =========================
+// Arrow Navigation
+// ===============
 
-// Keyboard navigation between sections with Layout Builder support
-// ------------------------------
+// Keyboard navigation between sections
+// -----------------------------------
 
 import { useEffect } from 'react';
 
-// Navigation timing and offset constants
-// ------------------------------
 const NAVIGATION = {
-  SCROLL_LOCK_DURATION: 450,  // milliseconds
-  SECTION_OFFSET: 4           // pixels for current section detection
+  SCROLL_LOCK_DURATION: 450,
+  SECTION_OFFSET: 4
 };
 
 export default function ArrowNavigation({ projectOverlayUrl, isFullscreenPreview }) {
@@ -31,13 +29,11 @@ export default function ArrowNavigation({ projectOverlayUrl, isFullscreenPreview
       const container = document.getElementById('content-scroll');
       if (!container) return;
       
-      // Get sections in their current CSS order (respecting Layout Builder)
       const sections = Array.from(container.querySelectorAll('section'));
       if (sections.length === 0) return;
       
-      // Sort sections by their computed CSS order value
       const orderedSections = sections
-        .filter(section => section.style.display !== 'none') // Only visible sections
+        .filter(section => section.style.display !== 'none')
         .sort((a, b) => {
           const orderA = parseInt(getComputedStyle(a).order) || 0;
           const orderB = parseInt(getComputedStyle(b).order) || 0;
@@ -46,7 +42,6 @@ export default function ArrowNavigation({ projectOverlayUrl, isFullscreenPreview
       
       if (orderedSections.length === 0) return;
 
-      // Find current section index by scrollTop
       const currentScrollTop = container.scrollTop;
       let currentIndex = 0;
       
@@ -56,23 +51,19 @@ export default function ArrowNavigation({ projectOverlayUrl, isFullscreenPreview
         }
       }
 
-      // Calculate target section index
       const direction = e.key === 'ArrowDown' ? 1 : -1;
       let targetIndex = currentIndex + direction;
       
-      // Clamp target index to valid range
       targetIndex = Math.max(0, Math.min(targetIndex, orderedSections.length - 1));
       
       if (targetIndex === currentIndex) return;
 
-      // Perform smooth scroll to target section
       e.preventDefault();
       isArrowScrolling = true;
       
       const targetTop = orderedSections[targetIndex].offsetTop;
       container.scrollTo({ top: targetTop, behavior: 'smooth' });
       
-      // Reset scroll lock after delay
       if (scrollLockTimer) clearTimeout(scrollLockTimer);
       scrollLockTimer = setTimeout(() => { 
         isArrowScrolling = false; 

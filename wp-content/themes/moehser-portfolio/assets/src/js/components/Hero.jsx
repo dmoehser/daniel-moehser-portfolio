@@ -95,14 +95,10 @@ export default function Hero() {
 
   return (
     <>
-      {/* Quick nav buttons (top-right) - OUTSIDE section to avoid Layout Builder interference */}
       <HeroQuickMenu />
-
-      {/* Brand (top-left) - OUTSIDE section to avoid Layout Builder interference */}
       <HeroBrand />
 
       <section className="hero" id="hero">
-        {/* Animated background blobs */}
         <motion.div
           className="hero__bg"
           initial={{ opacity: 0 }}
@@ -121,7 +117,6 @@ export default function Hero() {
           />
         </motion.div>
 
-        {/* Staggered intro text */}
         <div className="hero__inner hero__grid">
           <div className="hero__photo">
             <div className="hero__avatar">
@@ -132,7 +127,6 @@ export default function Hero() {
             </div>
           </div>
           <div className="hero__copy">
-            {/* Desktop: Typewriter effect with HTML tags */}
             <div className="hero__code">
               <span className="tag">&lt;h1&gt;</span>
               <span className="type h1 hero__monospace">{h1Text}</span>
@@ -148,13 +142,63 @@ export default function Hero() {
               <span className="tag">&lt;/p&gt;</span>
             </div>
             
-            {/* Mobile: Clean, simple text */}
             <div className="hero__mobile-text">
               <h1>Hello!</h1>
               <p>
                 I'm <span className="hero__name">Daniel Moehser</span> — full‑stack web developer crafting reliable and elegant web experiences.
               </p>
             </div>
+          </div>
+        </div>
+
+        <div 
+          className="hero-arrow" 
+          onClick={() => {
+            const container = document.getElementById('content-scroll');
+            if (!container) return;
+            
+            const sections = Array.from(container.querySelectorAll('section'));
+            if (sections.length === 0) return;
+            
+            const orderedSections = sections
+              .filter(section => section.style.display !== 'none')
+              .sort((a, b) => {
+                const orderA = parseInt(getComputedStyle(a).order) || 0;
+                const orderB = parseInt(getComputedStyle(b).order) || 0;
+                return orderA - orderB;
+              });
+            
+            if (orderedSections.length === 0) return;
+
+            const currentScrollTop = container.scrollTop;
+            let currentIndex = 0;
+            
+            for (let i = 0; i < orderedSections.length; i += 1) {
+              if (currentScrollTop >= orderedSections[i].offsetTop - 4) {
+                currentIndex = i;
+              }
+            }
+
+            const targetIndex = Math.min(currentIndex + 1, orderedSections.length - 1);
+            if (targetIndex === currentIndex) return;
+
+            const targetTop = orderedSections[targetIndex].offsetTop;
+            container.scrollTo({ top: targetTop, behavior: 'smooth' });
+          }}
+        >
+          <div className="hero-arrow__container">
+            <svg 
+              className="hero-arrow__icon" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            >
+              <path d="M7 13l3 3 3-3" />
+              <path d="M7 6l3 3 3-3" />
+            </svg>
           </div>
         </div>
       </section>

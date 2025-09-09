@@ -15,7 +15,7 @@ import SettingsGear from './components/ui/SettingsGear.jsx';
 import MobileMenu from './components/ui/MobileMenu.jsx';
 import ResourcePreloader from './components/ui/ResourcePreloader.jsx';
 import BackToProjectsButton from './components/ui/BackToProjectsButton.jsx';
-import ArrowNavigation from './features/arrow-navigation/ArrowNavigation.jsx';
+import ArrowNavigation from './components/ui/ArrowNavigation.jsx';
 import TerminalManager from './features/terminal/TerminalManager.jsx';
 import FullscreenPreviewManager from './features/fullscreen-preview/FullscreenPreviewManager.jsx';
 import ProjectOverlayManager from './features/project-overlay/ProjectOverlayManager.jsx';
