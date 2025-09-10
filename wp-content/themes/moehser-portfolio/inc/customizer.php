@@ -72,6 +72,30 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'type' => 'text',
     ]);
 
+    // Business Email Subject
+    $wp_customize->add_setting('moehser_business_email_subject', [
+        'default' => 'Business Inquiry - Portfolio Contact',
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp_customize->add_control('moehser_business_email_subject', [
+        'label' => __('Business Email Subject Line', 'moehser-portfolio'),
+        'description' => __('Subject line for business/legal inquiries from imprint page', 'moehser-portfolio'),
+        'section' => 'moehser_profile',
+        'type' => 'text',
+    ]);
+
+    // reCAPTCHA Site Key
+    $wp_customize->add_setting('moehser_recaptcha_site_key', [
+        'default' => '',
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp_customize->add_control('moehser_recaptcha_site_key', [
+        'label' => __('reCAPTCHA Site Key', 'moehser-portfolio'),
+        'description' => __('Google reCAPTCHA site key for contact form spam protection', 'moehser-portfolio'),
+        'section' => 'moehser_profile',
+        'type' => 'text',
+    ]);
+
     // Section: About Settings
     $wp_customize->add_section('moehser_about', [
         'title' => __('About Settings', 'moehser-portfolio'),
@@ -691,5 +715,12 @@ add_action('wp_head', function () {
     if ($social_linkedin) echo 'window.__SOCIAL_LINKEDIN__ = "' . esc_js($social_linkedin) . '";';
     if ($social_email) echo 'window.__SOCIAL_EMAIL__ = "' . esc_js($social_email) . '";';
     if ($email_subject) echo 'window.__EMAIL_SUBJECT__ = "' . esc_js($email_subject) . '";';
+    
+    // Contact Form JavaScript Variables
+    $business_email_subject = get_theme_mod('moehser_business_email_subject', 'Business Inquiry - Portfolio Contact');
+    $recaptcha_site_key = get_theme_mod('moehser_recaptcha_site_key', '');
+    if ($business_email_subject) echo 'window.__BUSINESS_EMAIL_SUBJECT__ = "' . esc_js($business_email_subject) . '";';
+    if ($recaptcha_site_key) echo 'window.__RECAPTCHA_SITE_KEY__ = "' . esc_js($recaptcha_site_key) . '";';
+    
     echo '</script>';
 });

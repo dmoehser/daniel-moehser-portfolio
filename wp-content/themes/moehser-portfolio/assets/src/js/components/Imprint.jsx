@@ -4,7 +4,8 @@
 // Static imprint page with WordPress integration
 // ---------------------------------------------
 
-import React from 'react';
+import React, { useState } from 'react';
+import ContactForm from './ui/ContactForm';
 
 export default function Imprint() {
   // Get page content from WordPress
@@ -12,9 +13,22 @@ export default function Imprint() {
   const imprintHTML = typeof window !== 'undefined' ? (window.__IMPRINT_HTML__ || '') : '';
   const contentToShow = imprintHTML || '';
 
+  // Contact form state
+  const [isContactFormExpanded, setIsContactFormExpanded] = useState(false);
+
+  // Get business email subject from WordPress Customizer
+  const businessEmailSubject = typeof window !== 'undefined' ? 
+    (window.__BUSINESS_EMAIL_SUBJECT__ || 'Business Inquiry - Portfolio Contact') : 
+    'Business Inquiry - Portfolio Contact';
+
   // Navigate back to projects section
   const goBack = () => {
     window.location.href = '/#projects';
+  };
+
+  // Toggle contact form
+  const toggleContactForm = () => {
+    setIsContactFormExpanded(!isContactFormExpanded);
   };
 
   return (
@@ -258,6 +272,13 @@ export default function Imprint() {
                       </div>
                     </div>
                   )}
+
+                  {/* Contact Form */}
+                  <ContactForm 
+                    isExpanded={isContactFormExpanded}
+                    onToggle={toggleContactForm}
+                    businessSubject={businessEmailSubject}
+                  />
                 </div>
               </div>
             </div>
