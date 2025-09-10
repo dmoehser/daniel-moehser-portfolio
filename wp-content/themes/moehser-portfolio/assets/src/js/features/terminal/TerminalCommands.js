@@ -70,8 +70,25 @@ const getSkillsFromCards = () => {
           skills.push(`│  ${prefix} ${skill.trim()}`);
         });
       } else {
-        // If no skills list, show tags instead
-        if (cardData.tags && cardData.tags.trim()) {
+        // If no skills list, show description first, then tags
+        if (cardData.description && cardData.description.trim()) {
+          const description = cardData.description.replace(/&[^;]+;/g, (entity) => {
+            const entities = {
+              '&amp;': '&',
+              '&lt;': '<',
+              '&gt;': '>',
+              '&quot;': '"',
+              '&#39;': "'",
+              '&nbsp;': ' '
+            };
+            return entities[entity] || entity;
+          });
+          
+          // Remove markdown formatting and show clean description
+          const cleanDescription = description.replace(/\*\*(.*?)\*\*/g, '$1');
+          skills.push(`│  └── ${cleanDescription}`);
+        } else if (cardData.tags && cardData.tags.trim()) {
+          // If no description, show tags
           const tags = cardData.tags.replace(/&[^;]+;/g, (entity) => {
             const entities = {
               '&amp;': '&',
@@ -90,25 +107,6 @@ const getSkillsFromCards = () => {
             const prefix = isLast ? '└──' : '├──';
             skills.push(`│  ${prefix} ${tag}`);
           });
-        } else {
-          // If no tags either, show description
-          if (cardData.description && cardData.description.trim()) {
-            const description = cardData.description.replace(/&[^;]+;/g, (entity) => {
-              const entities = {
-                '&amp;': '&',
-                '&lt;': '<',
-                '&gt;': '>',
-                '&quot;': '"',
-                '&#39;': "'",
-                '&nbsp;': ' '
-              };
-              return entities[entity] || entity;
-            });
-            
-            // Remove markdown formatting and show clean description
-            const cleanDescription = description.replace(/\*\*(.*?)\*\*/g, '$1');
-            skills.push(`│  └── ${cleanDescription}`);
-          }
         }
       }
       skills.push(''); // Empty line between cards
