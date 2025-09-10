@@ -173,12 +173,17 @@ export default function Imprint() {
           }
 
           .imprint__text a {
-            color: var(--color-accent);
+            color: #3b82f6 !important; /* Blue for light mode */
             text-decoration: none;
           }
 
           .imprint__text a:hover {
             text-decoration: underline;
+          }
+
+          /* Dark mode link styling */
+          .theme-dark .imprint__text a {
+            color: #10b981 !important; /* Green for dark mode */
           }
 
           /* Dark mode */
