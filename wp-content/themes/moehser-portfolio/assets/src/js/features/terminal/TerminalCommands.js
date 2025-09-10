@@ -187,7 +187,7 @@ export const makeCommands = () => ({
       '└── 🎯 Quick Actions',
       '    ├── help        → show this menu',
       '    ├── clear       → clear terminal',
-      '    └── T key       → toggle terminal',
+      '    └── ESC         → close terminal',
       '',
       '💡 Use arrow keys to navigate, Enter to execute!',
     ],
@@ -199,9 +199,9 @@ export const makeCommands = () => ({
   experience: {
     title: 'What I deliver',
     lines: [
-      '• Core Web Vitals in green (LCP < 2s, CLS ~0)',
-      '• Headless WP + React: fast publishing flows',
-      '• Accessibility: keyboard and screenreader friendly',
+      '• Performance-optimized websites',
+      '• Modern headless WordPress solutions',
+      '• Inclusive, accessible user experiences',
     ],
   },
   contact: {
