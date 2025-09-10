@@ -176,8 +176,8 @@ export default function Imprint() {
             border-radius: 16px !important;
             padding: clamp(24px, 3.5vw, 48px) !important;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
-            backdrop-filter: blur(10px) saturate(140%) !important;
-            -webkit-backdrop-filter: blur(10px) saturate(140%) !important;
+            backdrop-filter: blur(4px) saturate(110%) !important;
+            -webkit-backdrop-filter: blur(4px) saturate(110%) !important;
             text-align: left !important;
           }
 
@@ -187,7 +187,7 @@ export default function Imprint() {
             z-index: 100;
             background: var(--color-bg);
             border-bottom: 1px solid var(--color-border);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(4px);
           }
 
           .imprint-header__inner {
