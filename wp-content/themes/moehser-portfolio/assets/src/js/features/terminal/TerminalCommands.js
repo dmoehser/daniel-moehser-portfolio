@@ -69,7 +69,7 @@ export const makeCommands = () => ({
       'home        - go to hero section',
       'skills      - go to skills section',
       'about       - go to about section',
-      'work        - go to projects section',
+      'projects    - go to projects section',
       'imprint     - open imprint page',
       '',
       'Social Media:',
@@ -191,19 +191,46 @@ export const buildActions = (cmd) => {
   
   // Navigation actions
   if (cmd === 'home') {
-    map[0] = () => scrollToSection('hero');
+    map[0] = () => {
+      // Navigate to home page and then to hero section
+      if (window.location.pathname.includes('/imprint')) {
+        // If on imprint page, navigate to home page first
+        window.location.href = '/';
+      } else {
+        // If on main page, navigate to root hash (empty hash)
+        window.location.hash = '';
+      }
+    };
   }
   
   if (cmd === 'skills') {
-    map[0] = () => scrollToSection('skills');
+    map[0] = () => {
+      if (window.location.pathname.includes('/imprint')) {
+        window.location.href = '/#skills';
+      } else {
+        scrollToSection('skills');
+      }
+    };
   }
   
   if (cmd === 'about') {
-    map[0] = () => scrollToSection('about');
+    map[0] = () => {
+      if (window.location.pathname.includes('/imprint')) {
+        window.location.href = '/#about';
+      } else {
+        scrollToSection('about');
+      }
+    };
   }
   
-  if (cmd === 'work') {
-    map[0] = () => scrollToSection('projects');
+  if (cmd === 'projects') {
+    map[0] = () => {
+      if (window.location.pathname.includes('/imprint')) {
+        window.location.href = '/#projects';
+      } else {
+        scrollToSection('projects');
+      }
+    };
   }
   
   if (cmd === 'imprint') {
@@ -260,11 +287,6 @@ export const buildActions = (cmd) => {
     }
   }
   
-  if (cmd === 'projects') {
-    map[0] = () => { 
-      window.location.href = '/projects'; 
-    };
-  }
   
   if (cmd === 'socials') {
     const githubUrl = getSocialUrl('GITHUB');
