@@ -20,6 +20,14 @@ const getEmail = () => {
   return '';
 };
 
+// Helper function to safely get email subject
+const getEmailSubject = () => {
+  if (typeof window !== 'undefined' && window.__EMAIL_SUBJECT__) {
+    return window.__EMAIL_SUBJECT__;
+  }
+  return '';
+};
+
 // Helper function to get skills from cards
 // ----------------------------------------
 const getSkillsFromCards = () => {
@@ -509,9 +517,11 @@ export const buildActions = (cmd) => {
   
   if (cmd === 'email') {
     const email = getEmail();
+    const subject = getEmailSubject();
     if (email) {
       map[0] = () => {
-        window.location.href = `mailto:${email}`;
+        const mailtoUrl = subject ? `mailto:${email}?subject=${encodeURIComponent(subject)}` : `mailto:${email}`;
+        window.location.href = mailtoUrl;
         // Close terminal after opening email client
         setTimeout(() => {
           window.dispatchEvent(new Event('terminal:close'));

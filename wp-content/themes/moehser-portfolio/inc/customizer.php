@@ -60,6 +60,18 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'type' => 'email',
     ]);
 
+    // Email Subject
+    $wp_customize->add_setting('moehser_email_subject', [
+        'default' => 'Portfolio Contact - New Inquiry',
+        'sanitize_callback' => 'sanitize_text_field',
+    ]);
+    $wp_customize->add_control('moehser_email_subject', [
+        'label' => __('Email Subject Line', 'moehser-portfolio'),
+        'description' => __('Default subject line for contact emails', 'moehser-portfolio'),
+        'section' => 'moehser_profile',
+        'type' => 'text',
+    ]);
+
     // Section: About Settings
     $wp_customize->add_section('moehser_about', [
         'title' => __('About Settings', 'moehser-portfolio'),
@@ -556,6 +568,7 @@ add_action('wp_head', function () {
     $social_github = get_theme_mod('moehser_social_github', '');
     $social_linkedin = get_theme_mod('moehser_social_linkedin', '');
     $social_email = get_theme_mod('moehser_social_email', '');
+    $email_subject = get_theme_mod('moehser_email_subject', 'Portfolio Contact - New Inquiry');
     
     // About texts
     $about_title = get_theme_mod('moehser_about_title', '');
@@ -677,5 +690,6 @@ add_action('wp_head', function () {
     if ($social_github) echo 'window.__SOCIAL_GITHUB__ = "' . esc_js($social_github) . '";';
     if ($social_linkedin) echo 'window.__SOCIAL_LINKEDIN__ = "' . esc_js($social_linkedin) . '";';
     if ($social_email) echo 'window.__SOCIAL_EMAIL__ = "' . esc_js($social_email) . '";';
+    if ($email_subject) echo 'window.__EMAIL_SUBJECT__ = "' . esc_js($email_subject) . '";';
     echo '</script>';
 });
