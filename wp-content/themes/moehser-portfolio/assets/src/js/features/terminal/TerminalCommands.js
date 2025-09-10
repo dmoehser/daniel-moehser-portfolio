@@ -521,7 +521,9 @@ export const buildActions = (cmd) => {
     if (email) {
       map[0] = () => {
         const mailtoUrl = subject ? `mailto:${email}?subject=${encodeURIComponent(subject)}` : `mailto:${email}`;
-        window.location.href = mailtoUrl;
+        console.log('Email URL:', mailtoUrl);
+        console.log('Subject:', subject);
+        window.open(mailtoUrl, '_blank');
         // Close terminal after opening email client
         setTimeout(() => {
           window.dispatchEvent(new Event('terminal:close'));
