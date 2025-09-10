@@ -24,22 +24,16 @@ import ProjectOverlay from './components/ui/ProjectOverlay.jsx';
 import FullscreenPreview from './components/ui/FullscreenPreview.jsx';
 import Footer from './components/ui/Footer.jsx';
 import { AnimatePresence } from 'framer-motion';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 export default function App() {
-  // Check if we're on the imprint page
-  const [isImprintPage, setIsImprintPage] = useState(false);
+  // Check if we're on the imprint page - check immediately, not in useEffect
+  const isImprintPage = typeof window !== 'undefined' ? window.location.pathname.includes('/imprint') : false;
   
   // Initialize all feature managers
   const { showTerminal } = TerminalManager();
   const { isFullscreenPreview, fullscreenProject } = FullscreenPreviewManager();
   const { projectOverlayUrl } = ProjectOverlayManager();
-
-  // Check if we're on imprint page
-  useEffect(() => {
-    const path = window.location.pathname;
-    setIsImprintPage(path.includes('/imprint'));
-  }, []);
 
   // Handle hash navigation
   useEffect(() => {

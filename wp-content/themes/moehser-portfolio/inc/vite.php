@@ -40,6 +40,8 @@ function moehser_enqueue_vite_assets()
 {
     $theme_handle = 'moehser-portfolio';
 
+    // No need to check for imprint page - CSS is loaded directly in template
+
     if (moehser_is_development()) {
         // Vite dev server
         $viteBase = '/wp-content/themes/moehser-portfolio/';
@@ -81,6 +83,8 @@ function moehser_enqueue_vite_assets()
         // Therefore, all dev URLs must contain the base, otherwise 404 → white page.
         $devEntry = 'http://localhost:5173' . $viteBase . 'assets/src/js/main.jsx' . $cacheBuster;
 
+        // CSS is loaded directly in page-imprint.php template
+
         wp_enqueue_script(
             $theme_handle . '-main',
             $devEntry,
@@ -119,6 +123,8 @@ function moehser_enqueue_vite_assets()
             );
         }
     }
+
+    // CSS is loaded directly in page-imprint.php template
 
     // JS entry
     $js_file = $entry['file'] ?? '';
