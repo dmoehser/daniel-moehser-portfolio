@@ -61,8 +61,8 @@
 // Projects section specific positioning
 // ------------------------------------
 .projects .site-footer {
-  position: fixed; // Fixed like Settings Gear and Social Dock
-  bottom: 24px; // Lower position, same as Settings Gear standard position
+  position: absolute; // Not fixed, only visible in projects section
+  bottom: 24px; // Same position as Settings Gear standard position
   right: 60px; // Position left of Settings Gear (Settings Gear is 36px wide + 24px margin = 60px)
   width: auto; // Only as wide as needed
   z-index: 5;
@@ -89,7 +89,7 @@
   }
   
   .projects .site-footer {
-    position: fixed; // Fixed like Settings Gear and Social Dock
+    position: absolute; // Not fixed, only visible in projects section
     bottom: 20px; // Lower mobile position
     right: 56px; // Position left of mobile Settings Gear (Settings Gear is 40px wide + 20px margin = 60px, but using 56px for better spacing)
   }
