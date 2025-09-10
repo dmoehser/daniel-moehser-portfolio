@@ -186,24 +186,6 @@ export default function Terminal() {
                 actions[0]();
               }, 100);
             }
-          } else if (cmdline.startsWith('projects ')) {
-            // Handle projects subcommands
-            const subcommand = cmdline;
-            if (COMMANDS[subcommand]) {
-              term.writeln(COMMANDS[subcommand].title);
-              COMMANDS[subcommand].lines.forEach((l)=> term.writeln(l));
-              
-              // Execute action if available
-              const actions = buildActions(subcommand);
-              if (actions[0]) {
-                // Execute the first action after a short delay
-                setTimeout(() => {
-                  actions[0]();
-                }, 100);
-              }
-            } else {
-              term.writeln('projects subcommand not found. Try "projects grid" or "projects list"');
-            }
           } else if (cmdline.length) {
             term.writeln('command not found');
           }

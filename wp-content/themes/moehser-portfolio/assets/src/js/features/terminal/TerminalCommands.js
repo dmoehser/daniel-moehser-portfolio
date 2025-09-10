@@ -66,8 +66,8 @@ export const makeCommands = () => ({
       '│   └── imprint     → open imprint page',
       '',
       '├── 📋 Project Layout',
-      '│   ├── projects grid → switch to grid view',
-      '│   └── projects list → switch to list view',
+      '│   ├── grid        → switch to grid view',
+      '│   └── list        → switch to list view',
       '',
       '├── 🌐 Social Media',
       '│   ├── github      → open GitHub profile',
@@ -209,14 +209,14 @@ export const makeCommands = () => ({
       '💡 Use "help" to see available commands',
     ],
   },
-  'projects grid': {
+  grid: {
     title: 'Switching to Grid View',
     lines: [
       'Changing projects layout to grid view...',
       'This will show projects in a card-based grid format.',
     ],
   },
-  'projects list': {
+  list: {
     title: 'Switching to List View',
     lines: [
       'Changing projects layout to list view...',
@@ -231,8 +231,8 @@ export const COMMAND_ORDER = [
   'skills', 
   'about',
   'projects',
-  'projects grid',
-  'projects list',
+  'grid',
+  'list',
   'imprint',
   'github',
   'linkedin',
@@ -297,7 +297,7 @@ export const buildActions = (cmd) => {
   }
   
   // Project layout commands
-  if (cmd === 'projects grid') {
+  if (cmd === 'grid') {
     map[0] = () => {
       // First navigate to projects section
       if (window.location.pathname.includes('/imprint')) {
@@ -316,7 +316,7 @@ export const buildActions = (cmd) => {
     };
   }
   
-  if (cmd === 'projects list') {
+  if (cmd === 'list') {
     map[0] = () => {
       // First navigate to projects section
       if (window.location.pathname.includes('/imprint')) {
