@@ -5,6 +5,7 @@
 // ------------------------------
 
 import React, { useState, useEffect, useRef } from 'react';
+import { getMailtoUrl } from '../../utils/emailHelper.js';
 
 // Icon dimensions and social media configuration
 // ------------------------------
@@ -19,7 +20,7 @@ const SOCIAL_LINKS = [
   {
     type: 'email',
     label: 'Email',
-    href: () => `mailto:${window.__SOCIAL_EMAIL__ || ''}`,
+    href: () => getMailtoUrl(),
     icon: 'email.svg',
     className: 'social social--mail'
   },

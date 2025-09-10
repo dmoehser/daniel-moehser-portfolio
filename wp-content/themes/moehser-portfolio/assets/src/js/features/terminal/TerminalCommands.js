@@ -4,28 +4,14 @@
 // All available terminal commands and their logic
 // ------------------------------
 
+import { getEmail, getEmailSubject, generateMailtoUrl } from '../../utils/emailHelper.js';
+
 // Helper function to safely get social media URLs
 const getSocialUrl = (type) => {
   if (typeof window !== 'undefined' && window[`__SOCIAL_${type}__`]) {
     return window[`__SOCIAL_${type}__`];
   }
   return '—';
-};
-
-// Helper function to safely get email
-const getEmail = () => {
-  if (typeof window !== 'undefined' && window.__SOCIAL_EMAIL__) {
-    return window.__SOCIAL_EMAIL__;
-  }
-  return '';
-};
-
-// Helper function to safely get email subject
-const getEmailSubject = () => {
-  if (typeof window !== 'undefined' && window.__EMAIL_SUBJECT__) {
-    return window.__EMAIL_SUBJECT__;
-  }
-  return '';
 };
 
 // Helper function to get skills from cards
@@ -520,9 +506,7 @@ export const buildActions = (cmd) => {
     const subject = getEmailSubject();
     if (email) {
       map[0] = () => {
-        const mailtoUrl = subject ? `mailto:${email}?subject=${encodeURIComponent(subject)}` : `mailto:${email}`;
-        console.log('Email URL:', mailtoUrl);
-        console.log('Subject:', subject);
+        const mailtoUrl = generateMailtoUrl(email, subject);
         window.open(mailtoUrl, '_blank');
         // Close terminal after opening email client
         setTimeout(() => {
@@ -535,9 +519,15 @@ export const buildActions = (cmd) => {
   // Legacy actions
   if (cmd === 'contact') {
     const email = getEmail();
+    const subject = getEmailSubject();
     if (email) {
       map[0] = () => {
-        window.location.href = `mailto:${email}`;
+        const mailtoUrl = generateMailtoUrl(email, subject);
+        window.open(mailtoUrl, '_blank');
+        // Close terminal after opening email client
+        setTimeout(() => {
+          window.dispatchEvent(new Event('terminal:close'));
+        }, 300);
       };
     }
   }

@@ -5,6 +5,7 @@
 // ------------------------------------------------
 
 import React, { useState, useEffect, useRef } from 'react';
+import { getMailtoUrl } from '../../utils/emailHelper.js';
 
 // Section mapping constants
 // ------------------------------
@@ -117,7 +118,7 @@ export default function MobileMenu() {
     {
       type: 'email',
       label: 'Email',
-      href: () => `mailto:${window.__SOCIAL_EMAIL__ || ''}`,
+      href: () => getMailtoUrl(),
       icon: '📧'
     },
     {
