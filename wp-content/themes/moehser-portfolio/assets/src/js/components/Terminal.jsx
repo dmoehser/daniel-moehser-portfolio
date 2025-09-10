@@ -161,6 +161,15 @@ export default function Terminal() {
           } else if (COMMANDS[cmdline]) {
             term.writeln(COMMANDS[cmdline].title);
             COMMANDS[cmdline].lines.forEach((l)=> term.writeln(l));
+            
+            // Execute action if available
+            const actions = buildActions(cmdline);
+            if (actions[0]) {
+              // Execute the first action after a short delay
+              setTimeout(() => {
+                actions[0]();
+              }, 100);
+            }
           } else if (cmdline.length) {
             term.writeln('command not found');
           }

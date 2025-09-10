@@ -20,16 +20,61 @@ const getEmail = () => {
   return '';
 };
 
+// Helper function to scroll to section smoothly
+const scrollToSection = (sectionId) => {
+  if (typeof window !== 'undefined') {
+    console.log(`Attempting to scroll to section: ${sectionId}`);
+    
+    // Use the existing hash navigation system by changing the URL hash
+    // This triggers the existing hash change handler in App.jsx
+    const currentHash = window.location.hash;
+    const newHash = `#${sectionId}`;
+    
+    if (currentHash !== newHash) {
+      console.log(`Changing hash from ${currentHash} to ${newHash}`);
+      window.location.hash = newHash;
+      
+      // Close terminal after navigation
+      setTimeout(() => {
+        window.dispatchEvent(new Event('terminal:close'));
+      }, 500);
+    } else {
+      console.log(`Already at section ${sectionId}, just closing terminal`);
+      // If already at the section, just close the terminal
+      window.dispatchEvent(new Event('terminal:close'));
+    }
+  }
+};
+
+// Helper function to open imprint page
+const openImprint = () => {
+  if (typeof window !== 'undefined') {
+    window.location.href = '/imprint';
+  }
+};
+
 export const makeCommands = () => ({
   help: {
     title: 'Available commands',
     lines: [
-      'help        - list commands',
+      'help        - list all commands',
       'stack       - show core technologies',
       'experience  - show what I deliver',
       'contact     - get in touch',
       'projects    - where to find my work',
       'socials     - GitHub & LinkedIn',
+      '',
+      'Navigation:',
+      'home        - go to hero section',
+      'skills      - go to skills section',
+      'about       - go to about section',
+      'work        - go to projects section',
+      'imprint     - open imprint page',
+      '',
+      'Social Media:',
+      'github      - open GitHub profile',
+      'linkedin    - open LinkedIn profile',
+      'email       - open email client',
     ],
   },
   stack: {
@@ -71,27 +116,147 @@ export const makeCommands = () => ({
       `LinkedIn: ${getSocialUrl('LINKEDIN')}`,
     ],
   },
+  // Navigation commands
+  home: {
+    title: 'Navigating to Hero section',
+    lines: [
+      'Scrolling to top of page...',
+    ],
+  },
+  skills: {
+    title: 'Navigating to Skills section',
+    lines: [
+      'Scrolling to skills section...',
+    ],
+  },
+  about: {
+    title: 'Navigating to About section',
+    lines: [
+      'Scrolling to about section...',
+    ],
+  },
+  work: {
+    title: 'Navigating to Projects section',
+    lines: [
+      'Scrolling to projects section...',
+    ],
+  },
+  imprint: {
+    title: 'Opening Imprint page',
+    lines: [
+      'Redirecting to imprint page...',
+    ],
+  },
+  // Social media commands
+  github: {
+    title: 'Opening GitHub',
+    lines: [
+      `Opening GitHub profile: ${getSocialUrl('GITHUB')}`,
+    ],
+  },
+  linkedin: {
+    title: 'Opening LinkedIn',
+    lines: [
+      `Opening LinkedIn profile: ${getSocialUrl('LINKEDIN')}`,
+    ],
+  },
+  email: {
+    title: 'Opening Email Client',
+    lines: [
+      `Opening email client for: ${getEmail()}`,
+    ],
+  },
 });
 
 export const COMMAND_ORDER = [
+  'help',
+  'home',
+  'skills', 
+  'about',
+  'work',
+  'imprint',
+  'github',
+  'linkedin',
+  'email',
   'stack', 
   'experience', 
   'contact', 
   'projects', 
-  'socials', 
-  'help'
+  'socials'
 ];
 
 export const buildActions = (cmd) => {
   const map = {};
   
-  if (cmd === 'contact') {
-    map[0] = () => {
-      const email = getEmail();
-      if (email) {
+  // Navigation actions
+  if (cmd === 'home') {
+    map[0] = () => scrollToSection('hero');
+  }
+  
+  if (cmd === 'skills') {
+    map[0] = () => scrollToSection('skills');
+  }
+  
+  if (cmd === 'about') {
+    map[0] = () => scrollToSection('about');
+  }
+  
+  if (cmd === 'work') {
+    map[0] = () => scrollToSection('projects');
+  }
+  
+  if (cmd === 'imprint') {
+    map[0] = () => openImprint();
+  }
+  
+  // Social media actions
+  if (cmd === 'github') {
+    const githubUrl = getSocialUrl('GITHUB');
+    if (githubUrl !== '—') {
+      map[0] = () => {
+        window.open(githubUrl, '_blank');
+        // Close terminal after opening social link
+        setTimeout(() => {
+          window.dispatchEvent(new Event('terminal:close'));
+        }, 300);
+      };
+    }
+  }
+  
+  if (cmd === 'linkedin') {
+    const linkedinUrl = getSocialUrl('LINKEDIN');
+    if (linkedinUrl !== '—') {
+      map[0] = () => {
+        window.open(linkedinUrl, '_blank');
+        // Close terminal after opening social link
+        setTimeout(() => {
+          window.dispatchEvent(new Event('terminal:close'));
+        }, 300);
+      };
+    }
+  }
+  
+  if (cmd === 'email') {
+    const email = getEmail();
+    if (email) {
+      map[0] = () => {
         window.location.href = `mailto:${email}`;
-      }
-    };
+        // Close terminal after opening email client
+        setTimeout(() => {
+          window.dispatchEvent(new Event('terminal:close'));
+        }, 300);
+      };
+    }
+  }
+  
+  // Legacy actions
+  if (cmd === 'contact') {
+    const email = getEmail();
+    if (email) {
+      map[0] = () => {
+        window.location.href = `mailto:${email}`;
+      };
+    }
   }
   
   if (cmd === 'projects') {
