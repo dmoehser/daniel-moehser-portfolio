@@ -35,6 +35,37 @@ export default function App() {
   const { isFullscreenPreview, fullscreenProject } = FullscreenPreviewManager();
   const { projectOverlayUrl } = ProjectOverlayManager();
 
+  // Detect Safari and disable scroll-snap completely
+  useEffect(() => {
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    
+    if (isSafari) {
+      // Wait for DOM to be ready
+      const disableScrollSnap = () => {
+        const scrollContainer = document.querySelector('.page-scroll');
+        if (scrollContainer) {
+          // Disable scroll-snap completely
+          scrollContainer.style.scrollSnapType = 'none';
+          scrollContainer.style.webkitScrollSnapType = 'none';
+          
+          // Disable for all sections
+          const sections = scrollContainer.querySelectorAll('section');
+          sections.forEach(section => {
+            section.style.scrollSnapAlign = 'none';
+            section.style.scrollSnapStop = 'normal';
+            section.style.webkitScrollSnapAlign = 'none';
+            section.style.webkitScrollSnapStop = 'normal';
+          });
+        }
+      };
+      
+      // Try immediately and also after a delay
+      disableScrollSnap();
+      setTimeout(disableScrollSnap, 100);
+      setTimeout(disableScrollSnap, 500);
+    }
+  }, []);
+
   // Handle hash navigation
   useEffect(() => {
     const handleHashChange = () => {

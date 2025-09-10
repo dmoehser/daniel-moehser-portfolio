@@ -14,8 +14,8 @@
   // Enable smooth scrolling
   scroll-behavior: smooth;
   
-  // Scroll snapping for sections
-  scroll-snap-type: y mandatory;
+  // Scroll snapping for sections - disabled by default for Safari compatibility
+  scroll-snap-type: y proximity;
   
   // Ensure proper stacking context
   position: relative;
@@ -28,7 +28,6 @@
   
   // Scroll snapping
   scroll-snap-align: start;
-  scroll-snap-stop: always;
   
   // Flexbox properties for ordering
   flex: 0 0 auto;
@@ -38,6 +37,22 @@
   
   // Ensure proper positioning
   position: relative;
+}
+
+// Safari scroll-snap fixes - CSS fallback
+// ----------------------------------------
+@supports (-webkit-appearance: none) {
+  .page-scroll {
+    scroll-snap-type: none !important;
+    -webkit-scroll-snap-type: none !important;
+  }
+  
+  .page-scroll > section {
+    scroll-snap-align: none !important;
+    scroll-snap-stop: normal !important;
+    -webkit-scroll-snap-align: none !important;
+    -webkit-scroll-snap-stop: normal !important;
+  }
 }
 
 // Responsive adjustments for page-scroll
