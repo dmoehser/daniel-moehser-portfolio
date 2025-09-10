@@ -48,9 +48,9 @@ export default function Imprint() {
 
   const processedContent = processImprintContent(contentToShow);
 
-  // Navigate back to projects section
+  // Navigate back to home section
   const goBack = () => {
-    window.location.href = '/#projects';
+    window.location.href = '/#';
   };
 
   // Toggle contact form
@@ -400,7 +400,7 @@ export default function Imprint() {
             <button 
               className="imprint-header__back-btn"
               onClick={goBack}
-              aria-label="Back to projects"
+              aria-label="Back to home"
             >
               <svg 
                 width="20" 
