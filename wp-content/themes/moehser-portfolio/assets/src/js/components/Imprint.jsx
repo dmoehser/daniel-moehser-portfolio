@@ -38,9 +38,9 @@ export default function Imprint() {
   // If no content is provided, show empty string
   const contentToShow = imprintHTML || '';
 
-  // Back to home function
+  // Back to projects function
   const goBack = () => {
-    window.location.href = '/';
+    window.location.href = '/#projects';
   };
 
   return (
@@ -59,7 +59,7 @@ export default function Imprint() {
           <button 
             className="imprint-header__back-btn"
             onClick={goBack}
-            aria-label="Zurück zur Hauptseite"
+            aria-label="Back to projects"
           >
             <svg 
               width="20" 
@@ -73,7 +73,7 @@ export default function Imprint() {
             >
               <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
-            Zurück
+            Back
           </button>
         </div>
       </header>
