@@ -29,10 +29,10 @@ const getSkillsFromCards = () => {
 
   const skills = [];
   
-  // Check each skill card
+  // Check each skill card (1-5)
   for (let i = 1; i <= 5; i++) {
     const cardData = window[`__SKILLS_CARD${i}__`];
-    if (cardData && cardData.title && cardData.skills_list) {
+    if (cardData && cardData.title) {
       // Decode HTML entities
       const title = cardData.title.replace(/&[^;]+;/g, (entity) => {
         const entities = {
@@ -46,26 +46,71 @@ const getSkillsFromCards = () => {
         return entities[entity] || entity;
       });
       
-      const skillsList = cardData.skills_list.replace(/&[^;]+;/g, (entity) => {
-        const entities = {
-          '&amp;': '&',
-          '&lt;': '<',
-          '&gt;': '>',
-          '&quot;': '"',
-          '&#39;': "'",
-          '&nbsp;': ' '
-        };
-        return entities[entity] || entity;
-      });
-
       skills.push(`┌─ ${title}`);
-      // Split skills list by line breaks and add each skill
-      const skillItems = skillsList.split('\n').filter(item => item.trim());
-      skillItems.forEach((skill, index) => {
-        const isLast = index === skillItems.length - 1;
-        const prefix = isLast ? '└──' : '├──';
-        skills.push(`│  ${prefix} ${skill.trim()}`);
-      });
+      
+      // Check if there's a skills list
+      if (cardData.skills_list && cardData.skills_list.trim()) {
+        const skillsList = cardData.skills_list.replace(/&[^;]+;/g, (entity) => {
+          const entities = {
+            '&amp;': '&',
+            '&lt;': '<',
+            '&gt;': '>',
+            '&quot;': '"',
+            '&#39;': "'",
+            '&nbsp;': ' '
+          };
+          return entities[entity] || entity;
+        });
+        
+        // Split skills list by line breaks and add each skill
+        const skillItems = skillsList.split('\n').filter(item => item.trim());
+        skillItems.forEach((skill, index) => {
+          const isLast = index === skillItems.length - 1;
+          const prefix = isLast ? '└──' : '├──';
+          skills.push(`│  ${prefix} ${skill.trim()}`);
+        });
+      } else {
+        // If no skills list, show tags instead
+        if (cardData.tags && cardData.tags.trim()) {
+          const tags = cardData.tags.replace(/&[^;]+;/g, (entity) => {
+            const entities = {
+              '&amp;': '&',
+              '&lt;': '<',
+              '&gt;': '>',
+              '&quot;': '"',
+              '&#39;': "'",
+              '&nbsp;': ' '
+            };
+            return entities[entity] || entity;
+          });
+          
+          const tagItems = tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+          tagItems.forEach((tag, index) => {
+            const isLast = index === tagItems.length - 1;
+            const prefix = isLast ? '└──' : '├──';
+            skills.push(`│  ${prefix} ${tag}`);
+          });
+        } else {
+          // If no tags either, show description
+          if (cardData.description && cardData.description.trim()) {
+            const description = cardData.description.replace(/&[^;]+;/g, (entity) => {
+              const entities = {
+                '&amp;': '&',
+                '&lt;': '<',
+                '&gt;': '>',
+                '&quot;': '"',
+                '&#39;': "'",
+                '&nbsp;': ' '
+              };
+              return entities[entity] || entity;
+            });
+            
+            // Remove markdown formatting and show clean description
+            const cleanDescription = description.replace(/\*\*(.*?)\*\*/g, '$1');
+            skills.push(`│  └── ${cleanDescription}`);
+          }
+        }
+      }
       skills.push(''); // Empty line between cards
     }
   }
