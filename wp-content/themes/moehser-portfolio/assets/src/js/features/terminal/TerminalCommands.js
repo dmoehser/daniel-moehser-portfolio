@@ -69,6 +69,10 @@ export const makeCommands = () => ({
       '│   ├── grid        → switch to grid view',
       '│   └── list        → switch to list view',
       '',
+      '├── 🎨 Theme Control',
+      '│   ├── light       → switch to light mode',
+      '│   └── dark        → switch to dark mode',
+      '',
       '├── 🌐 Social Media',
       '│   ├── github      → open GitHub profile',
       '│   ├── linkedin    → open LinkedIn profile',
@@ -223,6 +227,20 @@ export const makeCommands = () => ({
       'This will show projects in a compact list format.',
     ],
   },
+  light: {
+    title: 'Switching to Light Mode',
+    lines: [
+      'Changing theme to light mode...',
+      'This will switch the entire portfolio to light theme.',
+    ],
+  },
+  dark: {
+    title: 'Switching to Dark Mode',
+    lines: [
+      'Changing theme to dark mode...',
+      'This will switch the entire portfolio to dark theme.',
+    ],
+  },
 });
 
 export const COMMAND_ORDER = [
@@ -233,6 +251,8 @@ export const COMMAND_ORDER = [
   'projects',
   'grid',
   'list',
+  'light',
+  'dark',
   'imprint',
   'github',
   'linkedin',
@@ -332,6 +352,35 @@ export const buildActions = (cmd) => {
           window.dispatchEvent(new Event('terminal:close'));
         }, 300);
       }, 500);
+    };
+  }
+  
+  // Theme switching commands
+  if (cmd === 'light') {
+    map[0] = () => {
+      // Switch to light mode
+      document.body.classList.remove('theme-dark');
+      document.body.classList.add('theme-light');
+      // Save preference
+      localStorage.setItem('theme', 'light');
+      // Close terminal after theme change
+      setTimeout(() => {
+        window.dispatchEvent(new Event('terminal:close'));
+      }, 300);
+    };
+  }
+  
+  if (cmd === 'dark') {
+    map[0] = () => {
+      // Switch to dark mode
+      document.body.classList.remove('theme-light');
+      document.body.classList.add('theme-dark');
+      // Save preference
+      localStorage.setItem('theme', 'dark');
+      // Close terminal after theme change
+      setTimeout(() => {
+        window.dispatchEvent(new Event('terminal:close'));
+      }, 300);
     };
   }
   

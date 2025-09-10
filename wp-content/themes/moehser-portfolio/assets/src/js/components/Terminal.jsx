@@ -32,6 +32,7 @@ const TERMINAL_CONFIG = {
     GREEN: '\u001b[38;2;0;255;123m',
     GRAY: '\u001b[38;2;209;213;219m',
     BLUE: '\u001b[38;2;96;165;250m',
+    YELLOW: '\u001b[38;2;251;191;36m',
     RESET: '\u001b[0m'
   }
 };
@@ -136,7 +137,7 @@ export default function Terminal() {
     } catch {}
     fit.fit();
 
-    const prompt = `${TERMINAL_CONFIG.COLORS.GREEN}daniel${TERMINAL_CONFIG.COLORS.RESET}${TERMINAL_CONFIG.COLORS.GRAY} [ ${TERMINAL_CONFIG.COLORS.RESET}${TERMINAL_CONFIG.COLORS.BLUE}~${TERMINAL_CONFIG.COLORS.RESET}${TERMINAL_CONFIG.COLORS.GRAY} ]$ ${TERMINAL_CONFIG.COLORS.RESET}`;
+    const prompt = `${TERMINAL_CONFIG.COLORS.GREEN}daniel${TERMINAL_CONFIG.COLORS.RESET}@${TERMINAL_CONFIG.COLORS.BLUE}portfolio${TERMINAL_CONFIG.COLORS.RESET}:${TERMINAL_CONFIG.COLORS.YELLOW}~${TERMINAL_CONFIG.COLORS.RESET}$ `;
     const writePrompt = () => { term.write(`\r\n${prompt}`); };
     let buffer = '';
     const history = [];
