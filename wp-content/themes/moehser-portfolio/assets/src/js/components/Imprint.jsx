@@ -183,9 +183,10 @@ export default function Imprint() {
 
           /* Dark mode */
           .theme-dark .imprint__card {
-            background: rgba(30,41,59,.95);
-            border-color: rgba(255,255,255,.12);
-            color: #e2e8f0;
+            background: rgba(11,18,32,.95) !important;
+            border-color: rgba(255,255,255,.12) !important;
+            color: #e2e8f0 !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2) !important;
           }
 
           .theme-dark .imprint-header {
