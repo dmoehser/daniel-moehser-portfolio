@@ -4,7 +4,8 @@
 // Static imprint page with WordPress integration
 // ---------------------------------------------
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createRoot } from 'react-dom/client';
 import ContactForm from './ui/ContactForm';
 
 export default function Imprint() {
@@ -21,6 +22,23 @@ export default function Imprint() {
     (window.__BUSINESS_EMAIL_SUBJECT__ || 'Business Inquiry - Portfolio Contact') : 
     'Business Inquiry - Portfolio Contact';
 
+  // Process content to replace h3 Contact with contact form
+  const processImprintContent = (html) => {
+    if (!html) return '';
+    
+    // Replace <h3>Contact</h3> with contact form button
+    const contactFormButton = `
+      <div class="imprint-contact-section">
+        <h3>Contact</h3>
+        <div id="imprint-contact-form-container"></div>
+      </div>
+    `;
+    
+    return html.replace(/<h3[^>]*>Contact<\/h3>/gi, contactFormButton);
+  };
+
+  const processedContent = processImprintContent(contentToShow);
+
   // Navigate back to projects section
   const goBack = () => {
     window.location.href = '/#projects';
@@ -30,6 +48,21 @@ export default function Imprint() {
   const toggleContactForm = () => {
     setIsContactFormExpanded(!isContactFormExpanded);
   };
+
+  // Render contact form in the container after content is processed
+  useEffect(() => {
+    const container = document.getElementById('imprint-contact-form-container');
+    if (container) {
+      const root = createRoot(container);
+      root.render(
+        <ContactForm 
+          isExpanded={isContactFormExpanded}
+          onToggle={toggleContactForm}
+          businessSubject={businessEmailSubject}
+        />
+      );
+    }
+  }, [isContactFormExpanded, businessEmailSubject]);
 
   return (
     <>
@@ -213,6 +246,24 @@ export default function Imprint() {
             border-bottom-color: var(--color-border-dark);
           }
 
+          /* Contact Section Styles */
+          .imprint-contact-section {
+            margin: 2rem 0;
+            padding: 1.5rem 0;
+            border-top: 1px solid rgba(15, 23, 42, 0.1);
+          }
+
+          .imprint-contact-section h3 {
+            margin: 0 0 1rem 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-text);
+          }
+
+          .theme-dark .imprint-contact-section {
+            border-top-color: rgba(255, 255, 255, 0.1);
+          }
+
         `}
       </style>
       
@@ -262,23 +313,16 @@ export default function Imprint() {
                     </h1>
                   </div>
 
-                  {contentToShow && (
+                  {processedContent && (
                     <div className="imprint__body">
                       <div className="imprint__text">
                         <div 
                           className="imprint__content-text" 
-                          dangerouslySetInnerHTML={{ __html: contentToShow }} 
+                          dangerouslySetInnerHTML={{ __html: processedContent }} 
                         />
                       </div>
                     </div>
                   )}
-
-                  {/* Contact Form */}
-                  <ContactForm 
-                    isExpanded={isContactFormExpanded}
-                    onToggle={toggleContactForm}
-                    businessSubject={businessEmailSubject}
-                  />
                 </div>
               </div>
             </div>
