@@ -143,8 +143,19 @@ export default function Terminal() {
     let histIdx = -1;
 
     // Welcome
-    term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}Welcome to daniel@portfolio shell${TERMINAL_CONFIG.COLORS.RESET}`);
-    term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}Type help to list commands. This is a local emulation.${TERMINAL_CONFIG.COLORS.RESET}`);
+    term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}╭─────────────────────────────────────────╮${TERMINAL_CONFIG.COLORS.RESET}`);
+    term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}│  Welcome to daniel@portfolio shell      │${TERMINAL_CONFIG.COLORS.RESET}`);
+    term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}│  Interactive Portfolio Terminal         │${TERMINAL_CONFIG.COLORS.RESET}`);
+    term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}╰─────────────────────────────────────────╯${TERMINAL_CONFIG.COLORS.RESET}`);
+    term.writeln('');
+    term.writeln(`${TERMINAL_CONFIG.COLORS.BLUE}🚀 Quick Start:${TERMINAL_CONFIG.COLORS.RESET}`);
+    term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • Type 'help' to see all available commands${TERMINAL_CONFIG.COLORS.RESET}`);
+    term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • Use 'T' key to toggle terminal anytime${TERMINAL_CONFIG.COLORS.RESET}`);
+    term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • Press 'Esc' to close terminal${TERMINAL_CONFIG.COLORS.RESET}`);
+    term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • Navigate with arrow keys, Enter to execute${TERMINAL_CONFIG.COLORS.RESET}`);
+    term.writeln('');
+    term.writeln(`${TERMINAL_CONFIG.COLORS.BLUE}💡 Pro Tip:${TERMINAL_CONFIG.COLORS.RESET} Try 'home', 'skills', 'about', or 'projects' to navigate!`);
+    term.writeln('');
     term.write(prompt);
 
     const redrawLine = () => {
@@ -174,6 +185,24 @@ export default function Terminal() {
               setTimeout(() => {
                 actions[0]();
               }, 100);
+            }
+          } else if (cmdline.startsWith('projects ')) {
+            // Handle projects subcommands
+            const subcommand = cmdline;
+            if (COMMANDS[subcommand]) {
+              term.writeln(COMMANDS[subcommand].title);
+              COMMANDS[subcommand].lines.forEach((l)=> term.writeln(l));
+              
+              // Execute action if available
+              const actions = buildActions(subcommand);
+              if (actions[0]) {
+                // Execute the first action after a short delay
+                setTimeout(() => {
+                  actions[0]();
+                }, 100);
+              }
+            } else {
+              term.writeln('projects subcommand not found. Try "projects grid" or "projects list"');
             }
           } else if (cmdline.length) {
             term.writeln('command not found');

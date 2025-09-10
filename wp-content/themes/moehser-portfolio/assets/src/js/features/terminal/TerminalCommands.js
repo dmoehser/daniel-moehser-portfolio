@@ -56,26 +56,35 @@ const openImprint = () => {
 
 export const makeCommands = () => ({
   help: {
-    title: 'Available commands',
+    title: 'moehser-portfolio/',
     lines: [
-      'help        - list all commands',
-      'stack       - show core technologies',
-      'experience  - show what I deliver',
-      'contact     - get in touch',
-      'projects    - where to find my work',
-      'socials     - GitHub & LinkedIn',
+      '├── 🧭 Navigation',
+      '│   ├── home        → go to hero section',
+      '│   ├── skills      → go to skills section', 
+      '│   ├── about       → go to about section',
+      '│   ├── projects    → go to projects section',
+      '│   └── imprint     → open imprint page',
       '',
-      'Navigation:',
-      'home        - go to hero section',
-      'skills      - go to skills section',
-      'about       - go to about section',
-      'projects    - go to projects section',
-      'imprint     - open imprint page',
+      '├── 📋 Project Layout',
+      '│   ├── projects grid → switch to grid view',
+      '│   └── projects list → switch to list view',
       '',
-      'Social Media:',
-      'github      - open GitHub profile',
-      'linkedin    - open LinkedIn profile',
-      'email       - open email client',
+      '├── 🌐 Social Media',
+      '│   ├── github      → open GitHub profile',
+      '│   ├── linkedin    → open LinkedIn profile',
+      '│   └── email       → open email client',
+      '',
+      '├── 💼 Professional Info',
+      '│   ├── stack       → show core technologies',
+      '│   ├── experience  → show what I deliver',
+      '│   └── contact     → get in touch',
+      '',
+      '└── 🎯 Quick Actions',
+      '    ├── help        → show this menu',
+      '    ├── clear       → clear terminal',
+      '    └── T key       → toggle terminal',
+      '',
+      '💡 Use arrow keys to navigate, Enter to execute!',
     ],
   },
   stack: {
@@ -167,6 +176,53 @@ export const makeCommands = () => ({
       `Opening email client for: ${getEmail()}`,
     ],
   },
+  // Additional helpful commands
+  clear: {
+    title: 'Terminal cleared',
+    lines: [
+      'Terminal cleared. Type "help" to see available commands.',
+    ],
+  },
+  whoami: {
+    title: 'User Information',
+    lines: [
+      'daniel@portfolio',
+      'Full-stack Developer & UI/UX Designer',
+      'Specializing in React, WordPress, and modern web technologies',
+      '',
+      '📍 Location: Hamburg, Germany',
+      '💼 Available for freelance projects',
+      '🎯 Focus: Performance, Accessibility, User Experience',
+    ],
+  },
+  ls: {
+    title: 'Directory Listing',
+    lines: [
+      'moehser-portfolio/',
+      '├── assets/          # Static assets & compiled files',
+      '├── inc/             # WordPress includes & custom functions',
+      '├── wp-content/      # WordPress content & uploads',
+      '├── functions.php    # Main theme functions',
+      '├── style.css        # Theme stylesheet',
+      '└── index.php        # Main template file',
+      '',
+      '💡 Use "help" to see available commands',
+    ],
+  },
+  'projects grid': {
+    title: 'Switching to Grid View',
+    lines: [
+      'Changing projects layout to grid view...',
+      'This will show projects in a card-based grid format.',
+    ],
+  },
+  'projects list': {
+    title: 'Switching to List View',
+    lines: [
+      'Changing projects layout to list view...',
+      'This will show projects in a compact list format.',
+    ],
+  },
 });
 
 export const COMMAND_ORDER = [
@@ -174,15 +230,18 @@ export const COMMAND_ORDER = [
   'home',
   'skills', 
   'about',
-  'work',
+  'projects',
+  'projects grid',
+  'projects list',
   'imprint',
   'github',
   'linkedin',
   'email',
+  'whoami',
+  'ls',
   'stack', 
   'experience', 
   'contact', 
-  'projects', 
   'socials'
 ];
 
@@ -235,6 +294,45 @@ export const buildActions = (cmd) => {
   
   if (cmd === 'imprint') {
     map[0] = () => openImprint();
+  }
+  
+  // Project layout commands
+  if (cmd === 'projects grid') {
+    map[0] = () => {
+      // First navigate to projects section
+      if (window.location.pathname.includes('/imprint')) {
+        window.location.href = '/#projects';
+      } else {
+        scrollToSection('projects');
+      }
+      // Then trigger grid layout change
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('projects:layout', { detail: { layout: 'grid' } }));
+        // Close terminal after layout change
+        setTimeout(() => {
+          window.dispatchEvent(new Event('terminal:close'));
+        }, 300);
+      }, 500);
+    };
+  }
+  
+  if (cmd === 'projects list') {
+    map[0] = () => {
+      // First navigate to projects section
+      if (window.location.pathname.includes('/imprint')) {
+        window.location.href = '/#projects';
+      } else {
+        scrollToSection('projects');
+      }
+      // Then trigger list layout change
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('projects:layout', { detail: { layout: 'list' } }));
+        // Close terminal after layout change
+        setTimeout(() => {
+          window.dispatchEvent(new Event('terminal:close'));
+        }, 300);
+      }, 500);
+    };
   }
   
   // Social media actions

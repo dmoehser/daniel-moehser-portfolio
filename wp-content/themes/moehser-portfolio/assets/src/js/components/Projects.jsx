@@ -546,6 +546,23 @@ export default function Projects() {
     };
   }, []);
 
+  // Listen for terminal layout commands
+  useEffect(() => {
+    const handleLayoutChange = (event) => {
+      const { layout } = event.detail;
+      if (layout === 'grid') {
+        updateListView(false); // Grid view = listView = false
+      } else if (layout === 'list') {
+        updateListView(true); // List view = listView = true
+      }
+    };
+
+    window.addEventListener('projects:layout', handleLayoutChange);
+    return () => {
+      window.removeEventListener('projects:layout', handleLayoutChange);
+    };
+  }, []);
+
   useEffect(() => {
     const fetchProjects = async () => {
       try {
