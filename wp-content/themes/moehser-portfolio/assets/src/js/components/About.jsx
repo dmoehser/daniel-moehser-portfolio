@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { getMailtoUrl } from '../utils/emailHelper.js';
 
 // Animation constants for consistent motion
 // ------------------------------
@@ -38,6 +39,19 @@ export default function About() {
   const aboutCtaEnabled = typeof window !== 'undefined' ? (window.__ABOUT_CTA_ENABLED__ || false) : false;
   const aboutCtaText = typeof window !== 'undefined' ? (window.__ABOUT_CTA_TEXT__ || '') : '';
   const aboutCtaUrl = typeof window !== 'undefined' ? (window.__ABOUT_CTA_URL__ || '') : '';
+
+  // Helper function to get the correct URL for CTA button
+  const getCtaUrl = () => {
+    if (!aboutCtaUrl) return '';
+    
+    // If it's a mailto URL, use the global email helper to include subject
+    if (aboutCtaUrl.startsWith('mailto:')) {
+      return getMailtoUrl();
+    }
+    
+    // For all other URLs, use the original URL
+    return aboutCtaUrl;
+  };
 
   // If no About content is provided, do not render the section
   if (!aboutHTML || aboutHTML.trim() === '') {
@@ -108,7 +122,7 @@ export default function About() {
                     transition={{ duration: ANIMATION.TIMING.BASE, delay: ANIMATION.TIMING.DELAY_LARGE + 0.1 }}
                   >
                     <a 
-                      href={aboutCtaUrl} 
+                      href={getCtaUrl()} 
                       className="about__cta-btn"
                       target="_blank"
                       rel="noopener noreferrer"
