@@ -40,10 +40,35 @@ export default function App() {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '');
       if (hash) {
-        const element = document.getElementById(hash);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
+        // Wait for element to be available with retry mechanism
+        const findElement = (retries = 0) => {
+          const element = document.getElementById(hash);
+          if (element) {
+            
+            // Temporarily disable scroll-snap for programmatic scrolling
+            const scrollContainer = document.querySelector('.page-scroll');
+            if (scrollContainer) {
+              const originalSnapType = scrollContainer.style.scrollSnapType;
+              scrollContainer.style.scrollSnapType = 'none';
+              
+              element.scrollIntoView({ behavior: 'smooth' });
+              
+              // Re-enable scroll-snap after scrolling is complete
+              setTimeout(() => {
+                scrollContainer.style.scrollSnapType = originalSnapType || '';
+              }, 1000);
+            } else {
+              element.scrollIntoView({ behavior: 'smooth' });
+            }
+          } else if (retries < 20) {
+            // Retry after a delay if element not found - longer delay for initial load
+            const delay = retries < 5 ? 200 : 100; // Longer delay for first few attempts
+            setTimeout(() => findElement(retries + 1), delay);
+          } else {
+            console.warn(`Element with id "${hash}" not found after ${retries} retries`);
+          }
+        };
+        findElement();
       } else {
         // If no hash or empty hash, scroll to top (hero section)
         const heroElement = document.getElementById('hero');
@@ -53,8 +78,21 @@ export default function App() {
       }
     };
 
-    // Handle initial hash
-    handleHashChange();
+    // Handle initial hash - wait for both DOM and React to be ready
+    const handleInitialHash = () => {
+      // Wait for DOM to be ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+          // Additional delay for React components to render
+          setTimeout(handleHashChange, 500);
+        });
+      } else {
+        // DOM is already ready, but wait for React components
+        setTimeout(handleHashChange, 500);
+      }
+    };
+    
+    handleInitialHash();
 
     // Listen for hash changes
     window.addEventListener('hashchange', handleHashChange);

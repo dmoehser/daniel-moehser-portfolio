@@ -327,7 +327,7 @@ const renderGridActions = (project, handleProjectClick) => {
 // Reusable section wrapper
 // ------------------------
 const ProjectsSectionWrapper = ({ children, className = "" }) => (
-  <section className={`projects section-base ${className}`.trim()} id="projects">
+  <section className={`projects section-base ${className}`.trim()}>
     <div className="projects__inner section-inner">
       <div className="projects__content section-content">
         <div className="projects__card section-card">
