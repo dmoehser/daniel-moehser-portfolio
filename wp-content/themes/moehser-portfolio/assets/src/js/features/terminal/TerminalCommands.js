@@ -23,15 +23,12 @@ const getEmail = () => {
 // Helper function to scroll to section smoothly
 const scrollToSection = (sectionId) => {
   if (typeof window !== 'undefined') {
-    console.log(`Attempting to scroll to section: ${sectionId}`);
-    
     // Use the existing hash navigation system by changing the URL hash
     // This triggers the existing hash change handler in App.jsx
     const currentHash = window.location.hash;
     const newHash = `#${sectionId}`;
     
     if (currentHash !== newHash) {
-      console.log(`Changing hash from ${currentHash} to ${newHash}`);
       window.location.hash = newHash;
       
       // Close terminal after navigation
@@ -39,7 +36,6 @@ const scrollToSection = (sectionId) => {
         window.dispatchEvent(new Event('terminal:close'));
       }, 500);
     } else {
-      console.log(`Already at section ${sectionId}, just closing terminal`);
       // If already at the section, just close the terminal
       window.dispatchEvent(new Event('terminal:close'));
     }
