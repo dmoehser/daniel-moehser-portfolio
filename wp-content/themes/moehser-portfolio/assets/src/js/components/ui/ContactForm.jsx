@@ -44,25 +44,44 @@ export default function ContactForm({ isExpanded, onToggle, businessSubject, hid
 
   // Load reCAPTCHA script
   useEffect(() => {
-    if (isExpanded && !window.grecaptcha) {
-      const script = document.createElement('script');
-      script.src = 'https://www.google.com/recaptcha/api.js?render=explicit';
-      script.async = true;
-      script.defer = true;
-      document.head.appendChild(script);
-      
-      script.onload = () => {
-        if (window.grecaptcha && recaptchaRef.current) {
-          const siteKey = window.__RECAPTCHA_SITE_KEY__ || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'; // Fallback to test key
-          window.grecaptcha.render(recaptchaRef.current, {
-            sitekey: siteKey,
-            theme: 'light',
-            size: 'normal'
-          });
-        }
-      };
+    if (isExpanded) {
+      // Load script if not already loaded
+      if (!window.grecaptcha) {
+        const script = document.createElement('script');
+        script.src = 'https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit';
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+        
+        // Global callback for reCAPTCHA
+        window.onRecaptchaLoad = () => {
+          renderRecaptcha();
+        };
+      } else {
+        // Script already loaded, render immediately
+        renderRecaptcha();
+      }
     }
   }, [isExpanded]);
+
+  // Render reCAPTCHA
+  const renderRecaptcha = () => {
+    if (window.grecaptcha && recaptchaRef.current) {
+      const siteKey = window.__RECAPTCHA_SITE_KEY__ || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'; // Fallback to test key
+      try {
+        window.grecaptcha.render(recaptchaRef.current, {
+          sitekey: siteKey,
+          theme: 'light',
+          size: 'normal',
+          callback: (token) => {
+            console.log('reCAPTCHA token:', token);
+          }
+        });
+      } catch (error) {
+        console.error('reCAPTCHA render error:', error);
+      }
+    }
+  };
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -80,9 +99,23 @@ export default function ContactForm({ isExpanded, onToggle, businessSubject, hid
     setSubmitStatus(null);
 
     try {
-      // Get reCAPTCHA token
-      const recaptchaToken = window.grecaptcha ? 
-        await window.grecaptcha.execute() : null;
+      // Get reCAPTCHA token (v2)
+      let recaptchaToken = null;
+      if (window.grecaptcha) {
+        try {
+          recaptchaToken = window.grecaptcha.getResponse();
+          if (!recaptchaToken) {
+            setSubmitStatus('error');
+            setIsSubmitting(false);
+            return;
+          }
+        } catch (error) {
+          console.error('reCAPTCHA error:', error);
+          setSubmitStatus('error');
+          setIsSubmitting(false);
+          return;
+        }
+      }
 
       // Prepare form data
       const submitData = {
