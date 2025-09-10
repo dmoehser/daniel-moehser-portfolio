@@ -4,7 +4,7 @@
 // Static imprint page with WordPress integration
 // ---------------------------------------------
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import ContactForm from './ui/ContactForm';
 
@@ -16,6 +16,7 @@ export default function Imprint() {
 
   // Contact form state
   const [isContactFormExpanded, setIsContactFormExpanded] = useState(false);
+  const isExpandedRef = useRef(false);
 
   // Get business email subject from WordPress Customizer
   const businessEmailSubject = typeof window !== 'undefined' ? 
@@ -30,7 +31,15 @@ export default function Imprint() {
     const contactFormButton = `
       <div class="imprint-contact-section">
         <h3>Contact</h3>
-        <div id="imprint-contact-form-container"></div>
+        <div class="contact-form-container">
+          <button class="contact-form__toggle" onclick="window.toggleImprintContactForm()" id="imprint-contact-toggle">
+            <span class="contact-form__toggle-icon">📧</span>
+            <span class="contact-form__toggle-text">Contact Form</span>
+          </button>
+          <div class="contact-form__wrapper" id="imprint-contact-form-wrapper" style="display: none;">
+            <!-- Contact form will be rendered here -->
+          </div>
+        </div>
       </div>
     `;
     
@@ -46,23 +55,72 @@ export default function Imprint() {
 
   // Toggle contact form
   const toggleContactForm = () => {
-    setIsContactFormExpanded(!isContactFormExpanded);
+    const newState = !isContactFormExpanded;
+    setIsContactFormExpanded(newState);
+    isExpandedRef.current = newState;
   };
+
+  // Global function for onclick handler
+  useEffect(() => {
+    window.toggleImprintContactForm = () => {
+      const newState = !isExpandedRef.current;
+      setIsContactFormExpanded(newState);
+      isExpandedRef.current = newState;
+    };
+
+    return () => {
+      delete window.toggleImprintContactForm;
+    };
+  }, []);
+
+  // Update ref when state changes
+  useEffect(() => {
+    isExpandedRef.current = isContactFormExpanded;
+  }, [isContactFormExpanded]);
 
   // Render contact form in the container after content is processed
   useEffect(() => {
-    const container = document.getElementById('imprint-contact-form-container');
-    if (container) {
-      const root = createRoot(container);
-      root.render(
-        <ContactForm 
-          isExpanded={isContactFormExpanded}
-          onToggle={toggleContactForm}
-          businessSubject={businessEmailSubject}
-        />
-      );
-    }
-  }, [isContactFormExpanded, businessEmailSubject]);
+    const renderContactForm = () => {
+      const wrapper = document.getElementById('imprint-contact-form-wrapper');
+      const toggleButton = document.getElementById('imprint-contact-toggle');
+      
+      if (wrapper && toggleButton) {
+        // Update button text and icon
+        const icon = toggleButton.querySelector('.contact-form__toggle-icon');
+        const text = toggleButton.querySelector('.contact-form__toggle-text');
+        
+        if (isContactFormExpanded) {
+          icon.textContent = '✕';
+          text.textContent = 'Close Contact Form';
+        } else {
+          icon.textContent = '📧';
+          text.textContent = 'Contact Form';
+        }
+        
+        // Clear and render form
+        wrapper.innerHTML = '';
+        if (isContactFormExpanded) {
+          const root = createRoot(wrapper);
+          root.render(
+            <ContactForm 
+              isExpanded={true}
+              onToggle={toggleContactForm}
+              businessSubject={businessEmailSubject}
+              hideToggleButton={true}
+            />
+          );
+        }
+        
+        // Show/hide wrapper based on expanded state
+        wrapper.style.display = isContactFormExpanded ? 'block' : 'none';
+      }
+    };
+
+    // Initial render with delay
+    const timeoutId = setTimeout(renderContactForm, 100);
+    
+    return () => clearTimeout(timeoutId);
+  }, [isContactFormExpanded, businessEmailSubject, processedContent]);
 
   return (
     <>
@@ -251,6 +309,8 @@ export default function Imprint() {
             margin: 2rem 0;
             padding: 1.5rem 0;
             border-top: 1px solid rgba(15, 23, 42, 0.1);
+            position: relative;
+            z-index: 10;
           }
 
           .imprint-contact-section h3 {
@@ -262,6 +322,64 @@ export default function Imprint() {
 
           .theme-dark .imprint-contact-section {
             border-top-color: rgba(255, 255, 255, 0.1);
+          }
+
+          /* Ensure contact form is above terminal overlay */
+          .contact-form-container {
+            position: relative;
+            z-index: 10000;
+          }
+
+          .contact-form {
+            position: relative;
+            z-index: 10000;
+          }
+
+          /* Button styles for inline contact form */
+          .contact-form__toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 2px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            color: #3b82f6;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            width: 100%;
+            justify-content: center;
+            font-family: inherit;
+          }
+
+          .contact-form__toggle:hover {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.3);
+            transform: translateY(-1px);
+          }
+
+          .contact-form__toggle-icon {
+            font-size: 1.25rem;
+            line-height: 1;
+          }
+
+          .contact-form__toggle-text {
+            font-size: 1rem;
+            font-weight: 600;
+          }
+
+          .theme-dark .contact-form__toggle {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.3);
+            color: #60a5fa;
+          }
+
+          .theme-dark .contact-form__toggle:hover {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.4);
           }
 
         `}

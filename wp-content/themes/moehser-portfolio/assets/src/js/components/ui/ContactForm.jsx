@@ -24,7 +24,7 @@ const ANIMATION = {
   }
 };
 
-export default function ContactForm({ isExpanded, onToggle, businessSubject }) {
+export default function ContactForm({ isExpanded, onToggle, businessSubject, hideToggleButton = false }) {
   // Get business subject from WordPress Customizer
   const defaultBusinessSubject = typeof window !== 'undefined' ? 
     (window.__BUSINESS_EMAIL_SUBJECT__ || 'Business Inquiry - Portfolio Contact') : 
@@ -125,21 +125,23 @@ export default function ContactForm({ isExpanded, onToggle, businessSubject }) {
 
   return (
     <div className="contact-form-container">
-      {/* Toggle Button */}
-      <motion.button
-        className="contact-form__toggle"
-        onClick={onToggle}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        transition={ANIMATION.TIMING}
-      >
-        <span className="contact-form__toggle-icon">
-          {isExpanded ? '✕' : '📧'}
-        </span>
-        <span className="contact-form__toggle-text">
-          {isExpanded ? 'Close Contact Form' : 'Contact Form'}
-        </span>
-      </motion.button>
+      {/* Toggle Button - only show if not hidden */}
+      {!hideToggleButton && (
+        <motion.button
+          className="contact-form__toggle"
+          onClick={onToggle}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          transition={ANIMATION.TIMING}
+        >
+          <span className="contact-form__toggle-icon">
+            {isExpanded ? '✕' : '📧'}
+          </span>
+          <span className="contact-form__toggle-text">
+            {isExpanded ? 'Close Contact Form' : 'Contact Form'}
+          </span>
+        </motion.button>
+      )}
 
       {/* Expandable Form */}
       <AnimatePresence>
