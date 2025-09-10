@@ -20,6 +20,64 @@ const getEmail = () => {
   return '';
 };
 
+// Helper function to get skills from cards
+// ----------------------------------------
+const getSkillsFromCards = () => {
+  if (typeof window === 'undefined') {
+    return ['Skills data not available'];
+  }
+
+  const skills = [];
+  
+  // Check each skill card
+  for (let i = 1; i <= 5; i++) {
+    const cardData = window[`__SKILLS_CARD${i}__`];
+    if (cardData && cardData.title && cardData.skills_list) {
+      // Decode HTML entities
+      const title = cardData.title.replace(/&[^;]+;/g, (entity) => {
+        const entities = {
+          '&amp;': '&',
+          '&lt;': '<',
+          '&gt;': '>',
+          '&quot;': '"',
+          '&#39;': "'",
+          '&nbsp;': ' '
+        };
+        return entities[entity] || entity;
+      });
+      
+      const skillsList = cardData.skills_list.replace(/&[^;]+;/g, (entity) => {
+        const entities = {
+          '&amp;': '&',
+          '&lt;': '<',
+          '&gt;': '>',
+          '&quot;': '"',
+          '&#39;': "'",
+          '&nbsp;': ' '
+        };
+        return entities[entity] || entity;
+      });
+
+      skills.push(`┌─ ${title}`);
+      // Split skills list by line breaks and add each skill
+      const skillItems = skillsList.split('\n').filter(item => item.trim());
+      skillItems.forEach((skill, index) => {
+        const isLast = index === skillItems.length - 1;
+        const prefix = isLast ? '└──' : '├──';
+        skills.push(`│  ${prefix} ${skill.trim()}`);
+      });
+      skills.push(''); // Empty line between cards
+    }
+  }
+  
+  // Remove last empty line if present
+  if (skills[skills.length - 1] === '') {
+    skills.pop();
+  }
+  
+  return skills.length > 0 ? skills : ['No skills data available'];
+};
+
 // Helper function to scroll to section smoothly
 const scrollToSection = (sectionId) => {
   if (typeof window !== 'undefined') {
@@ -92,13 +150,8 @@ export const makeCommands = () => ({
     ],
   },
   stack: {
-    title: 'Core technologies',
-    lines: [
-      'Frontend : React, TypeScript, Vite, Sass/Tailwind',
-      'Backend  : Node.js, Express, PHP, WordPress (REST)',
-      'Database : MySQL',
-      'Tooling  : Docker, GitHub Actions, Playwright',
-    ],
+    title: 'Tech Stack & Skills',
+    lines: getSkillsFromCards(),
   },
   experience: {
     title: 'What I deliver',
