@@ -23,7 +23,7 @@
   &__inner {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1rem 2rem;
+    padding: 1rem 3rem; // Match imprint content padding
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -86,64 +86,53 @@
   padding: 2rem 0 4vh 0; // Reduced from 120px to 2rem
 }
 
-// Imprint section (reusing existing section styles)
+// Imprint section - Custom styling
 // ------------------------------
 .imprint {
-  // Inherits from .section-base
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start; // Align to left
+  background: transparent;
+  position: relative;
+  padding: 2rem 0 4vh 0; // Reduced top padding
+  box-sizing: border-box;
+  z-index: 1;
   
   &__inner {
-    // Inherits from .section-inner
-    
-    &--spaced {
-      padding: 3rem 2rem;
-    }
+    width: 100%;
+    max-width: 1200px; // Match header max-width
+    margin: 0 auto;
+    padding: 0 3rem; // Increased padding to move content right
+    position: relative;
+    z-index: 2;
+    overflow: visible;
   }
   
   &__content {
-    // Inherits from .section-content
-    
-    &--centered {
-      max-width: 800px;
-      margin: 0 auto;
-    }
+    width: 100%;
+    max-width: 800px;
+    margin: 0; // No centering
   }
   
   &__card {
-    // Inherits from .section-card
-    background: var(--color-card);
-    border: 1px solid var(--color-border);
-    border-radius: 16px;
-    padding: 0; // Override section-card padding
-    box-shadow: var(--shadow-card);
-  }
-  
-  // Light mode specific card styling (like about page)
-  // ------------------------------
-  &:not(.theme-dark) &__card {
+    width: 100%;
     background: rgba(255,255,255,.95);
     border: 1px solid rgba(15,23,42,.12);
+    border-radius: 16px;
+    padding: clamp(24px, 3.5vw, 48px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     backdrop-filter: blur(10px) saturate(140%);
     -webkit-backdrop-filter: blur(10px) saturate(140%);
-    padding: clamp(24px, 3.5vw, 48px);
-  }
-  
-  // Dark mode specific card styling
-  // ------------------------------
-  body.theme-dark &__card {
-    background: rgba(30,41,59,.95) !important;
-    border-color: rgba(255,255,255,.12) !important;
-    color: #e2e8f0 !important;
-    padding: clamp(24px, 3.5vw, 48px) !important;
   }
   
   &__header {
-    // Inherits from .section-header
-    margin-bottom: 2rem;
     text-align: center;
+    margin-bottom: 2rem;
   }
   
   &__title {
-    // Inherits from .section-title
     font-size: 2.5rem;
     font-weight: 700;
     color: var(--color-text);
@@ -151,7 +140,6 @@
   }
   
   &__body {
-    // Inherits from .section-body
     margin-top: 1rem;
   }
   
@@ -212,8 +200,8 @@
   }
   
   .imprint {
-    &__inner--spaced {
-      padding: 2rem 1rem;
+    &__inner {
+      padding: 0 1rem; // Match mobile header padding
     }
     
     &__card {
@@ -262,6 +250,9 @@
     }
   }
   
-  // Imprint card uses existing section-card dark mode styling
-  // No additional styling needed
+  .imprint__card {
+    background: rgba(30,41,59,.95);
+    border-color: rgba(255,255,255,.12);
+    color: #e2e8f0;
+  }
 }
