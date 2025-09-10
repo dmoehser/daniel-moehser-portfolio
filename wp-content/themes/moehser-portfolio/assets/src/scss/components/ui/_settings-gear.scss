@@ -6,9 +6,14 @@
 
 .settings-gear {
   position: fixed;
-  bottom: 24px;
+  bottom: 24px; // Standard Position
   right: 24px;
-  z-index: 15; // Höher als Footer (z-index: 5)
+  z-index: 25; // Deutlich höher als Footer
+}
+
+// Höhere Position nur in Projects-Section
+.projects .settings-gear {
+  bottom: 80px; // Höher als Footer-Button
 }
 
 .settings-gear__trigger {
@@ -130,7 +135,7 @@
   padding: 16px;
   animation: settingsMenuFadeIn 0.15s ease-out;
   transform-origin: bottom right;
-  z-index: 16; // Höher als Zahnrad
+  z-index: 26; // Höher als Footer
 }
 
 .settings-gear__performance-header {
@@ -248,7 +253,7 @@
   white-space: normal;
   width: 240px;
   word-wrap: break-word;
-  z-index: 17; // Höchste Priorität
+  z-index: 27; // Höchste Priorität
   opacity: 0;
   visibility: hidden;
   transition: all 0.2s ease;

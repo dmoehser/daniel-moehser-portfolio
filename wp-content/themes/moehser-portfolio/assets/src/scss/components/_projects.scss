@@ -33,17 +33,7 @@
   justify-content: center;
 }
 
-// Footer in Projects-Section soll volle Breite haben
-.projects .site-footer {
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
-  left: 0;
-  right: 0;
-  position: sticky;
-  bottom: 0;
-  z-index: 5;
-  margin-top: auto; // Footer nach unten drücken
-}
+// Footer positioning now handled in _footer.scss
 
 // Natural flow for grid mode
 .projects.projects--flow {
