@@ -190,49 +190,62 @@ add_action('rest_api_init', function () {
 			try {
 				$data = $request->get_json_params();
 				
-				// Debug: Log received data
-				error_log('Contact form data received: ' . print_r($data, true));
 				
 				// Validate required fields
 				$required_fields = ['name', 'email', 'subject', 'message'];
 				foreach ($required_fields as $field) {
 					if (empty($data[$field])) {
-						error_log("Missing field: {$field}");
 						return new WP_Error('missing_field', "Field '{$field}' is required", ['status' => 400]);
 					}
 				}
 				
 				// Validate email
 				if (!is_email($data['email'])) {
-					error_log("Invalid email: " . $data['email']);
 					return new WP_Error('invalid_email', 'Invalid email address', ['status' => 400]);
 				}
 				
 				// Verify reCAPTCHA (optional for now)
 				$recaptcha_token = $data['recaptchaToken'] ?? '';
-				if (!empty($recaptcha_token)) {
-					error_log('reCAPTCHA token received: ' . substr($recaptcha_token, 0, 20) . '...');
-				}
 				
 				// Get recipient email from customizer
 				$recipient_email = get_theme_mod('moehser_social_email', 'hi@danielmoehser.dev');
-				error_log('Recipient email: ' . $recipient_email);
 				
-				// For now, just return success without sending email
-				// TODO: Configure SMTP or use a service like SendGrid
-				return rest_ensure_response([
-					'success' => true,
-					'message' => 'Message received successfully (email sending disabled for testing)',
-					'debug' => [
-						'recipient' => $recipient_email,
-						'name' => sanitize_text_field($data['name']),
-						'email' => sanitize_email($data['email']),
-						'subject' => sanitize_text_field($data['subject'])
-					]
-				]);
+				// Prepare email content
+				$name = sanitize_text_field($data['name']);
+				$email = sanitize_email($data['email']);
+				$subject = sanitize_text_field($data['subject']);
+				$message = sanitize_textarea_field($data['message']);
+				
+				// Email headers
+				$headers = [
+					'Content-Type: text/html; charset=UTF-8',
+					'From: ' . $name . ' <' . $email . '>',
+					'Reply-To: ' . $email
+				];
+				
+				// Email content
+				$email_content = "
+					<h3>New Contact Form Submission</h3>
+					<p><strong>Name:</strong> {$name}</p>
+					<p><strong>Email:</strong> {$email}</p>
+					<p><strong>Subject:</strong> {$subject}</p>
+					<p><strong>Message:</strong></p>
+					<p>{$message}</p>
+				";
+				
+				// Send email
+				$email_sent = wp_mail($recipient_email, 'Portfolio Contact: ' . $subject, $email_content, $headers);
+				
+				if ($email_sent) {
+					return rest_ensure_response([
+						'success' => true,
+						'message' => 'Message sent successfully!'
+					]);
+				} else {
+					return new WP_Error('email_failed', 'Failed to send email', ['status' => 500]);
+				}
 				
 			} catch (Exception $e) {
-				error_log('Contact form error: ' . $e->getMessage());
 				return new WP_Error('server_error', 'Internal server error: ' . $e->getMessage(), ['status' => 500]);
 			}
 		},
