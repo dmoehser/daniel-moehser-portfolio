@@ -52,8 +52,8 @@ export default function Imprint() {
             z-index: 2 !important;
             overflow: visible !important;
             text-align: left !important;
-            /* Fixed width for consistent alignment */
-            margin-left: 0 !important;
+            /* Offset for social dock */
+            margin-left: 80px !important;
             margin-right: auto !important;
           }
 
@@ -92,8 +92,8 @@ export default function Imprint() {
             display: flex !important;
             justify-content: space-between !important;
             align-items: center !important;
-            /* Match content width and alignment */
-            margin-left: 0 !important;
+            /* Offset for social dock */
+            margin-left: 80px !important;
             margin-right: auto !important;
           }
 
@@ -105,21 +105,39 @@ export default function Imprint() {
           }
 
           .imprint-header__back-btn {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: var(--color-bg);
-            border: 1px solid var(--color-border);
-            border-radius: 8px;
-            color: var(--color-text);
-            cursor: pointer;
-            transition: all 0.2s ease;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            padding: 8px 12px !important;
+            border-radius: 12px !important;
+            background: rgba(255,255,255,.65) !important;
+            border: 1px solid rgba(15,23,42,.08) !important;
+            border-bottom: 2px solid rgba(15,23,42,.15) !important;
+            color: #0f172a !important;
+            cursor: pointer !important;
+            text-decoration: none !important;
+            font-weight: 700 !important;
+            transition: all 0.2s ease !important;
           }
 
           .imprint-header__back-btn:hover {
-            background: var(--color-bg-hover);
-            border-color: var(--color-border-hover);
+            background: rgba(255,255,255,.8) !important;
+            border-color: rgba(15,23,42,.12) !important;
+            border-bottom-color: rgba(15,23,42,.2) !important;
+            transform: translateY(-1px) !important;
+          }
+
+          .theme-dark .imprint-header__back-btn {
+            background: rgba(11,18,32,.7) !important;
+            color: #e2e8f0 !important;
+            border-color: rgba(255,255,255,.08) !important;
+            border-bottom: 2px solid rgba(255,255,255,.15) !important;
+          }
+
+          .theme-dark .imprint-header__back-btn:hover {
+            background: rgba(11,18,32,.9) !important;
+            border-color: rgba(255,255,255,.12) !important;
+            border-bottom-color: rgba(255,255,255,.2) !important;
           }
 
           .imprint__title {
@@ -175,16 +193,6 @@ export default function Imprint() {
             border-bottom-color: var(--color-border-dark);
           }
 
-          .theme-dark .imprint-header__back-btn {
-            background: var(--color-bg-dark);
-            border-color: var(--color-border-dark);
-            color: var(--color-text-dark);
-          }
-
-          .theme-dark .imprint-header__back-btn:hover {
-            background: var(--color-bg-hover-dark);
-            border-color: var(--color-border-hover-dark);
-          }
         `}
       </style>
       

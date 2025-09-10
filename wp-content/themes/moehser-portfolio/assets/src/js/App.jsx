@@ -70,6 +70,9 @@ export default function App() {
       <>
         <Imprint />
         <Footer />
+        <SocialDock />
+        <SettingsGear />
+        <MobileMenu />
       </>
     );
   }
