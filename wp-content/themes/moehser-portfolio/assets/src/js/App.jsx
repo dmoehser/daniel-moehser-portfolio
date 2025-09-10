@@ -35,6 +35,49 @@ export default function App() {
   const { isFullscreenPreview, fullscreenProject } = FullscreenPreviewManager();
   const { projectOverlayUrl } = ProjectOverlayManager();
 
+  // Global keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Terminal shortcut: T key (works on all pages)
+      if (e.key.toLowerCase() === 't' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        // Only trigger if not typing in an input field
+        const activeElement = document.activeElement;
+        const isInputField = activeElement && (
+          activeElement.tagName === 'INPUT' ||
+          activeElement.tagName === 'TEXTAREA' ||
+          activeElement.contentEditable === 'true'
+        );
+        
+        if (!isInputField) {
+          e.preventDefault();
+          window.dispatchEvent(new Event('terminal:toggle'));
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Close terminal on page navigation
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      window.dispatchEvent(new Event('terminal:close'));
+    };
+
+    const handlePopState = () => {
+      window.dispatchEvent(new Event('terminal:close'));
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('popstate', handlePopState);
+    
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
   // Detect Safari and disable scroll-snap completely
   useEffect(() => {
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
@@ -142,6 +185,11 @@ export default function App() {
         <SocialDock />
         <SettingsGear />
         <MobileMenu />
+        
+        {/* Terminal overlay with smooth animations */}
+        <AnimatePresence>
+          {showTerminal && <Terminal key="terminal-overlay" />}
+        </AnimatePresence>
       </>
     );
   }

@@ -45,7 +45,12 @@ const scrollToSection = (sectionId) => {
 // Helper function to open imprint page
 const openImprint = () => {
   if (typeof window !== 'undefined') {
-    window.location.href = '/imprint';
+    // Close terminal before navigation
+    window.dispatchEvent(new Event('terminal:close'));
+    // Small delay to allow terminal to close before navigation
+    setTimeout(() => {
+      window.location.href = '/imprint';
+    }, 100);
   }
 };
 

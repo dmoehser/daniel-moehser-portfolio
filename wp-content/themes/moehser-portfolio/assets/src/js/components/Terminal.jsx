@@ -90,14 +90,19 @@ export default function Terminal() {
     return () => document.removeEventListener('keydown', onKey);
   }, [cmd, selIdx, actionableCount]);
 
+  // Handle Esc key to close terminal
   useEffect(() => {
-    const onEsc = (e) => { 
+    const handleEsc = (e) => {
       if (e.key === 'Escape') {
-        window.dispatchEvent(new Event('terminal:close')); 
+        e.preventDefault();
+        e.stopPropagation();
+        window.dispatchEvent(new Event('terminal:close'));
       }
     };
-    document.addEventListener('keydown', onEsc);
-    return () => document.removeEventListener('keydown', onEsc);
+
+    // Add listener with capture to ensure it works even when terminal is focused
+    document.addEventListener('keydown', handleEsc, true);
+    return () => document.removeEventListener('keydown', handleEsc, true);
   }, []);
 
   const xtermRef = useRef(null);
