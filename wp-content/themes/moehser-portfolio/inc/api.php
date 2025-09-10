@@ -181,6 +181,64 @@ add_action('rest_api_init', function () {
 			return rest_ensure_response(['success' => true, 'message' => 'Projects reordered successfully']);
 		},
 	]);
+
+	// Contact form endpoint
+	register_rest_route('moehser/v1', '/contact', [
+		'methods' => 'POST',
+		'permission_callback' => '__return_true',
+		'callback' => function ($request) {
+			$data = $request->get_json_params();
+			
+			// Validate required fields
+			$required_fields = ['name', 'email', 'subject', 'message'];
+			foreach ($required_fields as $field) {
+				if (empty($data[$field])) {
+					return new WP_Error('missing_field', "Field '{$field}' is required", ['status' => 400]);
+				}
+			}
+			
+			// Validate email
+			if (!is_email($data['email'])) {
+				return new WP_Error('invalid_email', 'Invalid email address', ['status' => 400]);
+			}
+			
+			// Verify reCAPTCHA (optional for now)
+			$recaptcha_token = $data['recaptchaToken'] ?? '';
+			if (!empty($recaptcha_token)) {
+				// TODO: Add reCAPTCHA verification
+				// For now, we'll just log it
+				error_log('reCAPTCHA token received: ' . substr($recaptcha_token, 0, 20) . '...');
+			}
+			
+			// Get recipient email from customizer
+			$recipient_email = get_theme_mod('moehser_social_email', 'hi@danielmoehser.dev');
+			
+			// Prepare email content
+			$subject = 'Portfolio Contact: ' . sanitize_text_field($data['subject']);
+			$message = "Name: " . sanitize_text_field($data['name']) . "\n";
+			$message .= "Email: " . sanitize_email($data['email']) . "\n";
+			$message .= "Subject: " . sanitize_text_field($data['subject']) . "\n\n";
+			$message .= "Message:\n" . sanitize_textarea_field($data['message']);
+			
+			$headers = [
+				'Content-Type: text/plain; charset=UTF-8',
+				'From: ' . sanitize_text_field($data['name']) . ' <' . sanitize_email($data['email']) . '>',
+				'Reply-To: ' . sanitize_email($data['email'])
+			];
+			
+			// Send email
+			$mail_sent = wp_mail($recipient_email, $subject, $message, $headers);
+			
+			if ($mail_sent) {
+				return rest_ensure_response([
+					'success' => true,
+					'message' => 'Message sent successfully'
+				]);
+			} else {
+				return new WP_Error('mail_failed', 'Failed to send email', ['status' => 500]);
+			}
+		},
+	]);
 });
 
 
