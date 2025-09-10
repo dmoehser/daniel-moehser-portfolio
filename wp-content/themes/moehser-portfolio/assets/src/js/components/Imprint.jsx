@@ -35,26 +35,8 @@ export default function Imprint() {
   const imprintTitle = typeof window !== 'undefined' ? (window.__IMPRINT_TITLE__ || 'Impressum') : 'Impressum';
   const imprintHTML = typeof window !== 'undefined' ? (window.__IMPRINT_HTML__ || '') : '';
 
-  // If no content is provided, show default content
-  const defaultContent = `
-    <h3>Angaben gemäß § 5 TMG</h3>
-    <p><strong>Daniel Moehser</strong><br>
-    [Ihre Adresse]<br>
-    [PLZ Ort]</p>
-    
-    <h3>Kontakt</h3>
-    <p>E-Mail: [Ihre E-Mail-Adresse]</p>
-    
-    <h3>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h3>
-    <p>Daniel Moehser<br>
-    [Ihre Adresse]<br>
-    [PLZ Ort]</p>
-    
-    <h3>Haftungsausschluss</h3>
-    <p>Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen.</p>
-  `;
-
-  const contentToShow = imprintHTML || defaultContent;
+  // If no content is provided, show empty string
+  const contentToShow = imprintHTML || '';
 
   // Back to home function
   const goBack = () => {
@@ -120,19 +102,21 @@ export default function Imprint() {
                   </motion.h1>
                 </motion.div>
 
-                <motion.div
-                  className="imprint__body section-body"
-                  initial={ANIMATION.SLIDE_UP.hidden}
-                  animate={ANIMATION.SLIDE_UP.show}
-                  transition={{ duration: ANIMATION.TIMING.BASE, delay: ANIMATION.TIMING.DELAY_LARGE }}
-                >
-                  <div className="imprint__text">
-                    <div 
-                      className="imprint__content-text" 
-                      dangerouslySetInnerHTML={{ __html: contentToShow }} 
-                    />
-                  </div>
-                </motion.div>
+                {contentToShow && (
+                  <motion.div
+                    className="imprint__body section-body"
+                    initial={ANIMATION.SLIDE_UP.hidden}
+                    animate={ANIMATION.SLIDE_UP.show}
+                    transition={{ duration: ANIMATION.TIMING.BASE, delay: ANIMATION.TIMING.DELAY_LARGE }}
+                  >
+                    <div className="imprint__text">
+                      <div 
+                        className="imprint__content-text" 
+                        dangerouslySetInnerHTML={{ __html: contentToShow }} 
+                      />
+                    </div>
+                  </motion.div>
+                )}
               </div>
             </motion.div>
           </div>
