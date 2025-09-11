@@ -110,8 +110,10 @@
   // ----------------------------------------
   a[href^="http"]:after {
     content: " (" attr(href) ")";
+    font-size: 7pt;
     font-weight: normal;
-    color: #444;
+    color: #667;
+    text-decoration: none;
   }
   .project-card__demo-btn:after,
   .hero__quick-btn:after,
