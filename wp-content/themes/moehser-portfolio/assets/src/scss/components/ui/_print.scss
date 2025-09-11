@@ -174,7 +174,11 @@
   }
   #projects .project-card--side-by-side .project-card__screenshot img { width: 100% !important; height: auto !important; object-fit: contain !important; }
   #projects .project-card__actions { display: none !important; }
-  #projects .print-project-heading { font-size: 18pt !important; margin: 0 0 8pt 0 !important; color: #000 !important; }
+  #projects .project-card__technologies { display: none !important; }
+  #projects .project-card__tags { display: none !important; }
+  #projects .print-project-heading { font-size: 11pt !important; margin: 0 0 4pt 0 !important; color: #000 !important; }
+  #projects .project-card__title { font-size: 10pt !important; margin: 0 0 4pt 0 !important; color: #000 !important; font-weight: bold !important; }
+  #projects .project-card__excerpt { font-size: 8pt !important; line-height: 1.2 !important; margin: 0 0 6pt 0 !important; color: #333 !important; }
 
   // Force-visible states for motion elements (when animations not run)
   // -----------------------------------------------------------------
