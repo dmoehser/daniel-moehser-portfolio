@@ -178,8 +178,8 @@
   #projects .project-card__title { font-size: 10pt !important; margin: 0 0 4pt 0 !important; color: #000 !important; font-weight: bold !important; }
   #projects .project-card__excerpt { font-size: 8pt !important; line-height: 1.2 !important; margin: 0 0 6pt 0 !important; color: #333 !important; }
 
-  // Force-visible states for motion elements (when animations not run)
-  // -----------------------------------------------------------------
+  // Force-visible states for print
+  // ------------------------------
   #hero, #skills, #about, #projects,
   #hero *, #skills *, #about *, #projects * {
     opacity: 1 !important;
