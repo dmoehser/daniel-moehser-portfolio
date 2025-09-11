@@ -123,6 +123,7 @@
   #about .about__card { break-inside: avoid-page; page-break-inside: avoid; }
   #about .about__content-text p { orphans: 3; widows: 3; }
   #about ul, #about ol { break-inside: avoid; page-break-inside: avoid; }
+  #about .about__cta { display: none !important; }
   #skills .skills__inner { height: auto !important; overflow: visible !important; }
   #skills .skills__viewport { height: auto !important; overflow: visible !important; }
 
