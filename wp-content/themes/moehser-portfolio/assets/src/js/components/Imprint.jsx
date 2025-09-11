@@ -455,9 +455,14 @@ export default function Imprint() {
               <a href="https://danielmoehser.dev" className="text-light" target="_blank" style={{textDecoration: 'none', fontFamily: 'monospace', fontWeight: 'bold'}}>
                 <span className="brand-bracket">&lt;</span><span className="brand-base">danielmoehser</span><span className="brand-accent">.dev</span><span className="brand-bracket"> /&gt;</span>
               </a>
-            </small>
-          </p>
-        </div>
+              </small>
+            </p>
+            <p className="mb-0 mt-1">
+              <small style={{color: '#64748b', fontSize: '0.75rem'}}>
+                No cookies used
+              </small>
+            </p>
+          </div>
       </div>
     </>
   );

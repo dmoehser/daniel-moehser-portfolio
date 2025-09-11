@@ -1079,6 +1079,11 @@ export default function Projects() {
                 </a>
               </small>
             </p>
+            <p className="mb-0 mt-1">
+              <small style={{color: '#64748b', fontSize: '0.75rem'}}>
+                No cookies used
+              </small>
+            </p>
           </div>
         </div>
       </div>

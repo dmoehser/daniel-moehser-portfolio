@@ -294,6 +294,16 @@
   // Dark mode colors are already defined in _hero.scss
 }
 
+// No cookies hint styling
+// -----------------------
+.imprint__credits small[style*="#64748b"] {
+  color: #64748b !important;
+}
+
+.theme-dark .imprint__credits small[style*="#64748b"] {
+  color: #94a3b8 !important;
+}
+
 // Mobile adjustments for imprint credits
 // -------------------------------------
 @media (max-width: 768px) {

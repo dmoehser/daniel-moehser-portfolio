@@ -1172,6 +1172,16 @@ body.theme-dark .project-card__demo-btn--secondary:hover {
   // Dark mode colors are already defined in _hero.scss
 }
 
+// No cookies hint styling
+// -----------------------
+.projects__credits small[style*="#64748b"] {
+  color: #64748b !important;
+}
+
+.theme-dark .projects__credits small[style*="#64748b"] {
+  color: #94a3b8 !important;
+}
+
 // Mobile adjustments for credits
 // ------------------------------
 @media (max-width: 768px) {
