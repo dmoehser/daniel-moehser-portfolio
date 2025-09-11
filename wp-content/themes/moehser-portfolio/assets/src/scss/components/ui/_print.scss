@@ -117,8 +117,8 @@
   .hero__quick-btn:after,
   .animated-border:after { content: none !important; }
 
-  // About section print tweaks
-  // --------------------------
+  // About section optimization
+  // ---------------------------
   #about .about__card { break-inside: avoid-page; page-break-inside: avoid; }
   #about .about__content-text p { orphans: 3; widows: 3; }
   #about ul, #about ol { break-inside: avoid; page-break-inside: avoid; }
@@ -187,11 +187,16 @@
     filter: none !important;
   }
 
-  // Skills tune
-  // -----------
+  // Skills section styling
+  // ----------------------
   #skills .skills__scrollbar,
   #skills .custom-scrollbar { display: none !important; }
-  #skills .skill-card { box-shadow: none !important; border-color: #ddd !important; }
+  #skills .skill-card { 
+    box-shadow: none !important; 
+    border-color: #ddd !important; 
+    break-inside: avoid-page; 
+    page-break-inside: avoid; 
+  }
   #skills .skills--adaptive .skills__top-row,
   #skills .skills--fixed .skills__top-row,
   #skills .skills__bottom-row { grid-template-columns: 1fr !important; gap: 12px !important; }
@@ -199,11 +204,4 @@
   #skills .skill-card--special { height: auto !important; max-height: none !important; }
   #skills .skill-card__description { line-clamp: unset !important; -webkit-line-clamp: unset !important; display: block !important; max-height: none !important; overflow: visible !important; text-overflow: initial !important; }
   #skills .skill-card__list { max-height: none !important; overflow: visible !important; }
-  #skills .skill-card { break-inside: avoid-page; page-break-inside: avoid; }
-
-  // Cards should not split across pages
-  // -----------------------------------
-  #skills .skill-card { break-inside: avoid-page; page-break-inside: avoid; }
 }
-
-
