@@ -50,7 +50,7 @@ export default function Imprint() {
 
   // Navigate back to home section
   const goBack = () => {
-    window.location.href = '/#';
+    window.location.href = '/#projects';
   };
 
   // Toggle contact form
