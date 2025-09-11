@@ -446,6 +446,18 @@ export default function Imprint() {
             </div>
           </section>
         </main>
+        
+        {/* Credits at bottom of page */}
+        <div className="imprint__credits">
+          <p className="mb-0 mt-2">
+            <small>
+              Created with ❤️ by{' '}
+              <a href="https://danielmoehser.dev" className="text-light" target="_blank" style={{textDecoration: 'none', fontFamily: 'monospace', fontWeight: 'bold'}}>
+                <span className="brand-bracket">&lt;</span><span className="brand-base">danielmoehser</span><span className="brand-accent">.dev</span><span className="brand-bracket"> /&gt;</span>
+              </a>
+            </small>
+          </p>
+        </div>
       </div>
     </>
   );
