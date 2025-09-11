@@ -613,6 +613,22 @@ export default function Projects() {
     fetchProjects();
   }, [isPrint]);
 
+  // Remove dark theme class when print is active
+  useEffect(() => {
+    if (isPrint) {
+      const body = document.body;
+      const originalClass = body.className;
+      
+      // Remove theme-dark class for print
+      body.classList.remove('theme-dark');
+      
+      // Restore original class when print is done
+      return () => {
+        body.className = originalClass;
+      };
+    }
+  }, [isPrint]);
+
   // When print is requested and data/images are ready, ensure DOM is painted, then trigger print
   useEffect(() => {
     let cancelled = false;
