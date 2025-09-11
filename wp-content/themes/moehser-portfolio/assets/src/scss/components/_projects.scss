@@ -1140,7 +1140,7 @@ body.theme-dark .project-card__demo-btn--secondary:hover {
 .projects__credits {
   text-align: center;
   margin-top: 2rem;
-  padding: 1rem 0;
+  padding: 1rem 0 0 0;
   
   p {
     margin: 0;
@@ -1177,7 +1177,7 @@ body.theme-dark .project-card__demo-btn--secondary:hover {
 @media (max-width: 768px) {
   .projects__credits {
     margin-top: 1.5rem;
-    padding: 0.75rem 0;
+    padding: 0.75rem 0 0 0;
     
     p {
       font-size: 0.75rem;
