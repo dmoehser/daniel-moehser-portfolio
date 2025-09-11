@@ -118,6 +118,18 @@
   .project-card__demo-btn:after,
   .hero__quick-btn:after,
   .animated-border:after { content: none !important; }
+  
+  // URLs in project descriptions with :before
+  // ----------------------------------------
+  #projects a[href^="http"]:before {
+    content: attr(href) " ";
+    font-size: 7pt;
+    font-weight: normal;
+    color: #667;
+    text-decoration: none;
+  }
+  #projects .project-card__demo-btn:before,
+  #projects .project-card__github-btn:before { content: none !important; }
 
   // About section optimization
   // ---------------------------
