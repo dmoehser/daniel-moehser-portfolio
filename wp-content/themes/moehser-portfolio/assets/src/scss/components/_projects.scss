@@ -1135,4 +1135,54 @@ body.theme-dark .project-card__demo-btn--secondary:hover {
   border-color: #4ade80 !important;
 }
 
+// Projects Credits
+// ----------------
+.projects__credits {
+  text-align: center;
+  margin-top: 2rem;
+  padding: 1rem 0;
+  
+  p {
+    margin: 0;
+    color: var(--color-text);
+    font-size: 0.875rem;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+  }
+  
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+    
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+// Dark mode support for credits
+// -----------------------------
+.theme-dark .projects__credits {
+  p {
+    color: var(--color-text-dark);
+  }
+  
+  // Credits use same brand classes as header logo
+  // Dark mode colors are already defined in _hero.scss
+}
+
+// Mobile adjustments for credits
+// ------------------------------
+@media (max-width: 768px) {
+  .projects__credits {
+    margin-top: 1.5rem;
+    padding: 0.75rem 0;
+    
+    p {
+      font-size: 0.75rem;
+    }
+  }
+}
+
 
