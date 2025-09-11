@@ -127,7 +127,7 @@
   #skills .skills__viewport { height: auto !important; overflow: visible !important; }
 
   // Projects: show all slides, stack vertically
-  // ------------------------------------------
+  // ------------------------------
   #projects .projects__nav-btn { display: none !important; }
   #projects .projects__header { display: none !important; }
   #projects .projects__grid { display: none !important; }
@@ -139,7 +139,7 @@
   }
 
   // Print stack (rendered outside slider in print mode)
-  // ---------------------------------------------------
+  // ------------------------------
   #projects .projects__print-stack {
     display: block !important;
     width: 100% !important;
