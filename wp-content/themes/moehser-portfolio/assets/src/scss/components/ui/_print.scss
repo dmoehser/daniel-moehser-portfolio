@@ -122,7 +122,7 @@
   // URLs in project descriptions with :before
   // ----------------------------------------
   #projects a[href^="http"]:before {
-    content: attr(href) " ";
+    content: " (" attr(href) ") ";
     font-size: 7pt;
     font-weight: normal;
     color: #667;
