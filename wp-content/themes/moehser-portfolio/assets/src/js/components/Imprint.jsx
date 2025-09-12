@@ -212,6 +212,36 @@ export default function Imprint() {
             margin-right: auto !important;
           }
 
+          /* Mobile optimizations */
+          @media (max-width: 768px) {
+            .imprint__inner {
+              padding: 0 0.75rem !important;
+              margin-left: 0 !important;
+              margin-right: 0 !important;
+            }
+            
+            .imprint__card {
+              padding: 1.5rem 1rem !important;
+              margin: 0 !important;
+            }
+            
+            .imprint__title {
+              font-size: 1.75rem !important;
+              margin-bottom: 1rem !important;
+            }
+            
+            .imprint__content-text h3 {
+              font-size: 1.1rem !important;
+              margin: 1.25rem 0 0.5rem 0 !important;
+            }
+            
+            .imprint__content-text p {
+              margin: 0.75rem 0 !important;
+              font-size: 0.9rem !important;
+              line-height: 1.5 !important;
+            }
+          }
+
           .imprint__content {
             width: 100% !important;
             max-width: 1000px !important;
@@ -273,6 +303,13 @@ export default function Imprint() {
             text-decoration: none !important;
             font-weight: 700 !important;
             transition: all 0.2s ease !important;
+          }
+
+          /* Hide back button on mobile */
+          @media (max-width: 768px) {
+            .imprint-header__back-btn {
+              display: none !important;
+            }
           }
 
           .imprint-header__back-btn:hover {

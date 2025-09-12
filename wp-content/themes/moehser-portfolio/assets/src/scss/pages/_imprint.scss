@@ -186,36 +186,39 @@
 @media (max-width: 768px) {
   .imprint-header {
     &__inner {
-      padding: 1rem;
+      padding: 0.75rem 1rem; // Reduced vertical padding
     }
     
     &__back-btn {
-      padding: 0.5rem 1rem;
-      font-size: 0.85rem;
-      
-      svg {
-        width: 14px;
-        height: 14px;
-      }
+      display: none !important; // Hide back button on mobile
     }
   }
   
   .imprint {
     &__inner {
-      padding: 0 1rem; // Match mobile header padding
+      padding: 0 0.75rem; // Reduced side padding for more content space
     }
     
     &__card {
-      padding: 2rem 1.5rem;
+      padding: 1.5rem 1rem; // Reduced padding to give more text space
+      margin: 0; // Remove any margins
     }
     
     &__title {
-      font-size: 2rem;
+      font-size: 1.75rem; // Slightly smaller title
+      margin-bottom: 1rem; // Reduced margin
     }
     
     &__content-text {
       h3 {
-        font-size: 1.25rem;
+        font-size: 1.1rem; // Smaller headings
+        margin: 1.25rem 0 0.5rem 0; // Reduced margins
+      }
+      
+      p {
+        margin: 0.75rem 0; // Reduced paragraph margins
+        font-size: 0.9rem; // Slightly smaller text for better fit
+        line-height: 1.5; // Tighter line height
       }
     }
   }
