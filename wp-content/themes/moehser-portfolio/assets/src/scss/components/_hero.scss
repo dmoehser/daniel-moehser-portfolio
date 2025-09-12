@@ -183,6 +183,13 @@
     z-index: 10000; // Ensure it's above all content
   }
   
+  // Dark mode mobile header
+  body.theme-dark .hero__brand {
+    background: rgba(30, 41, 59, 0.9);
+    border-bottom-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
+  }
+  
   // Improve hero section spacing on mobile
   .hero {
     padding: 62px 1.5rem 2rem 1.5rem; // Add top padding for ultra-compact header bar
