@@ -18,6 +18,8 @@ const SECTION_MAPPING = {
 
 export default function HeroQuickMenu() {
   const [menuItems, setMenuItems] = useState([]);
+  const [isDark, setIsDark] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   // Load WordPress menu for quick navigation pills
   useEffect(() => {
@@ -53,6 +55,33 @@ export default function HeroQuickMenu() {
     
     loadMenu();
     return () => { cancelled = true; };
+  }, []);
+
+  // Detect dark mode
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDark(document.body.classList.contains('theme-dark'));
+    };
+    
+    checkDarkMode();
+    
+    // Listen for theme changes
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    
+    return () => observer.disconnect();
+  }, []);
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   // Resolve section ID from href/title
@@ -133,12 +162,27 @@ export default function HeroQuickMenu() {
         const id = resolveSectionId(item.url, item.title);
         const label = item.title;
         
+        // Hide TypeScript on mobile devices
+        if (isMobile && label.toLowerCase().includes('typescript')) {
+          return null;
+        }
+        
         return (
           <a 
             key={item.id} 
             href={`/#${id || ''}`} 
             className="hero__quick-btn" 
             onClick={(e) => handleItemClick(e, id)}
+            style={{
+              background: isDark 
+                ? 'rgba(30,41,59,.95)' 
+                : 'linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.62))',
+              color: isDark ? '#e2e8f0' : '#0f172a',
+              borderColor: isDark ? 'rgba(255,255,255,.12)' : 'rgba(15,23,42,.10)',
+              boxShadow: isDark 
+                ? '0 8px 25px rgba(15,23,42,.15)'
+                : 'inset 0 1px 0 rgba(255,255,255,.7), 0 10px 30px rgba(15,23,42,.10), 0 1px 0 rgba(15,23,42,.06)'
+            }}
           >
             {label}
           </a>

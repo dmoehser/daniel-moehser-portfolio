@@ -23,6 +23,7 @@ export default function Hero() {
   const [h1Text, setH1Text] = useState('');
   const [pText, setPText] = useState('');
   const [isPrint, setIsPrint] = useState(false);
+  const [isDark, setIsDark] = useState(false);
 
   const fullH1 = 'Hello!';
   const name = 'Daniel Moehser';
@@ -35,7 +36,12 @@ export default function Hero() {
       return (
         <>
           {pText.slice(0, idx)}
-          <span className="hero__name">{name}</span>
+          <span 
+            className="hero__name" 
+            style={{ color: isDark ? '#38bdf8' : '#38bdf8' }}
+          >
+            {name}
+          </span>
           {pText.slice(idx + name.length)}
         </>
       );
@@ -60,6 +66,21 @@ export default function Hero() {
         if (mq && typeof mq.removeEventListener === 'function') mq.removeEventListener('change', e => setIsPrint(e.matches));
       }
     };
+  }, []);
+
+  // Detect dark mode
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDark(document.body.classList.contains('theme-dark'));
+    };
+    
+    checkDarkMode();
+    
+    // Listen for theme changes
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -128,24 +149,87 @@ export default function Hero() {
           </div>
           <div className="hero__copy">
             <div className="hero__code">
-              <span className="tag">&lt;h1&gt;</span>
-              <span className="type h1 hero__monospace">{h1Text}</span>
-              {stage < 2 && <span className="caret">|</span>}
-              <span className="tag">&lt;/h1&gt;</span>
+              <span 
+                className="tag" 
+                style={{ 
+                  background: isDark ? 'rgba(30,41,59,.95)' : 'rgba(15,23,42,.1)',
+                  color: isDark ? '#e2e8f0' : '#64748b',
+                  borderColor: isDark ? 'rgba(56,189,248,.3)' : 'rgba(15,23,42,.2)'
+                }}
+              >
+                &lt;h1&gt;
+              </span>
+              <span 
+                className="type h1 hero__monospace" 
+                style={{ color: isDark ? '#e2e8f0' : '#0f172a' }}
+              >
+                {h1Text}
+              </span>
+              {stage < 2 && (
+                <span 
+                  className="caret" 
+                  style={{ color: isDark ? '#e2e8f0' : '#0f172a' }}
+                >
+                  |
+                </span>
+              )}
+              <span 
+                className="tag" 
+                style={{ 
+                  background: isDark ? 'rgba(30,41,59,.95)' : 'rgba(15,23,42,.1)',
+                  color: isDark ? '#e2e8f0' : '#64748b',
+                  borderColor: isDark ? 'rgba(56,189,248,.3)' : 'rgba(15,23,42,.2)'
+                }}
+              >
+                &lt;/h1&gt;
+              </span>
             </div>
             <div className="hero__code">
-              <span className="tag">&lt;p&gt;</span>
-              <span className="type p hero__monospace">
+              <span 
+                className="tag" 
+                style={{ 
+                  background: isDark ? 'rgba(30,41,59,.95)' : 'rgba(15,23,42,.1)',
+                  color: isDark ? '#e2e8f0' : '#64748b',
+                  borderColor: isDark ? 'rgba(56,189,248,.3)' : 'rgba(15,23,42,.2)'
+                }}
+              >
+                &lt;p&gt;
+              </span>
+              <span 
+                className="type p hero__monospace"
+                style={{ color: isDark ? '#cbd5e1' : '#0f172a' }}
+              >
                 {renderParagraphText()}
               </span>
-              {stage === 2 && pText.length < fullP.length && <span className="caret">|</span>}
-              <span className="tag">&lt;/p&gt;</span>
+              {stage === 2 && pText.length < fullP.length && (
+                <span 
+                  className="caret" 
+                  style={{ color: isDark ? '#e2e8f0' : '#0f172a' }}
+                >
+                  |
+                </span>
+              )}
+              <span 
+                className="tag" 
+                style={{ 
+                  background: isDark ? 'rgba(30,41,59,.95)' : 'rgba(15,23,42,.1)',
+                  color: isDark ? '#e2e8f0' : '#64748b',
+                  borderColor: isDark ? 'rgba(56,189,248,.3)' : 'rgba(15,23,42,.2)'
+                }}
+              >
+                &lt;/p&gt;
+              </span>
             </div>
             
             <div className="hero__mobile-text">
-              <h1>Hello!</h1>
-              <p>
-                I'm <span className="hero__name">Daniel Moehser</span> — full‑stack web developer crafting reliable and elegant web experiences.
+              <h1 style={{ color: isDark ? '#e2e8f0' : '#0f172a' }}>Hello!</h1>
+              <p style={{ color: isDark ? '#94a3b8' : '#64748b' }}>
+                I'm <span 
+                  className="hero__name" 
+                  style={{ color: isDark ? '#38bdf8' : '#38bdf8' }}
+                >
+                  Daniel Moehser
+                </span> — full‑stack web developer crafting reliable and elegant web experiences.
               </p>
             </div>
           </div>

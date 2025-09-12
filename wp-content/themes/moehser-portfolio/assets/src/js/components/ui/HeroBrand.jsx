@@ -27,6 +27,8 @@ const BRAND = {
 export default function HeroBrand() {
   const [brandTyped, setBrandTyped] = useState('');
   const [isPrint, setIsPrint] = useState(false);
+  const [isDark, setIsDark] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   // Detect print mode: show full brand immediately for print
   useEffect(() => {
@@ -47,9 +49,43 @@ export default function HeroBrand() {
     };
   }, []);
 
-  // Type brand logo once on mount; respect prefers-reduced-motion and print
+  // Detect dark mode
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDark(document.body.classList.contains('theme-dark'));
+    };
+    
+    checkDarkMode();
+    
+    // Listen for theme changes
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    
+    return () => observer.disconnect();
+  }, []);
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Type brand logo once on mount; respect prefers-reduced-motion, print, and mobile
   useEffect(() => {
     if (isPrint) { setBrandTyped(BRAND.FULL); return; }
+    
+    // Skip typing animation on mobile devices
+    if (isMobile) {
+      setBrandTyped(BRAND.FULL);
+      return;
+    }
+    
     const prefersReducedMotion = typeof window !== 'undefined' && 
       window.matchMedia && 
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -67,7 +103,7 @@ export default function HeroBrand() {
     }, ANIMATION.TYPING_SPEED);
     
     return () => clearInterval(timer);
-  }, [isPrint]);
+  }, [isPrint, isMobile]);
 
   // Scroll to hero section
   const scrollTo = (id) => {
@@ -110,15 +146,40 @@ export default function HeroBrand() {
       >
         {isTypingComplete ? (
           <>
-            <span className="brand-bracket">{BRAND.BRACKETS.OPEN}</span>
-            <span className="brand-base">{BRAND.BASE}</span>
-            <span className="brand-accent">{BRAND.ACCENT}</span>
-            <span className="brand-bracket">{BRAND.BRACKETS.CLOSE}</span>
+            <span 
+              className="brand-bracket" 
+              style={{ color: isDark ? '#94a3b8' : '#94a3b8' }}
+            >
+              {BRAND.BRACKETS.OPEN}
+            </span>
+            <span 
+              className="brand-base" 
+              style={{ color: isDark ? '#e2e8f0' : '#0f172a' }}
+            >
+              {BRAND.BASE}
+            </span>
+            <span 
+              className="brand-accent" 
+              style={{ color: isDark ? '#38bdf8' : '#38bdf8' }}
+            >
+              {BRAND.ACCENT}
+            </span>
+            <span 
+              className="brand-bracket" 
+              style={{ color: isDark ? '#94a3b8' : '#94a3b8' }}
+            >
+              {BRAND.BRACKETS.CLOSE}
+            </span>
           </>
         ) : (
           <>
             {brandTyped}
-            <span className="brand-caret">|</span>
+            <span 
+              className="brand-caret" 
+              style={{ color: isDark ? '#e2e8f0' : '#0f172a' }}
+            >
+              |
+            </span>
           </>
         )}
       </a>
