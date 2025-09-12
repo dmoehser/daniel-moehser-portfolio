@@ -126,11 +126,16 @@ require_once get_theme_file_path('inc/api.php');
 require_once get_theme_file_path('inc/cpt-project.php'); // Step 1: Basic project functions activated
 require_once get_theme_file_path('inc/setup-projects.php'); // Activated: Creates example projects if none exist
 
+// Language detection and redirection
+require_once get_theme_file_path('inc/language-detection.php');
 
 // Setup default content
 
 // Theme Customizer (UI Settings)
 require_once get_theme_file_path('inc/customizer.php');
+
+// German Customizer Settings (only loads on DE subdomain)
+require_once get_theme_file_path('inc/customizer-de.php');
 
 // Page Meta Boxes (Footer Settings per Page)
 require_once get_theme_file_path('inc/page-meta-boxes.php');

@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import HeroQuickMenu from './ui/HeroQuickMenu.jsx';
 import HeroBrand from './ui/HeroBrand.jsx';
+import { useLanguage } from '../hooks/useLanguage.js';
 
 // Animation timing constants
 // ------------------------------
@@ -24,10 +25,14 @@ export default function Hero() {
   const [pText, setPText] = useState('');
   const [isPrint, setIsPrint] = useState(false);
   const [isDark, setIsDark] = useState(false);
+  const { isGerman, t } = useLanguage();
 
-  const fullH1 = 'Hello!';
+  // Language-specific content
+  const fullH1 = isGerman ? 'Hallo!' : 'Hello!';
   const name = 'Daniel Moehser';
-  const fullP = `I'm ${name} — full‑stack web developer crafting reliable and elegant web experiences.`;
+  const fullP = isGerman 
+    ? `Ich bin ${name} — Full‑Stack Webentwickler, der zuverlässige und elegante Web-Erfahrungen entwickelt.`
+    : `I'm ${name} — full‑stack web developer crafting reliable and elegant web experiences.`;
 
   // Extract complex text rendering logic
   const renderParagraphText = () => {
