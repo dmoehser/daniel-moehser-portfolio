@@ -7,6 +7,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import ContactForm from './ui/ContactForm';
+import HeroBrand from './ui/HeroBrand';
+import MobileMenu from './ui/MobileMenu';
 
 export default function Imprint() {
   // Get page content from WordPress
@@ -533,8 +535,14 @@ export default function Imprint() {
       </style>
       
       <div className="imprint-page">
-        {/* Header with logo and back button */}
-        <header className="imprint-header">
+        {/* Mobile Header */}
+        <HeroBrand />
+        
+        {/* Mobile Menu */}
+        <MobileMenu />
+        
+        {/* Desktop Header with back button */}
+        <header className="imprint-header desktop-only">
           <div className="imprint-header__inner">
             <div className="imprint-header__logo">
               <a href="/#" onClick={(e) => { e.preventDefault(); window.location.href = '/#'; }} className="imprint-header__logo-link">

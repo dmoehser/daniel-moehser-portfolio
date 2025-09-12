@@ -220,7 +220,18 @@ export default function MobileMenu() {
   const handleItemClick = (e, id) => {
     if (!id) return;
     e.preventDefault();
-    scrollTo(id);
+    
+    // Check if we're on the imprint page
+    const isImprintPage = window.location.pathname.includes('/imprint/');
+    
+    if (isImprintPage) {
+      // Redirect to main page with section hash
+      const url = id === SECTION_MAPPING.HOME ? '/#' : `/#${id}`;
+      window.location.href = url;
+    } else {
+      // Normal scroll behavior on main page
+      scrollTo(id);
+    }
   };
 
   // Use all menu items (no terminal filtering needed)
