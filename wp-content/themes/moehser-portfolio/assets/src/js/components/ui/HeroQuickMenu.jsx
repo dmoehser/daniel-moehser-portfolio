@@ -178,7 +178,6 @@ export default function HeroQuickMenu() {
                 ? 'rgba(30,41,59,.95)' 
                 : 'linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.62))',
               color: isDark ? '#e2e8f0' : '#0f172a',
-              borderColor: isDark ? 'rgba(255,255,255,.12)' : 'rgba(15,23,42,.10)',
               boxShadow: isDark 
                 ? '0 8px 25px rgba(15,23,42,.15)'
                 : 'inset 0 1px 0 rgba(255,255,255,.7), 0 10px 30px rgba(15,23,42,.10), 0 1px 0 rgba(15,23,42,.06)'
