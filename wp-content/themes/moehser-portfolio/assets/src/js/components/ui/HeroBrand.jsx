@@ -158,7 +158,7 @@ export default function HeroBrand() {
           <>
             <span 
               className="brand-bracket" 
-              style={{ color: isDark ? '#94a3b8' : '#94a3b8' }}
+              style={{ color: '#94a3b8' }}
             >
               {BRAND.BRACKETS.OPEN}
             </span>
@@ -176,7 +176,7 @@ export default function HeroBrand() {
             </span>
             <span 
               className="brand-bracket" 
-              style={{ color: isDark ? '#94a3b8' : '#94a3b8' }}
+              style={{ color: '#94a3b8' }}
             >
               {BRAND.BRACKETS.CLOSE}
             </span>
