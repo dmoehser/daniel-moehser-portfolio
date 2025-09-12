@@ -14,6 +14,9 @@ export default function Imprint() {
   const imprintHTML = typeof window !== 'undefined' ? (window.__IMPRINT_HTML__ || '') : '';
   const contentToShow = imprintHTML || '';
 
+  // Print mode state
+  const [isPrintMode, setIsPrintMode] = useState(false);
+
   // Contact form state
   const [isContactFormExpanded, setIsContactFormExpanded] = useState(false);
   const isExpandedRef = useRef(false);
@@ -48,6 +51,33 @@ export default function Imprint() {
 
   const processedContent = processImprintContent(contentToShow);
 
+  // Static print content
+  const printContent = `
+    <h2>Legal Notice</h2>
+    <p><strong>Daniel Moehser</strong><br>
+    Sydneystr. 8<br>
+    22297 Hamburg<br>
+    Germany</p>
+
+    <h3>Contact</h3>
+    <p>Email: hi@danielmoehser.dev</p>
+    <p>Website: danielmoehser.dev</p>
+    <h3>Responsible for content according to German law (§ 55 Abs. 2 RStV)</h3>
+    <p><strong>Daniel Moehser</strong><br>
+    Sydneystr. 8<br>
+    22297 Hamburg<br>
+    Germany</p>
+
+    <h3>Disclaimer</h3>
+    <p>The contents of my pages have been created with the utmost care. However, I cannot guarantee the accuracy, completeness and timeliness of the content.</p>
+
+    <h3>Privacy</h3>
+    <p>The use of my website is generally possible without providing personal data. If personal data (such as name, address or e-mail addresses) is collected on my pages, this is always done on a voluntary basis as far as possible.</p>
+
+    <h3>Copyright</h3>
+    <p>The content and works created by the site operators on these pages are subject to German copyright law. The reproduction, processing, distribution and any kind of exploitation outside the limits of copyright require the written consent of the respective author or creator.</p>
+  `;
+
   // Navigate back to home section
   const goBack = () => {
     window.location.href = '/#projects';
@@ -59,6 +89,26 @@ export default function Imprint() {
     setIsContactFormExpanded(newState);
     isExpandedRef.current = newState;
   };
+
+  // Print mode detection and content replacement
+  useEffect(() => {
+    const handleBeforePrint = () => {
+      setIsPrintMode(true);
+    };
+
+    const handleAfterPrint = () => {
+      setIsPrintMode(false);
+    };
+
+    // Listen for print events
+    window.addEventListener('beforeprint', handleBeforePrint);
+    window.addEventListener('afterprint', handleAfterPrint);
+
+    return () => {
+      window.removeEventListener('beforeprint', handleBeforePrint);
+      window.removeEventListener('afterprint', handleAfterPrint);
+    };
+  }, []);
 
   // Global function for onclick handler
   useEffect(() => {
@@ -382,6 +432,66 @@ export default function Imprint() {
             border-color: rgba(59, 130, 246, 0.4);
           }
 
+          /* Print mode styles */
+          @media print {
+            @page {
+              size: portrait;
+              margin: 15mm;
+            }
+            
+            .imprint-header,
+            .imprint__credits,
+            .contact-form-container,
+            .imprint-contact-section {
+              display: none !important;
+            }
+            
+            .imprint-page,
+            .imprint-main,
+            .imprint,
+            .imprint__inner,
+            .imprint__content,
+            .imprint__card {
+              height: auto !important;
+              min-height: auto !important;
+              max-height: none !important;
+            }
+            
+            .imprint__card {
+              background: white !important;
+              border: none !important;
+              box-shadow: none !important;
+              padding: 20px !important;
+            }
+            
+            .imprint__text {
+              color: black !important;
+            }
+            
+            .imprint__text h2 {
+              color: black !important;
+              font-size: 14pt !important;
+              margin: 16pt 0 8pt 0 !important;
+            }
+            
+            .imprint__text h3 {
+              color: black !important;
+              font-size: 12pt !important;
+              margin: 12pt 0 6pt 0 !important;
+            }
+            
+            .imprint__text p {
+              color: black !important;
+              font-size: 9pt !important;
+              line-height: 1.3 !important;
+              margin: 0 0 6pt 0 !important;
+            }
+            
+            .imprint__text strong {
+              font-weight: bold !important;
+            }
+          }
+
         `}
       </style>
       
@@ -431,16 +541,16 @@ export default function Imprint() {
                     </h1>
                   </div>
 
-                  {processedContent && (
-                    <div className="imprint__body">
-                      <div className="imprint__text">
-                        <div 
-                          className="imprint__content-text" 
-                          dangerouslySetInnerHTML={{ __html: processedContent }} 
-                        />
-                      </div>
+                  <div className="imprint__body">
+                    <div className="imprint__text">
+                      <div 
+                        className="imprint__content-text" 
+                        dangerouslySetInnerHTML={{ 
+                          __html: isPrintMode ? printContent : processedContent 
+                        }} 
+                      />
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
             </div>
