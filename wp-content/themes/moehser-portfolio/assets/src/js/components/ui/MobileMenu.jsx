@@ -156,6 +156,7 @@ export default function MobileMenu() {
     localStorage.setItem('theme', newTheme);
     document.documentElement.setAttribute('data-theme', newTheme);
     document.body.classList.toggle('theme-dark', newTheme === 'dark');
+    setIsOpen(false); // Close menu after theme change
   };
 
 
