@@ -23,6 +23,17 @@ add_action('init', function() {
     }
 });
 
+// Set custom title for imprint page
+add_action('template_redirect', function() {
+    if (strpos($_SERVER['REQUEST_URI'], '/imprint') !== false) {
+        add_filter('document_title_parts', function($title) {
+            $title['title'] = 'Imprint';
+            $title['site'] = get_bloginfo('name');
+            return $title;
+        });
+    }
+});
+
 // Client-side cleanup for customize_changeset_uuid - robust solution
 add_action('wp_head', function() {
     if (!is_customize_preview()) {
