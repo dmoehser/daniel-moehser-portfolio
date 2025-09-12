@@ -130,7 +130,17 @@ export default function HeroBrand() {
   // Handle brand link click
   const handleBrandClick = (e) => {
     e.preventDefault();
-    scrollTo('hero');
+    
+    // Check if we're on the imprint page
+    const isImprintPage = window.location.pathname.includes('/imprint/');
+    
+    if (isImprintPage) {
+      // Redirect to main page
+      window.location.href = '/';
+    } else {
+      // Normal scroll behavior on main page
+      scrollTo('hero');
+    }
   };
 
   // Check if typing animation is complete
