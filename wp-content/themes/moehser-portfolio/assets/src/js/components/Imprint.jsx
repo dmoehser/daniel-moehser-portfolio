@@ -536,10 +536,10 @@ export default function Imprint() {
       
       <div className="imprint-page">
         {/* Mobile Header */}
-        <HeroBrand />
-        
-        {/* Mobile Menu */}
-        <MobileMenu />
+        <div className="mobile-only">
+          <HeroBrand />
+          <MobileMenu />
+        </div>
         
         {/* Desktop Header with back button */}
         <header className="imprint-header desktop-only">
