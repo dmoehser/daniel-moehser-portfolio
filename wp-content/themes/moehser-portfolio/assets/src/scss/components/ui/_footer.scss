@@ -77,21 +77,7 @@
 // ------------------
 @media (max-width: 768px) {
   .site-footer {
-    &__content {
-      justify-content: center;
-      padding: 0.5rem 1rem;
-    }
-    
-    &__link {
-      padding: 12px 20px;
-      font-size: 0.9rem;
-    }
-  }
-  
-  .projects .site-footer {
-    position: absolute; // Not fixed, only visible in projects section
-    bottom: 20px; // Lower mobile position
-    right: 56px; // Position left of mobile Settings Gear (Settings Gear is 40px wide + 20px margin = 60px, but using 56px for better spacing)
+    display: none !important; // Hide footer on mobile - Imprint is now in hamburger menu
   }
 }
 

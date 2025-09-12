@@ -322,6 +322,20 @@ export default function MobileMenu() {
               </a>
             ))}
           </div>
+          
+          {/* Legal Section */}
+          <div className="mobile-menu__divider"></div>
+          <div className="mobile-menu__section">
+            <h3 className="mobile-menu__section-title">Legal</h3>
+            <a
+              href="/imprint/"
+              className="mobile-menu__action"
+              onClick={() => setIsOpen(false)}
+            >
+              <span className="mobile-menu__action-icon">📄</span>
+              <span className="mobile-menu__action-label">Imprint</span>
+            </a>
+          </div>
         </nav>
       </div>
     </div>
