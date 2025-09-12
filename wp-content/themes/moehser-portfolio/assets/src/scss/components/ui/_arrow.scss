@@ -138,6 +138,41 @@ body.theme-dark .hero-arrow__container:hover .hero-arrow__icon {
 // -----------------
 @media (max-width: 768px) {
   .hero-arrow {
-    display: none;
+    // Mobile-optimized arrow - smaller and more touch-friendly
+    bottom: 20px;
+    
+    .hero-arrow__container {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(15, 23, 42, 0.15);
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.2);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      animation: arrow-pulse 2.5s infinite;
+      
+      // Larger touch target
+      &::after {
+        inset: -8px;
+        border-width: 1.5px;
+        animation: pulse 2s ease-out infinite;
+      }
+    }
+    
+    .hero-arrow__icon {
+      width: 18px;
+      height: 18px;
+    }
+  }
+  
+  // Dark mode mobile
+  body.theme-dark .hero-arrow {
+    .hero-arrow__container {
+      background: rgba(30, 41, 59, 0.9);
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      animation: arrow-pulse-dark 2.5s infinite;
+    }
   }
 }
