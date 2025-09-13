@@ -89,10 +89,12 @@ add_action('rest_api_init', function () {
 						$title_de = isset($meta['project_title_de'][0]) ? $meta['project_title_de'][0] : '';
 						$content_de = isset($meta['project_content_de'][0]) ? $meta['project_content_de'][0] : '';
 						$excerpt_de = isset($meta['project_excerpt_de'][0]) ? $meta['project_excerpt_de'][0] : '';
+						$technologies_de = isset($meta['project_technologies_de'][0]) ? $meta['project_technologies_de'][0] : '';
 						
 						if (!empty($title_de)) $title = $title_de;
 						if (!empty($content_de)) $content = $content_de;
 						if (!empty($excerpt_de)) $excerpt = $excerpt_de;
+						if (!empty($technologies_de)) $meta['project_technologies'][0] = $technologies_de;
 					}
 					
 					$result[] = [
