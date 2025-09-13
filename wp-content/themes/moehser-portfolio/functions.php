@@ -25,7 +25,12 @@ add_action('init', function() {
 
 // Set custom title for imprint page
 add_action('template_redirect', function() {
-    if (strpos($_SERVER['REQUEST_URI'], '/imprint') !== false) {
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    $is_imprint_page = strpos($request_uri, '/imprint') !== false || 
+                       strpos($request_uri, '/de/imprint') !== false ||
+                       (is_page() && get_page_template_slug() === 'page-imprint.php');
+    
+    if ($is_imprint_page) {
         add_filter('document_title_parts', function($title) {
             $title['title'] = 'Imprint';
             $title['site'] = get_bloginfo('name');
@@ -36,13 +41,37 @@ add_action('template_redirect', function() {
         add_action('wp_head', function() {
             $business_email_subject = get_theme_mod('moehser_business_email_subject', 'Business Inquiry - Portfolio Contact');
             
+            // Load imprint content from customizer
+            $imprint_page_id = get_theme_mod('moehser_imprint_page_id', 0);
+            $imprint_title = 'Imprint';
+            $imprint_content = '';
+            
+            if ($imprint_page_id > 0) {
+                $imprint_page = get_post($imprint_page_id);
+                if ($imprint_page) {
+                    $imprint_title = $imprint_page->post_title;
+                    $imprint_content = apply_filters('the_content', $imprint_page->post_content);
+                }
+            }
+            
             echo '<script>
-            window.__IMPRINT_TITLE__ = "Imprint";
-            window.__IMPRINT_HTML__ = "";
+            window.__IMPRINT_TITLE__ = ' . wp_json_encode($imprint_title) . ';
+            window.__IMPRINT_HTML__ = ' . wp_json_encode($imprint_content) . ';
             window.__BUSINESS_EMAIL_SUBJECT__ = ' . json_encode($business_email_subject) . ';
             </script>';
         });
     }
+});
+
+// Force imprint page template assignment
+add_filter('page_template', function($template) {
+    if (is_page() && (strpos(get_permalink(), '/imprint') !== false || strpos(get_permalink(), '/de/imprint') !== false)) {
+        $imprint_template = get_theme_file_path('page-imprint.php');
+        if (file_exists($imprint_template)) {
+            return $imprint_template;
+        }
+    }
+    return $template;
 });
 
 // Client-side cleanup for customize_changeset_uuid - robust solution
