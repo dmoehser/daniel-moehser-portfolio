@@ -45,6 +45,11 @@ export default function Terminal() {
   const [selIdx, setSelIdx] = useState(-1); // selection in output lines (actionable)
   const data = COMMANDS[cmd] || COMMANDS.help;
 
+  // Debug: Log language detection
+  useEffect(() => {
+    console.log('Terminal Language Debug:', { isGerman, path: window.location.pathname });
+  }, [isGerman]);
+
   useEffect(() => {
     const saved = localStorage.getItem('terminal_cmd');
     if (saved && COMMANDS[saved]) setCmd(saved);
@@ -145,8 +150,11 @@ export default function Terminal() {
     const history = [];
     let histIdx = -1;
 
-    // Welcome - language specific
-    if (isGerman) {
+    // Welcome - language specific (fallback to direct URL check)
+    const isGermanDirect = window.location.pathname.includes('/de/');
+    const useGerman = isGerman || isGermanDirect;
+    
+    if (useGerman) {
       term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}╭─────────────────────────────────────────╮${TERMINAL_CONFIG.COLORS.RESET}`);
       term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}│  Willkommen bei daniel@portfolio shell  │${TERMINAL_CONFIG.COLORS.RESET}`);
       term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}│  Interaktives Portfolio Terminal         │${TERMINAL_CONFIG.COLORS.RESET}`);
