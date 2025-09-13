@@ -8,7 +8,19 @@
 get_header(); ?>
 
 <!-- Load main CSS for imprint page -->
-<link rel="stylesheet" href="<?php echo get_theme_file_uri('assets/dist/assets/main-5231a2aa.css'); ?>" type="text/css" media="all" />
+<?php
+// Load CSS dynamically from manifest
+$manifest_path = get_theme_file_path('assets/dist/manifest.json');
+if (file_exists($manifest_path)) {
+    $manifest = json_decode(file_get_contents($manifest_path), true);
+    $entry = $manifest['assets/src/js/main.jsx'] ?? null;
+    if ($entry && !empty($entry['css']) && is_array($entry['css'])) {
+        foreach ($entry['css'] as $cssFile) {
+            echo '<link rel="stylesheet" href="' . get_theme_file_uri('assets/dist/' . $cssFile) . '" type="text/css" media="all" />' . "\n";
+        }
+    }
+}
+?>
 
 <div id="react-root">
     <!-- React will mount here -->

@@ -28,7 +28,10 @@ import React, { useEffect } from 'react';
 
 export default function App() {
   // Check if we're on the imprint page - check immediately, not in useEffect
-  const isImprintPage = typeof window !== 'undefined' ? window.location.pathname.includes('/imprint') : false;
+  const isImprintPage = typeof window !== 'undefined' ? 
+    (window.location.pathname.includes('/imprint') || 
+     window.location.pathname.includes('/de/imprint') ||
+     document.body.classList.contains('page-template-page-imprint')) : false;
   
   // Initialize all feature managers
   const { showTerminal } = TerminalManager();
