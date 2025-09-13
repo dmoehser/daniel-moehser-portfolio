@@ -577,7 +577,14 @@ export default function Imprint() {
         <header className="imprint-header desktop-only">
           <div className="imprint-header__inner">
             <div className="imprint-header__logo">
-              <a href="/#" onClick={(e) => { e.preventDefault(); window.location.href = '/#'; }} className="imprint-header__logo-link">
+              <a 
+                href={window.location.pathname.includes('/de/') ? '/de/#' : '/#'} 
+                onClick={(e) => { 
+                  e.preventDefault(); 
+                  window.location.href = window.location.pathname.includes('/de/') ? '/de/#' : '/#'; 
+                }} 
+                className="imprint-header__logo-link"
+              >
                 <span style={{color: '#94a3b8'}}>&lt;</span>
                 <span style={{color: '#0f172a'}}>danielmoehser</span>
                 <span style={{color: '#38bdf8'}}>.dev</span>

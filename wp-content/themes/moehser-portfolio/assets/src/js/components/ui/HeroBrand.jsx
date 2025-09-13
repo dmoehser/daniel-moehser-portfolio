@@ -122,8 +122,10 @@ export default function HeroBrand() {
       behavior: 'smooth' 
     });
     
-    // Update URL without try-catch (not critical)
-    const url = id === 'hero' ? '/#' : `/#${id}`;
+    // Update URL with language-specific path
+    const isGerman = window.location.pathname.includes('/de/');
+    const basePath = isGerman ? '/de' : '';
+    const url = id === 'hero' ? `${basePath}/#` : `${basePath}/#${id}`;
     window.history.replaceState(null, '', url);
   };
 
@@ -133,10 +135,12 @@ export default function HeroBrand() {
     
     // Check if we're on the imprint page
     const isImprintPage = window.location.pathname.includes('/imprint/');
+    const isGerman = window.location.pathname.includes('/de/');
     
     if (isImprintPage) {
-      // Redirect to main page
-      window.location.href = '/';
+      // Redirect to main page with language-specific path
+      const basePath = isGerman ? '/de' : '';
+      window.location.href = `${basePath}/#`;
     } else {
       // Normal scroll behavior on main page
       scrollTo('hero');
@@ -146,10 +150,14 @@ export default function HeroBrand() {
   // Check if typing animation is complete
   const isTypingComplete = isPrint || brandTyped.length >= BRAND.FULL.length;
 
+  // Get language-specific href
+  const isGerman = window.location.pathname.includes('/de/');
+  const brandHref = isGerman ? '/de/#' : '/#';
+
   return (
     <div className="hero__brand">
       <a 
-        href="/#" 
+        href={brandHref}
         className="hero__brand-link" 
         aria-label="danielmoehser.dev home" 
         onClick={handleBrandClick}
