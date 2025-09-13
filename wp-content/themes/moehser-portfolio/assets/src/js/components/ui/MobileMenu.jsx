@@ -6,6 +6,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { getMailtoUrl } from '../../utils/emailHelper.js';
+import { useLanguage } from '../../hooks/useLanguage.js';
 
 // Section mapping constants
 // ------------------------------
@@ -23,6 +24,7 @@ export default function MobileMenu() {
   const [isDark, setIsDark] = useState(false);
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
+  const { isGerman, switchLanguage } = useLanguage();
 
   // Check if we're on mobile
   useEffect(() => {
@@ -50,14 +52,16 @@ export default function MobileMenu() {
     
     async function loadMenu() {
       try {
-        let res = await fetch('/wp-json/moehser/v1/menu/header_primary');
+        // Use language-specific API URL
+        const apiUrl = isGerman ? '/de/wp-json/moehser/v1/menu/header_primary' : '/wp-json/moehser/v1/menu/header_primary';
+        let res = await fetch(apiUrl);
         let data;
         const contentType = res.headers.get('content-type') || '';
         
         if (res.ok && contentType.includes('application/json')) {
           data = await res.json();
         } else {
-          const fallbackUrl = '/index.php?rest_route=/moehser/v1/menu/header_primary';
+          const fallbackUrl = isGerman ? '/de/index.php?rest_route=/moehser/v1/menu/header_primary' : '/index.php?rest_route=/moehser/v1/menu/header_primary';
           res = await fetch(fallbackUrl);
           if (!res.ok) throw new Error('Menu REST API failed');
           data = await res.json();
@@ -76,7 +80,7 @@ export default function MobileMenu() {
     
     loadMenu();
     return () => { cancelled = true; };
-  }, []);
+  }, [isGerman]);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -204,7 +208,8 @@ export default function MobileMenu() {
       behavior: 'smooth' 
     });
     
-    const url = id === SECTION_MAPPING.HOME ? '/#' : `/#${id}`;
+    const basePath = isGerman ? '/de' : '';
+    const url = id === SECTION_MAPPING.HOME ? `${basePath}/#` : `${basePath}/#${id}`;
     window.history.replaceState(null, '', url);
     
     try {
@@ -226,7 +231,8 @@ export default function MobileMenu() {
     
     if (isImprintPage) {
       // Redirect to main page with section hash
-      const url = id === SECTION_MAPPING.HOME ? '/#' : `/#${id}`;
+      const basePath = isGerman ? '/de' : '';
+      const url = id === SECTION_MAPPING.HOME ? `${basePath}/#` : `${basePath}/#${id}`;
       window.location.href = url;
     } else {
       // Normal scroll behavior on main page
@@ -280,14 +286,15 @@ export default function MobileMenu() {
             return (
               <a 
                 key={item.id} 
-                href={`/#${id || ''}`} 
+                href={`${isGerman ? '/de' : ''}/#${id || ''}`} 
                 className="mobile-menu__link" 
                 onClick={(e) => {
                   e.preventDefault();
                   // Close mobile menu first
                   handleItemClick(e, id);
                   // Clean URL and navigate without page reload
-                  const cleanUrl = window.location.origin + `/#${id || ''}`;
+                  const basePath = isGerman ? '/de' : '';
+                  const cleanUrl = window.location.origin + `${basePath}/#${id || ''}`;
                   window.history.replaceState({}, '', cleanUrl);
                 }}
               >
@@ -299,7 +306,7 @@ export default function MobileMenu() {
           {/* Settings Section */}
           <div className="mobile-menu__divider"></div>
           <div className="mobile-menu__section">
-            <h3 className="mobile-menu__section-title">Settings</h3>
+            <h3 className="mobile-menu__section-title">{isGerman ? 'Einstellungen' : 'Settings'}</h3>
             <button
               className="mobile-menu__action"
               onClick={toggleTheme}
@@ -309,6 +316,20 @@ export default function MobileMenu() {
               </span>
               <span className="mobile-menu__action-label">
                 {isDark ? 'Light Mode' : 'Dark Mode'}
+              </span>
+            </button>
+            <button
+              className="mobile-menu__action"
+              onClick={() => {
+                switchLanguage();
+                setIsOpen(false);
+              }}
+            >
+              <span className="mobile-menu__action-icon">
+                {isGerman ? '🇬🇧' : '🇩🇪'}
+              </span>
+              <span className="mobile-menu__action-label">
+                {isGerman ? 'English' : 'German'}
               </span>
             </button>
           </div>
@@ -338,14 +359,14 @@ export default function MobileMenu() {
           {/* Legal Section */}
           <div className="mobile-menu__divider"></div>
           <div className="mobile-menu__section">
-            <h3 className="mobile-menu__section-title">Legal</h3>
+            <h3 className="mobile-menu__section-title">{isGerman ? 'Rechtliches' : 'Legal'}</h3>
             <a
-              href="/imprint/"
+              href={isGerman ? "/de/imprint/" : "/imprint/"}
               className="mobile-menu__action"
               onClick={() => setIsOpen(false)}
             >
               <span className="mobile-menu__action-icon">📄</span>
-              <span className="mobile-menu__action-label">Imprint</span>
+              <span className="mobile-menu__action-label">{isGerman ? 'Impressum' : 'Imprint'}</span>
             </a>
           </div>
         </nav>

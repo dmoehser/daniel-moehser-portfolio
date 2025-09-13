@@ -12,14 +12,25 @@ add_action('rest_api_init', function () {
 		'callback' => function ($request) {
 			$location = sanitize_key($request['location']);
 			
-			// Get menu locations from current site
+			// Detect language from request
+			$is_german = false;
+			$referer = $request->get_header('referer');
+			if ($referer && strpos($referer, '/de/') !== false) {
+				$is_german = true;
+			}
+			
+			// Try language-specific menu location first
+			$language_specific_location = $is_german ? $location . '_de' : $location . '_en';
 			$locations = get_nav_menu_locations();
 			
-			if (!isset($locations[$location])) {
+			// Use language-specific menu if available, otherwise fallback to default
+			$menu_location = isset($locations[$language_specific_location]) ? $language_specific_location : $location;
+			
+			if (!isset($locations[$menu_location])) {
 				return new WP_Error('menu_not_found', 'Menu location not found', ['status' => 404]);
 			}
 			
-			$menu_id = $locations[$location];
+			$menu_id = $locations[$menu_location];
 			$items = wp_get_nav_menu_items($menu_id) ?: [];
 			
 			$result = array_map(function ($item) {
