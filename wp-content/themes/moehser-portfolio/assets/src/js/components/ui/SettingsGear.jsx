@@ -171,8 +171,10 @@ export default function SettingsGear() {
           </div>
           
           <button
-            className="settings-gear__option"
-            onClick={togglePerformance}
+            className={`settings-gear__option ${metrics.isSafari ? 'settings-gear__option--disabled' : ''}`}
+            onClick={metrics.isSafari ? undefined : togglePerformance}
+            title={metrics.isSafari ? (isGerman ? 'Nicht für Safari unterstützt' : 'Not supported on Safari') : ''}
+            disabled={metrics.isSafari}
           >
             <span className="settings-gear__icon">📊</span>
             <span className="settings-gear__label">Performance</span>
@@ -212,7 +214,18 @@ export default function SettingsGear() {
           </div>
           
           <div className="settings-gear__performance-metrics">
-            <div className="settings-gear__metric">
+            {metrics.isSafari ? (
+              <div style={{padding: '20px', textAlign: 'center', color: '#f59e0b', background: 'rgba(245, 158, 11, 0.1)', borderRadius: '8px', border: '1px solid rgba(245, 158, 11, 0.2)'}}>
+                <p style={{margin: '0', fontSize: '14px'}}>
+                  {isGerman 
+                    ? '⚠️ Performance-Metriken werden in Safari nicht unterstützt - Messungen sind dort unzuverlässig'
+                    : '⚠️ Performance metrics not supported on Safari - measurements are unreliable there'
+                  }
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="settings-gear__metric">
               <div className="settings-gear__metric-info">
                 <span className="settings-gear__metric-label">LCP:</span>
                 <span className="settings-gear__metric-tooltip">Largest Contentful Paint - Time until the largest element loads</span>
@@ -224,11 +237,11 @@ export default function SettingsGear() {
             
             <div className="settings-gear__metric">
               <div className="settings-gear__metric-info">
-                <span className="settings-gear__metric-label">INP:</span>
-                <span className="settings-gear__metric-tooltip">Interaction to Next Paint - Time from user interaction to visual response</span>
+                <span className="settings-gear__metric-label">FID:</span>
+                <span className="settings-gear__metric-tooltip">First Input Delay - Time from first user interaction to browser response</span>
               </div>
-              <span className={`settings-gear__metric-value ${metrics.inp && metrics.inp > 200 ? 'warning' : 'good'}`}>
-                {metrics.inp ? `${Math.round(metrics.inp)}ms` : 'No interaction yet'}
+              <span className={`settings-gear__metric-value ${metrics.fid && metrics.fid > 100 ? 'warning' : 'good'}`}>
+                {metrics.fid ? `${Math.round(metrics.fid)}ms` : 'No interaction yet'}
               </span>
             </div>
             
@@ -251,6 +264,8 @@ export default function SettingsGear() {
                 {metrics.loadedImages}/{metrics.imageCount}
               </span>
             </div>
+              </>
+            )}
           </div>
         </div>
       )}
