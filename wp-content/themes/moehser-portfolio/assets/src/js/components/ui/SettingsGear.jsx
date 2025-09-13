@@ -151,17 +151,24 @@ export default function SettingsGear() {
             </span>
           </button>
           
-          <button
-            className="settings-gear__option"
-            onClick={switchLanguage}
-          >
-            <span className="settings-gear__icon">
-              {isGerman ? '🇬🇧' : '🇩🇪'}
-            </span>
-            <span className="settings-gear__label">
-              {isGerman ? 'Switch to English' : 'Auf Deutsch wechseln'}
-            </span>
-          </button>
+          <div className="settings-gear__section">
+            <div className="settings-gear__section-header">
+              <span className="settings-gear__section-title">
+                {isGerman ? 'Sprache' : 'Language'}
+              </span>
+            </div>
+            <button
+              className="settings-gear__option"
+              onClick={switchLanguage}
+            >
+              <span className="settings-gear__icon">
+                {isGerman ? '🇬🇧' : '🇩🇪'}
+              </span>
+              <span className="settings-gear__label">
+                {isGerman ? 'English' : 'German'}
+              </span>
+            </button>
+          </div>
           
           <button
             className="settings-gear__option"

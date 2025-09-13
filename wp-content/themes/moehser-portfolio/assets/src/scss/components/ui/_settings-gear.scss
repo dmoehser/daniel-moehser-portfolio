@@ -105,6 +105,30 @@
   line-height: 1.2;
 }
 
+// Section grouping
+.settings-gear__section {
+  margin: 4px 0;
+  
+  &:not(:last-child) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+  }
+}
+
+.settings-gear__section-header {
+  padding: 8px 16px 4px 16px;
+}
+
+.settings-gear__section-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1;
+}
+
 // Animation for menu appearance
 @keyframes settingsMenuFadeIn {
   0% {
@@ -333,6 +357,16 @@ body.theme-dark {
       background: rgba(59, 130, 246, 0.15);
       color: #e2e8f0;
     }
+  }
+  
+  .settings-gear__section {
+    &:not(:last-child) {
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+  
+  .settings-gear__section-title {
+    color: #94a3b8;
   }
   
   .settings-gear__performance-panel {
