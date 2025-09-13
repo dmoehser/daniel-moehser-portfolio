@@ -39,25 +39,31 @@ const usePerformanceMonitor = () => {
   const measureLCPFallback = () => {
     if (typeof window === 'undefined' || !window.performance) return;
     
-    const navigation = performance.getEntriesByType('navigation')[0];
-    if (!navigation) return;
-    
-    const lcpEntries = performance.getEntriesByType('largest-contentful-paint');
-    if (lcpEntries.length > 0) {
-      const latestLCP = lcpEntries[lcpEntries.length - 1];
-      setMetrics(prev => ({ ...prev, lcp: latestLCP.startTime }));
-      return;
-    }
-    
-    const loadTime = navigation.loadEventEnd - navigation.navigationStart;
-    if (loadTime > 0) {
-      setMetrics(prev => ({ ...prev, lcp: loadTime }));
-      return;
-    }
-    
-    const domContentLoaded = navigation.domContentLoadedEventEnd - navigation.navigationStart;
-    if (domContentLoaded > 0) {
-      setMetrics(prev => ({ ...prev, lcp: domContentLoaded }));
+    try {
+      const navigation = performance.getEntriesByType('navigation')[0];
+      if (!navigation) return;
+      
+      // Use load timing as LCP fallback
+      const loadTime = navigation.loadEventEnd - navigation.navigationStart;
+      if (loadTime > 0) {
+        setMetrics(prev => ({ ...prev, lcp: loadTime }));
+        return;
+      }
+      
+      // Fallback to DOMContentLoaded timing
+      const domContentLoaded = navigation.domContentLoadedEventEnd - navigation.navigationStart;
+      if (domContentLoaded > 0) {
+        setMetrics(prev => ({ ...prev, lcp: domContentLoaded }));
+      }
+    } catch (error) {
+      // Ignore deprecated API warnings - fallback to timing API
+      const timing = performance.timing;
+      if (timing) {
+        const loadTime = timing.loadEventEnd - timing.navigationStart;
+        if (loadTime > 0) {
+          setMetrics(prev => ({ ...prev, lcp: loadTime }));
+        }
+      }
     }
   };
 
