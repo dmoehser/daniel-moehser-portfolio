@@ -111,7 +111,8 @@ export default function Imprint() {
   const goBack = () => {
     const isGerman = window.location.pathname.includes('/de/');
     const basePath = isGerman ? '/de' : '';
-    window.location.href = `${basePath}/#`;
+    const targetSection = isGerman ? 'projects' : 'hero';
+    window.location.href = `${basePath}/#${targetSection}`;
   };
 
   // Toggle contact form
