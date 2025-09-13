@@ -51,7 +51,7 @@ export default function Imprint() {
             <span class="contact-form__toggle-icon">📧</span>
             <span class="contact-form__toggle-text">Kontaktformular</span>
           </button>
-          <div class="contact-form__wrapper" id="imprint-contact-form-wrapper" style="display: none;">
+          <div class="contact-form__wrapper" id="imprint-contact" style="display: none;">
             <!-- Contact form will be rendered here -->
           </div>
         </div>
@@ -67,7 +67,7 @@ export default function Imprint() {
             <span class="contact-form__toggle-icon">📧</span>
             <span class="contact-form__toggle-text">Contact Form</span>
           </button>
-          <div class="contact-form__wrapper" id="imprint-contact-form-wrapper" style="display: none;">
+          <div class="contact-form__wrapper" id="imprint-contact" style="display: none;">
             <!-- Contact form will be rendered here -->
           </div>
         </div>
@@ -200,7 +200,7 @@ export default function Imprint() {
   // Render contact form in the container after content is processed
   useEffect(() => {
     const renderContactForm = () => {
-      const wrapper = document.getElementById('imprint-contact-form-wrapper');
+      const wrapper = document.getElementById('imprint-contact');
       const toggleButton = document.getElementById('imprint-contact-toggle');
       
       if (wrapper && toggleButton) {
@@ -248,6 +248,14 @@ export default function Imprint() {
 
   return (
     <>
+      <nav id="imprint-navigation" className="sr-only">
+        <h2>Navigation</h2>
+        <ul>
+          <li><a href="#imprint-content">Skip to main content</a></li>
+          <li><a href="#imprint-contact">Skip to contact form</a></li>
+        </ul>
+      </nav>
+      
       <style>
         {`
           /* Force left alignment with highest priority */
@@ -616,7 +624,7 @@ export default function Imprint() {
         `}
       </style>
       
-      <div className="imprint-page">
+      <div className="imprint-page" id="imprint-content">
         {/* Mobile Header */}
         <div className="mobile-only">
           <HeroBrand />

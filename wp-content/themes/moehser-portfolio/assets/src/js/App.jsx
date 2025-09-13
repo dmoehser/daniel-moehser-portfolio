@@ -25,6 +25,7 @@ import FullscreenPreview from './components/ui/FullscreenPreview.jsx';
 import Footer from './components/ui/Footer.jsx';
 import { AnimatePresence } from 'framer-motion';
 import React, { useEffect } from 'react';
+import { SkipLink } from './features/accessibility/AccessibilityUtils.jsx';
 
 export default function App() {
   // Check if we're on the imprint page - check immediately, not in useEffect
@@ -183,6 +184,10 @@ export default function App() {
   if (isImprintPage) {
     return (
       <>
+        {/* Skip Links for Imprint Page */}
+        <SkipLink href="#imprint-content">Skip to main content</SkipLink>
+        <SkipLink href="#imprint-navigation">Skip to navigation</SkipLink>
+        
         <Imprint />
         <SocialDock />
         <SettingsGear />
@@ -198,6 +203,12 @@ export default function App() {
 
   return (
     <>
+      {/* Skip Links for Main Page */}
+      <SkipLink href="#hero">Skip to hero section</SkipLink>
+      <SkipLink href="#skills">Skip to skills section</SkipLink>
+      <SkipLink href="#about">Skip to about section</SkipLink>
+      <SkipLink href="#projects">Skip to projects section</SkipLink>
+      
       {/* Background navigation service */}
       <ArrowNavigation 
         projectOverlayUrl={projectOverlayUrl} 
