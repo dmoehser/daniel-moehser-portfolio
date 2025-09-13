@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Minimal REST endpoints consumed by the React app.
+ * REST API endpoints for React frontend
  */
 
 add_action('rest_api_init', function () {
-	// Simple menu endpoint - just get current site's menu
+	// Menu endpoint
 	register_rest_route('moehser/v1', '/menu/(?P<location>[a-z_\-]+)', [
 		'methods' => 'GET',
 		'permission_callback' => '__return_true',
@@ -37,7 +37,7 @@ add_action('rest_api_init', function () {
 		},
 	]);
 
-	// Endpoint for projects
+	// Projects endpoint
 	register_rest_route('moehser/v1', '/projects', [
 		'methods' => 'GET',
 		'permission_callback' => '__return_true',
@@ -113,7 +113,7 @@ add_action('rest_api_init', function () {
 		},
 	]);
 
-	// Endpoint for single project
+	// Single project endpoint
 	register_rest_route('moehser/v1', '/projects/(?P<id>\d+)', [
 		'methods' => 'GET',
 		'permission_callback' => '__return_true',
@@ -153,7 +153,7 @@ add_action('rest_api_init', function () {
 		},
 	]);
 
-	// Endpoint for reordering projects
+	// Project reordering endpoint
 	register_rest_route('moehser/v1', '/projects/reorder', [
 		'methods' => 'POST',
 		'permission_callback' => function () {
@@ -183,12 +183,12 @@ add_action('rest_api_init', function () {
 		},
 	]);
 
-	// Language-specific content endpoint
+	// Content endpoint
 	register_rest_route('moehser/v1', '/content', [
 		'methods' => 'GET',
 		'permission_callback' => '__return_true',
 		'callback' => function ($request) {
-			// Get content from customizer
+			// Get customizer content
 			$content = [
 				'language' => 'en',
 				'about' => [
@@ -208,7 +208,7 @@ add_action('rest_api_init', function () {
 				]
 			];
 			
-			// Add skills cards
+			// Skills cards
 			$skills_cards = [];
 			for ($i = 1; $i <= 5; $i++) {
 				$card_id = "card{$i}";
@@ -234,7 +234,7 @@ add_action('rest_api_init', function () {
 				$data = $request->get_json_params();
 				
 				
-				// Validate required fields
+				// Validate fields
 				$required_fields = ['name', 'email', 'subject', 'message'];
 				foreach ($required_fields as $field) {
 					if (empty($data[$field])) {
@@ -247,26 +247,26 @@ add_action('rest_api_init', function () {
 					return new WP_Error('invalid_email', 'Invalid email address', ['status' => 400]);
 				}
 				
-				// Verify reCAPTCHA (optional for now)
+				// Verify reCAPTCHA
 				$recaptcha_token = $data['recaptchaToken'] ?? '';
 				
-				// Get recipient email from customizer (Social email setting)
+				// Get recipient email
 				$recipient_email = get_theme_mod('moehser_social_email', 'hi@danielmoehser.dev');
 				
-				// Prepare email content
+				// Email content
 				$name = sanitize_text_field($data['name']);
 				$email = sanitize_email($data['email']);
 				$subject = sanitize_text_field($data['subject']);
 				$message = sanitize_textarea_field($data['message']);
 				
-				// Email headers
+				// Headers
 				$headers = [
 					'Content-Type: text/html; charset=UTF-8',
 					'From: ' . $name . ' <' . $email . '>',
 					'Reply-To: ' . $email
 				];
 				
-				// Email content
+				// Content
 				$email_content = "
 					<h3>New Contact Form Submission</h3>
 					<p><strong>Name:</strong> {$name}</p>
@@ -276,10 +276,10 @@ add_action('rest_api_init', function () {
 					<p>{$message}</p>
 				";
 				
-				// Get email subject from customizer
+				// Email subject
 				$email_subject = get_theme_mod('moehser_email_subject', 'Portfolio Contact - New Inquiry');
 				
-				// Send email
+				// Send
 				$email_sent = wp_mail($recipient_email, $email_subject . ': ' . $subject, $email_content, $headers);
 				
 				if ($email_sent) {

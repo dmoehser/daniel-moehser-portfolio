@@ -478,9 +478,9 @@ export default function Projects() {
 
   // Determine default view based on layout mode
   const getDefaultView = () => {
-    if (layoutMode === 'list') return true; // list mode defaults to list view
-    if (layoutMode === 'grid') return false; // grid mode defaults to grid view
-    return false; // side_by_side mode doesn't use view toggle
+    if (layoutMode === 'list') return true;
+    if (layoutMode === 'grid') return false;
+    return false;
   };
 
   useEffect(() => {
@@ -546,14 +546,14 @@ export default function Projects() {
     };
   }, []);
 
-  // Listen for terminal layout commands
+  // Terminal layout commands
   useEffect(() => {
     const handleLayoutChange = (event) => {
       const { layout } = event.detail;
       if (layout === 'grid') {
-        updateListView(false); // Grid view = listView = false
+        updateListView(false);
       } else if (layout === 'list') {
-        updateListView(true); // List view = listView = true
+        updateListView(true);
       }
     };
 
@@ -566,7 +566,7 @@ export default function Projects() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        // Use the correct API URL for the current site
+        // Dynamic API URL for multisite setup
         const apiUrl = window.location.pathname.startsWith('/de/') 
           ? '/de/wp-json/moehser/v1/projects'
           : '/wp-json/moehser/v1/projects';
@@ -577,13 +577,11 @@ export default function Projects() {
         }
         const data = await response.json();
         
-        // Always show only active projects (including print mode)
+        // Filter active projects only
         const filteredProjects = data.filter(project => project.project_status === 'active');
-        
-        // Keep API order (date DESC)
         setProjects(filteredProjects);
 
-        // Preload main images early so Print has them ready
+        // Preload images for print mode
         try {
           const urls = filteredProjects
             .map(p => p.featured_image_wide_2x || p.featured_image_wide || p.project_screenshot || p.featured_image)
@@ -618,23 +616,20 @@ export default function Projects() {
     fetchProjects();
   }, [isPrint]);
 
-  // Remove dark theme class when print is active
+  // Remove dark theme for print
   useEffect(() => {
     if (isPrint) {
       const body = document.body;
       const originalClass = body.className;
       
-      // Remove theme-dark class for print
       body.classList.remove('theme-dark');
-      
-      // Restore original class when print is done
       return () => {
         body.className = originalClass;
       };
     }
   }, [isPrint]);
 
-  // When print is requested and data/images are ready, ensure DOM is painted, then trigger print
+  // Trigger print when ready
   useEffect(() => {
     let cancelled = false;
     const triggerPrint = async () => {
@@ -647,7 +642,7 @@ export default function Projects() {
     return () => { cancelled = true; };
   }, [isPrint, printReady, projects.length]);
 
-  // Auto-play functionality
+  // Autoplay functionality
   useEffect(() => {
     if (!autoplay || projects.length <= 1 || isPaused || reducedMotion || isPrint) {
       return;
@@ -656,9 +651,9 @@ export default function Projects() {
     const autoplayTimer = setInterval(() => {
       setCurrentSlide((prevSlide) => {
         if (prevSlide >= projects.length - 1) {
-          return 0; // Go back to first project
+          return 0;
         } else {
-          return prevSlide + 1; // Go to next project
+          return prevSlide + 1;
         }
       });
     }, Math.max(1, autoplayDelay) * 1000);
@@ -676,10 +671,9 @@ export default function Projects() {
     };
   }, [autoplay, autoplayDelay, projects.length, currentSlide, isPaused, reducedMotion, isPrint]);
 
-  // Keyboard navigation for projects
+  // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // Only handle arrow keys when projects are loaded and there are multiple projects
       if (projects.length <= 1) return;
       
       if (e.key === 'ArrowLeft') {
@@ -691,10 +685,7 @@ export default function Projects() {
       }
     };
 
-    // Add event listener
     window.addEventListener('keydown', handleKeyDown);
-
-    // Cleanup
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
@@ -710,7 +701,7 @@ export default function Projects() {
     setShouldFocusOnSlide(true);
   };
 
-  // Focus newly active slide title for accessibility
+  // Focus slide title for accessibility
   useEffect(() => {
     if (shouldFocusOnSlide && currentSlideTitleRef.current) {
       currentSlideTitleRef.current.focus();
@@ -718,7 +709,7 @@ export default function Projects() {
     }
   }, [shouldFocusOnSlide, currentSlide]);
 
-  // Touch swipe handlers (horizontal)
+  // Touch swipe handlers
   const onTouchStart = (e) => {
     if (isPrint || projects.length <= 1) return;
     const t = e.touches && e.touches[0] ? e.touches[0] : null;
@@ -733,7 +724,6 @@ export default function Projects() {
     if (!t) return;
     const dx = t.clientX - touchStartRef.current.x;
     const dy = t.clientY - touchStartRef.current.y;
-    // If horizontal intent is clear, prevent vertical scroll jank
     if (Math.abs(dx) > TOUCH.SCROLL_THRESHOLD && Math.abs(dx) > Math.abs(dy) * TOUCH.INTENT_RATIO) {
       e.preventDefault();
     }
@@ -748,8 +738,8 @@ export default function Projects() {
     const dy = t.clientY - touchStartRef.current.y;
     const dt = Date.now() - touchStartRef.current.time;
     const horizontal = Math.abs(dx) > Math.abs(dy) * TOUCH.INTENT_RATIO;
-    const fastEnough = dt < TOUCH.MAX_TIME; // Swipe should be reasonably quick
-    const farEnough = Math.abs(dx) > TOUCH.MIN_DISTANCE; // Minimum distance
+    const fastEnough = dt < TOUCH.MAX_TIME;
+    const farEnough = Math.abs(dx) > TOUCH.MIN_DISTANCE;
     if (horizontal && fastEnough && farEnough) {
       if (dx < 0 && currentSlide < projects.length - 1) {
         goToNextSlide();
@@ -772,17 +762,15 @@ export default function Projects() {
           });
           window.dispatchEvent(event);
         } catch (error) {
-          // Fallback to new window if fullscreen fails
           window.open(project.project_url_external, '_blank');
         }
       } else {
-        // Open in new window for external mode
         window.open(project.project_url_external, '_blank');
       }
     }
   };
 
-  // Early returns for different states
+  // State handlers
   if ((loading && !isPrint) || (isPrint && (!printReady || loading))) {
     return (
       <ProjectsLoading 
@@ -814,7 +802,7 @@ export default function Projects() {
     );
   }
 
-  // Grid mode render (simple): image + title + excerpt, no tags/CTAs
+  // Grid mode render
   const renderGrid = () => (
     <div className="projects__grid">
       {projects.map((p) => (
@@ -834,7 +822,7 @@ export default function Projects() {
       <div className="projects__inner section-inner">
         <div className="projects__content section-content">
           <div className="projects__card section-card">
-            {/* Toggle buttons positioned in top-right of card */}
+            {/* View toggle buttons */}
             <div className="projects__view-toggle">
               {(layoutMode === 'grid' || layoutMode === 'list') && showViewToggle && (
                 listView ? (
@@ -889,9 +877,7 @@ export default function Projects() {
               </motion.div>
             )}
 
-            {
-              /* Always render print stack hidden; print CSS will show it */
-            }
+            {/* Print stack - hidden by default */}
             <div className={`projects__body section-body projects__body--layout-${layoutMode}`}>
               <div className="projects__print-stack" style={{ display: 'none' }}>
                 {projects.map((proj, idx) => (
@@ -970,7 +956,7 @@ export default function Projects() {
                 viewport={{ once: true }}
                 className={`projects__body section-body projects__body--layout-${layoutMode}`}
               >
-                {/* Left Navigation Arrow */}
+                {/* Left navigation arrow */}
                 {projects.length > 1 && (
                   <button 
                     className="projects__nav-btn projects__nav-btn--prev"
@@ -1000,7 +986,7 @@ export default function Projects() {
                   onBlur={() => setIsPaused(false)}
                 >
                   <div className="projects__slider-container">
-                    {/* Live region for announcing slide changes */}
+                    {/* Live region for slide changes */}
                     {!isPrint && projects.length > 0 && (
                       <div
                         aria-live="polite"
@@ -1073,7 +1059,7 @@ export default function Projects() {
                   </div>
                 </div>
 
-                {/* Right Navigation Arrow */}
+                {/* Right navigation arrow */}
                 {projects.length > 1 && (
                   <button 
                     className="projects__nav-btn projects__nav-btn--next"
@@ -1090,7 +1076,7 @@ export default function Projects() {
             )}
           </div>
           
-          {/* Credits below projects card */}
+          {/* Credits */}
           <div className="projects__credits">
             <p className="mb-0 mt-2">
               <small>
@@ -1109,7 +1095,7 @@ export default function Projects() {
         </div>
       </div>
       
-      {/* Footer at end of Projects section */}
+      {/* Footer */}
       <Footer show={true} />
     </section>
   );
