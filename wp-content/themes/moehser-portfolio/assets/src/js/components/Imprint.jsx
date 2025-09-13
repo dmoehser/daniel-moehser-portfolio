@@ -406,13 +406,23 @@ export default function Imprint() {
             border-bottom-color: rgba(255,255,255,.2) !important;
           }
 
-          .imprint__title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--color-text);
-            margin: 0 0 1.5rem 0;
-            line-height: 1.2;
-          }
+            .imprint__title {
+              font-size: 2.5rem;
+              font-weight: 700;
+              color: var(--color-text);
+              margin: 0 0 1.5rem 0;
+              line-height: 1.2;
+            }
+            
+            /* Ensure title is black in print mode */
+            @media print {
+              .imprint__title {
+                color: black !important;
+                font-size: 18pt !important;
+                font-weight: bold !important;
+                margin: 0 0 12pt 0 !important;
+              }
+            }
 
           .imprint__text {
             color: var(--color-text);
