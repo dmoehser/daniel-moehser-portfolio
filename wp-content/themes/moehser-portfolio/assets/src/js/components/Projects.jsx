@@ -10,6 +10,7 @@ import githubIcon from '../../img/github.svg';
 import viewGridIcon from '../../img/view-grid.svg';
 import viewListIcon from '../../img/view-list.svg';
 import Footer from './ui/Footer.jsx';
+import { useLanguage } from '../hooks/useLanguage';
 
 // Utilities
 // ---------
@@ -403,6 +404,9 @@ const ProjectsEmpty = ({ projectsTitle, projectsSubtitle, hasSubtitle }) => (
 );
 
 export default function Projects() {
+  // Language detection
+  const { isGerman } = useLanguage();
+  
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -1081,7 +1085,7 @@ export default function Projects() {
             <p className="mb-0 mt-2">
               <small>
                 Created with ❤️ by{' '}
-                <a href="https://danielmoehser.dev" className="text-light" target="_blank" style={{textDecoration: 'none', fontFamily: 'monospace', fontWeight: 'bold'}}>
+                <a href={isGerman ? "https://danielmoehser.dev/de/" : "https://danielmoehser.dev"} className="text-light" target="_blank" style={{textDecoration: 'none', fontFamily: 'monospace', fontWeight: 'bold'}}>
                   <span className="brand-bracket">&lt;</span><span className="brand-base">danielmoehser</span><span className="brand-accent">.dev</span><span className="brand-bracket"> /&gt;</span>
                 </a>
               </small>
