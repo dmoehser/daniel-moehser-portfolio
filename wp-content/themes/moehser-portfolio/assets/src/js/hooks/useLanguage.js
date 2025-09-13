@@ -1,9 +1,6 @@
 // Language Detection Hook
 // ======================
 
-// Custom hook for language detection and content switching
-// --------------------------------------------------------
-
 import { useState, useEffect } from 'react';
 
 export function useLanguage() {
@@ -13,13 +10,13 @@ export function useLanguage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Detect current language from window object or URL
+    // Detect language from URL path
     const detectLanguage = () => {
-      const host = window.location.host;
-      const isGermanSubdomain = host.includes('de.localhost') || host.includes('de.');
+      const path = window.location.pathname;
+      const isGermanPath = path.includes('/de/');
       
-      setLanguage(isGermanSubdomain ? 'de' : 'en');
-      setIsGerman(isGermanSubdomain);
+      setLanguage(isGermanPath ? 'de' : 'en');
+      setIsGerman(isGermanPath);
     };
 
     detectLanguage();
@@ -79,15 +76,11 @@ export function useLanguage() {
   const getSwitchUrl = () => {
     const currentUrl = window.location.href;
     if (isGerman) {
-      // Switch from German to English
-      return currentUrl
-        .replace('de.localhost:8080', 'localhost:8080')
-        .replace('de.danielmoehser.dev', 'danielmoehser.dev');
+      // Switch from localized to main site
+      return currentUrl.replace('/de/', '/');
     } else {
-      // Switch from English to German
-      return currentUrl
-        .replace('localhost:8080', 'de.localhost:8080')
-        .replace('danielmoehser.dev', 'de.danielmoehser.dev');
+      // Switch from main to localized site
+      return currentUrl.replace(/(\/|$)/, '/de$1');
     }
   };
 
