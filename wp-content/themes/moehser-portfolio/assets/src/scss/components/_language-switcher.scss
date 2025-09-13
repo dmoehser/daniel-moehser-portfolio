@@ -1,0 +1,131 @@
+// Language Switcher Styles
+// ========================
+
+// Language switching component styles
+// -----------------------------------
+
+.language-switcher {
+  position: relative;
+  display: inline-block;
+  
+  &__button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+    
+    &:focus {
+      outline: 2px solid #38bdf8;
+      outline-offset: 2px;
+    }
+  }
+  
+  &__flag {
+    font-size: 1.125rem;
+    line-height: 1;
+  }
+  
+  &__text {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  
+  &__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+// Loading spinner
+// ---------------
+.loading-spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top: 2px solid #38bdf8;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Dark mode support
+// -----------------
+@media (prefers-color-scheme: dark) {
+  .language-switcher {
+    &__button {
+      background: rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.1);
+      
+      &:hover {
+        background: rgba(0, 0, 0, 0.5);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+    }
+  }
+}
+
+// Responsive design
+// -----------------
+@media (max-width: 768px) {
+  .language-switcher {
+    &__button {
+      padding: 0.375rem 0.75rem;
+      font-size: 0.8125rem;
+    }
+    
+    &__flag {
+      font-size: 1rem;
+    }
+  }
+}
+
+// Header integration
+// -----------------
+.header {
+  .language-switcher {
+    margin-left: auto;
+    margin-right: 1rem;
+  }
+}
+
+// Mobile menu integration
+// ----------------------
+.mobile-menu {
+  .language-switcher {
+    margin: 1rem 0;
+    text-align: center;
+    
+    &__button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}

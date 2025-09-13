@@ -7,6 +7,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import gearIcon from '../../../img/settings-gear.svg';
 import { usePerformanceMonitor } from '../../features/performance/PerformanceMonitor.jsx';
+import { useLanguage } from '../../hooks/useLanguage.js';
 
 export default function SettingsGear() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,6 +17,7 @@ export default function SettingsGear() {
   const buttonRef = useRef(null);
   const performanceRef = useRef(null);
   const metrics = usePerformanceMonitor();
+  const { isGerman, switchLanguage } = useLanguage();
 
   useEffect(() => {
     // Check current theme
@@ -146,6 +148,18 @@ export default function SettingsGear() {
             </span>
             <span className="settings-gear__label">
               {isDark ? 'Light Mode' : 'Dark Mode'}
+            </span>
+          </button>
+          
+          <button
+            className="settings-gear__option"
+            onClick={switchLanguage}
+          >
+            <span className="settings-gear__icon">
+              {isGerman ? '🇬🇧' : '🇩🇪'}
+            </span>
+            <span className="settings-gear__label">
+              {isGerman ? 'Switch to English' : 'Auf Deutsch wechseln'}
             </span>
           </button>
           

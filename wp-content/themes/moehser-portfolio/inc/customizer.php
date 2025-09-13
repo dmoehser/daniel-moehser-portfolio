@@ -190,6 +190,54 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'type' => 'url',
     ]);
 
+    // About CTA Email Subject
+    $wp_customize->add_setting('moehser_about_cta_subject', [
+        'default' => '',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport' => 'postMessage',
+    ]);
+    $wp_customize->add_control('moehser_about_cta_subject', [
+        'label' => __('CTA Email Subject', 'moehser-portfolio'),
+        'description' => __('Subject line for CTA email (when using mailto: URL)', 'moehser-portfolio'),
+        'section' => 'moehser_about',
+        'type' => 'text',
+    ]);
+
+    // Hero Section
+    $wp_customize->add_section('moehser_hero', [
+        'title' => __('Hero Section', 'moehser-portfolio'),
+        'description' => __('Configure the hero section content', 'moehser-portfolio'),
+        'priority' => 25,
+    ]);
+
+
+    // Hero Title
+    $wp_customize->add_setting('moehser_hero_title', [
+        'default' => '',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport' => 'postMessage',
+    ]);
+    $wp_customize->add_control('moehser_hero_title', [
+        'label' => __('Hero Title', 'moehser-portfolio'),
+        'description' => __('Main title for the hero section', 'moehser-portfolio'),
+        'section' => 'moehser_hero',
+        'type' => 'text',
+    ]);
+
+    // Hero Subtitle
+    $wp_customize->add_setting('moehser_hero_subtitle', [
+        'default' => '',
+        'sanitize_callback' => 'sanitize_textarea_field',
+        'transport' => 'postMessage',
+    ]);
+    $wp_customize->add_control('moehser_hero_subtitle', [
+        'label' => __('Hero Subtitle', 'moehser-portfolio'),
+        'description' => __('Subtitle text for the hero section', 'moehser-portfolio'),
+        'section' => 'moehser_hero',
+        'type' => 'textarea',
+    ]);
+
+
     // Imprint content source page
     $wp_customize->add_setting('moehser_imprint_page_id', [
         'default' => 0,
@@ -295,6 +343,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     $wp_customize->add_setting('moehser_skills_title', [
         'default' => __('Skills', 'moehser-portfolio'),
         'sanitize_callback' => 'wp_kses_post',
+        'transport' => 'postMessage',
     ]);
     $wp_customize->add_control('moehser_skills_title', [
         'label' => __('Skills Section Title', 'moehser-portfolio'),
@@ -307,6 +356,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     $wp_customize->add_setting('moehser_skills_subtitle', [
         'default' => __('Technologies & tools I work with', 'moehser-portfolio'),
         'sanitize_callback' => 'wp_kses_post',
+        'transport' => 'postMessage',
     ]);
     $wp_customize->add_control('moehser_skills_subtitle', [
         'label' => __('Skills Section Subtitle', 'moehser-portfolio'),
@@ -327,7 +377,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'section' => 'moehser_skills',
         'type' => 'select',
         'choices' => [
-            'fixed_grid' => __('Fixed Grid 3+2 arrangement (deprecated)', 'moehser-portfolio'),
+            'fixed_grid' => __('Fixed Grid 3+2 arrangement', 'moehser-portfolio'),
             'adaptive_grid' => __('Adaptive Grid (responsive layout)', 'moehser-portfolio'),
         ],
     ]);
@@ -669,9 +719,17 @@ add_action('wp_head', function () {
     $about_cta_enabled = get_theme_mod('moehser_about_cta_enabled', 0);
     $about_cta_text = get_theme_mod('moehser_about_cta_text', '');
     $about_cta_url = get_theme_mod('moehser_about_cta_url', '');
+    $about_cta_subject = get_theme_mod('moehser_about_cta_subject', '');
     echo 'window.__ABOUT_CTA_ENABLED__ = ' . ($about_cta_enabled ? 'true' : 'false') . ';';
     echo 'window.__ABOUT_CTA_TEXT__ = "' . esc_js($about_cta_text) . '";';
     echo 'window.__ABOUT_CTA_URL__ = "' . esc_js($about_cta_url) . '";';
+    echo 'window.__ABOUT_CTA_SUBJECT__ = "' . esc_js($about_cta_subject) . '";';
+    
+    // Hero Settings to frontend
+    $hero_title = get_theme_mod('moehser_hero_title', '');
+    $hero_subtitle = get_theme_mod('moehser_hero_subtitle', '');
+    echo 'window.__HERO_TITLE__ = "' . esc_js($hero_title) . '";';
+    echo 'window.__HERO_SUBTITLE__ = "' . esc_js($hero_subtitle) . '";';
     
     // Imprint Settings to frontend
     $imprint_page_id = get_theme_mod('moehser_imprint_page_id', 0);

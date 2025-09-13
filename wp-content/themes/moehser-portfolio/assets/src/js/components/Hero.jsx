@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import HeroQuickMenu from './ui/HeroQuickMenu.jsx';
 import HeroBrand from './ui/HeroBrand.jsx';
+import { useLanguage } from '../hooks/useLanguage.js';
 
 // Animation timing constants
 // ------------------------------
@@ -24,10 +25,14 @@ export default function Hero() {
   const [pText, setPText] = useState('');
   const [isPrint, setIsPrint] = useState(false);
   const [isDark, setIsDark] = useState(false);
-
-  const fullH1 = 'Hello!';
+  // Get customizer values from WordPress
+  const heroTitle = typeof window !== 'undefined' ? (window.__HERO_TITLE__ || '') : '';
+  const heroSubtitle = typeof window !== 'undefined' ? (window.__HERO_SUBTITLE__ || '') : '';
+  
+  // Extract name from subtitle for highlighting
   const name = 'Daniel Moehser';
-  const fullP = `I'm ${name} — full‑stack web developer crafting reliable and elegant web experiences.`;
+  const fullH1 = heroTitle;
+  const fullP = heroSubtitle;
 
   // Extract complex text rendering logic
   const renderParagraphText = () => {
@@ -37,8 +42,7 @@ export default function Hero() {
         <>
           {pText.slice(0, idx)}
           <span 
-            className="hero__name" 
-            style={{ color: isDark ? '#38bdf8' : '#38bdf8' }}
+            className="hero__name"
           >
             {name}
           </span>
@@ -222,14 +226,9 @@ export default function Hero() {
             </div>
             
             <div className="hero__mobile-text">
-              <h1 style={{ color: isDark ? '#e2e8f0' : '#0f172a' }}>Hello!</h1>
+              <h1 style={{ color: isDark ? '#e2e8f0' : '#0f172a' }}>{fullH1}</h1>
               <p style={{ color: isDark ? '#94a3b8' : '#64748b' }}>
-                I'm <span 
-                  className="hero__name" 
-                  style={{ color: isDark ? '#38bdf8' : '#38bdf8' }}
-                >
-                  Daniel Moehser
-                </span> — full‑stack web developer crafting reliable and elegant web experiences.
+                {renderParagraphText()}
               </p>
             </div>
           </div>

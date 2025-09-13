@@ -39,14 +39,16 @@ export default function About() {
   const aboutCtaEnabled = typeof window !== 'undefined' ? (window.__ABOUT_CTA_ENABLED__ || false) : false;
   const aboutCtaText = typeof window !== 'undefined' ? (window.__ABOUT_CTA_TEXT__ || '') : '';
   const aboutCtaUrl = typeof window !== 'undefined' ? (window.__ABOUT_CTA_URL__ || '') : '';
+  const aboutCtaSubject = typeof window !== 'undefined' ? (window.__ABOUT_CTA_SUBJECT__ || '') : '';
 
   // Helper function to get the correct URL for CTA button
   const getCtaUrl = () => {
     if (!aboutCtaUrl) return '';
     
-    // If it's a mailto URL, use the global email helper to include subject
-    if (aboutCtaUrl.startsWith('mailto:')) {
-      return getMailtoUrl();
+    // If it's a mailto URL, add subject if available
+    if (aboutCtaUrl.startsWith('mailto:') && aboutCtaSubject) {
+      const separator = aboutCtaUrl.includes('?') ? '&' : '?';
+      return `${aboutCtaUrl}${separator}subject=${encodeURIComponent(aboutCtaSubject)}`;
     }
     
     // For all other URLs, use the original URL
