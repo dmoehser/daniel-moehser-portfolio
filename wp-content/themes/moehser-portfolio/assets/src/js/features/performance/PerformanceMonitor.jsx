@@ -5,20 +5,33 @@
 // ------------------------------
 
 import React, { useEffect, useState } from 'react';
+import { useLanguage } from '../../hooks/useLanguage';
 
 // Performance monitoring configuration
 // ------------------------------
 const PERFORMANCE_CONFIG = {
-  // Core Web Vitals thresholds
-  LCP_THRESHOLD: 2500,    // Largest Contentful Paint (ms)
-  INP_THRESHOLD: 200,     // Interaction to Next Paint (ms) - modern metric
-  CLS_THRESHOLD: 0.1,     // Cumulative Layout Shift
+  // Core Web Vitals thresholds (updated 2024 standards)
+  LCP_THRESHOLD: 2500,    // Largest Contentful Paint (ms) - Good: <2.5s
+  INP_THRESHOLD: 200,     // Interaction to Next Paint (ms) - Good: <200ms
+  CLS_THRESHOLD: 0.1,     // Cumulative Layout Shift - Good: <0.1
+  FID_THRESHOLD: 100,     // First Input Delay (ms) - Good: <100ms
   
-  // Performance budgets
-  IMAGE_SIZE_LIMIT: 200,   // KB per image
+  // Performance budgets (image limits removed - no warnings needed)
   
   // Monitoring intervals
   MONITOR_INTERVAL: 1000,  // ms
+  IMAGE_UPDATE_INTERVAL: 500, // ms - more frequent for live updates
+  
+  // Real-time monitoring
+  ENABLE_LIVE_UPDATES: true,
+  VISIBILITY_CHECK_INTERVAL: 2000, // ms
+};
+
+// Safari detection utility
+// ------------------------
+const isSafari = () => {
+  if (typeof window === 'undefined') return false;
+  return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 };
 
 // Performance metrics state
@@ -27,9 +40,13 @@ const usePerformanceMonitor = () => {
   const [metrics, setMetrics] = useState({
     lcp: null,
     inp: null,
+    fid: null,
     cls: null,
     imageCount: 0,
-    loadedImages: 0
+    loadedImages: 0,
+    totalImageSize: 0,
+    lastUpdate: Date.now(),
+    isSafari: isSafari()
   });
 
   // Fallback LCP measurement using resource timing
@@ -66,6 +83,9 @@ const usePerformanceMonitor = () => {
   // ----------------------------------------------
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    
+    // Skip performance monitoring on Safari - not reliable
+    if (metrics.isSafari) return;
 
     let observer = null;
     let fallbackTimer = null;
@@ -79,18 +99,36 @@ const usePerformanceMonitor = () => {
           entries.forEach((entry) => {
             switch (entry.entryType) {
               case 'largest-contentful-paint':
-                setMetrics(prev => ({ ...prev, lcp: entry.startTime }));
+                setMetrics(prev => ({ 
+                  ...prev, 
+                  lcp: entry.startTime,
+                  lastUpdate: Date.now()
+                }));
                 break;
               case 'first-input':
-                // INP measurement - first input delay
-                const inpValue = entry.processingStart - entry.startTime;
-                setMetrics(prev => ({ ...prev, inp: inpValue }));
+                // FID measurement - first input delay
+                const fidValue = entry.processingStart - entry.startTime;
+                setMetrics(prev => ({ 
+                  ...prev, 
+                  fid: fidValue,
+                  lastUpdate: Date.now()
+                }));
                 break;
               case 'layout-shift':
                 if (!entry.hadRecentInput) {
                   setMetrics(prev => ({ 
                     ...prev, 
-                    cls: (prev.cls || 0) + entry.value 
+                    cls: (prev.cls || 0) + entry.value,
+                    lastUpdate: Date.now()
+                  }));
+                }
+                break;
+              case 'navigation':
+                // Update metrics when navigation completes
+                if (entry.loadEventEnd > 0) {
+                  setMetrics(prev => ({ 
+                    ...prev, 
+                    lastUpdate: Date.now()
                   }));
                 }
                 break;
@@ -135,9 +173,11 @@ const usePerformanceMonitor = () => {
 
 
 
-  // Monitor image loading
+  // Monitor image loading with live updates
   useEffect(() => {
     let mounted = true;
+    let updateInterval = null;
+    let visibilityCheckInterval = null;
     
     const updateImageCount = () => {
       if (!mounted) return;
@@ -161,30 +201,81 @@ const usePerformanceMonitor = () => {
         return rect.width > 30 && rect.height > 30;
       });
       
-      setMetrics(prev => ({ ...prev, imageCount: contentImages.length }));
+      // Count loaded images and calculate total size
+      let loadedCount = 0;
+      let totalSize = 0;
       
-      // Count loaded images
-      const loadedCount = contentImages.filter(img => img.complete).length;
-      setMetrics(prev => ({ ...prev, loadedImages: loadedCount }));
+      contentImages.forEach(img => {
+        if (img.complete && img.naturalWidth > 0) {
+          loadedCount++;
+          
+          // Estimate image size (rough calculation)
+          const estimatedSize = (img.naturalWidth * img.naturalHeight * 3) / 1024; // Rough KB estimate
+          totalSize += estimatedSize;
+        }
+      });
+      
+      setMetrics(prev => ({ 
+        ...prev, 
+        imageCount: contentImages.length,
+        loadedImages: loadedCount,
+        totalImageSize: Math.round(totalSize),
+        lastUpdate: Date.now()
+      }));
     };
 
     const handleImageLoad = () => {
       if (!mounted) return;
       
-      setMetrics(prev => ({ 
-        ...prev, 
-        loadedImages: Math.min(prev.loadedImages + 1, prev.imageCount)
-      }));
+      // Update immediately when image loads
+      updateImageCount();
+    };
+
+    // Live update functionality
+    const setupLiveUpdates = () => {
+      if (!PERFORMANCE_CONFIG.ENABLE_LIVE_UPDATES) return;
+      
+      // Check if window is visible and active
+      const isWindowActive = () => {
+        return !document.hidden && document.visibilityState === 'visible';
+      };
+      
+      // Set up periodic updates when window is active
+      updateInterval = setInterval(() => {
+        if (isWindowActive()) {
+          updateImageCount();
+        }
+      }, PERFORMANCE_CONFIG.IMAGE_UPDATE_INTERVAL);
+      
+      // Check window visibility periodically
+      visibilityCheckInterval = setInterval(() => {
+        if (isWindowActive()) {
+          updateImageCount();
+        }
+      }, PERFORMANCE_CONFIG.VISIBILITY_CHECK_INTERVAL);
+      
+      // Listen for visibility changes
+      document.addEventListener('visibilitychange', () => {
+        if (isWindowActive()) {
+          updateImageCount();
+        }
+      });
+      
+      // Listen for window focus/blur
+      window.addEventListener('focus', updateImageCount);
+      window.addEventListener('blur', updateImageCount);
     };
 
     // Initial count
     updateImageCount();
+    setupLiveUpdates();
 
     // Add load listeners to all current images
     const images = document.querySelectorAll('img');
     images.forEach(img => {
       if (!img.complete) {
         img.addEventListener('load', handleImageLoad);
+        img.addEventListener('error', handleImageLoad);
       }
     });
 
@@ -221,11 +312,24 @@ const usePerformanceMonitor = () => {
 
     return () => {
       mounted = false;
-      observer.disconnect();
+      
+      // Clean up intervals
+      if (updateInterval) clearInterval(updateInterval);
+      if (visibilityCheckInterval) clearInterval(visibilityCheckInterval);
+      
+      // Clean up observers
+      if (observer) observer.disconnect();
+      
+      // Clean up event listeners
       images.forEach(img => {
         img.removeEventListener('load', handleImageLoad);
+        img.removeEventListener('error', handleImageLoad);
       });
+      
       window.removeEventListener('load', updateImageCount);
+      window.removeEventListener('focus', updateImageCount);
+      window.removeEventListener('blur', updateImageCount);
+      document.removeEventListener('visibilitychange', updateImageCount);
     };
   }, []);
 
@@ -269,6 +373,7 @@ const getOptimizationSuggestions = (metrics) => {
 // ----------------------------
 export default function PerformanceMonitor() {
   const metrics = usePerformanceMonitor();
+  const { isGerman } = useLanguage();
   const [showDetails, setShowDetails] = useState(false);
   const suggestions = getOptimizationSuggestions(metrics);
 
@@ -289,7 +394,17 @@ export default function PerformanceMonitor() {
         <div className="performance-monitor__panel">
           <h3>Performance Metrics</h3>
           
-          <div className="performance-metrics">
+          {metrics.isSafari ? (
+            <div className="performance-safari-notice">
+              <p style={{color: '#f59e0b', fontSize: '14px', margin: '10px 0', padding: '10px', background: 'rgba(245, 158, 11, 0.1)', borderRadius: '6px', border: '1px solid rgba(245, 158, 11, 0.2)'}}>
+                {isGerman 
+                  ? '⚠️ Performance-Metriken werden in Safari nicht unterstützt - Messungen sind dort unzuverlässig'
+                  : '⚠️ Performance metrics not supported on Safari - measurements are unreliable there'
+                }
+              </p>
+            </div>
+          ) : (
+            <div className="performance-metrics">
             <div className="metric">
               <span className="metric-label">LCP:</span>
               <span className={`metric-value ${metrics.lcp && metrics.lcp > PERFORMANCE_CONFIG.LCP_THRESHOLD ? 'warning' : 'good'}`}>
@@ -298,9 +413,9 @@ export default function PerformanceMonitor() {
             </div>
             
             <div className="metric">
-              <span className="metric-label">INP:</span>
-              <span className={`metric-value ${metrics.inp && metrics.inp > PERFORMANCE_CONFIG.INP_THRESHOLD ? 'warning' : 'good'}`}>
-                {metrics.inp ? `${Math.round(metrics.inp)}ms` : 'No interaction yet'}
+              <span className="metric-label">FID:</span>
+              <span className={`metric-value ${metrics.fid && metrics.fid > PERFORMANCE_CONFIG.FID_THRESHOLD ? 'warning' : 'good'}`}>
+                {metrics.fid ? `${Math.round(metrics.fid)}ms` : 'No interaction yet'}
               </span>
             </div>
             
@@ -311,16 +426,17 @@ export default function PerformanceMonitor() {
               </span>
             </div>
             
-            
             <div className="metric">
               <span className="metric-label">Images:</span>
               <span className="metric-value">
                 {metrics.loadedImages}/{metrics.imageCount}
               </span>
             </div>
+            
           </div>
+          )}
           
-          {suggestions.length > 0 && (
+          {!metrics.isSafari && suggestions.length > 0 && (
             <div className="performance-suggestions">
               <h4>Optimization Suggestions:</h4>
               {suggestions.map((suggestion, index) => (
