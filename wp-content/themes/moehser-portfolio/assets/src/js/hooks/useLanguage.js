@@ -74,13 +74,18 @@ export function useLanguage() {
 
   // Get switch URL for language toggle
   const getSwitchUrl = () => {
-    const currentUrl = window.location.href;
+    const currentPath = window.location.pathname;
+    const currentHash = window.location.hash;
+    const currentSearch = window.location.search;
+    
     if (isGerman) {
       // Switch from localized to main site
-      return currentUrl.replace('/de/', '/');
+      const newPath = currentPath.replace('/de', '') || '/';
+      return `${window.location.origin}${newPath}${currentSearch}${currentHash}`;
     } else {
       // Switch from main to localized site
-      return currentUrl.replace(/(\/|$)/, '/de$1');
+      const newPath = currentPath === '/' ? '/de/' : currentPath.replace('/', '/de/');
+      return `${window.location.origin}${newPath}${currentSearch}${currentHash}`;
     }
   };
 
