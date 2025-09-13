@@ -184,7 +184,6 @@ export default function App() {
     return (
       <>
         <Imprint />
-        <Footer />
         <SocialDock />
         <SettingsGear />
         <MobileMenu />

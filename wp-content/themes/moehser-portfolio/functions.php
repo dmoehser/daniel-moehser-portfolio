@@ -23,7 +23,6 @@ add_action('init', function() {
     }
 });
 
-// Set custom title for imprint page
 add_action('template_redirect', function() {
     $request_uri = $_SERVER['REQUEST_URI'] ?? '';
     $is_imprint_page = strpos($request_uri, '/imprint') !== false || 
@@ -31,10 +30,8 @@ add_action('template_redirect', function() {
                        (is_page() && get_page_template_slug() === 'page-imprint.php');
     
     if ($is_imprint_page) {
-        // Set 200 status code to eliminate 404 error
         status_header(200);
         
-        // Set proper title based on language
         $title = 'Imprint';
         if (strpos($request_uri, '/de/imprint') !== false) {
             $title = 'Impressum';
@@ -46,11 +43,9 @@ add_action('template_redirect', function() {
             return $title_parts;
         });
         
-        // Pass imprint data to JavaScript
         add_action('wp_head', function() {
             $business_email_subject = get_theme_mod('moehser_business_email_subject', 'Business Inquiry - Portfolio Contact');
             
-            // Load imprint content from customizer
             $imprint_page_id = get_theme_mod('moehser_imprint_page_id', 0);
             $imprint_title = 'Imprint';
             $imprint_content = '';
