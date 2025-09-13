@@ -17,6 +17,13 @@ const CRITICAL_RESOURCES = {
       type: 'text/css',
       crossorigin: 'anonymous',
       priority: 'high'
+    },
+    {
+      href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap',
+      as: 'style',
+      type: 'text/css',
+      crossorigin: 'anonymous',
+      priority: 'high'
     }
   ],
   
@@ -26,7 +33,7 @@ const CRITICAL_RESOURCES = {
   // Critical CSS - inline critical styles
   css: [
     {
-      href: window.location.hostname === 'localhost' && window.location.port === '8080' 
+      href: (window.location.hostname === 'localhost' || window.location.hostname === 'de.localhost') && window.location.port === '8080' 
         ? 'http://localhost:5173/wp-content/themes/moehser-portfolio/assets/src/scss/main.scss'
         : '/wp-content/themes/moehser-portfolio/assets/dist/assets/main.css',
       as: 'style',
@@ -38,7 +45,7 @@ const CRITICAL_RESOURCES = {
   // JavaScript - main bundle
   scripts: [
     {
-      href: window.location.hostname === 'localhost' && window.location.port === '8080' 
+      href: (window.location.hostname === 'localhost' || window.location.hostname === 'de.localhost') && window.location.port === '8080' 
         ? 'http://localhost:5173/wp-content/themes/moehser-portfolio/assets/src/js/main.jsx'
         : '/wp-content/themes/moehser-portfolio/assets/dist/assets/main.js',
       as: 'script',

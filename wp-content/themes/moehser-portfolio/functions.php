@@ -31,6 +31,17 @@ add_action('template_redirect', function() {
             $title['site'] = get_bloginfo('name');
             return $title;
         });
+        
+        // Pass imprint data to JavaScript
+        add_action('wp_head', function() {
+            $business_email_subject = get_theme_mod('moehser_business_email_subject', 'Business Inquiry - Portfolio Contact');
+            
+            echo '<script>
+            window.__IMPRINT_TITLE__ = "Imprint";
+            window.__IMPRINT_HTML__ = "";
+            window.__BUSINESS_EMAIL_SUBJECT__ = ' . json_encode($business_email_subject) . ';
+            </script>';
+        });
     }
 });
 
@@ -126,6 +137,17 @@ require_once get_theme_file_path('inc/api.php');
 require_once get_theme_file_path('inc/cpt-project.php'); // Step 1: Basic project functions activated
 require_once get_theme_file_path('inc/setup-projects.php'); // Activated: Creates example projects if none exist
 
+// Global language detection function
+if (!function_exists('is_german_subdomain')) {
+    function is_german_subdomain() {
+        $host = $_SERVER['HTTP_HOST'] ?? '';
+        return strpos($host, 'de.localhost') !== false || 
+               strpos($host, 'de.') !== false;
+    }
+}
+
+
+// Language detection handled by Multisite
 
 // Setup default content
 

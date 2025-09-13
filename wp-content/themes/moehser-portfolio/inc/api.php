@@ -5,40 +5,34 @@
  */
 
 add_action('rest_api_init', function () {
-	// Expose a menu location as a flat list of items with parent references
+	// Simple menu endpoint - just get current site's menu
 	register_rest_route('moehser/v1', '/menu/(?P<location>[a-z_\-]+)', [
 		'methods' => 'GET',
 		'permission_callback' => '__return_true',
 		'callback' => function ($request) {
 			$location = sanitize_key($request['location']);
+			
+			// Get menu locations from current site
 			$locations = get_nav_menu_locations();
+			
 			if (!isset($locations[$location])) {
 				return new WP_Error('menu_not_found', 'Menu location not found', ['status' => 404]);
 			}
+			
 			$menu_id = $locations[$location];
 			$items = wp_get_nav_menu_items($menu_id) ?: [];
+			
 			$result = array_map(function ($item) {
-				// Clean URL from customize_changeset_uuid parameter
-				$clean_url = $item->url;
-				$original_url = $item->url;
-				
-				// Debug: Log original URL
-				error_log("DEBUG API - Original URL: " . $original_url);
-				
-				if (strpos($clean_url, 'customize_changeset_uuid=') !== false) {
-					$clean_url = remove_query_arg('customize_changeset_uuid', $clean_url);
-					error_log("DEBUG API - Cleaned URL: " . $clean_url);
-				}
-				
 				return [
 					'id' => (int)$item->ID,
 					'parent' => (int)$item->menu_item_parent,
 					'title' => wp_strip_all_tags($item->title),
-					'url' => $clean_url,
+					'url' => $item->url,
 					'target' => $item->target,
 					'attr_title' => $item->attr_title,
 				];
 			}, $items);
+			
 			return rest_ensure_response($result);
 		},
 	]);
@@ -48,6 +42,8 @@ add_action('rest_api_init', function () {
 		'methods' => 'GET',
 		'permission_callback' => '__return_true',
 		'callback' => function ($request) {
+			// Check if we're on localized path
+			$is_localized = preg_match('/\/[a-z]{2}\//', $_SERVER['REQUEST_URI'] ?? '');
 			$status = $request->get_param('status');
 			// Order by menu_order ASC (custom order), then by date DESC as fallback
 			$orderby = 'menu_order';
@@ -82,11 +78,28 @@ add_action('rest_api_init', function () {
 					$featured_wide = $featured_id ? wp_get_attachment_image_src($featured_id, 'project_wide') : false;
 					$featured_wide_2x = $featured_id ? wp_get_attachment_image_src($featured_id, 'project_wide_2x') : false;
 					$featured_srcset = $featured_id ? wp_get_attachment_image_srcset($featured_id, 'project_wide') : '';
+					
+					// Get language-specific content
+					$title = html_entity_decode($project->post_title, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+					$content = $project->post_content;
+					$excerpt = $project->post_excerpt;
+					
+					// Check for German translations in meta
+					if ($is_localized) {
+						$title_de = isset($meta['project_title_de'][0]) ? $meta['project_title_de'][0] : '';
+						$content_de = isset($meta['project_content_de'][0]) ? $meta['project_content_de'][0] : '';
+						$excerpt_de = isset($meta['project_excerpt_de'][0]) ? $meta['project_excerpt_de'][0] : '';
+						
+						if (!empty($title_de)) $title = $title_de;
+						if (!empty($content_de)) $content = $content_de;
+						if (!empty($excerpt_de)) $excerpt = $excerpt_de;
+					}
+					
 					$result[] = [
 						'id' => $project->ID,
-						'title' => html_entity_decode($project->post_title, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
-						'content' => $project->post_content,
-						'excerpt' => $project->post_excerpt,
+						'title' => $title,
+						'content' => $content,
+						'excerpt' => $excerpt,
 						'slug' => $project->post_name,
 						'date' => $project->post_date,
 						'modified' => $project->post_modified,
@@ -104,6 +117,7 @@ add_action('rest_api_init', function () {
 						'project_url_external' => isset($meta['project_url'][0]) ? $meta['project_url'][0] : '',
 						'project_demo_mode' => isset($meta['project_demo_mode'][0]) ? $meta['project_demo_mode'][0] : 'iframe',
 						'project_github_url' => isset($meta['project_github_url'][0]) ? $meta['project_github_url'][0] : '',
+						'language' => $is_localized ? 'de' : 'en',
 					];
 				}
 			}
@@ -182,6 +196,72 @@ add_action('rest_api_init', function () {
 		},
 	]);
 
+	// Language-specific content endpoint
+	register_rest_route('moehser/v1', '/content', [
+		'methods' => 'GET',
+		'permission_callback' => '__return_true',
+		'callback' => function ($request) {
+			$is_localized = preg_match('/\/[a-z]{2}\//', $_SERVER['REQUEST_URI'] ?? '');
+			
+			// Get language-specific content from customizer
+			$content = [
+				'language' => $is_localized ? 'de' : 'en',
+				'about' => [
+					'title' => $is_localized ? 
+						get_theme_mod('moehser_about_title_de', 'Über mich') : 
+						get_theme_mod('moehser_about_title', 'About Me'),
+					'subtitle' => $is_localized ? 
+						get_theme_mod('moehser_about_subtitle_de', 'Meine Geschichte & Erfahrung') : 
+						get_theme_mod('moehser_about_subtitle', 'My story & experience'),
+				],
+				'projects' => [
+					'title' => $is_localized ? 
+						get_theme_mod('moehser_projects_title_de', 'Projekte') : 
+						get_theme_mod('moehser_projects_title', 'Projects'),
+					'subtitle' => $is_localized ? 
+						get_theme_mod('moehser_projects_subtitle_de', 'Meine neuesten Arbeiten und Projekte') : 
+						get_theme_mod('moehser_projects_subtitle', 'My latest work and projects'),
+				],
+				'skills' => [
+					'title' => $is_localized ? 
+						get_theme_mod('moehser_skills_title_de', 'Fähigkeiten') : 
+						get_theme_mod('moehser_skills_title', 'Skills'),
+					'subtitle' => $is_localized ? 
+						get_theme_mod('moehser_skills_subtitle_de', 'Technologien & Tools mit denen ich arbeite') : 
+						get_theme_mod('moehser_skills_subtitle', 'Technologies & tools I work with'),
+				],
+				'imprint' => [
+					'title' => $is_localized ? 
+						get_theme_mod('moehser_imprint_title_de', 'Impressum') : 
+						get_theme_mod('moehser_imprint_title', 'Imprint'),
+				]
+			];
+			
+			// Add skills cards
+			$skills_cards = [];
+			for ($i = 1; $i <= 5; $i++) {
+				$card_id = "card{$i}";
+				$skills_cards[$card_id] = [
+					'title' => $is_localized ? 
+						get_theme_mod("moehser_skills_{$card_id}_title_de", '') : 
+						get_theme_mod("moehser_skills_{$card_id}_title", ''),
+					'description' => $is_localized ? 
+						get_theme_mod("moehser_skills_{$card_id}_description_de", '') : 
+						get_theme_mod("moehser_skills_{$card_id}_description", ''),
+					'tags' => $is_localized ? 
+						get_theme_mod("moehser_skills_{$card_id}_tags_de", '') : 
+						get_theme_mod("moehser_skills_{$card_id}_tags", ''),
+					'skills_list' => $is_localized ? 
+						get_theme_mod("moehser_skills_{$card_id}_skills_list_de", '') : 
+						get_theme_mod("moehser_skills_{$card_id}_skills_list", ''),
+				];
+			}
+			$content['skills']['cards'] = $skills_cards;
+			
+			return rest_ensure_response($content);
+		},
+	]);
+
 	// Contact form endpoint
 	register_rest_route('moehser/v1', '/contact', [
 		'methods' => 'POST',
@@ -207,7 +287,7 @@ add_action('rest_api_init', function () {
 				// Verify reCAPTCHA (optional for now)
 				$recaptcha_token = $data['recaptchaToken'] ?? '';
 				
-				// Get recipient email from customizer
+				// Get recipient email from customizer (Social email setting)
 				$recipient_email = get_theme_mod('moehser_social_email', 'hi@danielmoehser.dev');
 				
 				// Prepare email content
@@ -233,8 +313,11 @@ add_action('rest_api_init', function () {
 					<p>{$message}</p>
 				";
 				
+				// Get email subject from customizer
+				$email_subject = get_theme_mod('moehser_email_subject', 'Portfolio Contact - New Inquiry');
+				
 				// Send email
-				$email_sent = wp_mail($recipient_email, 'Portfolio Contact: ' . $subject, $email_content, $headers);
+				$email_sent = wp_mail($recipient_email, $email_subject . ': ' . $subject, $email_content, $headers);
 				
 				if ($email_sent) {
 					return rest_ensure_response([

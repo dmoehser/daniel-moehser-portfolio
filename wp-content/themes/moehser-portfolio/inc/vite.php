@@ -30,7 +30,7 @@ function moehser_is_development()
         return true;
     }
     // Force development mode when Vite is running
-    if (!is_admin()) {
+    if (!is_admin() && is_vite_dev_server_running()) {
         return true;
     }
     return false;
@@ -82,8 +82,15 @@ function moehser_enqueue_vite_assets()
         // Important: In vite.config.js, base is set to "/wp-content/themes/moehser-portfolio/".
         // Therefore, all dev URLs must contain the base, otherwise 404 → white page.
         $devEntry = 'http://localhost:5173' . $viteBase . 'assets/src/js/main.jsx' . $cacheBuster;
+        $devCss = 'http://localhost:5173' . $viteBase . 'assets/src/scss/main.scss' . $cacheBuster;
 
-        // CSS is loaded directly in page-imprint.php template
+        // Load CSS in development mode
+        wp_enqueue_style(
+            $theme_handle . '-style',
+            $devCss,
+            [],
+            null
+        );
 
         wp_enqueue_script(
             $theme_handle . '-main',

@@ -22,33 +22,34 @@ export default function HeroQuickMenu() {
   const [isMobile, setIsMobile] = useState(false);
 
   // Load WordPress menu for quick navigation pills
+  // ----------------------------------------------
   useEffect(() => {
     let cancelled = false;
     
     async function loadMenu() {
       try {
-        // Primary API endpoint
-        let res = await fetch('/wp-json/moehser/v1/menu/header_primary');
-        let data;
-        const contentType = res.headers.get('content-type') || '';
+        // Check if we're on a localized path and use the correct API endpoint
+        const isLocalized = window.location.pathname.includes('/de/');
+        const apiUrl = isLocalized 
+          ? '/de/wp-json/moehser/v1/menu/header_primary'
+          : '/wp-json/moehser/v1/menu/header_primary';
         
-        if (res.ok && contentType.includes('application/json')) {
-          data = await res.json();
-        } else {
-          // Fallback endpoint
-          const fallbackUrl = '/index.php?rest_route=/moehser/v1/menu/header_primary';
-          res = await fetch(fallbackUrl);
-          if (!res.ok) throw new Error('Menu REST API failed');
-          data = await res.json();
-        }
+        console.log('Loading menu from:', apiUrl);
+        
+        const res = await fetch(apiUrl);
+        if (!res.ok) throw new Error('Menu API failed');
+        
+        const data = await res.json();
         
         if (!cancelled) {
           const filteredItems = Array.isArray(data) 
             ? data.filter(item => !item.parent) 
             : [];
+          console.log('HeroQuickMenu: Menu items loaded:', filteredItems);
           setMenuItems(filteredItems);
         }
-      } catch {
+      } catch (error) {
+        console.error('Menu loading error:', error);
         if (!cancelled) setMenuItems([]);
       }
     }
@@ -104,10 +105,10 @@ export default function HeroQuickMenu() {
     
     // Fallback to title-based mapping
     const titleLower = (title || '').toLowerCase();
-    if (titleLower.includes('about')) return SECTION_MAPPING.ABOUT;
-    if (titleLower.includes('project')) return SECTION_MAPPING.PROJECTS;
-    if (titleLower.includes('skill')) return SECTION_MAPPING.SKILLS;
-    if (titleLower.includes('home')) return SECTION_MAPPING.HOME;
+    if (titleLower.includes('about') || titleLower.includes('über')) return SECTION_MAPPING.ABOUT;
+    if (titleLower.includes('project') || titleLower.includes('projekt')) return SECTION_MAPPING.PROJECTS;
+    if (titleLower.includes('skill') || titleLower.includes('fähigkeit')) return SECTION_MAPPING.SKILLS;
+    if (titleLower.includes('home') || titleLower.includes('start')) return SECTION_MAPPING.HOME;
     if (titleLower.includes('terminal')) return SECTION_MAPPING.TERMINAL;
     
     return null;
@@ -132,8 +133,9 @@ export default function HeroQuickMenu() {
       behavior: 'smooth' 
     });
     
-    // Update URL without try-catch (not critical)
-    const url = id === SECTION_MAPPING.HOME ? '/#' : `/#${id}`;
+    // Update URL while preserving current path (e.g., /de/)
+    const currentPath = window.location.pathname;
+    const url = id === SECTION_MAPPING.HOME ? `${currentPath}#` : `${currentPath}#${id}`;
     window.history.replaceState(null, '', url);
     
     // Notify global listeners (e.g., ScrollArrow) about jump target
@@ -170,7 +172,7 @@ export default function HeroQuickMenu() {
         return (
           <a 
             key={item.id} 
-            href={`/#${id || ''}`} 
+            href={`${window.location.pathname}#${id || ''}`} 
             className="hero__quick-btn" 
             onClick={(e) => handleItemClick(e, id)}
           >

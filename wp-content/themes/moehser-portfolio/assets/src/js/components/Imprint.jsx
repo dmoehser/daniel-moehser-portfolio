@@ -12,7 +12,7 @@ import MobileMenu from './ui/MobileMenu';
 
 export default function Imprint() {
   // Get page content from WordPress
-  const imprintTitle = typeof window !== 'undefined' ? (window.__IMPRINT_TITLE__ || 'Impressum') : 'Impressum';
+  const imprintTitle = typeof window !== 'undefined' ? (window.__IMPRINT_TITLE__ || 'Imprint') : 'Imprint';
   const imprintHTML = typeof window !== 'undefined' ? (window.__IMPRINT_HTML__ || '') : '';
   const contentToShow = imprintHTML || '';
 
