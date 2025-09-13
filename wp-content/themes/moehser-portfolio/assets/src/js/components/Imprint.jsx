@@ -80,8 +80,42 @@ export default function Imprint() {
 
   const processedContent = processImprintContent(contentToShow);
 
-  // Static print content
-  const printContent = `
+  // Detect language for print content
+  const isGerman = typeof window !== 'undefined' && 
+    (window.location.pathname.includes('/de/') || 
+     contentToShow.includes('Kontakt') || 
+     contentToShow.includes('Impressum'));
+
+  // Static print content - German version
+  const printContentGerman = `
+    <h2>Rechtliche Hinweise</h2>
+    <p><strong>Daniel Moehser</strong><br>
+    Sydneystr. 8<br>
+    22297 Hamburg<br>
+    Deutschland</p>
+
+    <h3>Kontakt</h3>
+    <p>E-Mail: hi@danielmoehser.dev</p>
+    <p>Website: danielmoehser.dev</p>
+    
+    <h3>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h3>
+    <p><strong>Daniel Moehser</strong><br>
+    Sydneystr. 8<br>
+    22297 Hamburg<br>
+    Deutschland</p>
+
+    <h3>Haftungsausschluss</h3>
+    <p>Die Inhalte meiner Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte kann ich jedoch keine Gewähr übernehmen.</p>
+
+    <h3>Datenschutz</h3>
+    <p>Die Nutzung meiner Website ist in der Regel ohne Angabe personenbezogener Daten möglich. Soweit auf meinen Seiten personenbezogene Daten (beispielsweise Name, Anschrift oder E-Mail-Adressen) erhoben werden, erfolgt dies, soweit möglich, stets auf freiwilliger Basis.</p>
+
+    <h3>Urheberrecht</h3>
+    <p>Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.</p>
+  `;
+
+  // Static print content - English version
+  const printContentEnglish = `
     <h2>Legal Notice</h2>
     <p><strong>Daniel Moehser</strong><br>
     Sydneystr. 8<br>
@@ -106,6 +140,9 @@ export default function Imprint() {
     <h3>Copyright</h3>
     <p>The content and works created by the site operators on these pages are subject to German copyright law. The reproduction, processing, distribution and any kind of exploitation outside the limits of copyright require the written consent of the respective author or creator.</p>
   `;
+
+  // Select appropriate print content based on language
+  const printContent = isGerman ? printContentGerman : printContentEnglish;
 
   // Navigate back to home section
   const goBack = () => {
