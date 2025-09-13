@@ -147,7 +147,10 @@ export default function SettingsGear() {
               {isDark ? '☀️' : '🌙'}
             </span>
             <span className="settings-gear__label">
-              {isDark ? 'Light Mode' : 'Dark Mode'}
+              {isDark 
+                ? (isGerman ? 'Hell-Modus' : 'Light Mode')
+                : (isGerman ? 'Dunkel-Modus' : 'Dark Mode')
+              }
             </span>
           </button>
           
@@ -177,7 +180,9 @@ export default function SettingsGear() {
             disabled={metrics.isSafari}
           >
             <span className="settings-gear__icon">📊</span>
-            <span className="settings-gear__label">Performance</span>
+            <span className="settings-gear__label">
+  {isGerman ? 'Leistung' : 'Performance'}
+            </span>
           </button>
           
           <button
@@ -185,7 +190,9 @@ export default function SettingsGear() {
             onClick={openTerminal}
           >
             <span className="settings-gear__icon">⌨️</span>
-            <span className="settings-gear__label">Terminal</span>
+            <span className="settings-gear__label">
+              {isGerman ? 'Terminal' : 'Terminal'}
+            </span>
           </button>
         </div>
       )}
@@ -197,17 +204,17 @@ export default function SettingsGear() {
             <button 
               className="settings-gear__performance-back"
               onClick={closePerformance}
-              aria-label="Back to settings"
-              title="Back to settings"
+              aria-label={isGerman ? 'Zurück zu Einstellungen' : 'Back to settings'}
+              title={isGerman ? 'Zurück zu Einstellungen' : 'Back to settings'}
             >
               ←
             </button>
-            <h3>Performance Metrics</h3>
+            <h3>{isGerman ? 'Leistungs-Metriken' : 'Performance Metrics'}</h3>
             <button 
               className="settings-gear__performance-close"
               onClick={closePerformanceCompletely}
-              aria-label="Close settings"
-              title="Close settings"
+              aria-label={isGerman ? 'Einstellungen schließen' : 'Close settings'}
+              title={isGerman ? 'Einstellungen schließen' : 'Close settings'}
             >
               ×
             </button>
@@ -218,7 +225,7 @@ export default function SettingsGear() {
               <div style={{padding: '20px', textAlign: 'center', color: '#f59e0b', background: 'rgba(245, 158, 11, 0.1)', borderRadius: '8px', border: '1px solid rgba(245, 158, 11, 0.2)'}}>
                 <p style={{margin: '0', fontSize: '14px'}}>
                   {isGerman 
-                    ? '⚠️ Performance-Metriken werden in Safari nicht unterstützt - Messungen sind dort unzuverlässig'
+                    ? '⚠️ Leistungs-Metriken werden in Safari nicht unterstützt - Messungen sind dort unzuverlässig'
                     : '⚠️ Performance metrics not supported on Safari - measurements are unreliable there'
                   }
                 </p>
@@ -228,37 +235,57 @@ export default function SettingsGear() {
                 <div className="settings-gear__metric">
               <div className="settings-gear__metric-info">
                 <span className="settings-gear__metric-label">LCP:</span>
-                <span className="settings-gear__metric-tooltip">Largest Contentful Paint - Time until the largest element loads</span>
+                <span className="settings-gear__metric-tooltip">
+                  {isGerman 
+                    ? 'Largest Contentful Paint - Zeit bis das größte Element lädt'
+                    : 'Largest Contentful Paint - Time until the largest element loads'
+                  }
+                </span>
               </div>
               <span className={`settings-gear__metric-value ${metrics.lcp && metrics.lcp > 2500 ? 'warning' : 'good'}`}>
-                {metrics.lcp ? `${Math.round(metrics.lcp)}ms` : 'Loading...'}
+                {metrics.lcp ? `${Math.round(metrics.lcp)}ms` : (isGerman ? 'Lädt...' : 'Loading...')}
               </span>
             </div>
             
             <div className="settings-gear__metric">
               <div className="settings-gear__metric-info">
                 <span className="settings-gear__metric-label">FID:</span>
-                <span className="settings-gear__metric-tooltip">First Input Delay - Time from first user interaction to browser response</span>
+                <span className="settings-gear__metric-tooltip">
+                  {isGerman 
+                    ? 'First Input Delay - Zeit von erster Benutzerinteraktion zur Browser-Antwort'
+                    : 'First Input Delay - Time from first user interaction to browser response'
+                  }
+                </span>
               </div>
               <span className={`settings-gear__metric-value ${metrics.fid && metrics.fid > 100 ? 'warning' : 'good'}`}>
-                {metrics.fid ? `${Math.round(metrics.fid)}ms` : 'No interaction yet'}
+                {metrics.fid ? `${Math.round(metrics.fid)}ms` : (isGerman ? 'Noch keine Interaktion' : 'No interaction yet')}
               </span>
             </div>
             
             <div className="settings-gear__metric">
               <div className="settings-gear__metric-info">
                 <span className="settings-gear__metric-label">CLS:</span>
-                <span className="settings-gear__metric-tooltip">Cumulative Layout Shift - Layout stability during loading</span>
+                <span className="settings-gear__metric-tooltip">
+                  {isGerman 
+                    ? 'Cumulative Layout Shift - Layout-Stabilität während des Ladens'
+                    : 'Cumulative Layout Shift - Layout stability during loading'
+                  }
+                </span>
               </div>
               <span className={`settings-gear__metric-value ${metrics.cls && metrics.cls > 0.1 ? 'warning' : 'good'}`}>
-                {metrics.cls ? metrics.cls.toFixed(3) : 'Loading...'}
+                {metrics.cls ? metrics.cls.toFixed(3) : (isGerman ? 'Lädt...' : 'Loading...')}
               </span>
             </div>
             
             <div className="settings-gear__metric">
               <div className="settings-gear__metric-info">
                 <span className="settings-gear__metric-label">Images:</span>
-                <span className="settings-gear__metric-tooltip">Image Loading Progress - Number of loaded images vs total count</span>
+                <span className="settings-gear__metric-tooltip">
+                  {isGerman 
+                    ? 'Bild-Ladestatus - Anzahl geladener Bilder vs Gesamtanzahl'
+                    : 'Image Loading Progress - Number of loaded images vs total count'
+                  }
+                </span>
               </div>
               <span className="settings-gear__metric-value">
                 {metrics.loadedImages}/{metrics.imageCount}
