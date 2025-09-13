@@ -566,7 +566,12 @@ export default function Projects() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch('/wp-json/moehser/v1/projects');
+        // Use the correct API URL for the current site
+        const apiUrl = window.location.pathname.startsWith('/de/') 
+          ? '/de/wp-json/moehser/v1/projects'
+          : '/wp-json/moehser/v1/projects';
+        
+        const response = await fetch(apiUrl);
         if (!response.ok) {
           throw new Error('Failed to fetch projects');
         }
