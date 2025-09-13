@@ -144,7 +144,10 @@ const openImprint = () => {
     window.dispatchEvent(new Event('terminal:close'));
     // Small delay to allow terminal to close before navigation
     setTimeout(() => {
-      window.location.href = '/imprint';
+      // Navigate to appropriate imprint page based on current language
+      const isGermanPath = window.location.pathname.includes('/de/');
+      const imprintUrl = isGermanPath ? '/de/imprint/' : '/imprint/';
+      window.location.href = imprintUrl;
     }, 100);
   }
 };
@@ -155,6 +158,42 @@ const isGerman = () => {
   return window.location.pathname.includes('/de/');
 };
 
+// Helper function to switch language
+const switchLanguage = (targetLang) => {
+  if (typeof window === 'undefined') return;
+  
+  const currentPath = window.location.pathname;
+  const search = window.location.search;
+  const hash = window.location.hash;
+  
+  let newPath;
+  if (targetLang === 'de') {
+    // Switch to German
+    if (currentPath.startsWith('/de/')) {
+      // Already German, do nothing
+      return;
+    }
+    newPath = currentPath === '/' ? '/de/' : `/de${currentPath}`;
+  } else {
+    // Switch to English
+    if (!currentPath.startsWith('/de/')) {
+      // Already English, do nothing
+      return;
+    }
+    // Remove /de prefix and ensure we have a valid path
+    const pathWithoutDe = currentPath.replace('/de', '');
+    newPath = pathWithoutDe === '' ? '/' : pathWithoutDe;
+  }
+  
+  // Close terminal before navigation
+  window.dispatchEvent(new Event('terminal:close'));
+  
+  // Small delay to allow terminal to close before navigation
+  setTimeout(() => {
+    window.location.href = newPath + search + hash;
+  }, 100);
+};
+
 export const makeCommands = () => {
   const german = isGerman();
   
@@ -163,19 +202,23 @@ export const makeCommands = () => {
       title: 'moehser-portfolio/',
       lines: [
         '├── 🧭 Navigation',
-        '│   ├── start        → zur Startseite',
-        '│   ├── fähigkeiten  → zu den Fähigkeiten', 
-        '│   ├── über-mich    → zum Über-Mich Bereich',
-        '│   ├── projekte     → zu den Projekten',
-        '│   └── impressum    → Impressum öffnen',
+        '│   ├── home        → zur Startseite',
+        '│   ├── skills      → zu den Fähigkeiten', 
+        '│   ├── about       → zum Über-Mich Bereich',
+        '│   ├── projects    → zu den Projekten',
+        '│   └── impressum   → Impressum öffnen',
+        '',
+        '├── 🌍 Sprache',
+        '│   ├── de          → zu Deutsch wechseln',
+        '│   └── en          → zu English wechseln',
         '',
         '├── 📋 Projekt-Layout',
         '│   ├── grid        → Raster-Ansicht',
         '│   └── list        → Listen-Ansicht',
         '',
         '├── 🎨 Theme-Steuerung',
-        '│   ├── hell        → Hell-Modus',
-        '│   └── dunkel      → Dunkel-Modus',
+        '│   ├── light       → Hell-Modus',
+        '│   └── dark        → Dunkel-Modus',
         '',
         '├── 🌐 Social Media',
         '│   ├── github      → GitHub-Profil öffnen',
@@ -184,13 +227,13 @@ export const makeCommands = () => {
         '',
         '├── 💼 Professionelle Infos',
         '│   ├── stack       → Kern-Technologien anzeigen',
-        '│   ├── erfahrung   → Was ich biete',
-        '│   └── kontakt     → Kontakt aufnehmen',
+        '│   ├── experience  → Was ich biete',
+        '│   └── contact     → Kontakt aufnehmen',
         '',
         '└── 🎯 Schnellaktionen',
-        '    ├── hilfe      → dieses Menü anzeigen',
-        '    ├── löschen    → Terminal leeren',
-        '    └── ESC        → Terminal schließen',
+        '    ├── help        → dieses Menü anzeigen',
+        '    ├── clear       → Terminal leeren',
+        '    └── ESC         → Terminal schließen',
         '',
         '💡 Pfeiltasten zur Navigation, Enter zum Ausführen!',
       ],
@@ -203,6 +246,10 @@ export const makeCommands = () => {
         '│   ├── about       → go to about section',
         '│   ├── projects    → go to projects section',
         '│   └── imprint     → open imprint page',
+        '',
+        '├── 🌍 Language',
+        '│   ├── de          → switch to German',
+        '│   └── en          → switch to English',
         '',
         '├── 📋 Project Layout',
         '│   ├── grid        → switch to grid view',
@@ -379,11 +426,16 @@ export const makeCommands = () => {
   
   // Add German command aliases if German is detected
   if (german) {
+    // Keep main help command as German
     baseCommands.hilfe = baseCommands.help;
+    
+    // German aliases for navigation (skills, about, projects remain as main commands)
+    baseCommands.fähigkeiten = baseCommands.skills;  // Alias for skills
+    baseCommands['über-mich'] = baseCommands.about;  // Alias for about
+    baseCommands.projekte = baseCommands.projects;   // Alias for projects
+    
+    // German-specific commands
     baseCommands.start = { title: 'Navigating to Start', lines: ['Going to hero section...'] };
-    baseCommands.fähigkeiten = { title: 'Navigating to Skills', lines: ['Going to skills section...'] };
-    baseCommands['über-mich'] = { title: 'Navigating to About', lines: ['Going to about section...'] };
-    baseCommands.projekte = { title: 'Navigating to Projects', lines: ['Going to projects section...'] };
     baseCommands.impressum = { title: 'Opening Imprint', lines: ['Opening imprint page...'] };
     baseCommands.hell = { title: 'Switching to Light Mode', lines: ['Changing theme to light mode...'] };
     baseCommands.dunkel = { title: 'Switching to Dark Mode', lines: ['Changing theme to dark mode...'] };
@@ -391,6 +443,10 @@ export const makeCommands = () => {
     baseCommands.kontakt = { title: 'Contact Information', lines: ['Showing contact information...'] };
     baseCommands.löschen = { title: 'Terminal Cleared', lines: ['Terminal geleert. Tippe "hilfe" für verfügbare Befehle.'] };
   }
+  
+  // Language switching commands (available on both languages)
+  baseCommands.de = { title: 'Switching to German', lines: ['Switching to German language...'] };
+  baseCommands.en = { title: 'Switching to English', lines: ['Switching to English language...'] };
   
   return baseCommands;
 };
@@ -466,6 +522,18 @@ export const buildActions = (cmd) => {
   
   if (cmd === 'imprint') {
     map[0] = () => openImprint();
+  }
+  
+  if (cmd === 'impressum') {
+    map[0] = () => openImprint();
+  }
+  
+  if (cmd === 'de') {
+    map[0] = () => switchLanguage('de');
+  }
+  
+  if (cmd === 'en') {
+    map[0] = () => switchLanguage('en');
   }
   
   // Project layout commands

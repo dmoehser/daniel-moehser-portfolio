@@ -45,10 +45,6 @@ export default function Terminal() {
   const [selIdx, setSelIdx] = useState(-1); // selection in output lines (actionable)
   const data = COMMANDS[cmd] || COMMANDS.help;
 
-  // Debug: Log language detection
-  useEffect(() => {
-    console.log('Terminal Language Debug:', { isGerman, path: window.location.pathname });
-  }, [isGerman]);
 
   useEffect(() => {
     const saved = localStorage.getItem('terminal_cmd');
