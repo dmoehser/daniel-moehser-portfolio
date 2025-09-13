@@ -129,13 +129,19 @@ export default function HeroBrand() {
     window.history.replaceState(null, '', url);
   };
 
+  // Check if typing animation is complete
+  const isTypingComplete = isPrint || brandTyped.length >= BRAND.FULL.length;
+
+  // Get language-specific href
+  const isGerman = window.location.pathname.includes('/de/');
+  const brandHref = isGerman ? '/de/#' : '/#';
+
   // Handle brand link click
   const handleBrandClick = (e) => {
     e.preventDefault();
     
     // Check if we're on the imprint page
     const isImprintPage = window.location.pathname.includes('/imprint/');
-    const isGerman = window.location.pathname.includes('/de/');
     
     if (isImprintPage) {
       // Redirect to main page with language-specific path
@@ -146,13 +152,6 @@ export default function HeroBrand() {
       scrollTo('hero');
     }
   };
-
-  // Check if typing animation is complete
-  const isTypingComplete = isPrint || brandTyped.length >= BRAND.FULL.length;
-
-  // Get language-specific href
-  const isGerman = window.location.pathname.includes('/de/');
-  const brandHref = isGerman ? '/de/#' : '/#';
 
   return (
     <div className="hero__brand">
