@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import { Terminal as XTerm } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { makeCommands, COMMAND_ORDER, buildActions } from '../features/terminal/TerminalCommands.js';
+import { useLanguage } from '../hooks/useLanguage.js';
 import 'xterm/css/xterm.css';
 
 // Terminal configuration constants
@@ -38,6 +39,7 @@ const TERMINAL_CONFIG = {
 };
 
 export default function Terminal() {
+  const { isGerman } = useLanguage();
   const COMMANDS = makeCommands();
   const [cmd, setCmd] = useState('help');
   const [selIdx, setSelIdx] = useState(-1); // selection in output lines (actionable)
@@ -143,19 +145,34 @@ export default function Terminal() {
     const history = [];
     let histIdx = -1;
 
-    // Welcome
-    term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}╭─────────────────────────────────────────╮${TERMINAL_CONFIG.COLORS.RESET}`);
-    term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}│  Welcome to daniel@portfolio shell      │${TERMINAL_CONFIG.COLORS.RESET}`);
-    term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}│  Interactive Portfolio Terminal         │${TERMINAL_CONFIG.COLORS.RESET}`);
-    term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}╰─────────────────────────────────────────╯${TERMINAL_CONFIG.COLORS.RESET}`);
-    term.writeln('');
-    term.writeln(`${TERMINAL_CONFIG.COLORS.BLUE}🚀 Quick Start:${TERMINAL_CONFIG.COLORS.RESET}`);
-    term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • Type 'help' to see all available commands${TERMINAL_CONFIG.COLORS.RESET}`);
-    term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • Use 'T' key to toggle terminal anytime${TERMINAL_CONFIG.COLORS.RESET}`);
-    term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • Press 'Esc' to close terminal${TERMINAL_CONFIG.COLORS.RESET}`);
-    term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • Navigate with arrow keys, Enter to execute${TERMINAL_CONFIG.COLORS.RESET}`);
-    term.writeln('');
-    term.writeln(`${TERMINAL_CONFIG.COLORS.BLUE}💡 Pro Tip:${TERMINAL_CONFIG.COLORS.RESET} Try 'home', 'skills', 'about', or 'projects' to navigate!`);
+    // Welcome - language specific
+    if (isGerman) {
+      term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}╭─────────────────────────────────────────╮${TERMINAL_CONFIG.COLORS.RESET}`);
+      term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}│  Willkommen bei daniel@portfolio shell  │${TERMINAL_CONFIG.COLORS.RESET}`);
+      term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}│  Interaktives Portfolio Terminal         │${TERMINAL_CONFIG.COLORS.RESET}`);
+      term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}╰─────────────────────────────────────────╯${TERMINAL_CONFIG.COLORS.RESET}`);
+      term.writeln('');
+      term.writeln(`${TERMINAL_CONFIG.COLORS.BLUE}🚀 Schnellstart:${TERMINAL_CONFIG.COLORS.RESET}`);
+      term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • Tippe 'hilfe' für alle verfügbaren Befehle${TERMINAL_CONFIG.COLORS.RESET}`);
+      term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • 'T' Taste zum Ein-/Ausblenden des Terminals${TERMINAL_CONFIG.COLORS.RESET}`);
+      term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • 'Esc' zum Schließen des Terminals${TERMINAL_CONFIG.COLORS.RESET}`);
+      term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • Pfeiltasten zur Navigation, Enter zum Ausführen${TERMINAL_CONFIG.COLORS.RESET}`);
+      term.writeln('');
+      term.writeln(`${TERMINAL_CONFIG.COLORS.BLUE}💡 Pro-Tipp:${TERMINAL_CONFIG.COLORS.RESET} Probiere 'start', 'fähigkeiten', 'über-mich' oder 'projekte'!`);
+    } else {
+      term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}╭─────────────────────────────────────────╮${TERMINAL_CONFIG.COLORS.RESET}`);
+      term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}│  Welcome to daniel@portfolio shell      │${TERMINAL_CONFIG.COLORS.RESET}`);
+      term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}│  Interactive Portfolio Terminal         │${TERMINAL_CONFIG.COLORS.RESET}`);
+      term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}╰─────────────────────────────────────────╯${TERMINAL_CONFIG.COLORS.RESET}`);
+      term.writeln('');
+      term.writeln(`${TERMINAL_CONFIG.COLORS.BLUE}🚀 Quick Start:${TERMINAL_CONFIG.COLORS.RESET}`);
+      term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • Type 'help' to see all available commands${TERMINAL_CONFIG.COLORS.RESET}`);
+      term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • Use 'T' key to toggle terminal anytime${TERMINAL_CONFIG.COLORS.RESET}`);
+      term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • Press 'Esc' to close terminal${TERMINAL_CONFIG.COLORS.RESET}`);
+      term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • Navigate with arrow keys, Enter to execute${TERMINAL_CONFIG.COLORS.RESET}`);
+      term.writeln('');
+      term.writeln(`${TERMINAL_CONFIG.COLORS.BLUE}💡 Pro Tip:${TERMINAL_CONFIG.COLORS.RESET} Try 'home', 'skills', 'about', or 'projects' to navigate!`);
+    }
     term.writeln('');
     term.write(prompt);
 

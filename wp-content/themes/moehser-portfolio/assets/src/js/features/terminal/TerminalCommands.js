@@ -149,43 +149,87 @@ const openImprint = () => {
   }
 };
 
-export const makeCommands = () => ({
-  help: {
-    title: 'moehser-portfolio/',
-    lines: [
-      '├── 🧭 Navigation',
-      '│   ├── home        → go to hero section',
-      '│   ├── skills      → go to skills section', 
-      '│   ├── about       → go to about section',
-      '│   ├── projects    → go to projects section',
-      '│   └── imprint     → open imprint page',
-      '',
-      '├── 📋 Project Layout',
-      '│   ├── grid        → switch to grid view',
-      '│   └── list        → switch to list view',
-      '',
-      '├── 🎨 Theme Control',
-      '│   ├── light       → switch to light mode',
-      '│   └── dark        → switch to dark mode',
-      '',
-      '├── 🌐 Social Media',
-      '│   ├── github      → open GitHub profile',
-      '│   ├── linkedin    → open LinkedIn profile',
-      '│   └── email       → open email client',
-      '',
-      '├── 💼 Professional Info',
-      '│   ├── stack       → show core technologies',
-      '│   ├── experience  → show what I deliver',
-      '│   └── contact     → get in touch',
-      '',
-      '└── 🎯 Quick Actions',
-      '    ├── help        → show this menu',
-      '    ├── clear       → clear terminal',
-      '    └── ESC         → close terminal',
-      '',
-      '💡 Use arrow keys to navigate, Enter to execute!',
-    ],
-  },
+// Helper function to detect German language
+const isGerman = () => {
+  if (typeof window === 'undefined') return false;
+  return window.location.pathname.includes('/de/');
+};
+
+export const makeCommands = () => {
+  const german = isGerman();
+  
+  const baseCommands = {
+    help: german ? {
+      title: 'moehser-portfolio/',
+      lines: [
+        '├── 🧭 Navigation',
+        '│   ├── start        → zur Startseite',
+        '│   ├── fähigkeiten  → zu den Fähigkeiten', 
+        '│   ├── über-mich    → zum Über-Mich Bereich',
+        '│   ├── projekte     → zu den Projekten',
+        '│   └── impressum    → Impressum öffnen',
+        '',
+        '├── 📋 Projekt-Layout',
+        '│   ├── grid        → Raster-Ansicht',
+        '│   └── list        → Listen-Ansicht',
+        '',
+        '├── 🎨 Theme-Steuerung',
+        '│   ├── hell        → Hell-Modus',
+        '│   └── dunkel      → Dunkel-Modus',
+        '',
+        '├── 🌐 Social Media',
+        '│   ├── github      → GitHub-Profil öffnen',
+        '│   ├── linkedin    → LinkedIn-Profil öffnen',
+        '│   └── email       → E-Mail-Client öffnen',
+        '',
+        '├── 💼 Professionelle Infos',
+        '│   ├── stack       → Kern-Technologien anzeigen',
+        '│   ├── erfahrung   → Was ich biete',
+        '│   └── kontakt     → Kontakt aufnehmen',
+        '',
+        '└── 🎯 Schnellaktionen',
+        '    ├── hilfe      → dieses Menü anzeigen',
+        '    ├── löschen    → Terminal leeren',
+        '    └── ESC        → Terminal schließen',
+        '',
+        '💡 Pfeiltasten zur Navigation, Enter zum Ausführen!',
+      ],
+    } : {
+      title: 'moehser-portfolio/',
+      lines: [
+        '├── 🧭 Navigation',
+        '│   ├── home        → go to hero section',
+        '│   ├── skills      → go to skills section', 
+        '│   ├── about       → go to about section',
+        '│   ├── projects    → go to projects section',
+        '│   └── imprint     → open imprint page',
+        '',
+        '├── 📋 Project Layout',
+        '│   ├── grid        → switch to grid view',
+        '│   └── list        → switch to list view',
+        '',
+        '├── 🎨 Theme Control',
+        '│   ├── light       → switch to light mode',
+        '│   └── dark        → switch to dark mode',
+        '',
+        '├── 🌐 Social Media',
+        '│   ├── github      → open GitHub profile',
+        '│   ├── linkedin    → open LinkedIn profile',
+        '│   └── email       → open email client',
+        '',
+        '├── 💼 Professional Info',
+        '│   ├── stack       → show core technologies',
+        '│   ├── experience  → show what I deliver',
+        '│   └── contact     → get in touch',
+        '',
+        '└── 🎯 Quick Actions',
+        '    ├── help        → show this menu',
+        '    ├── clear       → clear terminal',
+        '    └── ESC         → close terminal',
+        '',
+        '💡 Use arrow keys to navigate, Enter to execute!',
+      ],
+    },
   stack: {
     title: 'Tech Stack & Skills',
     lines: getSkillsFromCards(),
@@ -330,8 +374,26 @@ export const makeCommands = () => ({
       'Changing theme to dark mode...',
       'This will switch the entire portfolio to dark theme.',
     ],
-  },
-});
+  }
+  };
+  
+  // Add German command aliases if German is detected
+  if (german) {
+    baseCommands.hilfe = baseCommands.help;
+    baseCommands.start = { title: 'Navigating to Start', lines: ['Going to hero section...'] };
+    baseCommands.fähigkeiten = { title: 'Navigating to Skills', lines: ['Going to skills section...'] };
+    baseCommands['über-mich'] = { title: 'Navigating to About', lines: ['Going to about section...'] };
+    baseCommands.projekte = { title: 'Navigating to Projects', lines: ['Going to projects section...'] };
+    baseCommands.impressum = { title: 'Opening Imprint', lines: ['Opening imprint page...'] };
+    baseCommands.hell = { title: 'Switching to Light Mode', lines: ['Changing theme to light mode...'] };
+    baseCommands.dunkel = { title: 'Switching to Dark Mode', lines: ['Changing theme to dark mode...'] };
+    baseCommands.erfahrung = { title: 'Professional Experience', lines: ['Showing professional experience...'] };
+    baseCommands.kontakt = { title: 'Contact Information', lines: ['Showing contact information...'] };
+    baseCommands.löschen = { title: 'Terminal Cleared', lines: ['Terminal geleert. Tippe "hilfe" für verfügbare Befehle.'] };
+  }
+  
+  return baseCommands;
+};
 
 export const COMMAND_ORDER = [
   'help',
