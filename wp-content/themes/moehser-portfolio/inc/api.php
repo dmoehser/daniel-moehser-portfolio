@@ -42,8 +42,6 @@ add_action('rest_api_init', function () {
 		'methods' => 'GET',
 		'permission_callback' => '__return_true',
 		'callback' => function ($request) {
-			// Check if we're on localized path
-			$is_localized = preg_match('/\/[a-z]{2}\//', $_SERVER['REQUEST_URI'] ?? '');
 			$status = $request->get_param('status');
 			// Order by menu_order ASC (custom order), then by date DESC as fallback
 			$orderby = 'menu_order';
@@ -79,23 +77,10 @@ add_action('rest_api_init', function () {
 					$featured_wide_2x = $featured_id ? wp_get_attachment_image_src($featured_id, 'project_wide_2x') : false;
 					$featured_srcset = $featured_id ? wp_get_attachment_image_srcset($featured_id, 'project_wide') : '';
 					
-					// Get language-specific content
+					// Get project content
 					$title = html_entity_decode($project->post_title, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 					$content = $project->post_content;
 					$excerpt = $project->post_excerpt;
-					
-					// Check for German translations in meta
-					if ($is_localized) {
-						$title_de = isset($meta['project_title_de'][0]) ? $meta['project_title_de'][0] : '';
-						$content_de = isset($meta['project_content_de'][0]) ? $meta['project_content_de'][0] : '';
-						$excerpt_de = isset($meta['project_excerpt_de'][0]) ? $meta['project_excerpt_de'][0] : '';
-						$technologies_de = isset($meta['project_technologies_de'][0]) ? $meta['project_technologies_de'][0] : '';
-						
-						if (!empty($title_de)) $title = $title_de;
-						if (!empty($content_de)) $content = $content_de;
-						if (!empty($excerpt_de)) $excerpt = $excerpt_de;
-						if (!empty($technologies_de)) $meta['project_technologies'][0] = $technologies_de;
-					}
 					
 					$result[] = [
 						'id' => $project->ID,
@@ -119,7 +104,7 @@ add_action('rest_api_init', function () {
 						'project_url_external' => isset($meta['project_url'][0]) ? $meta['project_url'][0] : '',
 						'project_demo_mode' => isset($meta['project_demo_mode'][0]) ? $meta['project_demo_mode'][0] : 'iframe',
 						'project_github_url' => isset($meta['project_github_url'][0]) ? $meta['project_github_url'][0] : '',
-						'language' => $is_localized ? 'de' : 'en',
+						'language' => 'en',
 					];
 				}
 			}
@@ -203,39 +188,23 @@ add_action('rest_api_init', function () {
 		'methods' => 'GET',
 		'permission_callback' => '__return_true',
 		'callback' => function ($request) {
-			$is_localized = preg_match('/\/[a-z]{2}\//', $_SERVER['REQUEST_URI'] ?? '');
-			
-			// Get language-specific content from customizer
+			// Get content from customizer
 			$content = [
-				'language' => $is_localized ? 'de' : 'en',
+				'language' => 'en',
 				'about' => [
-					'title' => $is_localized ? 
-						get_theme_mod('moehser_about_title_de', 'Über mich') : 
-						get_theme_mod('moehser_about_title', 'About Me'),
-					'subtitle' => $is_localized ? 
-						get_theme_mod('moehser_about_subtitle_de', 'Meine Geschichte & Erfahrung') : 
-						get_theme_mod('moehser_about_subtitle', 'My story & experience'),
+					'title' => get_theme_mod('moehser_about_title', 'About Me'),
+					'subtitle' => get_theme_mod('moehser_about_subtitle', 'My story & experience'),
 				],
 				'projects' => [
-					'title' => $is_localized ? 
-						get_theme_mod('moehser_projects_title_de', 'Projekte') : 
-						get_theme_mod('moehser_projects_title', 'Projects'),
-					'subtitle' => $is_localized ? 
-						get_theme_mod('moehser_projects_subtitle_de', 'Meine neuesten Arbeiten und Projekte') : 
-						get_theme_mod('moehser_projects_subtitle', 'My latest work and projects'),
+					'title' => get_theme_mod('moehser_projects_title', 'Projects'),
+					'subtitle' => get_theme_mod('moehser_projects_subtitle', 'My latest work and projects'),
 				],
 				'skills' => [
-					'title' => $is_localized ? 
-						get_theme_mod('moehser_skills_title_de', 'Fähigkeiten') : 
-						get_theme_mod('moehser_skills_title', 'Skills'),
-					'subtitle' => $is_localized ? 
-						get_theme_mod('moehser_skills_subtitle_de', 'Technologien & Tools mit denen ich arbeite') : 
-						get_theme_mod('moehser_skills_subtitle', 'Technologies & tools I work with'),
+					'title' => get_theme_mod('moehser_skills_title', 'Skills'),
+					'subtitle' => get_theme_mod('moehser_skills_subtitle', 'Technologies & tools I work with'),
 				],
 				'imprint' => [
-					'title' => $is_localized ? 
-						get_theme_mod('moehser_imprint_title_de', 'Impressum') : 
-						get_theme_mod('moehser_imprint_title', 'Imprint'),
+					'title' => get_theme_mod('moehser_imprint_title', 'Imprint'),
 				]
 			];
 			
@@ -244,18 +213,10 @@ add_action('rest_api_init', function () {
 			for ($i = 1; $i <= 5; $i++) {
 				$card_id = "card{$i}";
 				$skills_cards[$card_id] = [
-					'title' => $is_localized ? 
-						get_theme_mod("moehser_skills_{$card_id}_title_de", '') : 
-						get_theme_mod("moehser_skills_{$card_id}_title", ''),
-					'description' => $is_localized ? 
-						get_theme_mod("moehser_skills_{$card_id}_description_de", '') : 
-						get_theme_mod("moehser_skills_{$card_id}_description", ''),
-					'tags' => $is_localized ? 
-						get_theme_mod("moehser_skills_{$card_id}_tags_de", '') : 
-						get_theme_mod("moehser_skills_{$card_id}_tags", ''),
-					'skills_list' => $is_localized ? 
-						get_theme_mod("moehser_skills_{$card_id}_skills_list_de", '') : 
-						get_theme_mod("moehser_skills_{$card_id}_skills_list", ''),
+					'title' => get_theme_mod("moehser_skills_{$card_id}_title", ''),
+					'description' => get_theme_mod("moehser_skills_{$card_id}_description", ''),
+					'tags' => get_theme_mod("moehser_skills_{$card_id}_tags", ''),
+					'skills_list' => get_theme_mod("moehser_skills_{$card_id}_skills_list", ''),
 				];
 			}
 			$content['skills']['cards'] = $skills_cards;

@@ -138,11 +138,20 @@ require_once get_theme_file_path('inc/cpt-project.php'); // Step 1: Basic projec
 require_once get_theme_file_path('inc/setup-projects.php'); // Activated: Creates example projects if none exist
 
 // Global language detection function
-if (!function_exists('is_german_subdomain')) {
-    function is_german_subdomain() {
-        $host = $_SERVER['HTTP_HOST'] ?? '';
-        return strpos($host, 'de.localhost') !== false || 
-               strpos($host, 'de.') !== false;
+if (!function_exists('get_current_language')) {
+    function get_current_language() {
+        $uri = $_SERVER['REQUEST_URI'] ?? '';
+        // Extract language code from path (e.g., /de/, /fr/, /es/, etc.)
+        if (preg_match('/\/([a-z]{2})\//', $uri, $matches)) {
+            return $matches[1];
+        }
+        return 'en'; // Default to English
+    }
+}
+
+if (!function_exists('is_localized_path')) {
+    function is_localized_path() {
+        return get_current_language() !== 'en';
     }
 }
 
