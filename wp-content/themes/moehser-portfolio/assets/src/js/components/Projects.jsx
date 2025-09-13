@@ -1096,23 +1096,7 @@ export default function Projects() {
       </div>
       
       {/* Footer */}
-      <Footer show={true} />
-      
-      {/* Credits below footer - test */}
-      <div style={{textAlign: 'center', marginTop: '1rem', padding: '1rem'}}>
-        <p style={{margin: '0 0 0.5rem 0'}}>
-          <small>
-            Created with ❤️ by{' '}
-            <a href="https://danielmoehser.dev" style={{textDecoration: 'none', fontFamily: 'monospace', fontWeight: 'bold'}}>
-              <span className="brand-bracket">&lt;</span><span className="brand-base">danielmoehser</span><span className="brand-accent">.dev</span><span className="brand-bracket"> /&gt;</span>
-            </a>
-          </small>
-        </p>
-        <p style={{margin: '0', color: '#64748b', fontSize: '0.75rem'}}>
-          <small>No cookies used</small>
-        </p>
-      </div>
-      
+      <Footer show={true} />      
     </section>
   );
 }
