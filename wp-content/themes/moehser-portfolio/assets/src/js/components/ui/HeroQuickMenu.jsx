@@ -34,7 +34,6 @@ export default function HeroQuickMenu() {
           ? '/de/wp-json/moehser/v1/menu/header_primary'
           : '/wp-json/moehser/v1/menu/header_primary';
         
-        console.log('Loading menu from:', apiUrl);
         
         const res = await fetch(apiUrl);
         if (!res.ok) throw new Error('Menu API failed');
@@ -45,7 +44,6 @@ export default function HeroQuickMenu() {
           const filteredItems = Array.isArray(data) 
             ? data.filter(item => !item.parent) 
             : [];
-          console.log('HeroQuickMenu: Menu items loaded:', filteredItems);
           setMenuItems(filteredItems);
         }
       } catch (error) {

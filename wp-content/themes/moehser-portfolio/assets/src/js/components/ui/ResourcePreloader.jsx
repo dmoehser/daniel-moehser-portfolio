@@ -9,64 +9,20 @@ import React, { useEffect } from 'react';
 // Critical resources configuration
 // ------------------------------
 const CRITICAL_RESOURCES = {
-  // Fonts - highest priority
-  fonts: [
-    {
-      href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap',
-      as: 'style',
-      type: 'text/css',
-      crossorigin: 'anonymous',
-      priority: 'high'
-    },
-    {
-      href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap',
-      as: 'style',
-      type: 'text/css',
-      crossorigin: 'anonymous',
-      priority: 'high'
-    }
-  ],
+  // Fonts - already preloaded in header.php
+  fonts: [],
   
   // Critical images - above the fold
   images: [],
   
-  // Critical CSS - inline critical styles
-  css: [
-    {
-      href: (window.location.hostname === 'localhost' || window.location.hostname === 'de.localhost') && window.location.port === '8080' 
-        ? 'http://localhost:5173/wp-content/themes/moehser-portfolio/assets/src/scss/main.scss'
-        : '/wp-content/themes/moehser-portfolio/assets/dist/assets/main.css',
-      as: 'style',
-      type: 'text/css',
-      priority: 'high'
-    }
-  ],
+  // Critical CSS - already preloaded in header.php
+  css: [],
   
-  // JavaScript - main bundle
-  scripts: [
-    {
-      href: (window.location.hostname === 'localhost' || window.location.hostname === 'de.localhost') && window.location.port === '8080' 
-        ? 'http://localhost:5173/wp-content/themes/moehser-portfolio/assets/src/js/main.jsx'
-        : '/wp-content/themes/moehser-portfolio/assets/dist/assets/main.js',
-      as: 'script',
-      type: 'text/javascript',
-      priority: 'high'
-    }
-  ],
+  // JavaScript - already preloaded in header.php
+  scripts: [],
   
-  // API endpoints - preconnect to external domains
-  connections: [
-    {
-      href: 'https://fonts.googleapis.com',
-      rel: 'preconnect',
-      crossorigin: 'anonymous'
-    },
-    {
-      href: 'https://fonts.gstatic.com',
-      rel: 'preconnect',
-      crossorigin: 'anonymous'
-    }
-  ]
+  // API endpoints - preconnect already in header.php
+  connections: []
 };
 
 // Resource preloader hook
