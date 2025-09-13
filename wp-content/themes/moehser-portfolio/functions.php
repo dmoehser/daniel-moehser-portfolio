@@ -31,10 +31,19 @@ add_action('template_redirect', function() {
                        (is_page() && get_page_template_slug() === 'page-imprint.php');
     
     if ($is_imprint_page) {
-        add_filter('document_title_parts', function($title) {
-            $title['title'] = 'Imprint';
-            $title['site'] = get_bloginfo('name');
-            return $title;
+        // Set 200 status code to eliminate 404 error
+        status_header(200);
+        
+        // Set proper title based on language
+        $title = 'Imprint';
+        if (strpos($request_uri, '/de/imprint') !== false) {
+            $title = 'Impressum';
+        }
+        
+        add_filter('document_title_parts', function($title_parts) use ($title) {
+            $title_parts['title'] = $title;
+            $title_parts['site'] = get_bloginfo('name');
+            return $title_parts;
         });
         
         // Pass imprint data to JavaScript
