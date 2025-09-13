@@ -31,6 +31,31 @@ export default function ContactForm({ isExpanded, onToggle, businessSubject, hid
     'Business Inquiry - Portfolio Contact';
   
   const finalBusinessSubject = businessSubject || defaultBusinessSubject;
+  
+  // Detect language for form text
+  const isGerman = typeof window !== 'undefined' && 
+    (window.location.pathname.includes('/de/') || 
+     document.querySelector('.imprint__content-text')?.innerHTML.includes('Kontakt'));
+  
+  // Language-specific texts
+  const texts = {
+    en: {
+      toggle: { open: 'Contact Form', close: 'Close Contact Form' },
+      header: { title: 'Get in Touch', description: 'Send me a message and I\'ll get back to you as soon as possible.' },
+      labels: { name: 'Name *', email: 'Email *', subject: 'Subject *', message: 'Message *' },
+      placeholder: 'Tell me about your project or inquiry...',
+      button: { sending: 'Sending...', send: 'Send Message' }
+    },
+    de: {
+      toggle: { open: 'Kontaktformular', close: 'Kontaktformular schließen' },
+      header: { title: 'Kontakt aufnehmen', description: 'Senden Sie mir eine Nachricht und ich melde mich so schnell wie möglich bei Ihnen.' },
+      labels: { name: 'Name *', email: 'E-Mail *', subject: 'Betreff *', message: 'Nachricht *' },
+      placeholder: 'Erzählen Sie mir von Ihrem Projekt oder Ihrer Anfrage...',
+      button: { sending: 'Wird gesendet...', send: 'Nachricht senden' }
+    }
+  };
+  
+  const t = texts[isGerman ? 'de' : 'en'];
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -171,7 +196,7 @@ export default function ContactForm({ isExpanded, onToggle, businessSubject, hid
             {isExpanded ? '✕' : '📧'}
           </span>
           <span className="contact-form__toggle-text">
-            {isExpanded ? 'Close Contact Form' : 'Contact Form'}
+            {isExpanded ? t.toggle.close : t.toggle.open}
           </span>
         </motion.button>
       )}
@@ -195,16 +220,16 @@ export default function ContactForm({ isExpanded, onToggle, businessSubject, hid
               transition={{ ...ANIMATION.TIMING, delay: 0.1 }}
             >
               <div className="contact-form__header">
-                <h3 className="contact-form__title">Get in Touch</h3>
+                <h3 className="contact-form__title">{t.header.title}</h3>
                 <p className="contact-form__description">
-                  Send me a message and I'll get back to you as soon as possible.
+                  {t.header.description}
                 </p>
               </div>
 
               <div className="contact-form__fields">
                 <div className="contact-form__field">
                   <label htmlFor="contact-name" className="contact-form__label">
-                    Name *
+                    {t.labels.name}
                   </label>
                   <input
                     type="text"
@@ -220,7 +245,7 @@ export default function ContactForm({ isExpanded, onToggle, businessSubject, hid
 
                 <div className="contact-form__field">
                   <label htmlFor="contact-email" className="contact-form__label">
-                    Email *
+                    {t.labels.email}
                   </label>
                   <input
                     type="email"
@@ -236,7 +261,7 @@ export default function ContactForm({ isExpanded, onToggle, businessSubject, hid
 
                 <div className="contact-form__field">
                   <label htmlFor="contact-subject" className="contact-form__label">
-                    Subject *
+                    {t.labels.subject}
                   </label>
                   <input
                     type="text"
@@ -252,7 +277,7 @@ export default function ContactForm({ isExpanded, onToggle, businessSubject, hid
 
                 <div className="contact-form__field">
                   <label htmlFor="contact-message" className="contact-form__label">
-                    Message *
+                    {t.labels.message}
                   </label>
                   <textarea
                     id="contact-message"
@@ -263,7 +288,7 @@ export default function ContactForm({ isExpanded, onToggle, businessSubject, hid
                     rows="5"
                     required
                     disabled={isSubmitting}
-                    placeholder="Tell me about your project or inquiry..."
+                    placeholder={t.placeholder}
                   />
                 </div>
 
@@ -279,7 +304,7 @@ export default function ContactForm({ isExpanded, onToggle, businessSubject, hid
                     className="contact-form__submit"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? 'Sending...' : 'Send Message'}
+                    {isSubmitting ? t.button.sending : t.button.send}
                   </button>
                 </div>
 

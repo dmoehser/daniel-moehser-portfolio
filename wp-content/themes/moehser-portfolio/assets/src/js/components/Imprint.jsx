@@ -28,12 +28,34 @@ export default function Imprint() {
     (window.__BUSINESS_EMAIL_SUBJECT__ || 'Business Inquiry - Portfolio Contact') : 
     'Business Inquiry - Portfolio Contact';
 
-  // Process content to replace h3 Contact with contact form
+  // Process content to replace h3 Contact/Kontakt with contact form
   const processImprintContent = (html) => {
     if (!html) return '';
     
-    // Replace <h3>Contact</h3> with contact form button
-    const contactFormButton = `
+    // Detect language from URL or content
+    const isGerman = typeof window !== 'undefined' && 
+      (window.location.pathname.includes('/de/') || 
+       html.includes('Kontakt') || 
+       html.includes('Impressum'));
+    
+    // German contact form button
+    const germanContactFormButton = `
+      <div class="imprint-contact-section">
+        <h3>Kontakt</h3>
+        <div class="contact-form-container">
+          <button class="contact-form__toggle" onclick="window.toggleImprintContactForm()" id="imprint-contact-toggle">
+            <span class="contact-form__toggle-icon">📧</span>
+            <span class="contact-form__toggle-text">Kontaktformular</span>
+          </button>
+          <div class="contact-form__wrapper" id="imprint-contact-form-wrapper" style="display: none;">
+            <!-- Contact form will be rendered here -->
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // English contact form button
+    const englishContactFormButton = `
       <div class="imprint-contact-section">
         <h3>Contact</h3>
         <div class="contact-form-container">
@@ -48,7 +70,12 @@ export default function Imprint() {
       </div>
     `;
     
-    return html.replace(/<h3[^>]*>Contact<\/h3>/gi, contactFormButton);
+    // Replace based on language
+    if (isGerman) {
+      return html.replace(/<h3[^>]*>Kontakt<\/h3>/gi, germanContactFormButton);
+    } else {
+      return html.replace(/<h3[^>]*>Contact<\/h3>/gi, englishContactFormButton);
+    }
   };
 
   const processedContent = processImprintContent(contentToShow);
@@ -141,12 +168,17 @@ export default function Imprint() {
         const icon = toggleButton.querySelector('.contact-form__toggle-icon');
         const text = toggleButton.querySelector('.contact-form__toggle-text');
         
+        // Detect language for button text
+        const isGerman = typeof window !== 'undefined' && 
+          (window.location.pathname.includes('/de/') || 
+           document.querySelector('.imprint__content-text')?.innerHTML.includes('Kontakt'));
+        
         if (isContactFormExpanded) {
           icon.textContent = '✕';
-          text.textContent = 'Close Contact Form';
+          text.textContent = isGerman ? 'Kontaktformular schließen' : 'Close Contact Form';
         } else {
           icon.textContent = '📧';
-          text.textContent = 'Contact Form';
+          text.textContent = isGerman ? 'Kontaktformular' : 'Contact Form';
         }
         
         // Clear and render form
