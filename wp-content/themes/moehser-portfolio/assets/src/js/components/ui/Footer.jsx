@@ -5,7 +5,6 @@ import React, { useEffect, useState } from 'react';
 
 export default function Footer({ show = false }) {
   const [footerMenuItems, setFooterMenuItems] = useState([]);
-  const [isInProjectsSection, setIsInProjectsSection] = useState(false);
 
   // Detect language
   const isGerman = typeof window !== 'undefined' && 
@@ -66,36 +65,6 @@ export default function Footer({ show = false }) {
     return () => { cancelled = true; };
   }, [isGerman]);
 
-  // Check if we're in the Projects section
-  useEffect(() => {
-    const checkProjectsSection = () => {
-      const projectsSection = document.getElementById('projects');
-      if (!projectsSection) {
-        setIsInProjectsSection(false);
-        return;
-      }
-      
-      const rect = projectsSection.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      
-      // Show footer only when Projects section is significantly visible
-      const sectionHeight = rect.bottom - rect.top;
-      const visibleHeight = Math.min(rect.bottom, windowHeight) - Math.max(rect.top, 0);
-      const isVisible = visibleHeight > (sectionHeight * 0.5);
-      
-      setIsInProjectsSection(isVisible);
-    };
-    
-    // Check on scroll and resize
-    window.addEventListener('scroll', checkProjectsSection);
-    window.addEventListener('resize', checkProjectsSection);
-    checkProjectsSection(); // Initial check
-    
-    return () => {
-      window.removeEventListener('scroll', checkProjectsSection);
-      window.removeEventListener('resize', checkProjectsSection);
-    };
-  }, []);
 
   // Handle menu item click
   const handleMenuItemClick = (e, url) => {
@@ -103,10 +72,7 @@ export default function Footer({ show = false }) {
     window.location.href = url;
   };
 
-  // Don't render footer if not in Projects section and show is false
-  if (!show && !isInProjectsSection) {
-    return null;
-  }
+  // Always render footer - simple and clean
 
   // Get fallback items if no menu items are loaded
   const displayItems = footerMenuItems.length > 0 ? footerMenuItems : [{
