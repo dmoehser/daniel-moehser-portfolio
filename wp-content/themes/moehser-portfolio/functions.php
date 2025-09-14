@@ -246,20 +246,55 @@ add_action('wp_head', function() {
 // ----------------------------------------------
 add_action('template_redirect', 'auto_language_redirect');
 
+// Debug Admin Redirect Issues
+// ---------------------------
+add_action('template_redirect', 'debug_admin_redirects', 1);
+
+function debug_admin_redirects() {
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    error_log('DEBUG ADMIN: Request URI: ' . $request_uri);
+    error_log('DEBUG ADMIN: is_admin: ' . (is_admin() ? 'true' : 'false'));
+    error_log('DEBUG ADMIN: HTTP_HOST: ' . ($_SERVER['HTTP_HOST'] ?? 'unknown'));
+    error_log('DEBUG ADMIN: SERVER_NAME: ' . ($_SERVER['SERVER_NAME'] ?? 'unknown'));
+    
+    if (strpos($request_uri, '/wp-admin') !== false) {
+        error_log('DEBUG ADMIN: wp-admin request detected');
+        error_log('DEBUG ADMIN: Current blog ID: ' . get_current_blog_id());
+        error_log('DEBUG ADMIN: Site URL: ' . get_site_url());
+        error_log('DEBUG ADMIN: Home URL: ' . get_home_url());
+    }
+}
+
 function auto_language_redirect() {
+    // DEBUG: Log all redirect attempts
+    error_log('DEBUG: auto_language_redirect called for: ' . ($_SERVER['REQUEST_URI'] ?? 'unknown'));
+    error_log('DEBUG: is_home: ' . (is_home() ? 'true' : 'false') . ', is_front_page: ' . (is_front_page() ? 'true' : 'false'));
+    error_log('DEBUG: is_admin: ' . (is_admin() ? 'true' : 'false') . ', is_customize_preview: ' . (is_customize_preview() ? 'true' : 'false'));
+    
     // Only redirect on homepage, not on subpages or admin
     if (!is_home() && !is_front_page()) {
+        error_log('DEBUG: Not homepage, returning');
         return;
     }
     
     // Don't redirect in admin or customize preview
     if (is_admin() || is_customize_preview()) {
+        error_log('DEBUG: Admin or customize preview, returning');
+        return;
+    }
+    
+    // Don't redirect on wp-admin pages (multisite fix)
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    if (strpos($request_uri, '/wp-admin') !== false) {
+        error_log('DEBUG: wp-admin detected in URI, returning');
         return;
     }
     
     // Don't redirect if already on German page
     $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    error_log('DEBUG: Request URI: ' . $request_uri);
     if (strpos($request_uri, '/de/') !== false) {
+        error_log('DEBUG: Already on German page, returning');
         return;
     }
     
