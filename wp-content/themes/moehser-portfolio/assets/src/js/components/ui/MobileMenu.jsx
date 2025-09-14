@@ -254,10 +254,11 @@ export default function MobileMenu() {
         ref={buttonRef}
         className={`mobile-menu__toggle ${isOpen ? 'mobile-menu__toggle--open' : ''}`}
         onClick={() => setIsOpen(!isOpen)}
-        aria-label={isOpen ? 'Close menu' : 'Open menu'}
+        aria-label={isOpen ? 'Close mobile navigation menu' : 'Open mobile navigation menu'}
         aria-expanded={isOpen}
+        aria-controls="mobile-menu-content"
       >
-        <span className="mobile-menu__hamburger">
+        <span className="mobile-menu__hamburger" aria-hidden="true">
           <span className="mobile-menu__line"></span>
           <span className="mobile-menu__line"></span>
           <span className="mobile-menu__line"></span>
@@ -266,15 +267,18 @@ export default function MobileMenu() {
       
       <div 
         ref={menuRef}
+        id="mobile-menu-content"
         className={`mobile-menu__overlay ${isOpen ? 'mobile-menu__overlay--open' : ''}`}
         aria-hidden={!isOpen}
+        role="navigation"
+        aria-label="Mobile navigation menu"
       >
         <button
           className="mobile-menu__close"
           onClick={() => setIsOpen(false)}
-          aria-label="Close menu"
+          aria-label="Close mobile navigation menu"
         >
-          <span className="mobile-menu__close-icon">×</span>
+          <span className="mobile-menu__close-icon" aria-hidden="true">×</span>
         </button>
         
         <nav className="mobile-menu__nav">
@@ -288,6 +292,7 @@ export default function MobileMenu() {
                 key={item.id} 
                 href={`${isGerman ? '/de' : ''}/#${id || ''}`} 
                 className="mobile-menu__link" 
+                aria-label={`Navigate to ${label} section`}
                 onClick={(e) => {
                   e.preventDefault();
                   // Close mobile menu first
