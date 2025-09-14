@@ -252,40 +252,69 @@ function auto_language_redirect() {
         return;
     }
     
-    // Don't redirect if already on German page or manual language selection
-    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
-    if (strpos($request_uri, '/de/') !== false || 
-        isset($_GET['lang']) || 
-        isset($_GET['no-redirect'])) {
-        return;
-    }
-    
     // Don't redirect in admin or customize preview
     if (is_admin() || is_customize_preview()) {
         return;
     }
     
-    // Get browser language preferences
-    $accept_language = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '';
+    // Don't redirect if already on German page
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    if (strpos($request_uri, '/de/') !== false) {
+        return;
+    }
     
-    // Check if German is preferred language
-    $german_variants = ['de', 'de-DE', 'de-AT', 'de-CH', 'de-LU', 'de-LI'];
-    $is_german_preferred = false;
-    
-    foreach ($german_variants as $variant) {
-        if (strpos($accept_language, $variant) === 0 || 
-            strpos($accept_language, $variant . ',') !== false ||
-            strpos($accept_language, $variant . ';') !== false) {
-            $is_german_preferred = true;
-            break;
+    // Check if user has manually chosen a language via URL parameters
+    if (isset($_GET['lang'])) {
+        if ($_GET['lang'] === 'en') {
+            // User explicitly chose English - redirect to clean URL without parameters
+            wp_redirect(home_url('/'), 302);
+            exit;
+        } elseif ($_GET['lang'] === 'de') {
+            // User explicitly chose German - redirect to German homepage
+            wp_redirect('/de/', 302);
+            exit;
         }
+        return; // Don't auto-redirect if manual language selection
     }
     
-    // Redirect to German homepage if German is preferred
-    if ($is_german_preferred) {
-        wp_redirect('/de/', 302);
-        exit;
+    // Don't redirect if user explicitly disabled auto-redirect
+    if (isset($_GET['no-redirect'])) {
+        return;
     }
+    
+    // Add JavaScript to check localStorage for manual language preference
+    // This will run before the auto-redirect logic
+    ?>
+    <script>
+    (function() {
+        // Check if user has manually set language preference
+        const userPref = localStorage.getItem('user_language_preference');
+        if (userPref === 'en') {
+            // User previously chose English, don't auto-redirect
+            return;
+        }
+        
+        // Only proceed with auto-redirect if no manual preference or preference is German
+        if (userPref === 'de' || !userPref) {
+            // Get browser language preferences
+            const acceptLanguage = navigator.language || navigator.userLanguage || '';
+            
+            // Check if German is preferred language
+            const germanVariants = ['de', 'de-DE', 'de-AT', 'de-CH', 'de-LU', 'de-LI'];
+            const isGermanPreferred = germanVariants.some(variant => 
+                acceptLanguage.startsWith(variant) || 
+                acceptLanguage.includes(variant + ',') ||
+                acceptLanguage.includes(variant + ';')
+            );
+            
+            // Redirect to German homepage if German is preferred
+            if (isGermanPreferred) {
+                window.location.href = '/de/';
+            }
+        }
+    })();
+    </script>
+    <?php
 }
 
 add_action('wp_head', function() {

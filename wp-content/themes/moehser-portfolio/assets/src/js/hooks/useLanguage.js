@@ -91,6 +91,10 @@ export function useLanguage() {
 
   // Switch language (no cookies, direct redirect)
   const switchLanguage = () => {
+    // Save user's manual language preference to localStorage
+    const newLanguage = isGerman ? 'en' : 'de';
+    localStorage.setItem('user_language_preference', newLanguage);
+    
     const switchUrl = getSwitchUrl();
     window.location.href = switchUrl;
   };
