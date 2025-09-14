@@ -1,20 +1,35 @@
-# BEGIN WordPress
+# BEGIN WordPress Multisite
 <IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 RewriteBase /
 
-RewriteRule ^index\.php$ - [L]
+# WordPress Multisite Subdirectory Rules
+# ======================================
 
-# add a trailing slash to /wp-admin
+# Add trailing slash to wp-admin
 RewriteRule ^([_0-9a-zA-Z-]+/)?wp-admin$ $1wp-admin/ [R=301,L]
 
+# Handle wp-includes and wp-content for all sites
+RewriteRule ^([_0-9a-zA-Z-]+/)?wp-includes/(.*) wp-includes/$2 [L]
+RewriteRule ^([_0-9a-zA-Z-]+/)?wp-content/(.*) wp-content/$2 [L]
+RewriteRule ^([_0-9a-zA-Z-]+/)?wp-admin/(.*) wp-admin/$2 [L]
+
+# Handle uploads for multisite
+RewriteRule ^([_0-9a-zA-Z-]+/)?files/(.*) wp-content/blogs.dir/$1/files/$2 [L]
+
+# Skip real files and directories
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
-RewriteRule ^([_0-9a-zA-Z-]+/)?(wp-(content|admin|includes).*) $2 [L]
+# Handle PHP files
 RewriteRule ^([_0-9a-zA-Z-]+/)?(.*\.php)$ $2 [L]
+
+# Handle main index.php
+RewriteRule ^index\.php$ - [L]
+
+# Everything else goes to WordPress
 RewriteRule . index.php [L]
 </IfModule>
-# END WordPress
+# END WordPress Multisite
