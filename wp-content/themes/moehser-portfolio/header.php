@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html <?php language_attributes(); ?>>
+<html <?php 
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    $is_german = strpos($request_uri, '/de/') !== false;
+    echo $is_german ? 'lang="de" dir="ltr"' : 'lang="en" dir="ltr"';
+?>>
   <head>
     <meta charset="<?php bloginfo('charset'); ?>" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
