@@ -19,7 +19,8 @@ const ICON_DIMENSIONS = {
 const SOCIAL_LINKS = [
   {
     type: 'email',
-    label: 'Email',
+    label: 'Send email',
+    ariaLabel: 'Send email to Daniel Moehser',
     href: () => getMailtoUrl(),
     icon: 'email.svg',
     className: 'social social--mail'
@@ -27,6 +28,7 @@ const SOCIAL_LINKS = [
   {
     type: 'github',
     label: 'GitHub',
+    ariaLabel: 'Visit Daniel Moehser GitHub profile - opens in new tab',
     href: () => typeof window !== 'undefined' && window.__SOCIAL_GITHUB__ 
       ? window.__SOCIAL_GITHUB__ 
       : 'https://github.com/',
@@ -37,6 +39,7 @@ const SOCIAL_LINKS = [
   {
     type: 'linkedin',
     label: 'LinkedIn',
+    ariaLabel: 'Visit Daniel Moehser LinkedIn profile - opens in new tab',
     href: () => typeof window !== 'undefined' && window.__SOCIAL_LINKEDIN__ 
       ? window.__SOCIAL_LINKEDIN__ 
       : 'https://linkedin.com/',
@@ -118,7 +121,7 @@ export default function SocialDock() {
                   key={social.type}
                   href={social.href()} 
                   className={social.className}
-                  aria-label={social.label}
+                  aria-label={social.ariaLabel}
                   {...(social.external && {
                     target: "_blank",
                     rel: "noreferrer"
@@ -126,7 +129,8 @@ export default function SocialDock() {
                 >
                   <img 
                     src={getIconUrl(social.icon)} 
-                    alt={social.label} 
+                    alt="" 
+                    role="presentation"
                     width={ICON_DIMENSIONS.WIDTH} 
                     height={ICON_DIMENSIONS.HEIGHT} 
                   />
@@ -142,7 +146,7 @@ export default function SocialDock() {
             key={social.type}
             href={social.href()} 
             className={social.className}
-            aria-label={social.label}
+            aria-label={social.ariaLabel}
             {...(social.external && {
               target: "_blank",
               rel: "noreferrer"
@@ -150,7 +154,8 @@ export default function SocialDock() {
           >
             <img 
               src={getIconUrl(social.icon)} 
-              alt={social.label} 
+              alt="" 
+              role="presentation"
               width={ICON_DIMENSIONS.WIDTH} 
               height={ICON_DIMENSIONS.HEIGHT} 
             />
