@@ -131,19 +131,30 @@ export default function SettingsGear() {
         ref={buttonRef}
         className="settings-gear__trigger"
         onClick={() => setIsOpen(!isOpen)}
-        aria-label="Open settings"
+        aria-label={isOpen ? 'Close settings menu' : 'Open settings menu'}
+        aria-expanded={isOpen}
+        aria-haspopup="menu"
         title="Settings"
       >
         <img src={gearIcon} alt="" aria-hidden="true" />
       </button>
       
       {isOpen && !showPerformance && (
-        <div ref={menuRef} className="settings-gear__menu">
+        <div 
+          ref={menuRef} 
+          className="settings-gear__menu"
+          role="menu"
+          aria-label={isGerman ? 'Einstellungsmenü' : 'Settings menu'}
+        >
           <button
             className="settings-gear__option"
             onClick={toggleTheme}
+            aria-label={isDark 
+              ? (isGerman ? 'Zu Hell-Modus wechseln' : 'Switch to light mode')
+              : (isGerman ? 'Zu Dunkel-Modus wechseln' : 'Switch to dark mode')
+            }
           >
-            <span className="settings-gear__icon">
+            <span className="settings-gear__icon" aria-hidden="true">
               {isDark ? '☀️' : '🌙'}
             </span>
             <span className="settings-gear__label">
@@ -163,8 +174,12 @@ export default function SettingsGear() {
             <button
               className="settings-gear__option"
               onClick={switchLanguage}
+              aria-label={isGerman 
+                ? 'Zu English wechseln' 
+                : 'Switch to German'
+              }
             >
-              <span className="settings-gear__icon">
+              <span className="settings-gear__icon" aria-hidden="true">
                 {isGerman ? '🇬🇧' : '🇩🇪'}
               </span>
               <span className="settings-gear__label">
@@ -176,20 +191,25 @@ export default function SettingsGear() {
           <button
             className={`settings-gear__option ${metrics.isSafari ? 'settings-gear__option--disabled' : ''}`}
             onClick={metrics.isSafari ? undefined : togglePerformance}
+            aria-label={metrics.isSafari 
+              ? (isGerman ? 'Performance-Metriken nicht für Safari verfügbar' : 'Performance metrics not available on Safari')
+              : (isGerman ? 'Performance-Metriken öffnen' : 'Open performance metrics')
+            }
             title={metrics.isSafari ? (isGerman ? 'Nicht für Safari unterstützt' : 'Not supported on Safari') : ''}
             disabled={metrics.isSafari}
           >
-            <span className="settings-gear__icon">📊</span>
+            <span className="settings-gear__icon" aria-hidden="true">📊</span>
             <span className="settings-gear__label">
-  {isGerman ? 'Leistung' : 'Performance'}
+              {isGerman ? 'Leistung' : 'Performance'}
             </span>
           </button>
           
           <button
             className="settings-gear__option"
             onClick={openTerminal}
+            aria-label={isGerman ? 'Terminal öffnen' : 'Open terminal'}
           >
-            <span className="settings-gear__icon">⌨️</span>
+            <span className="settings-gear__icon" aria-hidden="true">⌨️</span>
             <span className="settings-gear__label">
               {isGerman ? 'Terminal' : 'Terminal'}
             </span>
