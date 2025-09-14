@@ -148,7 +148,7 @@ export default function Imprint() {
   const goBack = () => {
     const isGerman = window.location.pathname.includes('/de/');
     const basePath = isGerman ? '/de' : '';
-    const targetSection = isGerman ? 'projects' : 'hero';
+    const targetSection = 'projects';
     window.location.href = `${basePath}/#${targetSection}`;
   };
 
