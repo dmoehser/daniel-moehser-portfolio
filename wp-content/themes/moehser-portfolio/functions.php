@@ -79,6 +79,169 @@ add_filter('page_template', function($template) {
 });
 
 // Client-side cleanup for customize_changeset_uuid - robust solution
+// SEO Meta Descriptions
+add_action('wp_head', function() {
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    $is_german = strpos($request_uri, '/de/') !== false;
+    
+    // Homepage Meta Description
+    if (is_home() || is_front_page()) {
+        $description = $is_german 
+            ? 'Daniel Moehser - Full-Stack Entwickler Portfolio. Zeigt Webentwicklungsprojekte, Fähigkeiten und Erfahrung in React, WordPress, PHP und modernen Technologien.'
+            : 'Daniel Moehser - Full-Stack Developer Portfolio. Showcasing web development projects, skills and experience in React, WordPress, PHP and modern technologies.';
+        echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
+    }
+    
+    // Imprint Page Meta Description
+    if (strpos($request_uri, '/imprint') !== false) {
+        $description = $is_german
+            ? 'Impressum von Daniel Moehser - Rechtliche Informationen, Kontaktdaten und Datenschutzhinweise für das Portfolio.'
+            : 'Imprint of Daniel Moehser - Legal information, contact details and privacy policy for the portfolio.';
+        echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
+    }
+}, 1);
+
+// Open Graph Meta Tags
+add_action('wp_head', function() {
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    $is_german = strpos($request_uri, '/de/') !== false;
+    $site_url = home_url();
+    $current_url = home_url($request_uri);
+    
+    // Get site name and description
+    $site_name = get_bloginfo('name');
+    $site_description = $is_german 
+        ? 'Full-Stack Entwickler Portfolio - Daniel Moehser'
+        : 'Full-Stack Developer Portfolio - Daniel Moehser';
+    
+    // Page-specific content
+    if (is_home() || is_front_page()) {
+        $og_title = $is_german ? 'Daniel Moehser - Full-Stack Entwickler' : 'Daniel Moehser - Full-Stack Developer';
+        $og_description = $is_german 
+            ? 'Portfolio mit Webentwicklungsprojekten, Fähigkeiten und Erfahrung in React, WordPress, PHP und modernen Technologien.'
+            : 'Portfolio showcasing web development projects, skills and experience in React, WordPress, PHP and modern technologies.';
+    } else {
+        $og_title = $is_german ? 'Impressum - Daniel Moehser' : 'Imprint - Daniel Moehser';
+        $og_description = $is_german 
+            ? 'Rechtliche Informationen und Kontaktdaten für das Portfolio von Daniel Moehser.'
+            : 'Legal information and contact details for Daniel Moehser\'s portfolio.';
+    }
+    
+    // Use profile avatar from customizer as default image
+    $profile_avatar = get_theme_mod('moehser_profile_avatar', '');
+    $og_image = $profile_avatar ?: $site_url . '/wp-content/themes/moehser-portfolio/assets/dist/images/og-default.jpg';
+    
+    echo '<!-- Open Graph Meta Tags -->' . "\n";
+    echo '<meta property="og:type" content="website">' . "\n";
+    echo '<meta property="og:site_name" content="' . esc_attr($site_name) . '">' . "\n";
+    echo '<meta property="og:title" content="' . esc_attr($og_title) . '">' . "\n";
+    echo '<meta property="og:description" content="' . esc_attr($og_description) . '">' . "\n";
+    echo '<meta property="og:url" content="' . esc_url($current_url) . '">' . "\n";
+    echo '<meta property="og:image" content="' . esc_url($og_image) . '">' . "\n";
+    echo '<meta property="og:image:width" content="1200">' . "\n";
+    echo '<meta property="og:image:height" content="630">' . "\n";
+    echo '<meta property="og:locale" content="' . ($is_german ? 'de_DE' : 'en_US') . '">' . "\n";
+}, 2);
+
+// Twitter Cards
+add_action('wp_head', function() {
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    $is_german = strpos($request_uri, '/de/') !== false;
+    $site_url = home_url();
+    
+    // Twitter Card content
+    $twitter_title = $is_german ? 'Daniel Moehser - Full-Stack Entwickler' : 'Daniel Moehser - Full-Stack Developer';
+    $twitter_description = $is_german 
+        ? 'Portfolio mit Webentwicklungsprojekten, Fähigkeiten und Erfahrung in React, WordPress, PHP und modernen Technologien.'
+        : 'Portfolio showcasing web development projects, skills and experience in React, WordPress, PHP and modern technologies.';
+    // Use profile avatar from customizer as Twitter image
+    $profile_avatar = get_theme_mod('moehser_profile_avatar', '');
+    $twitter_image = $profile_avatar ?: $site_url . '/wp-content/themes/moehser-portfolio/assets/dist/images/og-default.jpg';
+    
+    echo '<!-- Twitter Card Meta Tags -->' . "\n";
+    echo '<meta name="twitter:card" content="summary_large_image">' . "\n";
+    echo '<meta name="twitter:site" content="@danielmoehser">' . "\n";
+    echo '<meta name="twitter:creator" content="@danielmoehser">' . "\n";
+    echo '<meta name="twitter:title" content="' . esc_attr($twitter_title) . '">' . "\n";
+    echo '<meta name="twitter:description" content="' . esc_attr($twitter_description) . '">' . "\n";
+    echo '<meta name="twitter:image" content="' . esc_url($twitter_image) . '">' . "\n";
+}, 3);
+
+// Canonical URLs
+add_action('wp_head', function() {
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    
+    // Remove query parameters for canonical URL
+    $canonical_path = strtok($request_uri, '?');
+    $canonical_url = home_url($canonical_path);
+    
+    echo '<link rel="canonical" href="' . esc_url($canonical_url) . '">' . "\n";
+}, 4);
+
+// JSON-LD Structured Data
+add_action('wp_head', function() {
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    $is_german = strpos($request_uri, '/de/') !== false;
+    $site_url = home_url();
+    $current_url = home_url($request_uri);
+    
+    // Person Schema
+    $person_schema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'Person',
+        'name' => 'Daniel Moehser',
+        'url' => $site_url,
+        'jobTitle' => $is_german ? 'Full-Stack Entwickler' : 'Full-Stack Developer',
+        'description' => $is_german 
+            ? 'Full-Stack Entwickler mit Erfahrung in React, WordPress, PHP und modernen Web-Technologien.'
+            : 'Full-Stack Developer with experience in React, WordPress, PHP and modern web technologies.',
+        'sameAs' => [
+            'https://github.com/dmoehser',
+            'https://linkedin.com/in/danielmoehser'
+        ],
+        'knowsAbout' => [
+            'JavaScript', 'React', 'WordPress', 'PHP', 'Node.js', 
+            'SCSS', 'HTML5', 'CSS3', 'MySQL', 'Git'
+        ]
+    ];
+    
+    // Organization Schema
+    $organization_schema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'Organization',
+        'name' => 'Daniel Moehser Portfolio',
+        'url' => $site_url,
+        'founder' => [
+            '@type' => 'Person',
+            'name' => 'Daniel Moehser'
+        ],
+        'description' => $is_german 
+            ? 'Portfolio-Website von Daniel Moehser - Full-Stack Entwickler'
+            : 'Portfolio website of Daniel Moehser - Full-Stack Developer'
+    ];
+    
+    // WebSite Schema with SearchAction
+    $website_schema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'WebSite',
+        'name' => get_bloginfo('name'),
+        'url' => $site_url,
+        'description' => $is_german 
+            ? 'Portfolio-Website von Daniel Moehser - Full-Stack Entwickler'
+            : 'Portfolio website of Daniel Moehser - Full-Stack Developer',
+        'author' => [
+            '@type' => 'Person',
+            'name' => 'Daniel Moehser'
+        ],
+        'inLanguage' => $is_german ? 'de' : 'en'
+    ];
+    
+    echo '<!-- JSON-LD Structured Data -->' . "\n";
+    echo '<script type="application/ld+json">' . wp_json_encode($person_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+    echo '<script type="application/ld+json">' . wp_json_encode($organization_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+    echo '<script type="application/ld+json">' . wp_json_encode($website_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+}, 5);
+
 add_action('wp_head', function() {
     if (!is_customize_preview()) {
         echo '<script>

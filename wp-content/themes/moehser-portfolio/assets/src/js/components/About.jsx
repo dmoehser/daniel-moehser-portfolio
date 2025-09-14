@@ -81,7 +81,7 @@ export default function About() {
                   transition={{ duration: ANIMATION.TIMING.BASE, delay: ANIMATION.TIMING.DELAY_MEDIUM }}
                 >
                   {aboutTitle && (
-                    <motion.h2
+                    <motion.h1
                       className="about__title section-title"
                       initial={ANIMATION.TITLE.hidden}
                       whileInView={ANIMATION.TITLE.show}
@@ -89,7 +89,7 @@ export default function About() {
                       transition={{ duration: ANIMATION.TIMING.BASE }}
                     >
                       {aboutTitle}
-                    </motion.h2>
+                      </motion.h1>
                   )}
                   {aboutSubtitle && (
                     <motion.p
