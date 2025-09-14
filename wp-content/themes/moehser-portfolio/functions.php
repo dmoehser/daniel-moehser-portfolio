@@ -244,7 +244,8 @@ add_action('wp_head', function() {
 
 // Auto Language Redirect based on Browser Language
 // ----------------------------------------------
-add_action('template_redirect', 'auto_language_redirect');
+// DISABLED: Causes redirect loop with multisite wp-admin
+// add_action('template_redirect', 'auto_language_redirect');
 
 // Debug Admin Redirect Issues
 // ---------------------------

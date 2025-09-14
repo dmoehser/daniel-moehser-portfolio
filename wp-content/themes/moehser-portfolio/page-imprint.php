@@ -29,8 +29,8 @@ if (file_exists($manifest_path)) {
 }
 ?>
 
-<div id="react-root">
+<main id="root">
     <!-- React will mount here -->
-</div>
+</main>
 
 <?php get_footer(); ?>
