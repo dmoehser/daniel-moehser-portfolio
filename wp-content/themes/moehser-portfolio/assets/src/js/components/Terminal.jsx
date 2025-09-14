@@ -162,7 +162,7 @@ export default function Terminal() {
       term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • 'Esc' zum Schließen des Terminals${TERMINAL_CONFIG.COLORS.RESET}`);
       term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • Pfeiltasten zur Navigation, Enter zum Ausführen${TERMINAL_CONFIG.COLORS.RESET}`);
       term.writeln('');
-      term.writeln(`${TERMINAL_CONFIG.COLORS.BLUE}💡 Pro-Tipp:${TERMINAL_CONFIG.COLORS.RESET} Probiere 'start', 'fähigkeiten', 'über-mich' oder 'projekte'!`);
+      term.writeln(`${TERMINAL_CONFIG.COLORS.BLUE}💡 Pro-Tipp:${TERMINAL_CONFIG.COLORS.RESET} Probiere 'home', 'skills', 'about' oder 'projects'!`);
     } else {
       term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}╭─────────────────────────────────────────╮${TERMINAL_CONFIG.COLORS.RESET}`);
       term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}│  Welcome to daniel@portfolio shell      │${TERMINAL_CONFIG.COLORS.RESET}`);
