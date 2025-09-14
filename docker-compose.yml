@@ -33,17 +33,6 @@ services:
         define('WP_ENV', 'development');
         define('WP_DEBUG_LOG', true);
         define('WP_DEBUG_DISPLAY', false);
-        define('WP_ALLOW_MULTISITE', true);
-        define('MULTISITE', true);
-        define('SUBDOMAIN_INSTALL', true);
-        define('DOMAIN_CURRENT_SITE', 'localhost');
-        define('PATH_CURRENT_SITE', '/');
-        define('SITE_ID_CURRENT_SITE', 1);
-        define('BLOG_ID_CURRENT_SITE', 1);
-        define('COOKIE_DOMAIN', '.localhost');
-        define('COOKIEPATH', '/');
-        define('SITECOOKIEPATH', '/');
-        define('NOBLOGREDIRECT', 'http://localhost:8080');
     volumes:
       - ./wp-content:/var/www/html/wp-content
       - ./php.ini:/usr/local/etc/php/conf.d/custom.ini
