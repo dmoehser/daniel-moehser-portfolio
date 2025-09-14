@@ -573,4 +573,105 @@ function handle_project_reorder() {
     wp_send_json_success('Projects reordered successfully');
 }
 
+// Multisite URL Fixes
+// ===================
+if (is_multisite()) {
+    // Fix home_url for multisite subdirectory sites
+    add_filter('home_url', function($url, $path, $scheme, $blog_id) {
+        if (is_multisite() && get_current_blog_id() > 1) {
+            $site_url = get_site_url();
+            if ($path) {
+                return $site_url . '/' . ltrim($path, '/');
+            }
+            return $site_url;
+        }
+        return $url;
+    }, 1, 4);
+
+    // Force absolute URLs for multisite (removed to prevent infinite loops)
+
+    // Fix wp-includes URLs for multisite
+    add_filter('includes_url', function($url, $path) {
+        if (get_current_blog_id() > 1) {
+            $site_url = get_site_url();
+            return $site_url . '/wp-includes/' . $path;
+        }
+        return $url;
+    }, 1, 2);
+
+    // Fix content URLs for multisite
+    add_filter('content_url', function($url, $path, $blog_id = null) {
+        if (is_multisite() && get_current_blog_id() > 1) {
+            $site_url = get_site_url();
+            return $site_url . '/wp-content' . $path;
+        }
+        return $url;
+    }, 10, 3);
+
+    // Fix plugins URLs for multisite
+    add_filter('plugins_url', function($url, $path, $plugin) {
+        if (get_current_blog_id() > 1) {
+            $site_url = get_site_url();
+            return $site_url . '/wp-content/plugins/' . $path;
+        }
+        return $url;
+    }, 10, 3);
+
+    // Fix admin URLs for multisite
+    add_filter('admin_url', function($url, $path, $blog_id) {
+        if ($blog_id > 1) {
+            $site_url = get_site_url($blog_id);
+            return $site_url . '/wp-admin/' . $path;
+        }
+        return $url;
+    }, 10, 3);
+
+    // Fix script and style URLs for multisite
+    add_filter('script_loader_src', function($src, $handle) {
+        if (get_current_blog_id() > 1) {
+            $site_url = get_site_url();
+            // Fix relative URLs that start with wp-includes
+            if (strpos($src, 'wp-includes/') === 0) {
+                $src = $site_url . '/' . $src;
+            }
+            // Fix relative URLs that start with wp-content
+            if (strpos($src, 'wp-content/') === 0) {
+                $src = $site_url . '/' . $src;
+            }
+            // Fix relative URLs that start with /
+            if (strpos($src, '/') === 0 && strpos($src, '//') !== 0) {
+                $src = $site_url . $src;
+            }
+            // Fix URLs that don't have the site URL prefix
+            if (strpos($src, $site_url) !== 0 && strpos($src, '//') === 0) {
+                $src = $site_url . '/' . ltrim($src, '/');
+            }
+        }
+        return $src;
+    }, 1, 2);
+
+    add_filter('style_loader_src', function($src, $handle) {
+        if (get_current_blog_id() > 1) {
+            $site_url = get_site_url();
+            // Fix relative URLs that start with wp-includes
+            if (strpos($src, 'wp-includes/') === 0) {
+                $src = $site_url . '/' . $src;
+            }
+            // Fix relative URLs that start with wp-content
+            if (strpos($src, 'wp-content/') === 0) {
+                $src = $site_url . '/' . $src;
+            }
+            // Fix relative URLs that start with /
+            if (strpos($src, '/') === 0 && strpos($src, '//') !== 0) {
+                $src = $site_url . $src;
+            }
+            // Fix URLs that don't have the site URL prefix
+            if (strpos($src, $site_url) !== 0 && strpos($src, '//') === 0) {
+                $src = $site_url . '/' . ltrim($src, '/');
+            }
+        }
+        return $src;
+    }, 1, 2);
+}
+
 
