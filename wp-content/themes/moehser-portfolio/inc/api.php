@@ -87,6 +87,7 @@ add_action('rest_api_init', function () {
 					$featured_wide = $featured_id ? wp_get_attachment_image_src($featured_id, 'project_wide') : false;
 					$featured_wide_2x = $featured_id ? wp_get_attachment_image_src($featured_id, 'project_wide_2x') : false;
 					$featured_srcset = $featured_id ? wp_get_attachment_image_srcset($featured_id, 'project_wide') : '';
+					$featured_alt = $featured_id ? get_post_meta($featured_id, '_wp_attachment_image_alt', true) : '';
 					
 					// Get project content
 					$title = html_entity_decode($project->post_title, ENT_QUOTES | ENT_HTML5, 'UTF-8');
@@ -109,6 +110,7 @@ add_action('rest_api_init', function () {
 						'featured_image_srcset' => $featured_srcset ?: '',
 						'featured_image_wide_w' => $featured_wide ? (int) $featured_wide[1] : 0,
 						'featured_image_wide_h' => $featured_wide ? (int) $featured_wide[2] : 0,
+						'featured_image_alt' => $featured_alt ?: $title,
 						'project_screenshot' => isset($meta['project_screenshot'][0]) ? $meta['project_screenshot'][0] : '',
 						'project_technologies' => isset($meta['project_technologies'][0]) ? $meta['project_technologies'][0] : '',
 						'project_status' => isset($meta['project_status'][0]) ? $meta['project_status'][0] : 'active',

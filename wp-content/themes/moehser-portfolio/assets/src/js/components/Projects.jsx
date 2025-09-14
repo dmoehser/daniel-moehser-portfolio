@@ -124,7 +124,7 @@ const renderProjectScreenshot = (project, opts = {}) => {
     return (
       <img 
         src={project.project_screenshot} 
-        alt={project.title}
+        alt={project.project_screenshot_alt || project.title}
         loading={isPrintImg ? undefined : (isPriority ? undefined : 'lazy')}
         decoding={isPrintImg ? 'sync' : (isPriority ? 'async' : undefined)}
         fetchPriority={isPrintImg ? 'high' : (isPriority ? 'high' : undefined)}
@@ -149,7 +149,7 @@ const renderProjectScreenshot = (project, opts = {}) => {
         sizes={isPrintImg ? "100vw" : "(max-width: 1024px) 100vw, 60vw"}
         width={project.featured_image_wide_w || undefined}
         height={project.featured_image_wide_h || undefined}
-        alt={project.title}
+        alt={project.featured_image_alt || project.title}
         loading={isPrintImg ? undefined : (isPriority ? undefined : 'lazy')}
         decoding={isPrintImg ? 'sync' : (isPriority ? 'async' : undefined)}
         fetchPriority={isPrintImg ? 'high' : (isPriority ? 'high' : undefined)}
