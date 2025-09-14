@@ -1,7 +1,6 @@
 <?php
 
 if ( ! class_exists( 'acf_field_google_map' ) ) :
-	#[AllowDynamicProperties]
 	class acf_field_google_map extends acf_field {
 
 
@@ -15,7 +14,6 @@ if ( ! class_exists( 'acf_field_google_map' ) ) :
 		 * @param   n/a
 		 * @return  n/a
 		 */
-
 		function initialize() {
 
 			// vars
@@ -50,7 +48,6 @@ if ( ! class_exists( 'acf_field_google_map' ) ) :
 		 * @param   $post_id (int)
 		 * @return  $post_id (int)
 		 */
-
 		function input_admin_enqueue_scripts() {
 
 			// localize
@@ -107,7 +104,6 @@ if ( ! class_exists( 'acf_field_google_map' ) ) :
 		 * @since   3.6
 		 * @date    23/01/13
 		 */
-
 		function render_field( $field ) {
 
 			// Apply defaults.
@@ -136,7 +132,7 @@ if ( ! class_exists( 'acf_field_google_map' ) ) :
 
 			?>
 <div <?php echo acf_esc_attrs( $attrs ); ?>>
-	
+
 			<?php
 			acf_hidden_input(
 				array(
@@ -145,22 +141,22 @@ if ( ! class_exists( 'acf_field_google_map' ) ) :
 				)
 			);
 			?>
-	
+
 	<div class="title">
-		
+
 		<div class="acf-actions -hover">
 			<a href="#" data-name="search" class="acf-icon -search grey" title="<?php esc_attr_e( 'Search', 'acf' ); ?>"></a>
 			<a href="#" data-name="clear" class="acf-icon -cancel grey" title="<?php esc_attr_e( 'Clear location', 'acf' ); ?>"></a>
 			<a href="#" data-name="locate" class="acf-icon -location grey" title="<?php esc_attr_e( 'Find current location', 'acf' ); ?>"></a>
 		</div>
-		
+
 		<input class="search" type="text" placeholder="<?php esc_attr_e( 'Search for address...', 'acf' ); ?>" value="<?php echo esc_attr( $search ); ?>" />
 		<i class="acf-loading"></i>
-				
+
 	</div>
-	
+
 	<div class="canvas" style="<?php echo esc_attr( 'height: ' . $field['height'] . 'px' ); ?>"></div>
-	
+
 </div>
 			<?php
 		}
@@ -176,7 +172,6 @@ if ( ! class_exists( 'acf_field_google_map' ) ) :
 		 *
 		 * @param   $field  - an array holding all the field's data
 		 */
-
 		function render_field_settings( $field ) {
 
 			// center_lat

@@ -15,7 +15,6 @@ if ( ! class_exists( 'acf_field_file' ) ) :
 		 * @param   n/a
 		 * @return  n/a
 		 */
-
 		function initialize() {
 
 			// vars
@@ -48,7 +47,6 @@ if ( ! class_exists( 'acf_field_file' ) ) :
 		 * @param   $post_id (int)
 		 * @return  $post_id (int)
 		 */
-
 		function input_admin_enqueue_scripts() {
 
 			// localize
@@ -71,7 +69,6 @@ if ( ! class_exists( 'acf_field_file' ) ) :
 		 * @since   3.6
 		 * @date    23/01/13
 		 */
-
 		function render_field( $field ) {
 
 			// vars
@@ -164,13 +161,17 @@ if ( ! class_exists( 'acf_field_file' ) ) :
 			
 			<label class="acf-basic-uploader">
 				<?php
-				acf_file_input(
-					array(
-						'name' => $field['name'],
-						'id'   => $field['id'],
-						'key'  => $field['key'],
-					)
+				$args = array(
+					'name' => $field['name'],
+					'id'   => $field['id'],
+					'key'  => $field['key'],
 				);
+
+				if ( ! empty( $field['mime_types'] ) ) {
+					$args['accept'] = $field['mime_types'];
+				}
+
+				acf_file_input( $args );
 				?>
 			</label>
 			
@@ -297,7 +298,6 @@ if ( ! class_exists( 'acf_field_file' ) ) :
 		 *
 		 * @return  $value (mixed) the modified value
 		 */
-
 		function format_value( $value, $post_id, $field ) {
 
 			// bail early if no value
@@ -335,7 +335,6 @@ if ( ! class_exists( 'acf_field_file' ) ) :
 		 * @param   $vars (array)
 		 * @return  $vars
 		 */
-
 		function get_media_item_args( $vars ) {
 
 			$vars['send'] = true;
@@ -356,7 +355,6 @@ if ( ! class_exists( 'acf_field_file' ) ) :
 		 *
 		 * @return  $value - the modified value
 		 */
-
 		function update_value( $value, $post_id, $field ) {
 
 			// Bail early if no value.

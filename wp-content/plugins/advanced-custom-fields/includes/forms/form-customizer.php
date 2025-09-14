@@ -5,9 +5,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( 'acf_form_customizer' ) ) :
-	#[AllowDynamicProperties]
 	class acf_form_customizer {
 
+		/**
+		 * Preview values.
+		 * @var array
+		 */
+		public $preview_values = array();
+
+		/**
+		 * Preview fields.
+		 * @var array
+		 */
+		public $preview_fields = array();
+
+		/**
+		 * Preview errors.
+		 * @var array
+		 */
+		public $preview_errors = array();
 
 		/**
 		 * This function will setup the class functionality
@@ -19,13 +35,7 @@ if ( ! class_exists( 'acf_form_customizer' ) ) :
 		 * @param   n/a
 		 * @return  n/a
 		 */
-
 		function __construct() {
-
-			// vars
-			$this->preview_values = array();
-			$this->preview_fields = array();
-			$this->preview_errors = array();
 
 			// actions
 			add_action( 'customize_controls_init', array( $this, 'customize_controls_init' ) );
@@ -48,7 +58,6 @@ if ( ! class_exists( 'acf_form_customizer' ) ) :
 		 * @param   N/A
 		 * @return  N/A
 		 */
-
 		function customize_controls_init() {
 
 			// load acf scripts
@@ -76,7 +85,6 @@ if ( ! class_exists( 'acf_form_customizer' ) ) :
 		 * @param   $widget (object) widget info
 		 * @return  $instance
 		 */
-
 		function save_widget( $instance, $new_instance, $old_instance, $widget ) {
 
 			// bail early if not valid (customize + acf values + nonce)
@@ -128,7 +136,6 @@ if ( ! class_exists( 'acf_form_customizer' ) ) :
 		 * @param   $customizer (object)
 		 * @return  $value (mixed)
 		 */
-
 		function settings( $customizer ) {
 
 			// vars
@@ -188,7 +195,6 @@ if ( ! class_exists( 'acf_form_customizer' ) ) :
 		 * @param   $customizer (object)
 		 * @return  n/a
 		 */
-
 		function customize_preview_init( $customizer ) {
 
 			// get customizer settings (widgets)
@@ -231,7 +237,6 @@ if ( ! class_exists( 'acf_form_customizer' ) ) :
 		 * @param   type $var Description. Default.
 		 * @return  type Description.
 		 */
-
 		function pre_load_value( $value, $post_id, $field ) {
 
 			// check
@@ -254,7 +259,6 @@ if ( ! class_exists( 'acf_form_customizer' ) ) :
 		 * @param   type $var Description. Default.
 		 * @return  type Description.
 		 */
-
 		function pre_load_reference( $field_key, $field_name, $post_id ) {
 
 			// check
@@ -279,7 +283,6 @@ if ( ! class_exists( 'acf_form_customizer' ) ) :
 		 * @param   $customizer (object)
 		 * @return  n/a
 		 */
-
 		function customize_save( $customizer ) {
 
 			// get customizer settings (widgets)
@@ -316,7 +319,6 @@ if ( ! class_exists( 'acf_form_customizer' ) ) :
 		 * @param   $post_id (int)
 		 * @return  $post_id (int)
 		 */
-
 		function pre_update_option( $value, $option, $old_value ) {
 
 			// bail early if no value
@@ -352,81 +354,80 @@ if ( ! class_exists( 'acf_form_customizer' ) ) :
 		 * @param   n/a
 		 * @return  n/a
 		 */
-
 		function admin_footer() {
 
 			?>
 <script type="text/javascript">
 (function($) {
-	
+
 	// customizer saves widget on any input change, so unload is not needed
 	acf.unload.active = 0;
-	
-	
+
+
 	// hack customizer function to remove bug caused by WYSIWYG field using aunique ID
 	// customizer compares returned AJAX HTML with the HTML of the widget form.
 	// the _getInputsSignature() function is used to generate a string based of input name + id.
 	// because ACF generates a unique ID on the WYSIWYG field, this string will not match causing the preview function to bail.
 	// an attempt was made to remove the WYSIWYG unique ID, but this caused multiple issues in the wp-admin and altimately doesn't make sense with the tinymce rule that all editors must have a unique ID.
 	// source: wp-admin/js/customize-widgets.js
-	
+
 	// vars
 	var WidgetControl = wp.customize.Widgets.WidgetControl.prototype;
-	
-	
+
+
 	// backup functions
 	WidgetControl.__getInputsSignature = WidgetControl._getInputsSignature;
 	WidgetControl.__setInputState = WidgetControl._setInputState;
-	
-	
+
+
 	// modify __getInputsSignature
 	WidgetControl._getInputsSignature = function( inputs ) {
-		
+
 		// vars
 		var signature = this.__getInputsSignature( inputs );
 			safe = [];
-		
-		
+
+
 		// split
 		signature = signature.split(';');
-		
-		
+
+
 		// loop
 		for( var i in signature ) {
-			
+
 			// vars
 			var bit = signature[i];
-			
-			
+
+
 			// bail early if acf is found
 			if( bit.indexOf('acf') !== -1 ) continue;
-			
-			
+
+
 			// append
 			safe.push( bit );
-			
+
 		}
-		
-		
+
+
 		// update
 		signature = safe.join(';');
-		
-		
+
+
 		// return
 		return signature;
-		
+
 	};
-	
-	
+
+
 	// modify _setInputState
 	// this function deosn't seem to run on widget title/content, only custom fields
 	// either way, this function is not needed and will break ACF fields 
 	WidgetControl._setInputState = function( input, state ) {
-		
+
 		return true;
-			
+
 	};
-		
+
 })(jQuery);	
 </script>
 			<?php
