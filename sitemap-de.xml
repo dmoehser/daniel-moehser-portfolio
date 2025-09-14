@@ -5,8 +5,7 @@
   <!-- Homepage (German) -->
   <url>
     <loc>https://danielmoehser.dev/de/</loc>
-    <lastmod>2024-12-19</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2025-09-14</lastmod>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="de" href="https://danielmoehser.dev/de/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://danielmoehser.dev/"/>
@@ -16,8 +15,7 @@
   <!-- Impressum Page (German) -->
   <url>
     <loc>https://danielmoehser.dev/de/imprint/</loc>
-    <lastmod>2024-12-19</lastmod>
-    <changefreq>monthly</changefreq>
+    <lastmod>2025-09-14</lastmod>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="de" href="https://danielmoehser.dev/de/imprint/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://danielmoehser.dev/imprint/"/>
