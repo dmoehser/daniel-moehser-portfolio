@@ -244,98 +244,36 @@ add_action('wp_head', function() {
 
 // Auto Language Redirect based on Browser Language
 // ----------------------------------------------
-// DISABLED: Causes redirect loop with multisite wp-admin
-// add_action('template_redirect', 'auto_language_redirect');
-
-// Debug Admin Redirect Issues
-// ---------------------------
-add_action('template_redirect', 'debug_admin_redirects', 1);
-
-function debug_admin_redirects() {
-    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
-    error_log('DEBUG ADMIN: Request URI: ' . $request_uri);
-    error_log('DEBUG ADMIN: is_admin: ' . (is_admin() ? 'true' : 'false'));
-    error_log('DEBUG ADMIN: HTTP_HOST: ' . ($_SERVER['HTTP_HOST'] ?? 'unknown'));
-    error_log('DEBUG ADMIN: SERVER_NAME: ' . ($_SERVER['SERVER_NAME'] ?? 'unknown'));
-    
-    if (strpos($request_uri, '/wp-admin') !== false) {
-        error_log('DEBUG ADMIN: wp-admin request detected');
-        error_log('DEBUG ADMIN: Current blog ID: ' . get_current_blog_id());
-        error_log('DEBUG ADMIN: Site URL: ' . get_site_url());
-        error_log('DEBUG ADMIN: Home URL: ' . get_home_url());
-    }
-}
+add_action('template_redirect', 'auto_language_redirect');
 
 function auto_language_redirect() {
-    // DEBUG: Log all redirect attempts
-    error_log('DEBUG: auto_language_redirect called for: ' . ($_SERVER['REQUEST_URI'] ?? 'unknown'));
-    error_log('DEBUG: is_home: ' . (is_home() ? 'true' : 'false') . ', is_front_page: ' . (is_front_page() ? 'true' : 'false'));
-    error_log('DEBUG: is_admin: ' . (is_admin() ? 'true' : 'false') . ', is_customize_preview: ' . (is_customize_preview() ? 'true' : 'false'));
+    if (!is_home() && !is_front_page()) return;
+    if (is_admin() || is_customize_preview()) return;
     
-    // Only redirect on homepage, not on subpages or admin
-    if (!is_home() && !is_front_page()) {
-        error_log('DEBUG: Not homepage, returning');
-        return;
-    }
-    
-    // Don't redirect in admin or customize preview
-    if (is_admin() || is_customize_preview()) {
-        error_log('DEBUG: Admin or customize preview, returning');
-        return;
-    }
-    
-    // Don't redirect on wp-admin pages (multisite fix)
     $request_uri = $_SERVER['REQUEST_URI'] ?? '';
-    if (strpos($request_uri, '/wp-admin') !== false) {
-        error_log('DEBUG: wp-admin detected in URI, returning');
-        return;
-    }
+    if (strpos($request_uri, '/de/') !== false) return;
     
-    // Don't redirect if already on German page
-    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
-    error_log('DEBUG: Request URI: ' . $request_uri);
-    if (strpos($request_uri, '/de/') !== false) {
-        error_log('DEBUG: Already on German page, returning');
-        return;
-    }
-    
-    // Check if user has manually chosen a language via URL parameters
     if (isset($_GET['lang'])) {
         if ($_GET['lang'] === 'en') {
-            // User explicitly chose English - redirect to clean URL without parameters
             wp_redirect(home_url('/'), 302);
             exit;
         } elseif ($_GET['lang'] === 'de') {
-            // User explicitly chose German - redirect to German homepage
             wp_redirect('/de/', 302);
             exit;
         }
-        return; // Don't auto-redirect if manual language selection
-    }
-    
-    // Don't redirect if user explicitly disabled auto-redirect
-    if (isset($_GET['no-redirect'])) {
         return;
     }
     
-    // Add JavaScript to check localStorage for manual language preference
-    // This will run before the auto-redirect logic
+    if (isset($_GET['no-redirect'])) return;
+    
     ?>
     <script>
     (function() {
-        // Check if user has manually set language preference
         const userPref = localStorage.getItem('user_language_preference');
-        if (userPref === 'en') {
-            // User previously chose English, don't auto-redirect
-            return;
-        }
+        if (userPref === 'en') return;
         
-        // Only proceed with auto-redirect if no manual preference or preference is German
         if (userPref === 'de' || !userPref) {
-            // Get browser language preferences
             const acceptLanguage = navigator.language || navigator.userLanguage || '';
-            
-            // Check if German is preferred language
             const germanVariants = ['de', 'de-DE', 'de-AT', 'de-CH', 'de-LU', 'de-LI'];
             const isGermanPreferred = germanVariants.some(variant => 
                 acceptLanguage.startsWith(variant) || 
@@ -343,7 +281,6 @@ function auto_language_redirect() {
                 acceptLanguage.includes(variant + ';')
             );
             
-            // Redirect to German homepage if German is preferred
             if (isGermanPreferred) {
                 window.location.href = '/de/';
             }

@@ -158,7 +158,6 @@ const isGerman = () => {
   return window.location.pathname.includes('/de/');
 };
 
-// Helper function to switch language
 const switchLanguage = (targetLang) => {
   if (typeof window === 'undefined') return;
   
@@ -168,30 +167,18 @@ const switchLanguage = (targetLang) => {
   
   let newPath;
   if (targetLang === 'de') {
-    // Switch to German
-    if (currentPath.startsWith('/de/')) {
-      // Already German, do nothing
-      return;
-    }
+    if (currentPath.startsWith('/de/')) return;
     newPath = currentPath === '/' ? '/de/' : `/de${currentPath}`;
   } else {
-    // Switch to English
-    if (!currentPath.startsWith('/de/')) {
-      // Already English, do nothing
-      return;
-    }
-    // Remove /de prefix and ensure we have a valid path
+    if (!currentPath.startsWith('/de/')) return;
     const pathWithoutDe = currentPath.replace('/de', '');
     newPath = pathWithoutDe === '' ? '/' : pathWithoutDe;
   }
   
-  // Save user's manual language preference to localStorage
   localStorage.setItem('user_language_preference', targetLang);
   
-  // Close terminal before navigation
   window.dispatchEvent(new Event('terminal:close'));
   
-  // Small delay to allow terminal to close before navigation
   setTimeout(() => {
     window.location.href = newPath + search + hash;
   }, 100);
