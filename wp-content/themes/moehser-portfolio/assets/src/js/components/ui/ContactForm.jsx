@@ -44,14 +44,22 @@ export default function ContactForm({ isExpanded, onToggle, businessSubject, hid
       header: { title: 'Get in Touch', description: 'Send me a message and I\'ll get back to you as soon as possible.' },
       labels: { name: 'Name *', email: 'Email *', subject: 'Subject *', message: 'Message *' },
       placeholder: 'Tell me about your project or inquiry...',
-      button: { sending: 'Sending...', send: 'Send Message' }
+      button: { sending: 'Sending...', send: 'Send Message' },
+      messages: { 
+        success: '✅ Message sent successfully! I\'ll get back to you soon.',
+        error: '❌ Something went wrong. Please try again or contact me directly.'
+      }
     },
     de: {
       toggle: { open: 'Kontaktformular', close: 'Kontaktformular schließen' },
       header: { title: 'Kontakt aufnehmen', description: 'Senden Sie mir eine Nachricht und ich melde mich so schnell wie möglich bei Ihnen.' },
       labels: { name: 'Name *', email: 'E-Mail *', subject: 'Betreff *', message: 'Nachricht *' },
       placeholder: 'Erzählen Sie mir von Ihrem Projekt oder Ihrer Anfrage...',
-      button: { sending: 'Wird gesendet...', send: 'Nachricht senden' }
+      button: { sending: 'Wird gesendet...', send: 'Nachricht senden' },
+      messages: { 
+        success: '✅ Nachricht erfolgreich gesendet! Ich melde mich bald bei Ihnen.',
+        error: '❌ Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut oder kontaktieren Sie mich direkt.'
+      }
     }
   };
   
@@ -315,7 +323,7 @@ export default function ContactForm({ isExpanded, onToggle, businessSubject, hid
                     initial={ANIMATION.FADE.hidden}
                     animate={ANIMATION.FADE.visible}
                   >
-                    ✅ Message sent successfully! I'll get back to you soon.
+                    {t.messages.success}
                   </motion.div>
                 )}
 
@@ -325,7 +333,7 @@ export default function ContactForm({ isExpanded, onToggle, businessSubject, hid
                     initial={ANIMATION.FADE.hidden}
                     animate={ANIMATION.FADE.visible}
                   >
-                    ❌ Something went wrong. Please try again or contact me directly.
+                    {t.messages.error}
                   </motion.div>
                 )}
               </div>
