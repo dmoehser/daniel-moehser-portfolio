@@ -26,8 +26,7 @@ add_action('init', function() {
 add_action('template_redirect', function() {
     $request_uri = $_SERVER['REQUEST_URI'] ?? '';
     $is_imprint_page = strpos($request_uri, '/imprint') !== false || 
-                       strpos($request_uri, '/de/imprint') !== false ||
-                       (is_page() && get_page_template_slug() === 'page-imprint.php');
+                       strpos($request_uri, '/de/imprint') !== false;
     
     if ($is_imprint_page) {
         status_header(200);
@@ -67,16 +66,6 @@ add_action('template_redirect', function() {
     }
 });
 
-// Force imprint page template assignment
-add_filter('page_template', function($template) {
-    if (is_page() && (strpos(get_permalink(), '/imprint') !== false || strpos(get_permalink(), '/de/imprint') !== false)) {
-        $imprint_template = get_theme_file_path('page-imprint.php');
-        if (file_exists($imprint_template)) {
-            return $imprint_template;
-        }
-    }
-    return $template;
-});
 
 // Client-side cleanup for customize_changeset_uuid - robust solution
 // SEO Meta Descriptions

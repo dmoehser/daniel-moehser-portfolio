@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me</title>
+</head>
+<body>
+    <h1>Daniel Moehser</h1>
+    <p>Living in Hamburg, Germany</p>
+    <img src="./images/daniel.jpeg" height="400" alt="picture of daniel">
+   <p><a href="./index.html">Go back to home page</a></p>
+   
+    <hr />
+    <footer>
+        <p>© <span id="currentYear"></span> · Daniel Moehser</p>
+        <p class="mb-0 mt-2">
+            <small>
+                Created by 
+                <a href="https://danielmoehser.dev" class="text-light" target="_blank" style="text-decoration: none; font-family: monospace; font-weight: bold;">
+                    <span style="color: #94a3b8;">&lt;</span><span style="color: #0f172a;">danielmoehser</span><span style="color: #38bdf8;">.dev</span><span style="color: #94a3b8;"> /&gt;</span>
+                </a>
+            </small>
+        </p>
+    </footer>
+   
+   <script>
+       // Automatically update the year
+       document.getElementById('currentYear').textContent = new Date().getFullYear();
+   </script>
+</body>
+</html>
