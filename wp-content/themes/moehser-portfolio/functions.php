@@ -242,6 +242,52 @@ add_action('wp_head', function() {
     echo '<script type="application/ld+json">' . wp_json_encode($website_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
 }, 5);
 
+// Auto Language Redirect based on Browser Language
+// ----------------------------------------------
+add_action('template_redirect', 'auto_language_redirect');
+
+function auto_language_redirect() {
+    // Only redirect on homepage, not on subpages or admin
+    if (!is_home() && !is_front_page()) {
+        return;
+    }
+    
+    // Don't redirect if already on German page or manual language selection
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    if (strpos($request_uri, '/de/') !== false || 
+        isset($_GET['lang']) || 
+        isset($_GET['no-redirect'])) {
+        return;
+    }
+    
+    // Don't redirect in admin or customize preview
+    if (is_admin() || is_customize_preview()) {
+        return;
+    }
+    
+    // Get browser language preferences
+    $accept_language = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '';
+    
+    // Check if German is preferred language
+    $german_variants = ['de', 'de-DE', 'de-AT', 'de-CH', 'de-LU', 'de-LI'];
+    $is_german_preferred = false;
+    
+    foreach ($german_variants as $variant) {
+        if (strpos($accept_language, $variant) === 0 || 
+            strpos($accept_language, $variant . ',') !== false ||
+            strpos($accept_language, $variant . ';') !== false) {
+            $is_german_preferred = true;
+            break;
+        }
+    }
+    
+    // Redirect to German homepage if German is preferred
+    if ($is_german_preferred) {
+        wp_redirect('/de/', 302);
+        exit;
+    }
+}
+
 add_action('wp_head', function() {
     if (!is_customize_preview()) {
         echo '<script>
