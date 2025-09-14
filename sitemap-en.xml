@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <!-- Homepage -->
+  <url>
+    <loc>https://danielmoehser.dev/</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="de" href="https://danielmoehser.dev/de/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://danielmoehser.dev/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://danielmoehser.dev/"/>
+  </url>
+  
+  <!-- Imprint Page -->
+  <url>
+    <loc>https://danielmoehser.dev/imprint/</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="de" href="https://danielmoehser.dev/de/imprint/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://danielmoehser.dev/imprint/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://danielmoehser.dev/imprint/"/>
+  </url>
+  
+  
+</urlset>

@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Sitemap reference
+Sitemap: https://danielmoehser.dev/sitemap-index.xml
+
+# Disallow admin areas
+Disallow: /wp-admin/
+Disallow: /wp-includes/
+Disallow: /wp-content/plugins/
+Disallow: /wp-content/themes/moehser-portfolio/assets/src/
+Disallow: /wp-content/cache/
+Disallow: /wp-content/uploads/cache/
+
+# Allow important assets
+Allow: /wp-content/themes/moehser-portfolio/assets/dist/
+Allow: /wp-content/uploads/
+
+# Crawl delay for respectful crawling
+Crawl-delay: 1
