@@ -185,6 +185,9 @@ const switchLanguage = (targetLang) => {
     newPath = pathWithoutDe === '' ? '/' : pathWithoutDe;
   }
   
+  // Save user's manual language preference to localStorage
+  localStorage.setItem('user_language_preference', targetLang);
+  
   // Close terminal before navigation
   window.dispatchEvent(new Event('terminal:close'));
   
