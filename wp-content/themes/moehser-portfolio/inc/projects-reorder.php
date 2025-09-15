@@ -1,18 +1,23 @@
 <?php
-/**
- * Admin Interface for Project Reordering
- * 
- * @package Moehser_Portfolio
- */
+// Admin Interface for Project Reordering
+// =====================================
 
 // Prevent direct access
 if (!defined('ABSPATH')) {
     exit;
 }
 
-/**
- * Add reorder page to admin menu
- */
+// Configuration constants
+// ----------------------
+const PROJECTS_PER_PAGE = -1;
+const CAPABILITY_REQUIRED = 'edit_posts';
+const JQUERY_UI_VERSION = '1.13.2';
+const JQUERY_UI_CDN_URL = 'https://code.jquery.com/ui/' . JQUERY_UI_VERSION . '/jquery-ui.min.js';
+const JQUERY_UI_CSS_URL = 'https://code.jquery.com/ui/' . JQUERY_UI_VERSION . '/themes/ui-lightness/jquery-ui.css';
+const MENU_PRIORITY = 11;
+
+// Add reorder page to admin menu
+// ------------------------------
 add_action('admin_menu', function () {
     // Custom menu order: All Projects, then Reorder Projects
     remove_submenu_page('edit.php?post_type=project', 'edit.php?post_type=project');
@@ -21,7 +26,7 @@ add_action('admin_menu', function () {
         'edit.php?post_type=project',
         'All Projects',
         'All Projects',
-        'edit_posts',
+        CAPABILITY_REQUIRED,
         'edit.php?post_type=project',
         '',
         1
@@ -31,62 +36,27 @@ add_action('admin_menu', function () {
         'edit.php?post_type=project',
         'Reorder Projects',
         'Reorder Projects',
-        'edit_posts',
+        CAPABILITY_REQUIRED,
         'reorder-projects',
         'moehser_reorder_projects_page',
         2
     );
-}, 11);
+}, MENU_PRIORITY);
 
-/**
- * Enqueue scripts and styles for reorder page
- */
+// Enqueue scripts and styles for reorder page
+// -------------------------------------------
 add_action('admin_enqueue_scripts', function($hook) {
     if ($hook === 'project_page_reorder-projects') {
-        wp_enqueue_script('jquery-ui-cdn', 'https://code.jquery.com/ui/1.13.2/jquery-ui.min.js', ['jquery'], '1.13.2', true);
-        wp_enqueue_style('jquery-ui-css', 'https://code.jquery.com/ui/1.13.2/themes/ui-lightness/jquery-ui.css', [], '1.13.2');
+        wp_enqueue_script('jquery-ui-cdn', JQUERY_UI_CDN_URL, ['jquery'], JQUERY_UI_VERSION, true);
+        wp_enqueue_style('jquery-ui-css', JQUERY_UI_CSS_URL, [], JQUERY_UI_VERSION);
         wp_enqueue_style('wp-admin');
     }
 });
 
-/**
- * Reorder projects admin page
- */
-function moehser_reorder_projects_page() {
-    $projects = get_posts([
-        'post_type' => 'project',
-        'post_status' => 'publish',
-        'posts_per_page' => -1,
-        'orderby' => 'menu_order',
-        'order' => 'ASC'
-    ]);
-    
-    if (empty($projects)) {
-        echo '<div class="wrap"><h1>Reorder Projects</h1><p>No projects found.</p></div>';
-        return;
-    }
+// Helper function to render reorder CSS
+// -------------------------------------
+function render_reorder_css() {
     ?>
-    <div class="wrap">
-        <h1>Reorder Projects</h1>
-        <p>Drag and drop projects to reorder them. The order will be saved automatically.</p>
-        
-        <div id="reorder-projects-container">
-            <ul id="sortable-projects" class="sortable-list">
-                <?php foreach ($projects as $project): ?>
-                    <li class="sortable-item" data-project-id="<?php echo esc_attr($project->ID); ?>">
-                        <div class="sortable-handle">⋮⋮</div>
-                        <div class="sortable-content">
-                            <strong><?php echo esc_html($project->post_title); ?></strong>
-                            <span class="project-status"><?php echo esc_html($project->post_status); ?></span>
-                        </div>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
-        
-        <div id="reorder-feedback" class="notice" style="display: none;"></div>
-    </div>
-    
     <style>
     .sortable-list {
         list-style: none;
@@ -197,7 +167,13 @@ function moehser_reorder_projects_page() {
         border-left-color: #d63638;
     }
     </style>
-    
+    <?php
+}
+
+// Helper function to render reorder JavaScript
+// -------------------------------------------
+function render_reorder_javascript() {
+    ?>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         var items = document.querySelectorAll('.sortable-item');
@@ -344,4 +320,47 @@ function moehser_reorder_projects_page() {
     });
     </script>
     <?php
+}
+
+// Reorder projects admin page
+// ---------------------------
+function moehser_reorder_projects_page() {
+    $projects = get_posts([
+        'post_type' => 'project',
+        'post_status' => 'publish',
+        'posts_per_page' => PROJECTS_PER_PAGE,
+        'orderby' => 'menu_order',
+        'order' => 'ASC'
+    ]);
+    
+    if (empty($projects)) {
+        echo '<div class="wrap"><h1>Reorder Projects</h1><p>No projects found.</p></div>';
+        return;
+    }
+    ?>
+    <div class="wrap">
+        <h1>Reorder Projects</h1>
+        <p>Drag and drop projects to reorder them. The order will be saved automatically.</p>
+        
+        <div id="reorder-projects-container">
+            <ul id="sortable-projects" class="sortable-list">
+                <?php foreach ($projects as $project): ?>
+                    <li class="sortable-item" data-project-id="<?php echo esc_attr($project->ID); ?>">
+                        <div class="sortable-handle">⋮⋮</div>
+                        <div class="sortable-content">
+                            <strong><?php echo esc_html($project->post_title); ?></strong>
+                            <span class="project-status"><?php echo esc_html($project->post_status); ?></span>
+                        </div>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        
+        <div id="reorder-feedback" class="notice" style="display: none;"></div>
+    </div>
+    
+    <?php
+    // Render CSS and JavaScript using helper functions
+    render_reorder_css();
+    render_reorder_javascript();
 }
