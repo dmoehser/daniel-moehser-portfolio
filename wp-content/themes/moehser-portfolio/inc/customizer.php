@@ -1,10 +1,143 @@
 <?php
-/**
- * Theme Customizer Settings for Moehser Portfolio
- */
+
+// Theme Customizer Settings for Moehser Portfolio
+// ===============================================
 
 if (!defined('ABSPATH')) {
     exit;
+}
+
+// Skills Cards Configuration
+// -------------------------
+const SKILLS_CARDS_CONFIG = [
+    1 => [
+        'title' => 'Frontend Development',
+        'description' => '',
+        'type' => 'list'
+    ],
+    2 => [
+        'title' => 'Backend Development', 
+        'description' => '',
+        'type' => 'list'
+    ],
+    3 => [
+        'title' => 'Design & UX',
+        'description' => '',
+        'type' => 'list'
+    ],
+    4 => [
+        'title' => 'DevOps & Tools',
+        'description' => 'Streamlining development workflows and deployment processes.',
+        'type' => 'description'
+    ],
+    5 => [
+        'title' => 'Mobile Development',
+        'description' => 'Building native and cross-platform mobile applications.',
+        'type' => 'description'
+    ]
+];
+
+// Helper function to register skills cards
+// ---------------------------------------
+function register_skills_cards($wp_customize) {
+    foreach (SKILLS_CARDS_CONFIG as $card_num => $config) {
+        $card_id = "moehser_skills_card{$card_num}";
+        
+        // Enable/Disable control
+        $wp_customize->add_setting("{$card_id}_enabled", [
+            'default' => 1,
+            'sanitize_callback' => 'absint',
+            'transport' => 'postMessage',
+        ]);
+        $wp_customize->add_control("{$card_id}_enabled", [
+            'label' => sprintf(__('Enable Card %d – %s Card', 'moehser-portfolio'), $card_num, ucfirst($config['type'])),
+            'section' => 'moehser_skills',
+            'type' => 'checkbox',
+            'active_callback' => function () {
+                return get_theme_mod('moehser_skills_layout_mode', 'fixed_grid') === 'adaptive_grid';
+            },
+        ]);
+        
+        // Title
+        $wp_customize->add_setting("{$card_id}_title", [
+            'default' => __($config['title'], 'moehser-portfolio'),
+            'sanitize_callback' => 'wp_kses_post',
+        ]);
+        $wp_customize->add_control("{$card_id}_title", [
+            'label' => sprintf(__('Skills Card %d - Title', 'moehser-portfolio'), $card_num),
+            'section' => 'moehser_skills',
+            'type' => 'text',
+            'priority' => $card_num * 100,
+        ]);
+        
+        // Description (only for description type cards)
+        if ($config['type'] === 'description') {
+            $wp_customize->add_setting("{$card_id}_description", [
+                'default' => __($config['description'], 'moehser-portfolio'),
+                'sanitize_callback' => 'wp_kses_post',
+            ]);
+            $wp_customize->add_control("{$card_id}_description", [
+                'label' => sprintf(__('Skills Card %d - Description', 'moehser-portfolio'), $card_num),
+                'section' => 'moehser_skills',
+                'type' => 'textarea',
+                'priority' => $card_num * 100 + 10,
+            ]);
+        }
+        
+        // Tags
+        $wp_customize->add_setting("{$card_id}_tags", [
+            'default' => '',
+            'sanitize_callback' => 'sanitize_text_field',
+        ]);
+        $wp_customize->add_control("{$card_id}_tags", [
+            'label' => sprintf(__('Skills Card %d - Tags (comma separated)', 'moehser-portfolio'), $card_num),
+            'description' => __('Tags for this skill card. In Fixed Grid mode, max 3 tags are allowed.', 'moehser-portfolio'),
+            'section' => 'moehser_skills',
+            'type' => 'text',
+            'priority' => $card_num * 100 + 20,
+        ]);
+        
+        // Skills List
+        $wp_customize->add_setting("{$card_id}_skills_list", [
+            'default' => '',
+            'sanitize_callback' => 'wp_kses_post',
+        ]);
+        $wp_customize->add_control("{$card_id}_skills_list", [
+            'label' => sprintf(__('Skills Card %d - Skills List (comma separated)', 'moehser-portfolio'), $card_num),
+            'description' => __('Skills list for this card. In Fixed Grid mode, max 3 items are allowed.', 'moehser-portfolio'),
+            'section' => 'moehser_skills',
+            'type' => 'textarea',
+            'priority' => $card_num * 100 + 10,
+        ]);
+    }
+}
+
+// Helper function to get skills cards data
+// --------------------------------------
+function get_skills_cards_data() {
+    $cards_data = [];
+    
+    foreach (array_keys(SKILLS_CARDS_CONFIG) as $card_num) {
+        $card_id = "moehser_skills_card{$card_num}";
+        $cards_data["card{$card_num}"] = [
+            'title' => get_theme_mod("{$card_id}_title", ''),
+            'description' => get_theme_mod("{$card_id}_description", ''),
+            'tags' => get_theme_mod("{$card_id}_tags", ''),
+            'skills_list' => get_theme_mod("{$card_id}_skills_list", ''),
+        ];
+    }
+    
+    return $cards_data;
+}
+
+// Helper function to output JavaScript variables
+// ---------------------------------------------
+function output_js_variable($name, $value, $is_json = false) {
+    if ($is_json) {
+        echo "window.{$name} = " . wp_json_encode($value) . ";";
+    } else {
+        echo "window.{$name} = \"" . esc_js($value) . "\";";
+    }
 }
 
 add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
@@ -102,7 +235,6 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         'description' => __('Configure the about section content', 'moehser-portfolio'),
         'priority' => 30,
     ]);
-
 
     // Section: Imprint Settings
     $wp_customize->add_section('moehser_imprint', [
@@ -272,7 +404,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
 
     // Projects Section Title
     $wp_customize->add_setting('moehser_projects_title', [
-        'default' => __('Projekte', 'moehser-portfolio'),
+        'default' => __('Projects', 'moehser-portfolio'),
         'sanitize_callback' => 'wp_kses_post',
     ]);
     $wp_customize->add_control('moehser_projects_title', [
@@ -383,274 +515,22 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]);
 
 
-    // Enable/Disable cards (only when adaptive mode is active)
-    $enable_control_active_cb = function () {
-        return get_theme_mod('moehser_skills_layout_mode', 'fixed_grid') === 'adaptive_grid';
-    };
-
-    $wp_customize->add_setting('moehser_skills_card1_enabled', [
-        'default' => 1,
-        'sanitize_callback' => 'absint',
-        'transport' => 'postMessage',
-    ]);
-    $wp_customize->add_control('moehser_skills_card1_enabled', [
-        'label' => __('Enable Card 1 – List Card', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'checkbox',
-        'active_callback' => $enable_control_active_cb,
-    ]);
-
-    $wp_customize->add_setting('moehser_skills_card2_enabled', [
-        'default' => 1,
-        'sanitize_callback' => 'absint',
-        'transport' => 'postMessage',
-    ]);
-    $wp_customize->add_control('moehser_skills_card2_enabled', [
-        'label' => __('Enable Card 2 – List Card', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'checkbox',
-        'active_callback' => $enable_control_active_cb,
-    ]);
-
-    $wp_customize->add_setting('moehser_skills_card3_enabled', [
-        'default' => 1,
-        'sanitize_callback' => 'absint',
-        'transport' => 'postMessage',
-    ]);
-    $wp_customize->add_control('moehser_skills_card3_enabled', [
-        'label' => __('Enable Card 3 – List Card', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'checkbox',
-        'active_callback' => $enable_control_active_cb,
-    ]);
-
-    $wp_customize->add_setting('moehser_skills_card4_enabled', [
-        'default' => 1,
-        'sanitize_callback' => 'absint',
-        'transport' => 'postMessage',
-    ]);
-    $wp_customize->add_control('moehser_skills_card4_enabled', [
-        'label' => __('Enable Card 4 – Description Card', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'checkbox',
-        'active_callback' => $enable_control_active_cb,
-    ]);
-
-    $wp_customize->add_setting('moehser_skills_card5_enabled', [
-        'default' => 1,
-        'sanitize_callback' => 'absint',
-        'transport' => 'postMessage',
-    ]);
-    $wp_customize->add_control('moehser_skills_card5_enabled', [
-        'label' => __('Enable Card 5 – Description Card', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'checkbox',
-        'active_callback' => $enable_control_active_cb,
-    ]);
-
-    // Skills Card 1
-    $wp_customize->add_setting('moehser_skills_card1_title', [
-        'default' => __('Frontend Development', 'moehser-portfolio'),
-        'sanitize_callback' => 'wp_kses_post',
-    ]);
-    $wp_customize->add_control('moehser_skills_card1_title', [
-        'label' => __('Skills Card 1 - Title', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'text',
-        'priority' => 100,
-    ]);
-
-
-
-    $wp_customize->add_setting('moehser_skills_card1_tags', [
-        'default' => '',
-        'sanitize_callback' => 'sanitize_text_field',
-    ]);
-    $wp_customize->add_control('moehser_skills_card1_tags', [
-        'label' => __('Skills Card 1 - Tags (comma separated)', 'moehser-portfolio'),
-        'description' => __('Tags for this skill card. In Fixed Grid mode, max 3 tags are allowed.', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'text',
-        'priority' => 120,
-    ]);
-
-    $wp_customize->add_setting('moehser_skills_card1_skills_list', [
-        'default' => '',
-        'sanitize_callback' => 'wp_kses_post',
-    ]);
-    $wp_customize->add_control('moehser_skills_card1_skills_list', [
-        'label' => __('Skills Card 1 - Skills List (comma separated)', 'moehser-portfolio'),
-        'description' => __('Skills list for this card. In Fixed Grid mode, max 3 items are allowed.', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'textarea',
-        'priority' => 110,
-    ]);
-
-    // Skills Card 2
-    $wp_customize->add_setting('moehser_skills_card2_title', [
-        'default' => __('Backend Development', 'moehser-portfolio'),
-        'sanitize_callback' => 'wp_kses_post',
-    ]);
-    $wp_customize->add_control('moehser_skills_card2_title', [
-        'label' => __('Skills Card 2 - Title', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'text',
-        'priority' => 200,
-    ]);
-
- 
-
-    $wp_customize->add_setting('moehser_skills_card2_tags', [
-        'default' => '',
-        'sanitize_callback' => 'sanitize_text_field',
-    ]);
-    $wp_customize->add_control('moehser_skills_card2_tags', [
-        'label' => __('Skills Card 2 - Tags (comma separated)', 'moehser-portfolio'),
-        'description' => __('Tags for this skill card. In Fixed Grid mode, max 3 tags are allowed.', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'text',
-        'priority' => 220,
-    ]);
-
-    $wp_customize->add_setting('moehser_skills_card2_skills_list', [
-        'default' => '',
-        'sanitize_callback' => 'wp_kses_post',
-    ]);
-    $wp_customize->add_control('moehser_skills_card2_skills_list', [
-        'label' => __('Skills Card 2 - Skills List (comma separated)', 'moehser-portfolio'),
-        'description' => __('Skills list for this card. In Fixed Grid mode, max 3 items are allowed.', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'textarea',
-        'priority' => 210,
-    ]);
-
-    // Skills Card 3
-    $wp_customize->add_setting('moehser_skills_card3_title', [
-        'default' => __('Design & UX', 'moehser-portfolio'),
-        'sanitize_callback' => 'wp_kses_post',
-    ]);
-    $wp_customize->add_control('moehser_skills_card3_title', [
-        'label' => __('Skills Card 3 - Title', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'text',
-        'priority' => 300,
-    ]);
-
-
-
-    $wp_customize->add_setting('moehser_skills_card3_tags', [
-        'default' => '',
-        'sanitize_callback' => 'sanitize_text_field',
-    ]);
-    $wp_customize->add_control('moehser_skills_card3_tags', [
-        'label' => __('Skills Card 3 - Tags (comma separated)', 'moehser-portfolio'),
-        'description' => __('Tags for this skill card. In Fixed Grid mode, max 3 tags are allowed.', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'text',
-        'priority' => 320,
-    ]);
-
-    $wp_customize->add_setting('moehser_skills_card3_skills_list', [
-        'default' => '',
-        'sanitize_callback' => 'wp_kses_post',
-    ]);
-    $wp_customize->add_control('moehser_skills_card3_skills_list', [
-        'label' => __('Skills Card 3 - Skills List (comma separated)', 'moehser-portfolio'),
-        'description' => __('Skills list for this card. In Fixed Grid mode, max 3 items are allowed.', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'textarea',
-        'priority' => 310,
-    ]);
-
-    // Skills Card 4
-    $wp_customize->add_setting('moehser_skills_card4_title', [
-        'default' => __('DevOps & Tools', 'moehser-portfolio'),
-        'sanitize_callback' => 'wp_kses_post',
-    ]);
-    $wp_customize->add_control('moehser_skills_card4_title', [
-        'label' => __('Skills Card 4 - Title', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'text',
-        'priority' => 400,
-    ]);
-
-    $wp_customize->add_setting('moehser_skills_card4_description', [
-        'default' => __('Streamlining development workflows and deployment processes.', 'moehser-portfolio'),
-        'sanitize_callback' => 'wp_kses_post',
-    ]);
-    $wp_customize->add_control('moehser_skills_card4_description', [
-        'label' => __('Skills Card 4 - Description', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'textarea',
-        'priority' => 410,
-    ]);
-
-    $wp_customize->add_setting('moehser_skills_card4_tags', [
-        'default' => '',
-        'sanitize_callback' => 'sanitize_text_field',
-    ]);
-    $wp_customize->add_control('moehser_skills_card4_tags', [
-        'label' => __('Skills Card 4 - Tags (comma separated)', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'text',
-        'priority' => 420,
-    ]);
-
-
-
-    // Skills Card 5
-    $wp_customize->add_setting('moehser_skills_card5_title', [
-        'default' => __('Mobile Development', 'moehser-portfolio'),
-        'sanitize_callback' => 'wp_kses_post',
-    ]);
-    $wp_customize->add_control('moehser_skills_card5_title', [
-        'label' => __('Skills Card 5 - Title', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'text',
-        'priority' => 500,
-    ]);
-
-    $wp_customize->add_setting('moehser_skills_card5_description', [
-        'default' => __('Building native and cross-platform mobile applications.', 'moehser-portfolio'),
-        'sanitize_callback' => 'wp_kses_post',
-    ]);
-    $wp_customize->add_control('moehser_skills_card5_description', [
-        'label' => __('Skills Card 5 - Description', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'textarea',
-        'priority' => 510,
-    ]);
-
-    $wp_customize->add_setting('moehser_skills_card5_tags', [
-        'default' => '',
-        'sanitize_callback' => 'sanitize_text_field',
-    ]);
-    $wp_customize->add_control('moehser_skills_card5_tags', [
-        'label' => __('Skills Card 5 - Tags (comma separated)', 'moehser-portfolio'),
-        'section' => 'moehser_skills',
-        'type' => 'text',
-        'priority' => 520,
-    ]);
-
-
+    // Register all skills cards
+    register_skills_cards($wp_customize);
 });
 
 // Pass Customizer values to frontend
+// ==================================
 add_action('wp_head', function () {
-    // Profile and Social Settings
-    $profile_avatar = get_theme_mod('moehser_profile_avatar', '');
-    $social_github = get_theme_mod('moehser_social_github', '');
-    $social_linkedin = get_theme_mod('moehser_social_linkedin', '');
-    $social_email = get_theme_mod('moehser_social_email', '');
-    $email_subject = get_theme_mod('moehser_email_subject', 'Portfolio Contact - New Inquiry');
+    echo '<script>';
     
-    // About texts
+    // About section data
     $about_title = get_theme_mod('moehser_about_title', '');
     $about_subtitle = get_theme_mod('moehser_about_subtitle', '');
     $about_page_id = (int) get_theme_mod('moehser_about_page_id', 0);
     $about_html = '';
     
-    // If no custom title is set, use the page title
+    // Get about content from page if no custom title
     if (empty($about_title) && $about_page_id > 0) {
         $about_post = get_post($about_page_id);
         if ($about_post && $about_post->post_status === 'publish') {
@@ -658,80 +538,33 @@ add_action('wp_head', function () {
         }
     }
     
+    // Get about HTML content
     if ($about_page_id > 0) {
         $about_post = get_post($about_page_id);
         if ($about_post && $about_post->post_status === 'publish') {
-            // Apply standard content filters so shortcodes/blocks are rendered
             $about_html = apply_filters('the_content', $about_post->post_content);
         }
     }
     
-    // Projects Settings
-    $show_only_active_projects = get_theme_mod('moehser_show_only_active_projects', 1);
-    $projects_title = get_theme_mod('moehser_projects_title', '');
-    $projects_subtitle = get_theme_mod('moehser_projects_subtitle', '');
-    $projects_layout_mode = get_theme_mod('moehser_projects_layout_mode', 'side_by_side');
-    $projects_show_view_toggle = get_theme_mod('moehser_projects_show_view_toggle', 1);
-    
-    // Skills Settings
-    $skills_title = get_theme_mod('moehser_skills_title', '');
-    $skills_subtitle = get_theme_mod('moehser_skills_subtitle', '');
-    $skills_layout_mode = get_theme_mod('moehser_skills_layout_mode', 'fixed_grid');
-    $skills_card1_enabled = get_theme_mod('moehser_skills_card1_enabled', 1);
-    $skills_card2_enabled = get_theme_mod('moehser_skills_card2_enabled', 1);
-    $skills_card3_enabled = get_theme_mod('moehser_skills_card3_enabled', 1);
-    $skills_card4_enabled = get_theme_mod('moehser_skills_card4_enabled', 1);
-    $skills_card5_enabled = get_theme_mod('moehser_skills_card5_enabled', 1);
-    
-    // Skills Cards
-    $skills_card1_title = get_theme_mod('moehser_skills_card1_title', '');
-    $skills_card1_description = get_theme_mod('moehser_skills_card1_description', '');
-    $skills_card1_tags = get_theme_mod('moehser_skills_card1_tags', '');
-    $skills_card1_skills_list = get_theme_mod('moehser_skills_card1_skills_list', '');
-    
-    $skills_card2_title = get_theme_mod('moehser_skills_card2_title', '');
-    $skills_card2_description = get_theme_mod('moehser_skills_card2_description', '');
-    $skills_card2_tags = get_theme_mod('moehser_skills_card2_tags', '');
-    $skills_card2_skills_list = get_theme_mod('moehser_skills_card2_skills_list', '');
-    
-    $skills_card3_title = get_theme_mod('moehser_skills_card3_title', '');
-    $skills_card3_description = get_theme_mod('moehser_skills_card3_description', '');
-    $skills_card3_tags = get_theme_mod('moehser_skills_card3_tags', '');
-    $skills_card3_skills_list = get_theme_mod('moehser_skills_card3_skills_list', '');
-    
-    $skills_card4_title = get_theme_mod('moehser_skills_card4_title', '');
-    $skills_card4_description = get_theme_mod('moehser_skills_card4_description', '');
-    $skills_card4_tags = get_theme_mod('moehser_skills_card4_tags', '');
-    $skills_card4_skills_list = get_theme_mod('moehser_skills_card4_skills_list', '');
-    
-    $skills_card5_title = get_theme_mod('moehser_skills_card5_title', '');
-    $skills_card5_description = get_theme_mod('moehser_skills_card5_description', '');
-    $skills_card5_tags = get_theme_mod('moehser_skills_card5_tags', '');
-    $skills_card5_skills_list = get_theme_mod('moehser_skills_card5_skills_list', '');
-    
-    echo '<script>';
-    // About texts to frontend
-    echo 'window.__ABOUT_TITLE__ = "' . esc_js($about_title) . '";';
-    echo 'window.__ABOUT_SUBTITLE__ = "' . esc_js($about_subtitle) . '";';
-    echo 'window.__ABOUT_HTML__ = ' . wp_json_encode($about_html) . ';';
+    output_js_variable('__ABOUT_TITLE__', $about_title);
+    output_js_variable('__ABOUT_SUBTITLE__', $about_subtitle);
+    output_js_variable('__ABOUT_HTML__', $about_html, true);
     
     // About CTA settings
     $about_cta_enabled = get_theme_mod('moehser_about_cta_enabled', 0);
     $about_cta_text = get_theme_mod('moehser_about_cta_text', '');
     $about_cta_url = get_theme_mod('moehser_about_cta_url', '');
     $about_cta_subject = get_theme_mod('moehser_about_cta_subject', '');
-    echo 'window.__ABOUT_CTA_ENABLED__ = ' . ($about_cta_enabled ? 'true' : 'false') . ';';
-    echo 'window.__ABOUT_CTA_TEXT__ = "' . esc_js($about_cta_text) . '";';
-    echo 'window.__ABOUT_CTA_URL__ = "' . esc_js($about_cta_url) . '";';
-    echo 'window.__ABOUT_CTA_SUBJECT__ = "' . esc_js($about_cta_subject) . '";';
+    echo "window.__ABOUT_CTA_ENABLED__ = " . ($about_cta_enabled ? 'true' : 'false') . ";";
+    output_js_variable('__ABOUT_CTA_TEXT__', $about_cta_text);
+    output_js_variable('__ABOUT_CTA_URL__', $about_cta_url);
+    output_js_variable('__ABOUT_CTA_SUBJECT__', $about_cta_subject);
     
-    // Hero Settings to frontend
-    $hero_title = get_theme_mod('moehser_hero_title', '');
-    $hero_subtitle = get_theme_mod('moehser_hero_subtitle', '');
-    echo 'window.__HERO_TITLE__ = "' . esc_js($hero_title) . '";';
-    echo 'window.__HERO_SUBTITLE__ = "' . esc_js($hero_subtitle) . '";';
+    // Hero settings
+    output_js_variable('__HERO_TITLE__', get_theme_mod('moehser_hero_title', ''));
+    output_js_variable('__HERO_SUBTITLE__', get_theme_mod('moehser_hero_subtitle', ''));
     
-    // Imprint Settings to frontend
+    // Imprint settings
     $imprint_page_id = get_theme_mod('moehser_imprint_page_id', 0);
     $imprint_title = __('Impressum', 'moehser-portfolio');
     $imprint_content = '';
@@ -744,41 +577,55 @@ add_action('wp_head', function () {
         }
     }
     
-    echo 'window.__IMPRINT_TITLE__ = ' . wp_json_encode($imprint_title) . ';';
-    echo 'window.__IMPRINT_HTML__ = ' . wp_json_encode($imprint_content) . ';';
+    output_js_variable('__IMPRINT_TITLE__', $imprint_title, true);
+    output_js_variable('__IMPRINT_HTML__', $imprint_content, true);
     
-    // Projects Settings to frontend
-    echo 'window.__SHOW_ONLY_ACTIVE_PROJECTS__ = ' . ($show_only_active_projects ? 'true' : 'false') . ';';
-    echo 'window.__PROJECTS_TITLE__ = ' . wp_json_encode($projects_title) . ';';
-    echo 'window.__PROJECTS_SUBTITLE__ = ' . wp_json_encode($projects_subtitle) . ';';
-    echo 'window.__PROJECTS_LAYOUT_MODE__ = "' . esc_js($projects_layout_mode) . '";';
-    echo 'window.__PROJECTS_SHOW_VIEW_TOGGLE__ = ' . ($projects_show_view_toggle ? 'true' : 'false') . ';';
+    // Projects settings
+    $show_only_active_projects = get_theme_mod('moehser_show_only_active_projects', 1);
+    echo "window.__SHOW_ONLY_ACTIVE_PROJECTS__ = " . ($show_only_active_projects ? 'true' : 'false') . ";";
+    output_js_variable('__PROJECTS_TITLE__', get_theme_mod('moehser_projects_title', ''), true);
+    output_js_variable('__PROJECTS_SUBTITLE__', get_theme_mod('moehser_projects_subtitle', ''), true);
+    output_js_variable('__PROJECTS_LAYOUT_MODE__', get_theme_mod('moehser_projects_layout_mode', 'side_by_side'));
+    $projects_show_view_toggle = get_theme_mod('moehser_projects_show_view_toggle', 1);
+    echo "window.__PROJECTS_SHOW_VIEW_TOGGLE__ = " . ($projects_show_view_toggle ? 'true' : 'false') . ";";
     
-    // Skills Settings to frontend
-    echo 'window.__SKILLS_TITLE__ = ' . wp_json_encode($skills_title) . ';';
-    echo 'window.__SKILLS_SUBTITLE__ = "' . esc_js($skills_subtitle) . '";';
-    echo 'window.__SKILLS_LAYOUT_MODE__ = "' . esc_js($skills_layout_mode) . '";';
-    echo 'window.__SKILLS_CARDS_ENABLED__ = { c1: ' . ($skills_card1_enabled ? 'true' : 'false') . ', c2: ' . ($skills_card2_enabled ? 'true' : 'false') . ', c3: ' . ($skills_card3_enabled ? 'true' : 'false') . ', c4: ' . ($skills_card4_enabled ? 'true' : 'false') . ', c5: ' . ($skills_card5_enabled ? 'true' : 'false') . ' };';
+    // Skills settings
+    output_js_variable('__SKILLS_TITLE__', get_theme_mod('moehser_skills_title', ''), true);
+    output_js_variable('__SKILLS_SUBTITLE__', get_theme_mod('moehser_skills_subtitle', ''));
+    output_js_variable('__SKILLS_LAYOUT_MODE__', get_theme_mod('moehser_skills_layout_mode', 'fixed_grid'));
     
-    // Skills Cards to frontend
-    echo 'window.__SKILLS_CARD1__ = { title: "' . esc_js($skills_card1_title) . '", description: "' . esc_js($skills_card1_description) . '", tags: "' . esc_js($skills_card1_tags) . '", skills_list: "' . esc_js($skills_card1_skills_list) . '" };';
-    echo 'window.__SKILLS_CARD2__ = { title: "' . esc_js($skills_card2_title) . '", description: "' . esc_js($skills_card2_description) . '", tags: "' . esc_js($skills_card2_tags) . '", skills_list: "' . esc_js($skills_card2_skills_list) . '" };';
-    echo 'window.__SKILLS_CARD3__ = { title: "' . esc_js($skills_card3_title) . '", description: "' . esc_js($skills_card3_description) . '", tags: "' . esc_js($skills_card3_tags) . '", skills_list: "' . esc_js($skills_card3_skills_list) . '" };';
-    echo 'window.__SKILLS_CARD4__ = { title: "' . esc_js($skills_card4_title) . '", description: "' . esc_js($skills_card4_description) . '", tags: "' . esc_js($skills_card4_tags) . '", skills_list: "' . esc_js($skills_card4_skills_list) . '" };';
-    echo 'window.__SKILLS_CARD5__ = { title: "' . esc_js($skills_card5_title) . '", description: "' . esc_js($skills_card5_description) . '", tags: "' . esc_js($skills_card5_tags) . '", skills_list: "' . esc_js($skills_card5_skills_list) . '" };';
+    // Skills cards enabled status
+    $cards_enabled = [];
+    foreach (array_keys(SKILLS_CARDS_CONFIG) as $card_num) {
+        $cards_enabled["c{$card_num}"] = get_theme_mod("moehser_skills_card{$card_num}_enabled", 1) ? true : false;
+    }
+    output_js_variable('__SKILLS_CARDS_ENABLED__', $cards_enabled, true);
     
-    // Profile and Social JavaScript Variables
-    if ($profile_avatar) echo 'window.__PROFILE_AVATAR_URL__ = "' . esc_js($profile_avatar) . '";';
-    if ($social_github) echo 'window.__SOCIAL_GITHUB__ = "' . esc_js($social_github) . '";';
-    if ($social_linkedin) echo 'window.__SOCIAL_LINKEDIN__ = "' . esc_js($social_linkedin) . '";';
-    if ($social_email) echo 'window.__SOCIAL_EMAIL__ = "' . esc_js($social_email) . '";';
-    if ($email_subject) echo 'window.__EMAIL_SUBJECT__ = "' . esc_js($email_subject) . '";';
+    // Skills cards data
+    $skills_cards = get_skills_cards_data();
+    foreach ($skills_cards as $card_key => $card_data) {
+        $card_number = str_replace('card', '', $card_key);
+        output_js_variable("__SKILLS_CARD{$card_number}__", $card_data, true);
+    }
     
-    // Contact Form JavaScript Variables
+    // Profile and social settings
+    $profile_avatar = get_theme_mod('moehser_profile_avatar', '');
+    $social_github = get_theme_mod('moehser_social_github', '');
+    $social_linkedin = get_theme_mod('moehser_social_linkedin', '');
+    $social_email = get_theme_mod('moehser_social_email', '');
+    $email_subject = get_theme_mod('moehser_email_subject', 'Portfolio Contact - New Inquiry');
+    
+    if ($profile_avatar) output_js_variable('__PROFILE_AVATAR_URL__', $profile_avatar);
+    if ($social_github) output_js_variable('__SOCIAL_GITHUB__', $social_github);
+    if ($social_linkedin) output_js_variable('__SOCIAL_LINKEDIN__', $social_linkedin);
+    if ($social_email) output_js_variable('__SOCIAL_EMAIL__', $social_email);
+    if ($email_subject) output_js_variable('__EMAIL_SUBJECT__', $email_subject);
+    
+    // Contact form settings
     $business_email_subject = get_theme_mod('moehser_business_email_subject', 'Business Inquiry - Portfolio Contact');
     $recaptcha_site_key = get_theme_mod('moehser_recaptcha_site_key', '');
-    if ($business_email_subject) echo 'window.__BUSINESS_EMAIL_SUBJECT__ = "' . esc_js($business_email_subject) . '";';
-    if ($recaptcha_site_key) echo 'window.__RECAPTCHA_SITE_KEY__ = "' . esc_js($recaptcha_site_key) . '";';
+    if ($business_email_subject) output_js_variable('__BUSINESS_EMAIL_SUBJECT__', $business_email_subject);
+    if ($recaptcha_site_key) output_js_variable('__RECAPTCHA_SITE_KEY__', $recaptcha_site_key);
     
     echo '</script>';
 });
