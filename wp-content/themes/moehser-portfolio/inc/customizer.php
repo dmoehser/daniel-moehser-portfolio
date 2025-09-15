@@ -70,7 +70,7 @@ function register_skills_cards($wp_customize) {
             'priority' => $card_num * 100,
         ]);
         
-        // Description (only for description type cards)
+        // Description
         if ($config['type'] === 'description') {
             $wp_customize->add_setting("{$card_id}_description", [
                 'default' => __($config['description'], 'moehser-portfolio'),
@@ -98,17 +98,19 @@ function register_skills_cards($wp_customize) {
         ]);
         
         // Skills List
-        $wp_customize->add_setting("{$card_id}_skills_list", [
-            'default' => '',
-            'sanitize_callback' => 'wp_kses_post',
-        ]);
-        $wp_customize->add_control("{$card_id}_skills_list", [
-            'label' => sprintf(__('Skills Card %d - Skills List (comma separated)', 'moehser-portfolio'), $card_num),
-            'description' => __('Skills list for this card. In Fixed Grid mode, max 3 items are allowed.', 'moehser-portfolio'),
-            'section' => 'moehser_skills',
-            'type' => 'textarea',
-            'priority' => $card_num * 100 + 10,
-        ]);
+        if ($config['type'] === 'list') {
+            $wp_customize->add_setting("{$card_id}_skills_list", [
+                'default' => '',
+                'sanitize_callback' => 'wp_kses_post',
+            ]);
+            $wp_customize->add_control("{$card_id}_skills_list", [
+                'label' => sprintf(__('Skills Card %d - Skills List (comma separated)', 'moehser-portfolio'), $card_num),
+                'description' => __('Skills list for this card. In Fixed Grid mode, max 3 items are allowed.', 'moehser-portfolio'),
+                'section' => 'moehser_skills',
+                'type' => 'textarea',
+                'priority' => $card_num * 100 + 10,
+            ]);
+        }
     }
 }
 
@@ -117,14 +119,24 @@ function register_skills_cards($wp_customize) {
 function get_skills_cards_data() {
     $cards_data = [];
     
-    foreach (array_keys(SKILLS_CARDS_CONFIG) as $card_num) {
+    foreach (SKILLS_CARDS_CONFIG as $card_num => $config) {
         $card_id = "moehser_skills_card{$card_num}";
-        $cards_data["card{$card_num}"] = [
+        $card_data = [
             'title' => get_theme_mod("{$card_id}_title", ''),
-            'description' => get_theme_mod("{$card_id}_description", ''),
             'tags' => get_theme_mod("{$card_id}_tags", ''),
-            'skills_list' => get_theme_mod("{$card_id}_skills_list", ''),
         ];
+        
+        // Add description
+        if ($config['type'] === 'description') {
+            $card_data['description'] = get_theme_mod("{$card_id}_description", '');
+        }
+        
+        // Add skills_list
+        if ($config['type'] === 'list') {
+            $card_data['skills_list'] = get_theme_mod("{$card_id}_skills_list", '');
+        }
+        
+        $cards_data["card{$card_num}"] = $card_data;
     }
     
     return $cards_data;
@@ -445,7 +457,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
         ],
     ]);
 
-    // Show Grid/List Toggle Option (only visible when grid or list mode is selected)
+    // Show Grid/List Toggle Option
     $wp_customize->add_setting('moehser_projects_show_view_toggle', [
         'default' => 1,
         'sanitize_callback' => function ($value) { return (int) (bool) $value; },
