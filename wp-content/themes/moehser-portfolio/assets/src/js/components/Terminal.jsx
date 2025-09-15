@@ -12,8 +12,10 @@ import { makeCommands, COMMAND_ORDER, buildActions } from '../features/terminal/
 import { useLanguage } from '../hooks/useLanguage.js';
 import 'xterm/css/xterm.css';
 
-// Terminal configuration constants
-// ------------------------------
+// Constants
+// =========
+
+// Terminal configuration
 const TERMINAL_CONFIG = {
   FONT: {
     FAMILY: 'JetBrains Mono, monospace',
@@ -38,22 +40,117 @@ const TERMINAL_CONFIG = {
   }
 };
 
+// Terminal behavior constants
+const TERMINAL_BEHAVIOR = {
+  DEFAULT_COMMAND: 'help',
+  STORAGE_KEY: 'terminal_cmd',
+  ACTION_DELAY: 100,
+  FOCUS_DELAY: 0,
+  CLEAR_DELAY: 0
+};
+
+// Keyboard constants
+const KEYBOARD = {
+  ENTER: '\r',
+  BACKSPACE: '\u007F',
+  BACKSPACE_ALT: '\u0008',
+  CTRL_C: '\u0003',
+  CTRL_L: '\u000c',
+  TAB: '\t',
+  ESC_UP: '\x1b[A',
+  ESC_DOWN: '\x1b[B',
+  PRINTABLE_START: ' ',
+  PRINTABLE_END: '~'
+};
+
+// Terminal commands
+const COMMANDS = {
+  CLEAR: 'clear',
+  HELP: 'help'
+};
+
+// Helper Functions
+// ================
+
+// Helper function to get terminal prompt
+const getTerminalPrompt = () => {
+  const { GREEN, BLUE, YELLOW, RESET } = TERMINAL_CONFIG.COLORS;
+  return `${GREEN}daniel${RESET}@${BLUE}portfolio${RESET}:${YELLOW}~${RESET}$ `;
+};
+
+// Helper function to write prompt to terminal
+const writePrompt = (term) => {
+  term.write(`\r\n${getTerminalPrompt()}`);
+};
+
+// Helper function to check if character is printable
+const isPrintableChar = (char) => {
+  return char >= KEYBOARD.PRINTABLE_START && char <= KEYBOARD.PRINTABLE_END;
+};
+
+// Helper function to handle terminal resize
+const createResizeHandler = (fitAddon) => {
+  return () => {
+    try { 
+      fitAddon.fit(); 
+    } catch (error) {
+      // Silent fail for resize errors
+    }
+  };
+};
+
+// Helper function to setup terminal styling
+const setupTerminalStyling = (container) => {
+  try {
+    const viewport = container?.querySelector('.xterm-viewport');
+    const screen = container?.querySelector('.xterm-screen');
+    if (viewport) viewport.style.backgroundColor = TERMINAL_CONFIG.THEME.BACKGROUND;
+    if (screen) screen.style.backgroundColor = TERMINAL_CONFIG.THEME.BACKGROUND;
+  } catch (error) {
+    // Silent fail for styling errors
+  }
+};
+
+// Helper function to create terminal instance
+const createTerminalInstance = () => {
+  return new XTerm({
+    fontFamily: TERMINAL_CONFIG.FONT.FAMILY,
+    fontSize: TERMINAL_CONFIG.FONT.SIZE,
+    cursorBlink: true,
+    cursorStyle: 'block',
+    lineHeight: TERMINAL_CONFIG.FONT.LINE_HEIGHT,
+    theme: TERMINAL_CONFIG.THEME,
+    allowProposedApi: true,
+  });
+};
+
 export default function Terminal() {
   const { isGerman } = useLanguage();
-  const COMMANDS = makeCommands();
-  const [cmd, setCmd] = useState('help');
-  const [selIdx, setSelIdx] = useState(-1); // selection in output lines (actionable)
-  const data = COMMANDS[cmd] || COMMANDS.help;
+  const terminalCommands = makeCommands();
+  const [cmd, setCmd] = useState(TERMINAL_BEHAVIOR.DEFAULT_COMMAND);
+  const [selIdx, setSelIdx] = useState(-1);
+  const data = terminalCommands[cmd] || terminalCommands.help;
 
+  // Refs
+  const xtermRef = useRef(null);
+  const xtermContainerRef = useRef(null);
+  const fitAddonRef = useRef(null);
 
+  // Load saved command from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem('terminal_cmd');
-    if (saved && COMMANDS[saved]) setCmd(saved);
-  }, []);
+    const saved = localStorage.getItem(TERMINAL_BEHAVIOR.STORAGE_KEY);
+    if (saved && terminalCommands[saved]) {
+      setCmd(saved);
+    }
+  }, [terminalCommands]);
 
+  // Save command to localStorage and reset selection
   useEffect(() => {
-    try { localStorage.setItem('terminal_cmd', cmd); } catch {}
-    // reset selection when command changes
+    try { 
+      localStorage.setItem(TERMINAL_BEHAVIOR.STORAGE_KEY, cmd); 
+    } catch (error) {
+      // Silent fail for localStorage errors
+    }
     setSelIdx(-1);
   }, [cmd]);
 
@@ -61,38 +158,80 @@ export default function Terminal() {
   const actions = buildActions(cmd);
   const actionableCount = Object.keys(actions).length;
 
+  // Helper function to navigate to next command
+  const navigateToNextCommand = () => {
+    const currentIndex = COMMAND_ORDER.indexOf(cmd);
+    const nextIndex = (currentIndex + 1) % COMMAND_ORDER.length;
+    setCmd(COMMAND_ORDER[nextIndex]);
+  };
+
+  // Helper function to navigate to previous command
+  const navigateToPreviousCommand = () => {
+    const currentIndex = COMMAND_ORDER.indexOf(cmd);
+    const prevIndex = (currentIndex - 1 + COMMAND_ORDER.length) % COMMAND_ORDER.length;
+    setCmd(COMMAND_ORDER[prevIndex]);
+  };
+
+  // Helper function to move selection down
+  const moveSelectionDown = () => {
+    if (actionableCount) {
+      const maxIdx = Math.max(...Object.keys(actions).map(Number));
+      setSelIdx((v) => {
+        const next = v < 0 ? 0 : Math.min(v + 1, maxIdx);
+        return next;
+      });
+    }
+  };
+
+  // Helper function to move selection up
+  const moveSelectionUp = () => {
+    if (actionableCount) {
+      setSelIdx((v) => Math.max(v - 1, 0));
+    }
+  };
+
+  // Helper function to execute selected action
+  const executeSelectedAction = () => {
+    if (selIdx >= 0 && actions[selIdx]) {
+      actions[selIdx]();
+    }
+  };
+
+  // Keyboard navigation handler
+  const handleKeyboardNavigation = (e) => {
+    switch (e.key) {
+      case 'ArrowRight':
+        navigateToNextCommand();
+        break;
+      case 'ArrowLeft':
+        navigateToPreviousCommand();
+        break;
+      case 'ArrowDown':
+        e.preventDefault();
+        moveSelectionDown();
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        moveSelectionUp();
+        break;
+      case 'Enter':
+        executeSelectedAction();
+        break;
+      default:
+        break;
+    }
+  };
+
   // Keyboard navigation: Left/Right switch commands; Up/Down move selection in output; Enter triggers action if available
   useEffect(() => {
-    const onKey = (e) => {
-      if (e.key === 'ArrowRight') {
-        const currentIndex = COMMAND_ORDER.indexOf(cmd);
-        const nextIndex = (currentIndex + 1) % COMMAND_ORDER.length;
-        setCmd(COMMAND_ORDER[nextIndex]);
-      } else if (e.key === 'ArrowLeft') {
-        const currentIndex = COMMAND_ORDER.indexOf(cmd);
-        const prevIndex = (currentIndex - 1 + COMMAND_ORDER.length) % COMMAND_ORDER.length;
-        setCmd(COMMAND_ORDER[prevIndex]);
-      } else if (e.key === 'ArrowDown') {
-        if (actionableCount) {
-          e.preventDefault();
-          const maxIdx = Math.max(...Object.keys(actions).map(Number));
-          setSelIdx((v) => {
-            const next = v < 0 ? 0 : Math.min(v + 1, maxIdx);
-            return next;
-          });
-        }
-      } else if (e.key === 'ArrowUp') {
-        if (actionableCount) {
-          e.preventDefault();
-          setSelIdx((v) => Math.max(v - 1, 0));
-        }
-      } else if (e.key === 'Enter') {
-        if (selIdx >= 0 && actions[selIdx]) actions[selIdx]();
-      }
-    };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener('keydown', handleKeyboardNavigation);
+    return () => document.removeEventListener('keydown', handleKeyboardNavigation);
   }, [cmd, selIdx, actionableCount]);
+
+  // Helper function to close terminal
+  const closeTerminal = () => {
+    window.dispatchEvent(new Event('terminal:close'));
+  };
 
   // Handle Esc key to close terminal
   useEffect(() => {
@@ -100,7 +239,7 @@ export default function Terminal() {
       if (e.key === 'Escape') {
         e.preventDefault();
         e.stopPropagation();
-        window.dispatchEvent(new Event('terminal:close'));
+        closeTerminal();
       }
     };
 
@@ -109,39 +248,64 @@ export default function Terminal() {
     return () => document.removeEventListener('keydown', handleEsc, true);
   }, []);
 
-  const xtermRef = useRef(null);
-  const xtermContainerRef = useRef(null);
-  const fitAddonRef = useRef(null);
+  // Helper function to display welcome message
+  const displayWelcomeMessage = (term, useGerman) => {
+    const { GREEN, BLUE, GRAY, RESET } = TERMINAL_CONFIG.COLORS;
+    
+    if (useGerman) {
+      term.writeln(`${GREEN}╭─────────────────────────────────────────╮${RESET}`);
+      term.writeln(`${GREEN}│  Willkommen bei daniel@portfolio shell  │${RESET}`);
+      term.writeln(`${GREEN}│  Interaktives Portfolio Terminal         │${RESET}`);
+      term.writeln(`${GREEN}╰─────────────────────────────────────────╯${RESET}`);
+      term.writeln('');
+      term.writeln(`${BLUE}🚀 Schnellstart:${RESET}`);
+      term.writeln(`${GRAY}  • Tippe 'hilfe' für alle verfügbaren Befehle${RESET}`);
+      term.writeln(`${GRAY}  • 'T' Taste zum Ein-/Ausblenden des Terminals${RESET}`);
+      term.writeln(`${GRAY}  • 'Esc' zum Schließen des Terminals${RESET}`);
+      term.writeln(`${GRAY}  • Pfeiltasten zur Navigation, Enter zum Ausführen${RESET}`);
+      term.writeln('');
+      term.writeln(`${BLUE}💡 Pro-Tipp:${RESET} Probiere 'home', 'skills', 'about' oder 'projects'!`);
+    } else {
+      term.writeln(`${GREEN}╭─────────────────────────────────────────╮${RESET}`);
+      term.writeln(`${GREEN}│  Welcome to daniel@portfolio shell      │${RESET}`);
+      term.writeln(`${GREEN}│  Interactive Portfolio Terminal         │${RESET}`);
+      term.writeln(`${GREEN}╰─────────────────────────────────────────╯${RESET}`);
+      term.writeln('');
+      term.writeln(`${BLUE}🚀 Quick Start:${RESET}`);
+      term.writeln(`${GRAY}  • Type 'help' to see all available commands${RESET}`);
+      term.writeln(`${GRAY}  • Use 'T' key to toggle terminal anytime${RESET}`);
+      term.writeln(`${GRAY}  • Press 'Esc' to close terminal${RESET}`);
+      term.writeln(`${GRAY}  • Navigate with arrow keys, Enter to execute${RESET}`);
+      term.writeln('');
+      term.writeln(`${BLUE}💡 Pro Tip:${RESET} Try 'home', 'skills', 'about', or 'projects' to navigate!`);
+    }
+  };
 
-  useEffect(() => {
-    // Init xterm on mount
-    const isDark = typeof document !== 'undefined' && document.body.classList.contains('theme-dark');
-    const term = new XTerm({
-      fontFamily: TERMINAL_CONFIG.FONT.FAMILY,
-      fontSize: TERMINAL_CONFIG.FONT.SIZE,
-      cursorBlink: true,
-      cursorStyle: 'block',
-      lineHeight: TERMINAL_CONFIG.FONT.LINE_HEIGHT,
-      theme: TERMINAL_CONFIG.THEME,
-      allowProposedApi: true,
-    });
+  // Helper function to initialize terminal
+  const initializeTerminal = () => {
+    const term = createTerminalInstance();
     const fit = new FitAddon();
+    
     term.loadAddon(fit);
     xtermRef.current = term;
     fitAddonRef.current = fit;
-    try { term.open(xtermContainerRef.current); } catch (e) { /* avoid hard crash */ }
     
-    // ensure canvas fills and paints opaque
-    try {
-      const viewport = xtermContainerRef.current?.querySelector('.xterm-viewport');
-      const screen = xtermContainerRef.current?.querySelector('.xterm-screen');
-      if (viewport) viewport.style.backgroundColor = TERMINAL_CONFIG.THEME.BACKGROUND;
-      if (screen) screen.style.backgroundColor = TERMINAL_CONFIG.THEME.BACKGROUND;
-    } catch {}
+    try { 
+      term.open(xtermContainerRef.current); 
+    } catch (error) {
+      // Silent fail for terminal open errors
+    }
+    
+    setupTerminalStyling(xtermContainerRef.current);
     fit.fit();
+    
+    return { term, fit };
+  };
 
-    const prompt = `${TERMINAL_CONFIG.COLORS.GREEN}daniel${TERMINAL_CONFIG.COLORS.RESET}@${TERMINAL_CONFIG.COLORS.BLUE}portfolio${TERMINAL_CONFIG.COLORS.RESET}:${TERMINAL_CONFIG.COLORS.YELLOW}~${TERMINAL_CONFIG.COLORS.RESET}$ `;
-    const writePrompt = () => { term.write(`\r\n${prompt}`); };
+  useEffect(() => {
+    const { term, fit } = initializeTerminal();
+    const prompt = getTerminalPrompt();
+    const writePromptToTerminal = () => writePrompt(term);
     let buffer = '';
     const history = [];
     let histIdx = -1;
@@ -150,149 +314,172 @@ export default function Terminal() {
     const isGermanDirect = window.location.pathname.includes('/de/');
     const useGerman = isGerman || isGermanDirect;
     
-    if (useGerman) {
-      term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}╭─────────────────────────────────────────╮${TERMINAL_CONFIG.COLORS.RESET}`);
-      term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}│  Willkommen bei daniel@portfolio shell  │${TERMINAL_CONFIG.COLORS.RESET}`);
-      term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}│  Interaktives Portfolio Terminal         │${TERMINAL_CONFIG.COLORS.RESET}`);
-      term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}╰─────────────────────────────────────────╯${TERMINAL_CONFIG.COLORS.RESET}`);
-      term.writeln('');
-      term.writeln(`${TERMINAL_CONFIG.COLORS.BLUE}🚀 Schnellstart:${TERMINAL_CONFIG.COLORS.RESET}`);
-      term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • Tippe 'hilfe' für alle verfügbaren Befehle${TERMINAL_CONFIG.COLORS.RESET}`);
-      term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • 'T' Taste zum Ein-/Ausblenden des Terminals${TERMINAL_CONFIG.COLORS.RESET}`);
-      term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • 'Esc' zum Schließen des Terminals${TERMINAL_CONFIG.COLORS.RESET}`);
-      term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • Pfeiltasten zur Navigation, Enter zum Ausführen${TERMINAL_CONFIG.COLORS.RESET}`);
-      term.writeln('');
-      term.writeln(`${TERMINAL_CONFIG.COLORS.BLUE}💡 Pro-Tipp:${TERMINAL_CONFIG.COLORS.RESET} Probiere 'home', 'skills', 'about' oder 'projects'!`);
-    } else {
-      term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}╭─────────────────────────────────────────╮${TERMINAL_CONFIG.COLORS.RESET}`);
-      term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}│  Welcome to daniel@portfolio shell      │${TERMINAL_CONFIG.COLORS.RESET}`);
-      term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}│  Interactive Portfolio Terminal         │${TERMINAL_CONFIG.COLORS.RESET}`);
-      term.writeln(`${TERMINAL_CONFIG.COLORS.GREEN}╰─────────────────────────────────────────╯${TERMINAL_CONFIG.COLORS.RESET}`);
-      term.writeln('');
-      term.writeln(`${TERMINAL_CONFIG.COLORS.BLUE}🚀 Quick Start:${TERMINAL_CONFIG.COLORS.RESET}`);
-      term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • Type 'help' to see all available commands${TERMINAL_CONFIG.COLORS.RESET}`);
-      term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • Use 'T' key to toggle terminal anytime${TERMINAL_CONFIG.COLORS.RESET}`);
-      term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • Press 'Esc' to close terminal${TERMINAL_CONFIG.COLORS.RESET}`);
-      term.writeln(`${TERMINAL_CONFIG.COLORS.GRAY}  • Navigate with arrow keys, Enter to execute${TERMINAL_CONFIG.COLORS.RESET}`);
-      term.writeln('');
-      term.writeln(`${TERMINAL_CONFIG.COLORS.BLUE}💡 Pro Tip:${TERMINAL_CONFIG.COLORS.RESET} Try 'home', 'skills', 'about', or 'projects' to navigate!`);
-    }
+    displayWelcomeMessage(term, useGerman);
     term.writeln('');
     term.write(prompt);
 
+    // Helper function to redraw current line
     const redrawLine = () => {
       term.write("\x1b[2K\r");
       term.write(prompt + buffer);
     };
 
-    term.onData((data) => {
-      switch (data) {
-        case '\r': { // Enter
-          const cmdline = buffer.trim().toLowerCase();
-          term.write('\r\n');
-          if (cmdline.length) {
-            history.push(cmdline);
-            histIdx = history.length;
-          }
-          if (cmdline === 'clear') {
-            term.clear();
-          } else if (COMMANDS[cmdline]) {
-            term.writeln(COMMANDS[cmdline].title);
-            COMMANDS[cmdline].lines.forEach((l)=> term.writeln(l));
-            
-            // Execute action if available
-            const actions = buildActions(cmdline);
-            if (actions[0]) {
-              // Execute the first action after a short delay
-              setTimeout(() => {
-                actions[0]();
-              }, 100);
-            }
-          } else if (cmdline.length) {
-            term.writeln('command not found');
-          }
-          buffer = '';
-          term.write(prompt);
-          break;
-        }
-        case '\u0003': { // Ctrl+C
-          term.write('^C');
-          buffer = '';
-          writePrompt();
-          break;
-        }
-        case '\u000c': { // Ctrl+L
-          term.clear();
-          buffer = '';
-          writePrompt();
-          break;
-        }
-        case '\u007F': // Backspace (DEL)
-        case '\u0008': { // Backspace
-          if (buffer.length > 0) {
-            buffer = buffer.slice(0, -1);
-            term.write('\b \b');
-          }
-          break;
-        }
-        case '\t': { // Tab: autocomplete
-          const sugg = COMMAND_ORDER.find((k) => k.startsWith(buffer.toLowerCase()));
-          if (sugg && sugg !== buffer) {
-            const rest = sugg.slice(buffer.length);
-            buffer = sugg;
-            term.write(rest);
-          }
-          break;
-        }
-        default: {
-          // Arrow keys and others are escape sequences
-          if (data === '\x1b[A') { // Up
-            if (history.length) {
-              histIdx = Math.max(0, histIdx - 1);
-              buffer = history[histIdx] || '';
-              redrawLine();
-            }
-            return;
-          }
-          if (data === '\x1b[B') { // Down
-            if (history.length) {
-              histIdx = Math.min(history.length, histIdx + 1);
-              buffer = history[histIdx] || '';
-              redrawLine();
-            }
-            return;
-          }
-          // Printable character
-          if (data >= ' ' && data <= '~') {
-            buffer += data;
-            term.write(data);
-          }
-        }
+    // Helper function to handle Enter key
+    const handleEnterKey = () => {
+      const cmdline = buffer.trim().toLowerCase();
+      term.write('\r\n');
+      
+      if (cmdline.length) {
+        history.push(cmdline);
+        histIdx = history.length;
       }
-    });
+      
+      if (cmdline === COMMANDS.CLEAR) {
+        term.clear();
+      } else if (terminalCommands[cmdline]) {
+        term.writeln(terminalCommands[cmdline].title);
+        terminalCommands[cmdline].lines.forEach((line) => term.writeln(line));
+        
+        // Execute action if available
+        const actions = buildActions(cmdline);
+        if (actions[0]) {
+          setTimeout(() => {
+            actions[0]();
+          }, TERMINAL_BEHAVIOR.ACTION_DELAY);
+        }
+      } else if (cmdline.length) {
+        term.writeln('command not found');
+      }
+      
+      buffer = '';
+      term.write(prompt);
+    };
+
+    // Helper function to handle Ctrl+C
+    const handleCtrlC = () => {
+      term.write('^C');
+      buffer = '';
+      writePromptToTerminal();
+    };
+
+    // Helper function to handle Ctrl+L
+    const handleCtrlL = () => {
+      term.clear();
+      buffer = '';
+      writePromptToTerminal();
+    };
+
+    // Helper function to handle Backspace
+    const handleBackspace = () => {
+      if (buffer.length > 0) {
+        buffer = buffer.slice(0, -1);
+        term.write('\b \b');
+      }
+    };
+
+    // Helper function to handle Tab autocomplete
+    const handleTabAutocomplete = () => {
+      const suggestion = COMMAND_ORDER.find((key) => key.startsWith(buffer.toLowerCase()));
+      if (suggestion && suggestion !== buffer) {
+        const rest = suggestion.slice(buffer.length);
+        buffer = suggestion;
+        term.write(rest);
+      }
+    };
+
+    // Helper function to handle history navigation
+    const handleHistoryUp = () => {
+      if (history.length) {
+        histIdx = Math.max(0, histIdx - 1);
+        buffer = history[histIdx] || '';
+        redrawLine();
+      }
+    };
+
+    // Helper function to handle history navigation down
+    const handleHistoryDown = () => {
+      if (history.length) {
+        histIdx = Math.min(history.length, histIdx + 1);
+        buffer = history[histIdx] || '';
+        redrawLine();
+      }
+    };
+
+    // Helper function to handle printable characters
+    const handlePrintableChar = (char) => {
+      if (isPrintableChar(char)) {
+        buffer += char;
+        term.write(char);
+      }
+    };
+
+    // Main terminal data handler
+    const handleTerminalData = (data) => {
+      switch (data) {
+        case KEYBOARD.ENTER:
+          handleEnterKey();
+          break;
+        case KEYBOARD.CTRL_C:
+          handleCtrlC();
+          break;
+        case KEYBOARD.CTRL_L:
+          handleCtrlL();
+          break;
+        case KEYBOARD.BACKSPACE:
+        case KEYBOARD.BACKSPACE_ALT:
+          handleBackspace();
+          break;
+        case KEYBOARD.TAB:
+          handleTabAutocomplete();
+          break;
+        case KEYBOARD.ESC_UP:
+          handleHistoryUp();
+          return;
+        case KEYBOARD.ESC_DOWN:
+          handleHistoryDown();
+          return;
+        default:
+          handlePrintableChar(data);
+          break;
+      }
+    };
+
+    term.onData(handleTerminalData);
 
     // Copy on select (like Azure default)
     term.onSelectionChange(() => {
-      const sel = term.getSelection();
-      if (sel && sel.length > 0) {
-        try { navigator.clipboard.writeText(sel); } catch {}
+      const selection = term.getSelection();
+      if (selection && selection.length > 0) {
+        try { 
+          navigator.clipboard.writeText(selection); 
+        } catch (error) {
+          // Silent fail for clipboard errors
+        }
       }
     });
 
     // Ctrl+L via key handler for some browsers
-    term.attachCustomKeyEventHandler((ev) => {
-      if ((ev.ctrlKey || ev.metaKey) && ev.key.toLowerCase() === 'l') {
-        ev.preventDefault();
+    term.attachCustomKeyEventHandler((event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'l') {
+        event.preventDefault();
         term.clear();
-        writePrompt();
+        writePromptToTerminal();
         return false;
       }
       return true;
     });
 
-    const onResize = () => { try { fit.fit(); } catch {} };
+    const onResize = createResizeHandler(fit);
     window.addEventListener('resize', onResize);
-    setTimeout(() => { try { term.focus(); } catch {} }, 0);
+    
+    setTimeout(() => { 
+      try { 
+        term.focus(); 
+      } catch (error) {
+        // Silent fail for focus errors
+      }
+    }, TERMINAL_BEHAVIOR.FOCUS_DELAY);
+    
     return () => {
       window.removeEventListener('resize', onResize);
       term.dispose();
@@ -321,7 +508,7 @@ export default function Terminal() {
           <button 
             className="shellbar__btn shellbar__btn--icon" 
             type="button" 
-            onClick={() => window.dispatchEvent(new Event('terminal:close'))} 
+            onClick={closeTerminal} 
             aria-label="Close terminal" 
             title="Close"
           >
