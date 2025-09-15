@@ -1,31 +1,118 @@
 // App Component
 // =============
-
 // Main App Component - Core application structure
-// ------------------------------
 
+import React, { useEffect } from 'react';
+import { AnimatePresence } from 'framer-motion';
+
+// Main components
 import Hero from './components/Hero.jsx';
 import Terminal from './components/Terminal.jsx';
 import About from './components/About.jsx';
 import Projects from './components/Projects.jsx';
 import Imprint from './components/Imprint.jsx';
-import SocialDock from './components/ui/SocialDock.jsx';
 import Skills from './components/Skills.jsx';
+
+// UI components
+import SocialDock from './components/ui/SocialDock.jsx';
 import ScrollProgress from './components/ui/ScrollProgress.jsx';
 import SettingsGear from './components/ui/SettingsGear.jsx';
 import MobileMenu from './components/ui/MobileMenu.jsx';
 import ResourcePreloader from './components/ui/ResourcePreloader.jsx';
 import BackToProjectsButton from './components/ui/BackToProjectsButton.jsx';
 import ArrowNavigation from './components/ui/ArrowNavigation.jsx';
-import TerminalManager from './features/terminal/TerminalManager.jsx';
-import FullscreenPreviewManager from './features/fullscreen-preview/FullscreenPreviewManager.jsx';
-import ProjectOverlayManager from './features/project-overlay/ProjectOverlayManager.jsx';
 import ProjectOverlay from './components/ui/ProjectOverlay.jsx';
 import FullscreenPreview from './components/ui/FullscreenPreview.jsx';
 import Footer from './components/ui/Footer.jsx';
-import { AnimatePresence } from 'framer-motion';
-import React, { useEffect } from 'react';
+
+// Feature managers
+import TerminalManager from './features/terminal/TerminalManager.jsx';
+import FullscreenPreviewManager from './features/fullscreen-preview/FullscreenPreviewManager.jsx';
+import ProjectOverlayManager from './features/project-overlay/ProjectOverlayManager.jsx';
+
+// Utilities
 import { SkipLink } from './features/accessibility/AccessibilityUtils.jsx';
+
+// Configuration constants
+// ----------------------
+const TERMINAL_KEY = 't';
+const TERMINAL_TOGGLE_EVENT = 'terminal:toggle';
+const TERMINAL_CLOSE_EVENT = 'terminal:close';
+const HASH_RETRY_LIMIT = 20;
+const HASH_RETRY_DELAY_FAST = 200;
+const HASH_RETRY_DELAY_SLOW = 100;
+const HASH_RETRY_THRESHOLD = 5;
+const SCROLL_SNAP_DISABLE_DELAY = 1000;
+const REACT_RENDER_DELAY = 500;
+const SAFARI_DETECTION_DELAYS = [100, 500];
+
+// Helper functions
+// ---------------
+function isInputField(element) {
+  return element && (
+    element.tagName === 'INPUT' ||
+    element.tagName === 'TEXTAREA' ||
+    element.contentEditable === 'true'
+  );
+}
+
+function disableScrollSnap() {
+  const scrollContainer = document.querySelector('.page-scroll');
+  if (!scrollContainer) return;
+  
+  // Disable scroll-snap completely
+  scrollContainer.style.scrollSnapType = 'none';
+  scrollContainer.style.webkitScrollSnapType = 'none';
+  
+  // Disable for all sections
+  const sections = scrollContainer.querySelectorAll('section');
+  sections.forEach(section => {
+    section.style.scrollSnapAlign = 'none';
+    section.style.scrollSnapStop = 'normal';
+    section.style.webkitScrollSnapAlign = 'none';
+    section.style.webkitScrollSnapStop = 'normal';
+  });
+}
+
+function scrollToElementWithRetry(hash, retries = 0) {
+  const element = document.getElementById(hash);
+  if (element) {
+    // Temporarily disable scroll-snap for programmatic scrolling
+    const scrollContainer = document.querySelector('.page-scroll');
+    if (scrollContainer) {
+      const originalSnapType = scrollContainer.style.scrollSnapType;
+      scrollContainer.style.scrollSnapType = 'none';
+      
+      element.scrollIntoView({ behavior: 'smooth' });
+      
+      // Re-enable scroll-snap after scrolling is complete
+      setTimeout(() => {
+        scrollContainer.style.scrollSnapType = originalSnapType || '';
+      }, SCROLL_SNAP_DISABLE_DELAY);
+    } else {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  } else if (retries < HASH_RETRY_LIMIT) {
+    // Retry after a delay if element not found
+    const delay = retries < HASH_RETRY_THRESHOLD ? HASH_RETRY_DELAY_FAST : HASH_RETRY_DELAY_SLOW;
+    setTimeout(() => scrollToElementWithRetry(hash, retries + 1), delay);
+  } else {
+    console.warn(`Element with id "${hash}" not found after ${retries} retries`);
+  }
+}
+
+function handleHashNavigation() {
+  const hash = window.location.hash.replace('#', '');
+  if (hash) {
+    scrollToElementWithRetry(hash);
+  } else {
+    // If no hash or empty hash, scroll to top (hero section)
+    const heroElement = document.getElementById('hero');
+    if (heroElement) {
+      heroElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+}
 
 export default function App() {
   // Check if we're on the imprint page - check immediately, not in useEffect
@@ -43,18 +130,11 @@ export default function App() {
   useEffect(() => {
     const handleKeyDown = (e) => {
       // Terminal shortcut: T key (works on all pages)
-      if (e.key.toLowerCase() === 't' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      if (e.key.toLowerCase() === TERMINAL_KEY && !e.ctrlKey && !e.metaKey && !e.altKey) {
         // Only trigger if not typing in an input field
-        const activeElement = document.activeElement;
-        const isInputField = activeElement && (
-          activeElement.tagName === 'INPUT' ||
-          activeElement.tagName === 'TEXTAREA' ||
-          activeElement.contentEditable === 'true'
-        );
-        
-        if (!isInputField) {
+        if (!isInputField(document.activeElement)) {
           e.preventDefault();
-          window.dispatchEvent(new Event('terminal:toggle'));
+          window.dispatchEvent(new Event(TERMINAL_TOGGLE_EVENT));
         }
       }
     };
@@ -65,20 +145,16 @@ export default function App() {
 
   // Close terminal on page navigation
   useEffect(() => {
-    const handleBeforeUnload = () => {
-      window.dispatchEvent(new Event('terminal:close'));
+    const closeTerminal = () => {
+      window.dispatchEvent(new Event(TERMINAL_CLOSE_EVENT));
     };
 
-    const handlePopState = () => {
-      window.dispatchEvent(new Event('terminal:close'));
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    window.addEventListener('popstate', handlePopState);
+    window.addEventListener('beforeunload', closeTerminal);
+    window.addEventListener('popstate', closeTerminal);
     
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('beforeunload', closeTerminal);
+      window.removeEventListener('popstate', closeTerminal);
     };
   }, []);
 
@@ -87,96 +163,34 @@ export default function App() {
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     
     if (isSafari) {
-      // Wait for DOM to be ready
-      const disableScrollSnap = () => {
-        const scrollContainer = document.querySelector('.page-scroll');
-        if (scrollContainer) {
-          // Disable scroll-snap completely
-          scrollContainer.style.scrollSnapType = 'none';
-          scrollContainer.style.webkitScrollSnapType = 'none';
-          
-          // Disable for all sections
-          const sections = scrollContainer.querySelectorAll('section');
-          sections.forEach(section => {
-            section.style.scrollSnapAlign = 'none';
-            section.style.scrollSnapStop = 'normal';
-            section.style.webkitScrollSnapAlign = 'none';
-            section.style.webkitScrollSnapStop = 'normal';
-          });
-        }
-      };
-      
-      // Try immediately and also after a delay
+      // Try immediately and also after delays
       disableScrollSnap();
-      setTimeout(disableScrollSnap, 100);
-      setTimeout(disableScrollSnap, 500);
+      SAFARI_DETECTION_DELAYS.forEach(delay => {
+        setTimeout(disableScrollSnap, delay);
+      });
     }
   }, []);
 
   // Handle hash navigation
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '');
-      if (hash) {
-        // Wait for element to be available with retry mechanism
-        const findElement = (retries = 0) => {
-          const element = document.getElementById(hash);
-          if (element) {
-            
-            // Temporarily disable scroll-snap for programmatic scrolling
-            const scrollContainer = document.querySelector('.page-scroll');
-            if (scrollContainer) {
-              const originalSnapType = scrollContainer.style.scrollSnapType;
-              scrollContainer.style.scrollSnapType = 'none';
-              
-              element.scrollIntoView({ behavior: 'smooth' });
-              
-              // Re-enable scroll-snap after scrolling is complete
-              setTimeout(() => {
-                scrollContainer.style.scrollSnapType = originalSnapType || '';
-              }, 1000);
-            } else {
-              element.scrollIntoView({ behavior: 'smooth' });
-            }
-          } else if (retries < 20) {
-            // Retry after a delay if element not found - longer delay for initial load
-            const delay = retries < 5 ? 200 : 100; // Longer delay for first few attempts
-            setTimeout(() => findElement(retries + 1), delay);
-          } else {
-            console.warn(`Element with id "${hash}" not found after ${retries} retries`);
-          }
-        };
-        findElement();
-      } else {
-        // If no hash or empty hash, scroll to top (hero section)
-        const heroElement = document.getElementById('hero');
-        if (heroElement) {
-          heroElement.scrollIntoView({ behavior: 'smooth' });
-        }
-      }
-    };
-
     // Handle initial hash - wait for both DOM and React to be ready
     const handleInitialHash = () => {
-      // Wait for DOM to be ready
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
-          // Additional delay for React components to render
-          setTimeout(handleHashChange, 500);
+          setTimeout(handleHashNavigation, REACT_RENDER_DELAY);
         });
       } else {
-        // DOM is already ready, but wait for React components
-        setTimeout(handleHashChange, 500);
+        setTimeout(handleHashNavigation, REACT_RENDER_DELAY);
       }
     };
     
     handleInitialHash();
 
     // Listen for hash changes
-    window.addEventListener('hashchange', handleHashChange);
+    window.addEventListener('hashchange', handleHashNavigation);
 
     return () => {
-      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('hashchange', handleHashNavigation);
     };
   }, []);
 
