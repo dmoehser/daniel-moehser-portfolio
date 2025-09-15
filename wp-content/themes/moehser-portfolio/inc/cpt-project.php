@@ -62,14 +62,13 @@ const PROJECT_META_FIELDS = [
 // Allowed values for validation
 // -----------------------------
 const PROJECT_STATUSES = ['active', 'archived', 'development'];
-const PROJECT_DEMO_MODES = ['iframe', 'new_window', 'fullscreen'];
+const PROJECT_DEMO_MODES = ['iframe', 'new_window'];
 
 // Demo mode labels for admin interface
 // -----------------------------------
 const PROJECT_DEMO_LABELS = [
-    'iframe' => 'Embed in iframe (Current)',
-    'new_window' => 'Open in new window',
-    'fullscreen' => 'Fullscreen overlay (Coming Soon)'
+    'iframe' => 'Embed in iframe',
+    'new_window' => 'Open in new window'
 ];
 
 // Helper function to render meta field input
@@ -101,6 +100,12 @@ function render_meta_field_input($field_name, $field_config, $value) {
             foreach ($options as $option_value) {
                 $option_label = $labels ? $labels[$option_value] : ucfirst(str_replace('_', ' ', $option_value));
                 $selected = selected($value, $option_value, false);
+                
+                // Add "(Current)" to the selected option
+                if ($selected && $field_name === 'project_demo_mode') {
+                    $option_label .= ' (Current)';
+                }
+                
                 echo '<option value="' . esc_attr($option_value) . '" ' . $selected . '>';
                 echo esc_html($option_label);
                 echo '</option>';
