@@ -13,7 +13,7 @@ const PROJECT_IMAGE_WIDTH_2X = 2880;
 const PROJECT_IMAGE_HEIGHT_2X = 1620;
 const OG_IMAGE_WIDTH = 1200;
 const OG_IMAGE_HEIGHT = 630;
-const URL_WATCHER_INTERVAL = 25; // milliseconds
+const URL_WATCHER_INTERVAL = 1000; // Interval for URL watcher in milliseconds (checks every 1 second)
 const URL_WATCHER_TIMEOUT = 60000; // 60 seconds
 
 // Helper functions
