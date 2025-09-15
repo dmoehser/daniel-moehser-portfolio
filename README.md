@@ -50,8 +50,7 @@ moehser-portfolio/
 │   ├── customizer.php         # WordPress Customizer
 │   ├── cpt-project.php        # Custom Post Type
 │   ├── api.php               # REST API endpoints
-│   ├── projects-reorder.php  # Drag & drop reordering
-│   └── setup-projects.php    # Project setup
+│   └── projects-reorder.php  # Drag & drop reordering
 ├── wp-content/
 │   └── uploads/
 │       └── projects/          # Project demos

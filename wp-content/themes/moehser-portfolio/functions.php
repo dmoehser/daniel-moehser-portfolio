@@ -368,7 +368,6 @@ require_once get_theme_file_path('inc/api.php');
 
 // Register custom post types
 require_once get_theme_file_path('inc/cpt-project.php'); // Step 1: Basic project functions activated
-require_once get_theme_file_path('inc/setup-projects.php'); // Activated: Creates example projects if none exist
 
 // Global language detection function
 if (!function_exists('get_current_language')) {
