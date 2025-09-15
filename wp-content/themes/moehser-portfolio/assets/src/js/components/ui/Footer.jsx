@@ -3,13 +3,75 @@
 
 import React, { useEffect, useState } from 'react';
 
+// Constants
+// =========
+
+const API_ENDPOINTS = {
+  FOOTER_MENU: {
+    DEFAULT: '/wp-json/moehser/v1/menu/footer',
+    LOCALIZED: '/de/wp-json/moehser/v1/menu/footer'
+  }
+};
+
+const MENU_ITEM = {
+  ID: 1,
+  PARENT: 0
+};
+
+const ROUTES = {
+  IMPRINT: {
+    DEFAULT: '/imprint/',
+    LOCALIZED: '/de/imprint/'
+  }
+};
+
+const TEXTS = {
+  IMPRINT: {
+    EN: 'Imprint',
+    DE: 'Impressum'
+  }
+};
+
+const LANGUAGE_DETECTION = {
+  GERMAN_PATH: '/de/',
+  GERMAN_INDICATOR: 'Kontakt'
+};
+
+// Helper Functions
+// ===============
+
+const detectLanguage = () => {
+  if (typeof window === 'undefined') return false;
+  
+  const hasGermanPath = window.location.pathname.includes(LANGUAGE_DETECTION.GERMAN_PATH);
+  const hasGermanContent = document.querySelector('.imprint__content-text')?.innerHTML.includes(LANGUAGE_DETECTION.GERMAN_INDICATOR);
+  
+  return hasGermanPath || hasGermanContent;
+};
+
+const getApiUrl = (isLocalized) => {
+  return isLocalized ? API_ENDPOINTS.FOOTER_MENU.LOCALIZED : API_ENDPOINTS.FOOTER_MENU.DEFAULT;
+};
+
+const createFallbackItem = (isGerman) => ({
+  id: MENU_ITEM.ID,
+  title: isGerman ? TEXTS.IMPRINT.DE : TEXTS.IMPRINT.EN,
+  url: isGerman ? ROUTES.IMPRINT.LOCALIZED : ROUTES.IMPRINT.DEFAULT,
+  parent: MENU_ITEM.PARENT
+});
+
+const filterMenuItems = (data) => {
+  return Array.isArray(data) ? data.filter(item => !item.parent) : [];
+};
+
+const handleMenuItemClick = (e, url) => {
+  e.preventDefault();
+  window.location.href = url;
+};
+
 export default function Footer({ show = false }) {
   const [footerMenuItems, setFooterMenuItems] = useState([]);
-
-  // Detect language
-  const isGerman = typeof window !== 'undefined' && 
-    (window.location.pathname.includes('/de/') || 
-     document.querySelector('.imprint__content-text')?.innerHTML.includes('Kontakt'));
+  const isGerman = detectLanguage();
 
   // Load WordPress footer menu
   useEffect(() => {
@@ -17,24 +79,13 @@ export default function Footer({ show = false }) {
     
     async function loadFooterMenu() {
       try {
-        // Use different API URLs for different languages (like header)
-        const isLocalized = window.location.pathname.includes('/de/');
-        const apiUrl = isLocalized 
-          ? '/de/wp-json/moehser/v1/menu/footer'
-          : '/wp-json/moehser/v1/menu/footer';
-        
+        const isLocalized = window.location.pathname.includes(LANGUAGE_DETECTION.GERMAN_PATH);
+        const apiUrl = getApiUrl(isLocalized);
         
         const res = await fetch(apiUrl);
         if (!res.ok) {
-          // Fallback: create language-specific imprint link
           if (!cancelled) {
-            const fallbackItem = {
-              id: 1,
-              title: isGerman ? 'Impressum' : 'Imprint',
-              url: isGerman ? '/de/imprint/' : '/imprint/',
-              parent: 0
-            };
-            setFooterMenuItems([fallbackItem]);
+            setFooterMenuItems([createFallbackItem(isGerman)]);
           }
           return;
         }
@@ -42,21 +93,12 @@ export default function Footer({ show = false }) {
         const data = await res.json();
         
         if (!cancelled) {
-          const filteredItems = Array.isArray(data) 
-            ? data.filter(item => !item.parent) 
-            : [];
+          const filteredItems = filterMenuItems(data);
           setFooterMenuItems(filteredItems);
         }
       } catch (error) {
-        // Fallback: create language-specific imprint link
         if (!cancelled) {
-          const fallbackItem = {
-            id: 1,
-            title: isGerman ? 'Impressum' : 'Imprint',
-            url: isGerman ? '/de/imprint/' : '/imprint/',
-            parent: 0
-          };
-          setFooterMenuItems([fallbackItem]);
+          setFooterMenuItems([createFallbackItem(isGerman)]);
         }
       }
     }
@@ -65,22 +107,8 @@ export default function Footer({ show = false }) {
     return () => { cancelled = true; };
   }, [isGerman]);
 
-
-  // Handle menu item click
-  const handleMenuItemClick = (e, url) => {
-    e.preventDefault();
-    window.location.href = url;
-  };
-
-  // Always render footer - simple and clean
-
-  // Get fallback items if no menu items are loaded
-  const displayItems = footerMenuItems.length > 0 ? footerMenuItems : [{
-    id: 1,
-    title: isGerman ? 'Impressum' : 'Imprint',
-    url: isGerman ? '/de/imprint/' : '/imprint/',
-    parent: 0
-  }];
+  // Get display items with fallback
+  const displayItems = footerMenuItems.length > 0 ? footerMenuItems : [createFallbackItem(isGerman)];
 
   return (
     <footer className="site-footer">
