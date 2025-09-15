@@ -152,6 +152,182 @@ function output_js_variable($name, $value, $is_json = false) {
     }
 }
 
+// Helper function for common customizer settings
+// --------------------------------------------
+function add_customizer_setting($wp_customize, $id, $args) {
+    $defaults = [
+        'default' => '',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport' => 'refresh',
+        'type' => 'text',
+        'label' => '',
+        'description' => '',
+        'section' => '',
+        'priority' => 10,
+        'choices' => [],
+        'active_callback' => null
+    ];
+    
+    $args = wp_parse_args($args, $defaults);
+    
+    // Add setting
+    $wp_customize->add_setting($id, [
+        'default' => $args['default'],
+        'sanitize_callback' => $args['sanitize_callback'],
+        'transport' => $args['transport'],
+    ]);
+    
+    // Add control
+    $control_args = [
+        'label' => $args['label'],
+        'description' => $args['description'],
+        'section' => $args['section'],
+        'type' => $args['type'],
+        'priority' => $args['priority'],
+    ];
+    
+    if (!empty($args['choices'])) {
+        $control_args['choices'] = $args['choices'];
+    }
+    
+    if ($args['active_callback']) {
+        $control_args['active_callback'] = $args['active_callback'];
+    }
+    
+    $wp_customize->add_control($id, $control_args);
+}
+
+// Output About section data to frontend
+// ------------------------------------
+function output_about_section_data() {
+    $about_title = get_theme_mod('moehser_about_title', '');
+    $about_subtitle = get_theme_mod('moehser_about_subtitle', '');
+    $about_page_id = (int) get_theme_mod('moehser_about_page_id', 0);
+    $about_html = '';
+    
+    // Get about content from page if no custom title
+    if (empty($about_title) && $about_page_id > 0) {
+        $about_post = get_post($about_page_id);
+        if ($about_post && $about_post->post_status === 'publish') {
+            $about_title = $about_post->post_title;
+        }
+    }
+    
+    // Get about HTML content
+    if ($about_page_id > 0) {
+        $about_post = get_post($about_page_id);
+        if ($about_post && $about_post->post_status === 'publish') {
+            $about_html = apply_filters('the_content', $about_post->post_content);
+        }
+    }
+    
+    output_js_variable('__ABOUT_TITLE__', $about_title);
+    output_js_variable('__ABOUT_SUBTITLE__', $about_subtitle);
+    output_js_variable('__ABOUT_HTML__', $about_html, true);
+}
+
+// Output About CTA settings to frontend
+// ------------------------------------
+function output_about_cta_data() {
+    $about_cta_enabled = get_theme_mod('moehser_about_cta_enabled', 0);
+    $about_cta_text = get_theme_mod('moehser_about_cta_text', '');
+    $about_cta_url = get_theme_mod('moehser_about_cta_url', '');
+    $about_cta_subject = get_theme_mod('moehser_about_cta_subject', '');
+    
+    echo "window.__ABOUT_CTA_ENABLED__ = " . ($about_cta_enabled ? 'true' : 'false') . ";";
+    output_js_variable('__ABOUT_CTA_TEXT__', $about_cta_text);
+    output_js_variable('__ABOUT_CTA_URL__', $about_cta_url);
+    output_js_variable('__ABOUT_CTA_SUBJECT__', $about_cta_subject);
+}
+
+// Output Hero settings to frontend
+// --------------------------------
+function output_hero_data() {
+    output_js_variable('__HERO_TITLE__', get_theme_mod('moehser_hero_title', ''));
+    output_js_variable('__HERO_SUBTITLE__', get_theme_mod('moehser_hero_subtitle', ''));
+}
+
+// Output Imprint settings to frontend
+// -----------------------------------
+function output_imprint_data() {
+    $imprint_page_id = get_theme_mod('moehser_imprint_page_id', 0);
+    $imprint_title = __('Impressum', 'moehser-portfolio');
+    $imprint_content = '';
+    
+    if ($imprint_page_id > 0) {
+        $imprint_page = get_post($imprint_page_id);
+        if ($imprint_page) {
+            $imprint_title = $imprint_page->post_title;
+            $imprint_content = apply_filters('the_content', $imprint_page->post_content);
+        }
+    }
+    
+    output_js_variable('__IMPRINT_TITLE__', $imprint_title, true);
+    output_js_variable('__IMPRINT_HTML__', $imprint_content, true);
+}
+
+// Output Projects settings to frontend
+// -----------------------------------
+function output_projects_data() {
+    $show_only_active_projects = get_theme_mod('moehser_show_only_active_projects', 1);
+    echo "window.__SHOW_ONLY_ACTIVE_PROJECTS__ = " . ($show_only_active_projects ? 'true' : 'false') . ";";
+    
+    output_js_variable('__PROJECTS_TITLE__', get_theme_mod('moehser_projects_title', ''), true);
+    output_js_variable('__PROJECTS_SUBTITLE__', get_theme_mod('moehser_projects_subtitle', ''), true);
+    output_js_variable('__PROJECTS_LAYOUT_MODE__', get_theme_mod('moehser_projects_layout_mode', 'side_by_side'));
+    
+    $projects_show_view_toggle = get_theme_mod('moehser_projects_show_view_toggle', 1);
+    echo "window.__PROJECTS_SHOW_VIEW_TOGGLE__ = " . ($projects_show_view_toggle ? 'true' : 'false') . ";";
+}
+
+// Output Skills settings to frontend
+// ----------------------------------
+function output_skills_data() {
+    output_js_variable('__SKILLS_TITLE__', get_theme_mod('moehser_skills_title', ''), true);
+    output_js_variable('__SKILLS_SUBTITLE__', get_theme_mod('moehser_skills_subtitle', ''));
+    output_js_variable('__SKILLS_LAYOUT_MODE__', get_theme_mod('moehser_skills_layout_mode', 'fixed_grid'));
+    
+    // Skills cards enabled status
+    $cards_enabled = [];
+    foreach (array_keys(SKILLS_CARDS_CONFIG) as $card_num) {
+        $cards_enabled["c{$card_num}"] = get_theme_mod("moehser_skills_card{$card_num}_enabled", 1) ? true : false;
+    }
+    output_js_variable('__SKILLS_CARDS_ENABLED__', $cards_enabled, true);
+    
+    // Skills cards data
+    $skills_cards = get_skills_cards_data();
+    foreach ($skills_cards as $card_key => $card_data) {
+        $card_number = str_replace('card', '', $card_key);
+        output_js_variable("__SKILLS_CARD{$card_number}__", $card_data, true);
+    }
+}
+
+// Output Profile and social settings to frontend
+// ----------------------------------------------
+function output_profile_data() {
+    $profile_avatar = get_theme_mod('moehser_profile_avatar', '');
+    $social_github = get_theme_mod('moehser_social_github', '');
+    $social_linkedin = get_theme_mod('moehser_social_linkedin', '');
+    $social_email = get_theme_mod('moehser_social_email', '');
+    $email_subject = get_theme_mod('moehser_email_subject', 'Portfolio Contact - New Inquiry');
+    
+    if ($profile_avatar) output_js_variable('__PROFILE_AVATAR_URL__', $profile_avatar);
+    if ($social_github) output_js_variable('__SOCIAL_GITHUB__', $social_github);
+    if ($social_linkedin) output_js_variable('__SOCIAL_LINKEDIN__', $social_linkedin);
+    if ($social_email) output_js_variable('__SOCIAL_EMAIL__', $social_email);
+    if ($email_subject) output_js_variable('__EMAIL_SUBJECT__', $email_subject);
+}
+
+// Output Contact form settings to frontend
+// ----------------------------------------
+function output_contact_data() {
+    $business_email_subject = get_theme_mod('moehser_business_email_subject', 'Business Inquiry - Portfolio Contact');
+    $recaptcha_site_key = get_theme_mod('moehser_recaptcha_site_key', '');
+    
+    if ($business_email_subject) output_js_variable('__BUSINESS_EMAIL_SUBJECT__', $business_email_subject);
+    if ($recaptcha_site_key) output_js_variable('__RECAPTCHA_SITE_KEY__', $recaptcha_site_key);
+}
+
 add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     // Section: Profile Settings
     $wp_customize->add_section('moehser_profile', [
@@ -173,44 +349,30 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]));
 
     // Social: GitHub
-    $wp_customize->add_setting('moehser_social_github', [
-        'default' => '',
-        'sanitize_callback' => 'sanitize_text_field',
-    ]);
-    $wp_customize->add_control('moehser_social_github', [
+    add_customizer_setting($wp_customize, 'moehser_social_github', [
         'label' => __('GitHub Username or URL', 'moehser-portfolio'),
         'section' => 'moehser_profile',
         'type' => 'text',
     ]);
 
     // Social: LinkedIn
-    $wp_customize->add_setting('moehser_social_linkedin', [
-        'default' => '',
-        'sanitize_callback' => 'sanitize_text_field',
-    ]);
-    $wp_customize->add_control('moehser_social_linkedin', [
+    add_customizer_setting($wp_customize, 'moehser_social_linkedin', [
         'label' => __('LinkedIn Username or URL', 'moehser-portfolio'),
         'section' => 'moehser_profile',
         'type' => 'text',
     ]);
 
     // Social: Email
-    $wp_customize->add_setting('moehser_social_email', [
-        'default' => '',
-        'sanitize_callback' => 'sanitize_email',
-    ]);
-    $wp_customize->add_control('moehser_social_email', [
+    add_customizer_setting($wp_customize, 'moehser_social_email', [
         'label' => __('Contact Email', 'moehser-portfolio'),
         'section' => 'moehser_profile',
         'type' => 'email',
+        'sanitize_callback' => 'sanitize_email',
     ]);
 
     // Email Subject
-    $wp_customize->add_setting('moehser_email_subject', [
+    add_customizer_setting($wp_customize, 'moehser_email_subject', [
         'default' => 'Portfolio Contact - New Inquiry',
-        'sanitize_callback' => 'sanitize_text_field',
-    ]);
-    $wp_customize->add_control('moehser_email_subject', [
         'label' => __('Email Subject Line', 'moehser-portfolio'),
         'description' => __('Default subject line for contact emails', 'moehser-portfolio'),
         'section' => 'moehser_profile',
@@ -218,11 +380,8 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]);
 
     // Business Email Subject
-    $wp_customize->add_setting('moehser_business_email_subject', [
+    add_customizer_setting($wp_customize, 'moehser_business_email_subject', [
         'default' => 'Business Inquiry - Portfolio Contact',
-        'sanitize_callback' => 'sanitize_text_field',
-    ]);
-    $wp_customize->add_control('moehser_business_email_subject', [
         'label' => __('Business Email Subject Line', 'moehser-portfolio'),
         'description' => __('Subject line for business/legal inquiries from imprint page', 'moehser-portfolio'),
         'section' => 'moehser_profile',
@@ -230,11 +389,7 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
     ]);
 
     // reCAPTCHA Site Key
-    $wp_customize->add_setting('moehser_recaptcha_site_key', [
-        'default' => '',
-        'sanitize_callback' => 'sanitize_text_field',
-    ]);
-    $wp_customize->add_control('moehser_recaptcha_site_key', [
+    add_customizer_setting($wp_customize, 'moehser_recaptcha_site_key', [
         'label' => __('reCAPTCHA Site Key', 'moehser-portfolio'),
         'description' => __('Google reCAPTCHA site key for contact form spam protection', 'moehser-portfolio'),
         'section' => 'moehser_profile',
@@ -536,108 +691,15 @@ add_action('customize_register', function (WP_Customize_Manager $wp_customize) {
 add_action('wp_head', function () {
     echo '<script>';
     
-    // About section data
-    $about_title = get_theme_mod('moehser_about_title', '');
-    $about_subtitle = get_theme_mod('moehser_about_subtitle', '');
-    $about_page_id = (int) get_theme_mod('moehser_about_page_id', 0);
-    $about_html = '';
-    
-    // Get about content from page if no custom title
-    if (empty($about_title) && $about_page_id > 0) {
-        $about_post = get_post($about_page_id);
-        if ($about_post && $about_post->post_status === 'publish') {
-            $about_title = $about_post->post_title;
-        }
-    }
-    
-    // Get about HTML content
-    if ($about_page_id > 0) {
-        $about_post = get_post($about_page_id);
-        if ($about_post && $about_post->post_status === 'publish') {
-            $about_html = apply_filters('the_content', $about_post->post_content);
-        }
-    }
-    
-    output_js_variable('__ABOUT_TITLE__', $about_title);
-    output_js_variable('__ABOUT_SUBTITLE__', $about_subtitle);
-    output_js_variable('__ABOUT_HTML__', $about_html, true);
-    
-    // About CTA settings
-    $about_cta_enabled = get_theme_mod('moehser_about_cta_enabled', 0);
-    $about_cta_text = get_theme_mod('moehser_about_cta_text', '');
-    $about_cta_url = get_theme_mod('moehser_about_cta_url', '');
-    $about_cta_subject = get_theme_mod('moehser_about_cta_subject', '');
-    echo "window.__ABOUT_CTA_ENABLED__ = " . ($about_cta_enabled ? 'true' : 'false') . ";";
-    output_js_variable('__ABOUT_CTA_TEXT__', $about_cta_text);
-    output_js_variable('__ABOUT_CTA_URL__', $about_cta_url);
-    output_js_variable('__ABOUT_CTA_SUBJECT__', $about_cta_subject);
-    
-    // Hero settings
-    output_js_variable('__HERO_TITLE__', get_theme_mod('moehser_hero_title', ''));
-    output_js_variable('__HERO_SUBTITLE__', get_theme_mod('moehser_hero_subtitle', ''));
-    
-    // Imprint settings
-    $imprint_page_id = get_theme_mod('moehser_imprint_page_id', 0);
-    $imprint_title = __('Impressum', 'moehser-portfolio');
-    $imprint_content = '';
-    
-    if ($imprint_page_id > 0) {
-        $imprint_page = get_post($imprint_page_id);
-        if ($imprint_page) {
-            $imprint_title = $imprint_page->post_title;
-            $imprint_content = apply_filters('the_content', $imprint_page->post_content);
-        }
-    }
-    
-    output_js_variable('__IMPRINT_TITLE__', $imprint_title, true);
-    output_js_variable('__IMPRINT_HTML__', $imprint_content, true);
-    
-    // Projects settings
-    $show_only_active_projects = get_theme_mod('moehser_show_only_active_projects', 1);
-    echo "window.__SHOW_ONLY_ACTIVE_PROJECTS__ = " . ($show_only_active_projects ? 'true' : 'false') . ";";
-    output_js_variable('__PROJECTS_TITLE__', get_theme_mod('moehser_projects_title', ''), true);
-    output_js_variable('__PROJECTS_SUBTITLE__', get_theme_mod('moehser_projects_subtitle', ''), true);
-    output_js_variable('__PROJECTS_LAYOUT_MODE__', get_theme_mod('moehser_projects_layout_mode', 'side_by_side'));
-    $projects_show_view_toggle = get_theme_mod('moehser_projects_show_view_toggle', 1);
-    echo "window.__PROJECTS_SHOW_VIEW_TOGGLE__ = " . ($projects_show_view_toggle ? 'true' : 'false') . ";";
-    
-    // Skills settings
-    output_js_variable('__SKILLS_TITLE__', get_theme_mod('moehser_skills_title', ''), true);
-    output_js_variable('__SKILLS_SUBTITLE__', get_theme_mod('moehser_skills_subtitle', ''));
-    output_js_variable('__SKILLS_LAYOUT_MODE__', get_theme_mod('moehser_skills_layout_mode', 'fixed_grid'));
-    
-    // Skills cards enabled status
-    $cards_enabled = [];
-    foreach (array_keys(SKILLS_CARDS_CONFIG) as $card_num) {
-        $cards_enabled["c{$card_num}"] = get_theme_mod("moehser_skills_card{$card_num}_enabled", 1) ? true : false;
-    }
-    output_js_variable('__SKILLS_CARDS_ENABLED__', $cards_enabled, true);
-    
-    // Skills cards data
-    $skills_cards = get_skills_cards_data();
-    foreach ($skills_cards as $card_key => $card_data) {
-        $card_number = str_replace('card', '', $card_key);
-        output_js_variable("__SKILLS_CARD{$card_number}__", $card_data, true);
-    }
-    
-    // Profile and social settings
-    $profile_avatar = get_theme_mod('moehser_profile_avatar', '');
-    $social_github = get_theme_mod('moehser_social_github', '');
-    $social_linkedin = get_theme_mod('moehser_social_linkedin', '');
-    $social_email = get_theme_mod('moehser_social_email', '');
-    $email_subject = get_theme_mod('moehser_email_subject', 'Portfolio Contact - New Inquiry');
-    
-    if ($profile_avatar) output_js_variable('__PROFILE_AVATAR_URL__', $profile_avatar);
-    if ($social_github) output_js_variable('__SOCIAL_GITHUB__', $social_github);
-    if ($social_linkedin) output_js_variable('__SOCIAL_LINKEDIN__', $social_linkedin);
-    if ($social_email) output_js_variable('__SOCIAL_EMAIL__', $social_email);
-    if ($email_subject) output_js_variable('__EMAIL_SUBJECT__', $email_subject);
-    
-    // Contact form settings
-    $business_email_subject = get_theme_mod('moehser_business_email_subject', 'Business Inquiry - Portfolio Contact');
-    $recaptcha_site_key = get_theme_mod('moehser_recaptcha_site_key', '');
-    if ($business_email_subject) output_js_variable('__BUSINESS_EMAIL_SUBJECT__', $business_email_subject);
-    if ($recaptcha_site_key) output_js_variable('__RECAPTCHA_SITE_KEY__', $recaptcha_site_key);
+    // Output all customizer data using dedicated functions
+    output_about_section_data();
+    output_about_cta_data();
+    output_hero_data();
+    output_imprint_data();
+    output_projects_data();
+    output_skills_data();
+    output_profile_data();
+    output_contact_data();
     
     echo '</script>';
 });
