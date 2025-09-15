@@ -195,11 +195,34 @@ const getProjectExcerpt = (project, maxLength = 150) => {
 };
 
 const hasProjectContent = (project) => {
-  return project && (project.content?.rendered || project.excerpt?.rendered);
+  return project && (
+    (project.content?.rendered && project.content.rendered.trim() !== '') ||
+    (project.excerpt?.rendered && project.excerpt.rendered.trim() !== '') ||
+    (project.content && project.content.trim() !== '') ||
+    (project.excerpt && project.excerpt.trim() !== '')
+  );
 };
 
 const getProjectContent = (project) => {
-  return project?.content?.rendered || project?.excerpt?.rendered || '';
+  if (!project) return '';
+  
+  // Check for .rendered properties first (WordPress API format)
+  if (project.content?.rendered && project.content.rendered.trim() !== '') {
+    return project.content.rendered;
+  }
+  if (project.excerpt?.rendered && project.excerpt.rendered.trim() !== '') {
+    return project.excerpt.rendered;
+  }
+  
+  // Fallback to direct properties
+  if (project.content && project.content.trim() !== '') {
+    return project.content;
+  }
+  if (project.excerpt && project.excerpt.trim() !== '') {
+    return project.excerpt;
+  }
+  
+  return '';
 };
 
 // Skeleton rendering helper
