@@ -1,15 +1,23 @@
 // About Component
 // ==============
-
 // About section with animated content and customizer integration
-// ------------------------------
 
 import React from 'react';
 import { motion } from 'framer-motion';
 import { getMailtoUrl } from '../utils/emailHelper.js';
 
+// Configuration constants
+// ----------------------
+const MAILTO_PREFIX = 'mailto:';
+const URL_SEPARATORS = {
+  QUERY: '?',
+  PARAM: '&'
+};
+const SUBJECT_PARAM = 'subject=';
+const VIEWPORT_AMOUNT = 0.3;
+
 // Animation constants for consistent motion
-// ------------------------------
+// ----------------------------------------
 const ANIMATION = {
   FADE_IN: {
     hidden: { opacity: 0, y: 20 },
@@ -27,33 +35,39 @@ const ANIMATION = {
     BASE: 0.6,
     DELAY_SMALL: 0.05,
     DELAY_MEDIUM: 0.1,
-    DELAY_LARGE: 0.2
+    DELAY_LARGE: 0.2,
+    CTA_EXTRA_DELAY: 0.1
   }
 };
 
+// Helper functions
+// ---------------
+function getCustomizerValue(key, defaultValue = '') {
+  return typeof window !== 'undefined' ? (window[key] || defaultValue) : defaultValue;
+}
+
+function getCtaUrl(url, subject) {
+  if (!url) return '';
+  
+  // If it's a mailto URL, add subject if available
+  if (url.startsWith(MAILTO_PREFIX) && subject) {
+    const separator = url.includes(URL_SEPARATORS.QUERY) ? URL_SEPARATORS.PARAM : URL_SEPARATORS.QUERY;
+    return `${url}${separator}${SUBJECT_PARAM}${encodeURIComponent(subject)}`;
+  }
+  
+  // For all other URLs, use the original URL
+  return url;
+}
+
 export default function About() {
   // Get customizer values from WordPress
-  const aboutTitle = typeof window !== 'undefined' ? (window.__ABOUT_TITLE__ || '') : '';
-  const aboutSubtitle = typeof window !== 'undefined' ? (window.__ABOUT_SUBTITLE__ || '') : '';
-  const aboutHTML = typeof window !== 'undefined' ? (window.__ABOUT_HTML__ || '') : '';
-  const aboutCtaEnabled = typeof window !== 'undefined' ? (window.__ABOUT_CTA_ENABLED__ || false) : false;
-  const aboutCtaText = typeof window !== 'undefined' ? (window.__ABOUT_CTA_TEXT__ || '') : '';
-  const aboutCtaUrl = typeof window !== 'undefined' ? (window.__ABOUT_CTA_URL__ || '') : '';
-  const aboutCtaSubject = typeof window !== 'undefined' ? (window.__ABOUT_CTA_SUBJECT__ || '') : '';
-
-  // Helper function to get the correct URL for CTA button
-  const getCtaUrl = () => {
-    if (!aboutCtaUrl) return '';
-    
-    // If it's a mailto URL, add subject if available
-    if (aboutCtaUrl.startsWith('mailto:') && aboutCtaSubject) {
-      const separator = aboutCtaUrl.includes('?') ? '&' : '?';
-      return `${aboutCtaUrl}${separator}subject=${encodeURIComponent(aboutCtaSubject)}`;
-    }
-    
-    // For all other URLs, use the original URL
-    return aboutCtaUrl;
-  };
+  const aboutTitle = getCustomizerValue('__ABOUT_TITLE__');
+  const aboutSubtitle = getCustomizerValue('__ABOUT_SUBTITLE__');
+  const aboutHTML = getCustomizerValue('__ABOUT_HTML__');
+  const aboutCtaEnabled = getCustomizerValue('__ABOUT_CTA_ENABLED__', false);
+  const aboutCtaText = getCustomizerValue('__ABOUT_CTA_TEXT__');
+  const aboutCtaUrl = getCustomizerValue('__ABOUT_CTA_URL__');
+  const aboutCtaSubject = getCustomizerValue('__ABOUT_CTA_SUBJECT__');
 
   // If no About content is provided, do not render the section
   if (!aboutHTML || aboutHTML.trim() === '') {
@@ -85,7 +99,7 @@ export default function About() {
                       className="about__title section-title"
                       initial={ANIMATION.TITLE.hidden}
                       whileInView={ANIMATION.TITLE.show}
-                      viewport={{ once: true, amount: 0.3 }}
+                      viewport={{ once: true, amount: VIEWPORT_AMOUNT }}
                       transition={{ duration: ANIMATION.TIMING.BASE }}
                     >
                       {aboutTitle}
@@ -96,7 +110,7 @@ export default function About() {
                       className="about__subtitle section-subtitle"
                       initial={ANIMATION.TITLE.hidden}
                       whileInView={ANIMATION.TITLE.show}
-                      viewport={{ once: true, amount: 0.3 }}
+                      viewport={{ once: true, amount: VIEWPORT_AMOUNT }}
                       transition={{ duration: ANIMATION.TIMING.BASE, delay: ANIMATION.TIMING.DELAY_SMALL }}
                       dangerouslySetInnerHTML={{ __html: aboutSubtitle }}
                     />
@@ -121,10 +135,10 @@ export default function About() {
                     initial={ANIMATION.FADE_IN.hidden}
                     whileInView={ANIMATION.FADE_IN.show}
                     viewport={{ once: true }}
-                    transition={{ duration: ANIMATION.TIMING.BASE, delay: ANIMATION.TIMING.DELAY_LARGE + 0.1 }}
+                    transition={{ duration: ANIMATION.TIMING.BASE, delay: ANIMATION.TIMING.DELAY_LARGE + ANIMATION.TIMING.CTA_EXTRA_DELAY }}
                   >
                     <a 
-                      href={getCtaUrl()} 
+                      href={getCtaUrl(aboutCtaUrl, aboutCtaSubject)} 
                       className="about__cta-btn"
                       target="_blank"
                       rel="noopener noreferrer"
@@ -141,5 +155,3 @@ export default function About() {
     </section>
   );
 }
-
-
