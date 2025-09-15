@@ -1,8 +1,52 @@
 <?php
 
-/**
- * REST API endpoints for React frontend
- */
+// REST API endpoints for React frontend
+// ====================================
+
+// Helper function for featured image data
+// --------------------------------------
+function get_featured_image_data($post_id) {
+	$featured_id = get_post_thumbnail_id($post_id);
+	if (!$featured_id) {
+		return [
+			'featured_image' => '',
+			'featured_image_wide' => '',
+			'featured_image_wide_2x' => '',
+			'featured_image_srcset' => '',
+			'featured_image_wide_w' => 0,
+			'featured_image_wide_h' => 0,
+			'featured_image_alt' => ''
+		];
+	}
+	
+	$featured_wide = wp_get_attachment_image_src($featured_id, 'project_wide');
+	$featured_wide_2x = wp_get_attachment_image_src($featured_id, 'project_wide_2x');
+	$featured_srcset = wp_get_attachment_image_srcset($featured_id, 'project_wide');
+	$featured_alt = get_post_meta($featured_id, '_wp_attachment_image_alt', true);
+	
+	return [
+		'featured_image' => get_the_post_thumbnail_url($post_id, 'full'),
+		'featured_image_wide' => $featured_wide ? $featured_wide[0] : '',
+		'featured_image_wide_2x' => $featured_wide_2x ? $featured_wide_2x[0] : '',
+		'featured_image_srcset' => $featured_srcset ?: '',
+		'featured_image_wide_w' => $featured_wide ? (int) $featured_wide[1] : 0,
+		'featured_image_wide_h' => $featured_wide ? (int) $featured_wide[2] : 0,
+		'featured_image_alt' => $featured_alt ?: get_the_title($post_id)
+	];
+}
+
+// Helper function for email template
+// ---------------------------------
+function get_contact_email_template($name, $email, $subject, $message) {
+	return "
+		<h3>New Contact Form Submission</h3>
+		<p><strong>Name:</strong> {$name}</p>
+		<p><strong>Email:</strong> {$email}</p>
+		<p><strong>Subject:</strong> {$subject}</p>
+		<p><strong>Message:</strong></p>
+		<p>{$message}</p>
+	";
+}
 
 add_action('rest_api_init', function () {
 	// Menu endpoint
@@ -83,42 +127,28 @@ add_action('rest_api_init', function () {
 			if (!empty($projects)) {
 				foreach ($projects as $project) {
 					$meta = get_post_meta($project->ID);
-					$featured_id = get_post_thumbnail_id($project->ID);
-					$featured_wide = $featured_id ? wp_get_attachment_image_src($featured_id, 'project_wide') : false;
-					$featured_wide_2x = $featured_id ? wp_get_attachment_image_src($featured_id, 'project_wide_2x') : false;
-					$featured_srcset = $featured_id ? wp_get_attachment_image_srcset($featured_id, 'project_wide') : '';
-					$featured_alt = $featured_id ? get_post_meta($featured_id, '_wp_attachment_image_alt', true) : '';
+					$featured_data = get_featured_image_data($project->ID);
 					
 					// Get project content
 					$title = html_entity_decode($project->post_title, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-					$content = $project->post_content;
-					$excerpt = $project->post_excerpt;
 					
-					$result[] = [
+					$result[] = array_merge([
 						'id' => $project->ID,
 						'title' => $title,
-						'content' => $content,
-						'excerpt' => $excerpt,
+						'content' => $project->post_content,
+						'excerpt' => $project->post_excerpt,
 						'slug' => $project->post_name,
 						'date' => $project->post_date,
 						'modified' => $project->post_modified,
 						'status' => $project->post_status,
 						'menu_order' => $project->menu_order,
-						'featured_image' => get_the_post_thumbnail_url($project->ID, 'full'),
-						'featured_image_wide' => $featured_wide ? $featured_wide[0] : '',
-						'featured_image_wide_2x' => $featured_wide_2x ? $featured_wide_2x[0] : '',
-						'featured_image_srcset' => $featured_srcset ?: '',
-						'featured_image_wide_w' => $featured_wide ? (int) $featured_wide[1] : 0,
-						'featured_image_wide_h' => $featured_wide ? (int) $featured_wide[2] : 0,
-						'featured_image_alt' => $featured_alt ?: $title,
 						'project_screenshot' => isset($meta['project_screenshot'][0]) ? $meta['project_screenshot'][0] : '',
 						'project_technologies' => isset($meta['project_technologies'][0]) ? $meta['project_technologies'][0] : '',
 						'project_status' => isset($meta['project_status'][0]) ? $meta['project_status'][0] : 'active',
 						'project_url_external' => isset($meta['project_url'][0]) ? $meta['project_url'][0] : '',
 						'project_demo_mode' => isset($meta['project_demo_mode'][0]) ? $meta['project_demo_mode'][0] : 'iframe',
 						'project_github_url' => isset($meta['project_github_url'][0]) ? $meta['project_github_url'][0] : '',
-						'language' => 'en',
-					];
+					], $featured_data);
 				}
 			}
 
@@ -139,13 +169,9 @@ add_action('rest_api_init', function () {
 			}
 
 			$meta = get_post_meta($project_id);
-			
-			$featured_id = get_post_thumbnail_id($project->ID);
-			$featured_wide = $featured_id ? wp_get_attachment_image_src($featured_id, 'project_wide') : false;
-			$featured_wide_2x = $featured_id ? wp_get_attachment_image_src($featured_id, 'project_wide_2x') : false;
-			$featured_srcset = $featured_id ? wp_get_attachment_image_srcset($featured_id, 'project_wide') : '';
+			$featured_data = get_featured_image_data($project->ID);
 
-			return rest_ensure_response([
+			return rest_ensure_response(array_merge([
 				'id' => $project->ID,
 				'title' => html_entity_decode($project->post_title, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
 				'content' => $project->post_content,
@@ -153,16 +179,12 @@ add_action('rest_api_init', function () {
 				'slug' => $project->post_name,
 				'date' => $project->post_date,
 				'modified' => $project->post_modified,
-				'featured_image' => get_the_post_thumbnail_url($project->ID, 'full'),
-				'featured_image_wide' => $featured_wide ? $featured_wide[0] : '',
-				'featured_image_wide_2x' => $featured_wide_2x ? $featured_wide_2x[0] : '',
-				'featured_image_srcset' => $featured_srcset ?: '',
 				'project_technologies' => isset($meta['project_technologies'][0]) ? $meta['project_technologies'][0] : '',
 				'project_status' => isset($meta['project_status'][0]) ? $meta['project_status'][0] : 'active',
 				'project_url_external' => isset($meta['project_url'][0]) ? $meta['project_url'][0] : '',
 				'project_demo_mode' => isset($meta['project_demo_mode'][0]) ? $meta['project_demo_mode'][0] : 'iframe',
 				'project_github_url' => isset($meta['project_github_url'][0]) ? $meta['project_github_url'][0] : '',
-			]);
+			], $featured_data));
 		},
 	]);
 
@@ -223,14 +245,15 @@ add_action('rest_api_init', function () {
 			
 			// Skills cards
 			$skills_cards = [];
+			$card_fields = ['title', 'description', 'tags', 'skills_list'];
+			
 			for ($i = 1; $i <= 5; $i++) {
 				$card_id = "card{$i}";
-				$skills_cards[$card_id] = [
-					'title' => get_theme_mod("moehser_skills_{$card_id}_title", ''),
-					'description' => get_theme_mod("moehser_skills_{$card_id}_description", ''),
-					'tags' => get_theme_mod("moehser_skills_{$card_id}_tags", ''),
-					'skills_list' => get_theme_mod("moehser_skills_{$card_id}_skills_list", ''),
-				];
+				$skills_cards[$card_id] = [];
+				
+				foreach ($card_fields as $field) {
+					$skills_cards[$card_id][$field] = get_theme_mod("moehser_skills_{$card_id}_{$field}", '');
+				}
 			}
 			$content['skills']['cards'] = $skills_cards;
 			
@@ -246,7 +269,6 @@ add_action('rest_api_init', function () {
 			try {
 				$data = $request->get_json_params();
 				
-				
 				// Validate fields
 				$required_fields = ['name', 'email', 'subject', 'message'];
 				foreach ($required_fields as $field) {
@@ -259,9 +281,6 @@ add_action('rest_api_init', function () {
 				if (!is_email($data['email'])) {
 					return new WP_Error('invalid_email', 'Invalid email address', ['status' => 400]);
 				}
-				
-				// Verify reCAPTCHA
-				$recaptcha_token = $data['recaptchaToken'] ?? '';
 				
 				// Get recipient email
 				$recipient_email = get_theme_mod('moehser_social_email', 'hi@danielmoehser.dev');
@@ -280,14 +299,7 @@ add_action('rest_api_init', function () {
 				];
 				
 				// Content
-				$email_content = "
-					<h3>New Contact Form Submission</h3>
-					<p><strong>Name:</strong> {$name}</p>
-					<p><strong>Email:</strong> {$email}</p>
-					<p><strong>Subject:</strong> {$subject}</p>
-					<p><strong>Message:</strong></p>
-					<p>{$message}</p>
-				";
+				$email_content = get_contact_email_template($name, $email, $subject, $message);
 				
 				// Email subject
 				$email_subject = get_theme_mod('moehser_email_subject', 'Portfolio Contact - New Inquiry');
@@ -310,5 +322,3 @@ add_action('rest_api_init', function () {
 		},
 	]);
 });
-
-
