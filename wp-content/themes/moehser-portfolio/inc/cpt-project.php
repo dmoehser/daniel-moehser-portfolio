@@ -9,32 +9,53 @@ const PROJECT_META_FIELDS = [
     'project_technologies' => [
         'type' => 'string',
         'sanitize' => 'sanitize_text_field',
-        'default' => ''
+        'default' => '',
+        'field_type' => 'text',
+        'label' => 'Technologies',
+        'description' => 'e.g.: React, Node.js, WordPress (comma-separated)'
     ],
     'project_status' => [
         'type' => 'string',
         'sanitize' => 'sanitize_text_field',
-        'default' => 'active'
+        'default' => 'active',
+        'field_type' => 'select',
+        'label' => 'Status',
+        'description' => 'Active: Will be displayed in the frontend<br>Archived: Will be hidden in the frontend (only visible in admin)<br>In Development: Will be hidden in the frontend (only visible in admin)',
+        'options' => 'PROJECT_STATUSES'
     ],
     'project_url' => [
         'type' => 'string',
         'sanitize' => 'esc_url_raw',
-        'default' => ''
+        'default' => '',
+        'field_type' => 'url',
+        'label' => 'Project URL',
+        'description' => 'Live URL of your deployed project (e.g., https://your-app.onrender.com)'
     ],
     'project_demo_mode' => [
         'type' => 'string',
         'sanitize' => 'sanitize_text_field',
-        'default' => 'iframe'
+        'default' => 'iframe',
+        'field_type' => 'select',
+        'label' => 'Demo Mode',
+        'description' => 'How the project demo should be displayed',
+        'options' => 'PROJECT_DEMO_MODES',
+        'labels' => 'PROJECT_DEMO_LABELS'
     ],
     'project_screenshot' => [
         'type' => 'string',
         'sanitize' => 'esc_url_raw',
-        'default' => ''
+        'default' => '',
+        'field_type' => 'url',
+        'label' => 'Screenshot URL',
+        'description' => 'Direct URL to a preview image for the project card. If empty, the featured image will be used.'
     ],
     'project_github_url' => [
         'type' => 'string',
         'sanitize' => 'esc_url_raw',
-        'default' => ''
+        'default' => '',
+        'field_type' => 'url',
+        'label' => 'GitHub URL',
+        'description' => 'Repository URL (e.g., https://github.com/username/repo)'
     ]
 ];
 
@@ -42,6 +63,57 @@ const PROJECT_META_FIELDS = [
 // -----------------------------
 const PROJECT_STATUSES = ['active', 'archived', 'development'];
 const PROJECT_DEMO_MODES = ['iframe', 'new_window', 'fullscreen'];
+
+// Demo mode labels for admin interface
+// -----------------------------------
+const PROJECT_DEMO_LABELS = [
+    'iframe' => 'Embed in iframe (Current)',
+    'new_window' => 'Open in new window',
+    'fullscreen' => 'Fullscreen overlay (Coming Soon)'
+];
+
+// Helper function to render meta field input
+// -----------------------------------------
+function render_meta_field_input($field_name, $field_config, $value) {
+    $field_type = $field_config['field_type'];
+    $label = $field_config['label'];
+    $description = $field_config['description'];
+    
+    echo '<tr>';
+    echo '<th scope="row">';
+    echo '<label for="' . esc_attr($field_name) . '">' . esc_html(__($label, 'moehser-portfolio')) . '</label>';
+    echo '</th>';
+    echo '<td>';
+    
+    switch ($field_type) {
+        case 'url':
+            echo '<input type="url" id="' . esc_attr($field_name) . '" name="' . esc_attr($field_name) . '" value="' . esc_attr($value) . '" class="regular-text" />';
+            break;
+        case 'text':
+            echo '<input type="text" id="' . esc_attr($field_name) . '" name="' . esc_attr($field_name) . '" value="' . esc_attr($value) . '" class="regular-text" />';
+            break;
+        case 'select':
+            echo '<select id="' . esc_attr($field_name) . '" name="' . esc_attr($field_name) . '">';
+            
+            $options = constant($field_config['options']);
+            $labels = isset($field_config['labels']) ? constant($field_config['labels']) : null;
+            
+            foreach ($options as $option_value) {
+                $option_label = $labels ? $labels[$option_value] : ucfirst(str_replace('_', ' ', $option_value));
+                $selected = selected($value, $option_value, false);
+                echo '<option value="' . esc_attr($option_value) . '" ' . $selected . '>';
+                echo esc_html($option_label);
+                echo '</option>';
+            }
+            
+            echo '</select>';
+            break;
+    }
+    
+    echo '<p class="description">' . wp_kses_post(__($description, 'moehser-portfolio')) . '</p>';
+    echo '</td>';
+    echo '</tr>';
+}
 
 // Helper function to register project meta fields
 // -----------------------------------------------
@@ -116,86 +188,27 @@ function moehser_project_meta_box_callback($post) {
         $meta_values[$field] = get_post_meta($post->ID, $field, true);
     }
 
-    ?>
-    <table class="form-table">
-        <tr>
-            <th scope="row">
-                <label for="project_url"><?php _e('Project URL', 'moehser-portfolio'); ?></label>
-            </th>
-            <td>
-                <input type="url" id="project_url" name="project_url" value="<?php echo esc_attr($meta_values['project_url']); ?>" class="regular-text" />
-                <p class="description"><?php _e('Live URL of your deployed project (e.g., https://your-app.onrender.com)', 'moehser-portfolio'); ?></p>
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">
-                <label for="project_github_url"><?php _e('GitHub URL', 'moehser-portfolio'); ?></label>
-            </th>
-            <td>
-                <input type="url" id="project_github_url" name="project_github_url" value="<?php echo esc_attr($meta_values['project_github_url']); ?>" class="regular-text" />
-                <p class="description"><?php _e('Repository URL (e.g., https://github.com/username/repo)', 'moehser-portfolio'); ?></p>
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">
-                <label for="project_screenshot"><?php _e('Screenshot URL', 'moehser-portfolio'); ?></label>
-            </th>
-            <td>
-                <input type="url" id="project_screenshot" name="project_screenshot" value="<?php echo esc_attr($meta_values['project_screenshot']); ?>" class="regular-text" />
-                <p class="description"><?php _e('Direct URL to a preview image for the project card. If empty, the featured image will be used.', 'moehser-portfolio'); ?></p>
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">
-                <label for="project_technologies"><?php _e('Technologies', 'moehser-portfolio'); ?></label>
-            </th>
-            <td>
-                <input type="text" id="project_technologies" name="project_technologies" value="<?php echo esc_attr($meta_values['project_technologies']); ?>" class="regular-text" />
-                <p class="description"><?php _e('e.g.: React, Node.js, WordPress (comma-separated)', 'moehser-portfolio'); ?></p>
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">
-                <label for="project_status"><?php _e('Status', 'moehser-portfolio'); ?></label>
-            </th>
-            <td>
-                <select id="project_status" name="project_status">
-                    <?php foreach (PROJECT_STATUSES as $status_value): ?>
-                        <option value="<?php echo esc_attr($status_value); ?>" <?php selected($meta_values['project_status'], $status_value); ?>>
-                            <?php echo esc_html(ucfirst(str_replace('_', ' ', $status_value))); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-                <p class="description">
-                    <strong>Active:</strong> Will be displayed in the frontend<br>
-                    <strong>Archived:</strong> Will be hidden in the frontend (only visible in admin)<br>
-                    <strong>In Development:</strong> Will be hidden in the frontend (only visible in admin)
-                </p>
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">
-                <label for="project_demo_mode"><?php _e('Demo Mode', 'moehser-portfolio'); ?></label>
-            </th>
-            <td>
-                <select id="project_demo_mode" name="project_demo_mode">
-                    <?php 
-                    $demo_labels = [
-                        'iframe' => 'Embed in iframe (Current)',
-                        'new_window' => 'Open in new window',
-                        'fullscreen' => 'Fullscreen overlay (Coming Soon)'
-                    ];
-                    foreach (PROJECT_DEMO_MODES as $mode_value): ?>
-                        <option value="<?php echo esc_attr($mode_value); ?>" <?php selected($meta_values['project_demo_mode'], $mode_value); ?>>
-                            <?php echo esc_html($demo_labels[$mode_value]); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-                <p class="description"><?php _e('How the project demo should be displayed', 'moehser-portfolio'); ?></p>
-            </td>
-        </tr>
-    </table>
-    <?php
+    echo '<table class="form-table">';
+    
+    // Render all meta fields using the helper function
+    foreach (PROJECT_META_FIELDS as $field_name => $field_config) {
+        render_meta_field_input($field_name, $field_config, $meta_values[$field_name]);
+    }
+    
+    echo '</table>';
+}
+
+// Helper function to validate field value
+// --------------------------------------
+function validate_meta_field_value($field_name, $value) {
+    switch ($field_name) {
+        case 'project_status':
+            return in_array($value, PROJECT_STATUSES, true);
+        case 'project_demo_mode':
+            return in_array($value, PROJECT_DEMO_MODES, true);
+        default:
+            return true;
+    }
 }
 
 // Save project meta data
@@ -220,11 +233,8 @@ add_action('save_post', function ($post_id) {
         if (isset($_POST[$field_name])) {
             $value = call_user_func($config['sanitize'], $_POST[$field_name]);
             
-            // Additional validation for specific fields
-            if ($field_name === 'project_status' && !in_array($value, PROJECT_STATUSES, true)) {
-                continue;
-            }
-            if ($field_name === 'project_demo_mode' && !in_array($value, PROJECT_DEMO_MODES, true)) {
+            // Validate field value
+            if (!validate_meta_field_value($field_name, $value)) {
                 continue;
             }
             
