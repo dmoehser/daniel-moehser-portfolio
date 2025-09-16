@@ -1,15 +1,12 @@
 // Mobile Menu Component
 // ====================
 
-// Responsive hamburger menu for mobile navigation
-// ------------------------------------------------
-
 import React, { useState, useEffect, useRef } from 'react';
 import { getMailtoUrl } from '../../utils/emailHelper.js';
 import { useLanguage } from '../../hooks/useLanguage.js';
 
-// Section mapping constants
-// ------------------------------
+// Constants
+// ---------
 const SECTION_MAPPING = {
   HOME: 'hero',
   ABOUT: 'about',
@@ -17,19 +14,101 @@ const SECTION_MAPPING = {
   SKILLS: 'skills'
 };
 
-export default function MobileMenu() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [menuItems, setMenuItems] = useState([]);
-  const [isMobile, setIsMobile] = useState(false);
-  const [isDark, setIsDark] = useState(false);
-  const menuRef = useRef(null);
-  const buttonRef = useRef(null);
-  const { isGerman, switchLanguage } = useLanguage();
+const API_CONFIG = {
+  BASE_ENDPOINT: '/wp-json/moehser/v1/menu/header_primary',
+  LOCALIZED_ENDPOINT: '/de/wp-json/moehser/v1/menu/header_primary',
+  FALLBACK_BASE: '/index.php?rest_route=/moehser/v1/menu/header_primary',
+  FALLBACK_LOCALIZED: '/de/index.php?rest_route=/moehser/v1/menu/header_primary'
+};
 
-  // Check if we're on mobile
+const MOBILE_BREAKPOINT = 768; // pixels
+
+const CSS_CLASSES = {
+  CONTAINER: 'mobile-menu',
+  TOGGLE: 'mobile-menu__toggle',
+  TOGGLE_OPEN: 'mobile-menu__toggle--open',
+  HAMBURGER: 'mobile-menu__hamburger',
+  LINE: 'mobile-menu__line',
+  OVERLAY: 'mobile-menu__overlay',
+  OVERLAY_OPEN: 'mobile-menu__overlay--open',
+  CLOSE: 'mobile-menu__close',
+  CLOSE_ICON: 'mobile-menu__close-icon',
+  NAV: 'mobile-menu__nav',
+  LINK: 'mobile-menu__link',
+  DIVIDER: 'mobile-menu__divider',
+  SECTION: 'mobile-menu__section',
+  SECTION_TITLE: 'mobile-menu__section-title',
+  ACTION: 'mobile-menu__action',
+  ACTION_ICON: 'mobile-menu__action-icon',
+  ACTION_LABEL: 'mobile-menu__action-label'
+};
+
+const ARIA_LABELS = {
+  OPEN_MENU: 'Open mobile navigation menu',
+  CLOSE_MENU: 'Close mobile navigation menu',
+  NAVIGATION: 'Mobile navigation menu',
+  NAVIGATE_TO: (section) => `Navigate to ${section} section`
+};
+
+const SOCIAL_LINKS = [
+  {
+    type: 'email',
+    label: 'Email',
+    href: () => getMailtoUrl(),
+    icon: '📧'
+  },
+  {
+    type: 'github',
+    label: 'GitHub',
+    href: () => typeof window !== 'undefined' && window.__SOCIAL_GITHUB__ 
+      ? window.__SOCIAL_GITHUB__ 
+      : 'https://github.com/',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" width="18" height="18">
+        <path fillRule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38C13.71 14.53 16 11.54 16 8c0-4.42-3.58-8-8-8z"/>
+      </svg>
+    ),
+    external: true
+  },
+  {
+    type: 'linkedin',
+    label: 'LinkedIn',
+    href: () => typeof window !== 'undefined' && window.__SOCIAL_LINKEDIN__ 
+      ? window.__SOCIAL_LINKEDIN__ 
+      : 'https://linkedin.com/',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.028-3.037-1.852-3.037-1.853 0-2.136 1.447-2.136 2.942v5.664H9.352V9h3.414v1.561h.049c.476-.9 1.637-1.85 3.368-1.85 3.602 0 4.267 2.371 4.267 5.455v6.286zM5.337 7.433a2.063 2.063 0 1 1 0-4.126 2.063 2.063 0 0 1 0 4.126zM7.115 20.452H3.558V9h3.557v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.226.792 24 1.771 24h20.451C23.2 24 24 23.226 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+      </svg>
+    ),
+    external: true
+  }
+];
+
+const THEME_ICONS = {
+  LIGHT: '🌙',
+  DARK: '☀️'
+};
+
+const LANGUAGE_CONFIG = {
+  FLAGS: {
+    GERMAN_TO_ENGLISH: '🇬🇧',
+    ENGLISH_TO_GERMAN: '🇩🇪'
+  },
+  LABELS: {
+    GERMAN_TO_ENGLISH: 'English',
+    ENGLISH_TO_GERMAN: 'German'
+  }
+};
+
+// Custom Hooks
+// ------------
+const useMobileDetection = () => {
+  const [isMobile, setIsMobile] = useState(false);
+  
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth <= MOBILE_BREAKPOINT);
     };
     
     checkMobile();
@@ -37,50 +116,84 @@ export default function MobileMenu() {
     
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+  
+  return isMobile;
+};
 
-  // Initialize theme state
+const useThemeState = () => {
+  const [isDark, setIsDark] = useState(false);
+  
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const isDarkMode = savedTheme === 'dark' || (!savedTheme && systemPrefersDark);
     setIsDark(isDarkMode);
   }, []);
+  
+  const toggleTheme = () => {
+    const newTheme = isDark ? 'light' : 'dark';
+    setIsDark(!isDark);
+    localStorage.setItem('theme', newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+    document.body.classList.toggle('theme-dark', newTheme === 'dark');
+  };
+  
+  return { isDark, toggleTheme };
+};
 
-  // Load WordPress menu
+const useMobileMenu = (isGerman) => {
+  const [menuItems, setMenuItems] = useState([]);
+  
   useEffect(() => {
     let cancelled = false;
     
-    async function loadMenu() {
+    const loadMenuData = async () => {
       try {
-        // Use language-specific API URL
-        const apiUrl = isGerman ? '/de/wp-json/moehser/v1/menu/header_primary' : '/wp-json/moehser/v1/menu/header_primary';
-        let res = await fetch(apiUrl);
+        const primaryUrl = isGerman ? API_CONFIG.LOCALIZED_ENDPOINT : API_CONFIG.BASE_ENDPOINT;
+        let response = await fetch(primaryUrl);
         let data;
-        const contentType = res.headers.get('content-type') || '';
         
-        if (res.ok && contentType.includes('application/json')) {
-          data = await res.json();
+        const contentType = response.headers.get('content-type') || '';
+        
+        if (response.ok && contentType.includes('application/json')) {
+          data = await response.json();
         } else {
-          const fallbackUrl = isGerman ? '/de/index.php?rest_route=/moehser/v1/menu/header_primary' : '/index.php?rest_route=/moehser/v1/menu/header_primary';
-          res = await fetch(fallbackUrl);
-          if (!res.ok) throw new Error('Menu REST API failed');
-          data = await res.json();
+          // Fallback to index.php route
+          const fallbackUrl = isGerman ? API_CONFIG.FALLBACK_LOCALIZED : API_CONFIG.FALLBACK_BASE;
+          response = await fetch(fallbackUrl);
+          if (!response.ok) throw new Error(`Menu API failed: ${response.status}`);
+          data = await response.json();
         }
         
         if (!cancelled) {
-          const filteredItems = Array.isArray(data) 
+          const topLevelItems = Array.isArray(data) 
             ? data.filter(item => !item.parent) 
             : [];
-          setMenuItems(filteredItems);
+          setMenuItems(topLevelItems);
         }
-      } catch {
+      } catch (error) {
+        console.error('Menu loading error:', error);
         if (!cancelled) setMenuItems([]);
       }
-    }
+    };
     
-    loadMenu();
+    loadMenuData();
     return () => { cancelled = true; };
   }, [isGerman]);
+  
+  return menuItems;
+};
+
+export default function MobileMenu() {
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef(null);
+  const buttonRef = useRef(null);
+  
+  // Use custom hooks and language hook
+  const { isGerman, switchLanguage } = useLanguage();
+  const isMobile = useMobileDetection();
+  const { isDark, toggleTheme } = useThemeState();
+  const menuItems = useMobileMenu(isGerman);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -117,54 +230,8 @@ export default function MobileMenu() {
     };
   }, [isOpen]);
 
-  // Social links configuration
-  const socialLinks = [
-    {
-      type: 'email',
-      label: 'Email',
-      href: () => getMailtoUrl(),
-      icon: '📧'
-    },
-    {
-      type: 'github',
-      label: 'GitHub',
-      href: () => typeof window !== 'undefined' && window.__SOCIAL_GITHUB__ 
-        ? window.__SOCIAL_GITHUB__ 
-        : 'https://github.com/',
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" width="18" height="18">
-          <path fillRule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38C13.71 14.53 16 11.54 16 8c0-4.42-3.58-8-8-8z"/>
-        </svg>
-      ),
-      external: true
-    },
-    {
-      type: 'linkedin',
-      label: 'LinkedIn',
-      href: () => typeof window !== 'undefined' && window.__SOCIAL_LINKEDIN__ 
-        ? window.__SOCIAL_LINKEDIN__ 
-        : 'https://linkedin.com/',
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
-          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.028-3.037-1.852-3.037-1.853 0-2.136 1.447-2.136 2.942v5.664H9.352V9h3.414v1.561h.049c.476-.9 1.637-1.85 3.368-1.85 3.602 0 4.267 2.371 4.267 5.455v6.286zM5.337 7.433a2.063 2.063 0 1 1 0-4.126 2.063 2.063 0 0 1 0 4.126zM7.115 20.452H3.558V9h3.557v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.226.792 24 1.771 24h20.451C23.2 24 24 23.226 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-        </svg>
-      ),
-      external: true
-    }
-  ];
 
-  // Theme toggle function
-  const toggleTheme = () => {
-    const newTheme = isDark ? 'light' : 'dark';
-    setIsDark(!isDark);
-    localStorage.setItem('theme', newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
-    document.body.classList.toggle('theme-dark', newTheme === 'dark');
-    setIsOpen(false); // Close menu after theme change
-  };
-
-
-  // Resolve section ID from href/title
+  // Utility functions
   const resolveSectionId = (href, title) => {
     try {
       const url = new URL(href, window.location.origin);
@@ -180,7 +247,9 @@ export default function MobileMenu() {
       if (pathSegment.includes('about')) return SECTION_MAPPING.ABOUT;
       if (pathSegment.includes('project')) return SECTION_MAPPING.PROJECTS;
       if (pathSegment.includes('skill')) return SECTION_MAPPING.SKILLS;
-    } catch {}
+    } catch {
+      // URL parsing failed, continue to title-based fallback
+    }
     
     const titleLower = (title || '').toLowerCase();
     if (titleLower.includes('about')) return SECTION_MAPPING.ABOUT;
@@ -191,191 +260,204 @@ export default function MobileMenu() {
     return null;
   };
 
-  // Scroll to section
-  const scrollTo = (id) => {
+  const scrollToSection = (sectionId) => {
     const container = document.getElementById('content-scroll');
     if (!container) return;
     
-    const target = id === SECTION_MAPPING.HOME 
+    const target = sectionId === SECTION_MAPPING.HOME 
       ? document.querySelector('section.hero') 
-      : document.getElementById(id);
+      : document.getElementById(sectionId);
     
     if (!target) return;
     
-    const targetTop = target.offsetTop;
     container.scrollTo({ 
-      top: targetTop, 
+      top: target.offsetTop, 
       behavior: 'smooth' 
     });
     
     const basePath = isGerman ? '/de' : '';
-    const url = id === SECTION_MAPPING.HOME ? `${basePath}/#` : `${basePath}/#${id}`;
-    window.history.replaceState(null, '', url);
+    const newUrl = sectionId === SECTION_MAPPING.HOME 
+      ? `${basePath}/#` 
+      : `${basePath}/#${sectionId}`;
+    window.history.replaceState(null, '', newUrl);
     
     try {
       window.dispatchEvent(new CustomEvent('nav:jump', { 
-        detail: { id } 
+        detail: { id: sectionId } 
       }));
-    } catch {}
+    } catch (error) {
+      console.warn('Failed to dispatch nav:jump event:', error);
+    }
     
-    setIsOpen(false); // Close menu after navigation
+    setIsOpen(false);
   };
 
-  // Handle navigation item click
-  const handleItemClick = (e, id) => {
-    if (!id) return;
-    e.preventDefault();
+  const handleItemClick = (event, sectionId) => {
+    if (!sectionId) return;
+    event.preventDefault();
     
-    // Check if we're on the imprint page
     const isImprintPage = window.location.pathname.includes('/imprint/');
     
     if (isImprintPage) {
-      // Redirect to main page with section hash
       const basePath = isGerman ? '/de' : '';
-      const url = id === SECTION_MAPPING.HOME ? `${basePath}/#` : `${basePath}/#${id}`;
-      window.location.href = url;
+      const redirectUrl = sectionId === SECTION_MAPPING.HOME 
+        ? `${basePath}/#` 
+        : `${basePath}/#${sectionId}`;
+      window.location.href = redirectUrl;
     } else {
-      // Normal scroll behavior on main page
-      scrollTo(id);
+      scrollToSection(sectionId);
     }
   };
 
-  // Use all menu items (no terminal filtering needed)
-  const pillItems = menuItems;
+  const handleThemeToggle = () => {
+    toggleTheme();
+    setIsOpen(false);
+  };
+
+  const handleLanguageSwitch = () => {
+    switchLanguage();
+    setIsOpen(false);
+  };
 
   // Don't render on desktop
   if (!isMobile) {
     return null;
   }
 
+  // Computed values
+  const toggleClasses = `${CSS_CLASSES.TOGGLE} ${isOpen ? CSS_CLASSES.TOGGLE_OPEN : ''}`;
+  const overlayClasses = `${CSS_CLASSES.OVERLAY} ${isOpen ? CSS_CLASSES.OVERLAY_OPEN : ''}`;
+  const currentThemeIcon = isDark ? THEME_ICONS.DARK : THEME_ICONS.LIGHT;
+  const currentLanguageFlag = isGerman ? LANGUAGE_CONFIG.FLAGS.GERMAN_TO_ENGLISH : LANGUAGE_CONFIG.FLAGS.ENGLISH_TO_GERMAN;
+  const currentLanguageLabel = isGerman ? LANGUAGE_CONFIG.LABELS.GERMAN_TO_ENGLISH : LANGUAGE_CONFIG.LABELS.ENGLISH_TO_GERMAN;
+
   return (
-    <div className="mobile-menu">
+    <div className={CSS_CLASSES.CONTAINER}>
       <button
         ref={buttonRef}
-        className={`mobile-menu__toggle ${isOpen ? 'mobile-menu__toggle--open' : ''}`}
+        className={toggleClasses}
         onClick={() => setIsOpen(!isOpen)}
-        aria-label={isOpen ? 'Close mobile navigation menu' : 'Open mobile navigation menu'}
+        aria-label={isOpen ? ARIA_LABELS.CLOSE_MENU : ARIA_LABELS.OPEN_MENU}
         aria-expanded={isOpen}
         aria-controls="mobile-menu-content"
       >
-        <span className="mobile-menu__hamburger" aria-hidden="true">
-          <span className="mobile-menu__line"></span>
-          <span className="mobile-menu__line"></span>
-          <span className="mobile-menu__line"></span>
+        <span className={CSS_CLASSES.HAMBURGER} aria-hidden="true">
+          <span className={CSS_CLASSES.LINE}></span>
+          <span className={CSS_CLASSES.LINE}></span>
+          <span className={CSS_CLASSES.LINE}></span>
         </span>
       </button>
       
-      <div 
-        ref={menuRef}
-        id="mobile-menu-content"
-        className={`mobile-menu__overlay ${isOpen ? 'mobile-menu__overlay--open' : ''}`}
-        aria-hidden={!isOpen}
-        role="navigation"
-        aria-label="Mobile navigation menu"
-      >
-        <button
-          className="mobile-menu__close"
-          onClick={() => setIsOpen(false)}
-          aria-label="Close mobile navigation menu"
+      {isOpen && (
+        <div 
+          ref={menuRef}
+          id="mobile-menu-content"
+          className={overlayClasses}
+          role="navigation"
+          aria-label={ARIA_LABELS.NAVIGATION}
         >
-          <span className="mobile-menu__close-icon" aria-hidden="true">×</span>
+        <button
+          className={CSS_CLASSES.CLOSE}
+          onClick={() => setIsOpen(false)}
+          aria-label={ARIA_LABELS.CLOSE_MENU}
+        >
+          <span className={CSS_CLASSES.CLOSE_ICON} aria-hidden="true">×</span>
         </button>
         
-        <nav className="mobile-menu__nav">
+        <nav className={CSS_CLASSES.NAV}>
           {/* Navigation Links */}
-          {pillItems.map((item) => {
-            const id = resolveSectionId(item.url, item.title);
-            const label = item.title;
+          {menuItems.map((item) => {
+            const sectionId = resolveSectionId(item.url, item.title);
+            const basePath = isGerman ? '/de' : '';
+            const href = `${basePath}/#${sectionId || ''}`;
             
             return (
               <a 
                 key={item.id} 
-                href={`${isGerman ? '/de' : ''}/#${id || ''}`} 
-                className="mobile-menu__link" 
-                aria-label={`Navigate to ${label} section`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  // Close mobile menu first
-                  handleItemClick(e, id);
-                  // Clean URL and navigate without page reload
-                  const basePath = isGerman ? '/de' : '';
-                  const cleanUrl = window.location.origin + `${basePath}/#${id || ''}`;
-                  window.history.replaceState({}, '', cleanUrl);
-                }}
+                href={href} 
+                className={CSS_CLASSES.LINK} 
+                aria-label={ARIA_LABELS.NAVIGATE_TO(item.title)}
+                onClick={(event) => handleItemClick(event, sectionId)}
               >
-                {label}
+                {item.title}
               </a>
             );
           })}
           
           {/* Settings Section */}
-          <div className="mobile-menu__divider"></div>
-          <div className="mobile-menu__section">
-            <h3 className="mobile-menu__section-title">{isGerman ? 'Einstellungen' : 'Settings'}</h3>
+          <div className={CSS_CLASSES.DIVIDER}></div>
+          <div className={CSS_CLASSES.SECTION}>
+            <h3 className={CSS_CLASSES.SECTION_TITLE}>
+              {isGerman ? 'Einstellungen' : 'Settings'}
+            </h3>
             <button
-              className="mobile-menu__action"
-              onClick={toggleTheme}
+              className={CSS_CLASSES.ACTION}
+              onClick={handleThemeToggle}
             >
-              <span className="mobile-menu__action-icon">
-                {isDark ? '☀️' : '🌙'}
+              <span className={CSS_CLASSES.ACTION_ICON}>
+                {currentThemeIcon}
               </span>
-              <span className="mobile-menu__action-label">
+              <span className={CSS_CLASSES.ACTION_LABEL}>
                 {isDark ? 'Light Mode' : 'Dark Mode'}
               </span>
             </button>
             <button
-              className="mobile-menu__action"
-              onClick={() => {
-                switchLanguage();
-                setIsOpen(false);
-              }}
+              className={CSS_CLASSES.ACTION}
+              onClick={handleLanguageSwitch}
             >
-              <span className="mobile-menu__action-icon">
-                {isGerman ? '🇬🇧' : '🇩🇪'}
+              <span className={CSS_CLASSES.ACTION_ICON}>
+                {currentLanguageFlag}
               </span>
-              <span className="mobile-menu__action-label">
-                {isGerman ? 'English' : 'German'}
+              <span className={CSS_CLASSES.ACTION_LABEL}>
+                {currentLanguageLabel}
               </span>
             </button>
           </div>
           
           {/* Social Links Section */}
-          <div className="mobile-menu__divider"></div>
-          <div className="mobile-menu__section">
-            <h3 className="mobile-menu__section-title">Connect</h3>
-            {socialLinks.map((social) => (
+          <div className={CSS_CLASSES.DIVIDER}></div>
+          <div className={CSS_CLASSES.SECTION}>
+            <h3 className={CSS_CLASSES.SECTION_TITLE}>Connect</h3>
+            {SOCIAL_LINKS.map((social) => (
               <a
                 key={social.type}
                 href={social.href()}
-                className="mobile-menu__action"
+                className={CSS_CLASSES.ACTION}
                 {...(social.external && {
                   target: "_blank",
                   rel: "noreferrer"
                 })}
               >
-                <span className="mobile-menu__action-icon">
+                <span className={CSS_CLASSES.ACTION_ICON}>
                   {social.icon}
                 </span>
-                <span className="mobile-menu__action-label">{social.label}</span>
+                <span className={CSS_CLASSES.ACTION_LABEL}>
+                  {social.label}
+                </span>
               </a>
             ))}
           </div>
           
           {/* Legal Section */}
-          <div className="mobile-menu__divider"></div>
-          <div className="mobile-menu__section">
-            <h3 className="mobile-menu__section-title">{isGerman ? 'Rechtliches' : 'Legal'}</h3>
+          <div className={CSS_CLASSES.DIVIDER}></div>
+          <div className={CSS_CLASSES.SECTION}>
+            <h3 className={CSS_CLASSES.SECTION_TITLE}>
+              {isGerman ? 'Rechtliches' : 'Legal'}
+            </h3>
             <a
               href={isGerman ? "/de/imprint/" : "/imprint/"}
-              className="mobile-menu__action"
+              className={CSS_CLASSES.ACTION}
               onClick={() => setIsOpen(false)}
             >
-              <span className="mobile-menu__action-icon">📄</span>
-              <span className="mobile-menu__action-label">{isGerman ? 'Impressum' : 'Imprint'}</span>
+              <span className={CSS_CLASSES.ACTION_ICON}>📄</span>
+              <span className={CSS_CLASSES.ACTION_LABEL}>
+                {isGerman ? 'Impressum' : 'Imprint'}
+              </span>
             </a>
           </div>
         </nav>
-      </div>
+        </div>
+      )}
     </div>
   );
 }
