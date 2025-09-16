@@ -1,13 +1,25 @@
 // Resource Preloader Component
 // ===========================
 
-// Preload critical resources for faster loading
-// ------------------------------
-
 import React, { useEffect } from 'react';
 
-// Critical resources configuration
-// ------------------------------
+// Constants
+// ---------
+const PRELOAD_CONFIG = {
+  PROJECT_IMAGES_COUNT: 3,
+  PROJECT_IMAGES_DELAY: 1000, // milliseconds
+  FALLBACK_IMAGE_TYPE: 'image/jpeg'
+};
+
+const API_ENDPOINTS = {
+  PROJECTS_PREVIEW: '/wp-json/moehser/v1/projects?per_page=3&_fields=id,title,project_screenshot,featured_image_wide'
+};
+
+const PRIORITY_LEVELS = {
+  HIGH: 'high',
+  LOW: 'low'
+};
+
 const CRITICAL_RESOURCES = {
   // Fonts - already preloaded in header.php
   fonts: [],
@@ -25,95 +37,87 @@ const CRITICAL_RESOURCES = {
   connections: []
 };
 
+// Utility functions
+// -----------------
+const createPreloadLink = (resource) => {
+  const link = document.createElement('link');
+  link.rel = 'preload';
+  link.href = resource.href;
+  link.as = resource.as;
+  link.type = resource.type;
+  
+  if (resource.crossorigin) {
+    link.crossOrigin = resource.crossorigin;
+  }
+  
+  if (resource.priority === PRIORITY_LEVELS.HIGH) {
+    link.setAttribute('fetchpriority', PRIORITY_LEVELS.HIGH);
+  }
+  
+  return link;
+};
+
+const createConnectionLink = (resource) => {
+  const link = document.createElement('link');
+  link.rel = resource.rel;
+  link.href = resource.href;
+  
+  if (resource.crossorigin) {
+    link.crossOrigin = resource.crossorigin;
+  }
+  
+  return link;
+};
+
+const preloadResources = (resources) => {
+  resources.forEach(resource => {
+    const link = createPreloadLink(resource);
+    document.head.appendChild(link);
+  });
+};
+
+const preloadConnections = (connections) => {
+  connections.forEach(resource => {
+    const link = createConnectionLink(resource);
+    document.head.appendChild(link);
+  });
+};
+
 // Resource preloader hook
 // ----------------------
 const useResourcePreloader = () => {
   useEffect(() => {
-    // Preload critical fonts
-    CRITICAL_RESOURCES.fonts.forEach(resource => {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.href = resource.href;
-      link.as = resource.as;
-      link.type = resource.type;
-      if (resource.crossorigin) {
-        link.crossOrigin = resource.crossorigin;
-      }
-      if (resource.priority === 'high') {
-        link.setAttribute('fetchpriority', 'high');
-      }
-      document.head.appendChild(link);
-    });
+    // Preload all critical resource types
+    preloadResources(CRITICAL_RESOURCES.fonts);
+    preloadResources(CRITICAL_RESOURCES.images);
+    preloadResources(CRITICAL_RESOURCES.css);
+    preloadResources(CRITICAL_RESOURCES.scripts);
+    
+    // Handle connections separately (different link type)
+    preloadConnections(CRITICAL_RESOURCES.connections);
 
-    // Preload critical images
-    CRITICAL_RESOURCES.images.forEach(resource => {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.href = resource.href;
-      link.as = resource.as;
-      link.type = resource.type;
-      if (resource.priority === 'high') {
-        link.setAttribute('fetchpriority', 'high');
-      }
-      document.head.appendChild(link);
-    });
-
-    // Preload critical CSS
-    CRITICAL_RESOURCES.css.forEach(resource => {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.href = resource.href;
-      link.as = resource.as;
-      link.type = resource.type;
-      if (resource.priority === 'high') {
-        link.setAttribute('fetchpriority', 'high');
-      }
-      document.head.appendChild(link);
-    });
-
-    // Preload critical scripts
-    CRITICAL_RESOURCES.scripts.forEach(resource => {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.href = resource.href;
-      link.as = resource.as;
-      link.type = resource.type;
-      if (resource.priority === 'high') {
-        link.setAttribute('fetchpriority', 'high');
-      }
-      document.head.appendChild(link);
-    });
-
-    // Preconnect to external domains
-    CRITICAL_RESOURCES.connections.forEach(resource => {
-      const link = document.createElement('link');
-      link.rel = resource.rel;
-      link.href = resource.href;
-      if (resource.crossorigin) {
-        link.crossOrigin = resource.crossorigin;
-      }
-      document.head.appendChild(link);
-    });
-
-    // Preload critical project images (first 3 projects)
+    // Preload critical project images with delay
     const preloadProjectImages = async () => {
       try {
-        // Fetch projects data
-        const response = await fetch('/wp-json/moehser/v1/projects?per_page=3&_fields=id,title,project_screenshot,featured_image_wide');
+        const response = await fetch(API_ENDPOINTS.PROJECTS_PREVIEW);
 
-        if (response.ok) {
-          const projects = await response.json();
-          
+        if (!response.ok) {
+          throw new Error(`Projects API failed: ${response.status}`);
+        }
+        
+        const projects = await response.json();
+        
+        if (Array.isArray(projects)) {
           projects.forEach(project => {
             const imageUrl = project.project_screenshot || project.featured_image_wide;
             if (imageUrl) {
-              const link = document.createElement('link');
-              link.rel = 'preload';
-              link.href = imageUrl;
-              link.as = 'image';
-              link.type = 'image/jpeg';
-              link.setAttribute('fetchpriority', 'low');
-              document.head.appendChild(link);
+              const imageLink = createPreloadLink({
+                href: imageUrl,
+                as: 'image',
+                type: PRELOAD_CONFIG.FALLBACK_IMAGE_TYPE,
+                priority: PRIORITY_LEVELS.LOW
+              });
+              document.head.appendChild(imageLink);
             }
           });
         }
@@ -122,14 +126,14 @@ const useResourcePreloader = () => {
       }
     };
 
-    // Preload project images after a short delay
-    setTimeout(preloadProjectImages, 1000);
+    // Preload project images after delay for better initial page performance
+    setTimeout(preloadProjectImages, PRELOAD_CONFIG.PROJECT_IMAGES_DELAY);
 
   }, []);
 };
 
-// Resource preloader component
-// ---------------------------
+// Main component
+// --------------
 export default function ResourcePreloader() {
   useResourcePreloader();
   
@@ -137,5 +141,10 @@ export default function ResourcePreloader() {
   return null;
 }
 
-// Export the hook for use in other components
-export { useResourcePreloader, CRITICAL_RESOURCES };
+// Exports for external usage
+// --------------------------
+export { 
+  useResourcePreloader, 
+  CRITICAL_RESOURCES,
+  PRELOAD_CONFIG 
+};
