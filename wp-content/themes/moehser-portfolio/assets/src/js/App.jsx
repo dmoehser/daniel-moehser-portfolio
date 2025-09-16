@@ -21,14 +21,12 @@ import MobileMenu from './components/ui/MobileMenu.jsx';
 import ResourcePreloader from './components/ui/ResourcePreloader.jsx';
 import BackToProjectsButton from './components/ui/BackToProjectsButton.jsx';
 import ArrowNavigation from './components/ui/ArrowNavigation.jsx';
-import ProjectOverlay from './components/ui/ProjectOverlay.jsx';
 import FullscreenPreview from './components/ui/FullscreenPreview.jsx';
 import Footer from './components/ui/Footer.jsx';
 
 // Feature managers
 import TerminalManager from './features/terminal/TerminalManager.jsx';
 import FullscreenPreviewManager from './features/fullscreen-preview/FullscreenPreviewManager.jsx';
-import ProjectOverlayManager from './features/project-overlay/ProjectOverlayManager.jsx';
 
 // Utilities
 import { SkipLink } from './features/accessibility/AccessibilityUtils.jsx';
@@ -124,7 +122,6 @@ export default function App() {
   // Initialize all feature managers
   const { showTerminal } = TerminalManager();
   const { isFullscreenPreview, fullscreenProject } = FullscreenPreviewManager();
-  const { projectOverlayUrl } = ProjectOverlayManager();
 
   // Global keyboard shortcuts
   useEffect(() => {
@@ -225,7 +222,6 @@ export default function App() {
       
       {/* Background navigation service */}
       <ArrowNavigation 
-        projectOverlayUrl={projectOverlayUrl} 
         isFullscreenPreview={isFullscreenPreview} 
       />
       
@@ -242,16 +238,6 @@ export default function App() {
         {showTerminal && <Terminal key="terminal-overlay" />}
       </AnimatePresence>
 
-      {/* Project demo overlay */}
-      <AnimatePresence>
-        {projectOverlayUrl && (
-          <ProjectOverlay 
-            key="project-overlay"
-            projectOverlayUrl={projectOverlayUrl}
-          />
-        )}
-      </AnimatePresence>
-      
       {/* Fullscreen project preview */}
       <AnimatePresence>
         {isFullscreenPreview && fullscreenProject && (
