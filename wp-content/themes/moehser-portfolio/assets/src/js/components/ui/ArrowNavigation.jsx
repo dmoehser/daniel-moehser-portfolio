@@ -34,9 +34,9 @@ const isMobileDevice = () => {
 };
 
 // Helper function to check if any overlay is active
-const hasActiveOverlay = (projectOverlayUrl, isFullscreenPreview) => {
+const hasActiveOverlay = (isFullscreenPreview) => {
   return typeof window !== 'undefined' && 
-    (window.__terminalOpen || projectOverlayUrl || isFullscreenPreview);
+    (window.__terminalOpen || isFullscreenPreview);
 };
 
 // Helper function to get scroll container
@@ -90,7 +90,7 @@ const setScrollLockTimer = (callback, duration) => {
   return setTimeout(callback, duration);
 };
 
-export default function ArrowNavigation({ projectOverlayUrl, isFullscreenPreview }) {
+export default function ArrowNavigation({ isFullscreenPreview }) {
   useEffect(() => {
     let isArrowScrolling = false;
     let scrollLockTimer = null;
@@ -108,7 +108,7 @@ export default function ArrowNavigation({ projectOverlayUrl, isFullscreenPreview
       }
       
       // Avoid navigation when overlays are active
-      if (hasActiveOverlay(projectOverlayUrl, isFullscreenPreview)) {
+      if (hasActiveOverlay(isFullscreenPreview)) {
         return;
       }
       
@@ -180,7 +180,7 @@ export default function ArrowNavigation({ projectOverlayUrl, isFullscreenPreview
     
     // Return cleanup function
     return cleanup;
-  }, [projectOverlayUrl, isFullscreenPreview]);
+  }, [isFullscreenPreview]);
 
   return null;
 }
