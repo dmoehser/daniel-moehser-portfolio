@@ -1,20 +1,15 @@
 // Hero Brand Component
 // ===================
 
-// Top-left brand logo with typing animation
-// ------------------------------
-
 import React, { useEffect, useState } from 'react';
 
-// Animation and timing constants
-// ------------------------------
-const ANIMATION = {
+// Constants
+// ---------
+const ANIMATION_CONFIG = {
   TYPING_SPEED: 55  // milliseconds per character
 };
 
-// Brand text constants
-// ------------------------------
-const BRAND = {
+const BRAND_TEXT = {
   FULL: '<danielmoehser.dev />',
   BASE: 'danielmoehser',
   ACCENT: '.dev',
@@ -22,6 +17,19 @@ const BRAND = {
     OPEN: '<',
     CLOSE: ' />'
   }
+};
+
+const CSS_CLASSES = {
+  CONTAINER: 'hero__brand',
+  LINK: 'hero__brand-link',
+  BRACKET: 'brand-bracket',
+  BASE: 'brand-base',
+  ACCENT: 'brand-accent',
+  CARET: 'brand-caret'
+};
+
+const ARIA_LABELS = {
+  HOME_LINK: 'danielmoehser.dev home'
 };
 
 export default function HeroBrand() {
@@ -78,11 +86,11 @@ export default function HeroBrand() {
 
   // Type brand logo once on mount; respect prefers-reduced-motion, print, and mobile
   useEffect(() => {
-    if (isPrint) { setBrandTyped(BRAND.FULL); return; }
+    if (isPrint) { setBrandTyped(BRAND_TEXT.FULL); return; }
     
     // Skip typing animation on mobile devices
     if (isMobile) {
-      setBrandTyped(BRAND.FULL);
+      setBrandTyped(BRAND_TEXT.FULL);
       return;
     }
     
@@ -91,16 +99,16 @@ export default function HeroBrand() {
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     
     if (prefersReducedMotion) {
-      setBrandTyped(BRAND.FULL);
+      setBrandTyped(BRAND_TEXT.FULL);
       return;
     }
     
     let i = 0;
     const timer = setInterval(() => {
       i += 1;
-      setBrandTyped(BRAND.FULL.slice(0, i));
-      if (i >= BRAND.FULL.length) clearInterval(timer);
-    }, ANIMATION.TYPING_SPEED);
+      setBrandTyped(BRAND_TEXT.FULL.slice(0, i));
+      if (i >= BRAND_TEXT.FULL.length) clearInterval(timer);
+    }, ANIMATION_CONFIG.TYPING_SPEED);
     
     return () => clearInterval(timer);
   }, [isPrint, isMobile]);
@@ -130,7 +138,7 @@ export default function HeroBrand() {
   };
 
   // Check if typing animation is complete
-  const isTypingComplete = isPrint || brandTyped.length >= BRAND.FULL.length;
+  const isTypingComplete = isPrint || brandTyped.length >= BRAND_TEXT.FULL.length;
 
   // Get language-specific href
   const isGerman = window.location.pathname.includes('/de/');
@@ -154,45 +162,45 @@ export default function HeroBrand() {
   };
 
   return (
-    <div className="hero__brand">
+    <div className={CSS_CLASSES.CONTAINER}>
       <a 
         href={brandHref}
-        className="hero__brand-link" 
-        aria-label="danielmoehser.dev home" 
+        className={CSS_CLASSES.LINK} 
+        aria-label={ARIA_LABELS.HOME_LINK}
         onClick={handleBrandClick}
       >
         {isTypingComplete ? (
           <>
             <span 
-              className="brand-bracket" 
+              className={CSS_CLASSES.BRACKET} 
               style={{ color: '#94a3b8' }}
             >
-              {BRAND.BRACKETS.OPEN}
+              {BRAND_TEXT.BRACKETS.OPEN}
             </span>
             <span 
-              className="brand-base" 
+              className={CSS_CLASSES.BASE} 
               style={{ color: isDark ? '#e2e8f0' : '#0f172a' }}
             >
-              {BRAND.BASE}
+              {BRAND_TEXT.BASE}
             </span>
             <span 
-              className="brand-accent" 
+              className={CSS_CLASSES.ACCENT} 
               style={{ color: isDark ? '#38bdf8' : '#38bdf8' }}
             >
-              {BRAND.ACCENT}
+              {BRAND_TEXT.ACCENT}
             </span>
             <span 
-              className="brand-bracket" 
+              className={CSS_CLASSES.BRACKET} 
               style={{ color: '#94a3b8' }}
             >
-              {BRAND.BRACKETS.CLOSE}
+              {BRAND_TEXT.BRACKETS.CLOSE}
             </span>
           </>
         ) : (
           <>
             {brandTyped}
             <span 
-              className="brand-caret" 
+              className={CSS_CLASSES.CARET} 
               style={{ color: isDark ? '#e2e8f0' : '#0f172a' }}
             >
               |
