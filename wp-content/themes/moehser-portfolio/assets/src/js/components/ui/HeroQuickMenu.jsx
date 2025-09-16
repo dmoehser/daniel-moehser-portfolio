@@ -1,13 +1,10 @@
 // Hero Quick Menu Component
 // ========================
 
-// Top-right navigation pills with WordPress menu integration
-// ------------------------------
-
 import React, { useEffect, useState } from 'react';
 
-// Section mapping constants
-// ------------------------------
+// Constants
+// ---------
 const SECTION_MAPPING = {
   HOME: 'hero',
   ABOUT: 'about',
@@ -16,47 +13,32 @@ const SECTION_MAPPING = {
   TERMINAL: 'terminal'
 };
 
-export default function HeroQuickMenu() {
-  const [menuItems, setMenuItems] = useState([]);
+const API_CONFIG = {
+  BASE_ENDPOINT: '/wp-json/moehser/v1/menu/header_primary',
+  LOCALIZED_ENDPOINT: '/de/wp-json/moehser/v1/menu/header_primary'
+};
+
+const MOBILE_BREAKPOINT = 768; // pixels
+
+const CSS_CLASSES = {
+  CONTAINER: 'hero__quick',
+  BUTTON: 'hero__quick-btn'
+};
+
+const KEYWORDS = {
+  TYPESCRIPT: 'typescript',
+  ABOUT: ['about', 'über'],
+  PROJECTS: ['project', 'projekt'],
+  SKILLS: ['skill', 'fähigkeit'],
+  HOME: ['home', 'start'],
+  TERMINAL: ['terminal']
+};
+
+// Custom Hooks
+// ------------
+const useDarkModeDetection = () => {
   const [isDark, setIsDark] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  // Load WordPress menu for quick navigation pills
-  // ----------------------------------------------
-  useEffect(() => {
-    let cancelled = false;
-    
-    async function loadMenu() {
-      try {
-        // Check if we're on a localized path and use the correct API endpoint
-        const isLocalized = window.location.pathname.includes('/de/');
-        const apiUrl = isLocalized 
-          ? '/de/wp-json/moehser/v1/menu/header_primary'
-          : '/wp-json/moehser/v1/menu/header_primary';
-        
-        
-        const res = await fetch(apiUrl);
-        if (!res.ok) throw new Error('Menu API failed');
-        
-        const data = await res.json();
-        
-        if (!cancelled) {
-          const filteredItems = Array.isArray(data) 
-            ? data.filter(item => !item.parent) 
-            : [];
-          setMenuItems(filteredItems);
-        }
-      } catch (error) {
-        console.error('Menu loading error:', error);
-        if (!cancelled) setMenuItems([]);
-      }
-    }
-    
-    loadMenu();
-    return () => { cancelled = true; };
-  }, []);
-
-  // Detect dark mode
+  
   useEffect(() => {
     const checkDarkMode = () => {
       setIsDark(document.body.classList.contains('theme-dark'));
@@ -64,17 +46,24 @@ export default function HeroQuickMenu() {
     
     checkDarkMode();
     
-    // Listen for theme changes
     const observer = new MutationObserver(checkDarkMode);
-    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    observer.observe(document.body, { 
+      attributes: true, 
+      attributeFilter: ['class'] 
+    });
     
     return () => observer.disconnect();
   }, []);
+  
+  return isDark;
+};
 
-  // Detect mobile screen size
+const useMobileDetection = () => {
+  const [isMobile, setIsMobile] = useState(false);
+  
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth <= MOBILE_BREAKPOINT);
     };
     
     checkMobile();
@@ -82,9 +71,58 @@ export default function HeroQuickMenu() {
     
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+  
+  return isMobile;
+};
 
-  // Resolve section ID from href/title
+const useWordPressMenu = () => {
+  const [menuItems, setMenuItems] = useState([]);
+  
+  useEffect(() => {
+    let cancelled = false;
+    
+    const loadMenuData = async () => {
+      try {
+        const isLocalized = window.location.pathname.includes('/de/');
+        const apiUrl = isLocalized 
+          ? API_CONFIG.LOCALIZED_ENDPOINT
+          : API_CONFIG.BASE_ENDPOINT;
+        
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+          throw new Error(`Menu API failed: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (!cancelled) {
+          const topLevelItems = Array.isArray(data) 
+            ? data.filter(item => !item.parent) 
+            : [];
+          setMenuItems(topLevelItems);
+        }
+      } catch (error) {
+        console.error('Menu loading error:', error);
+        if (!cancelled) setMenuItems([]);
+      }
+    };
+    
+    loadMenuData();
+    return () => { cancelled = true; };
+  }, []);
+  
+  return menuItems;
+};
+
+export default function HeroQuickMenu() {
+  // Use custom hooks for cleaner state management
+  const menuItems = useWordPressMenu();
+  const isDark = useDarkModeDetection();
+  const isMobile = useMobileDetection();
+
+  // Utility functions
   const resolveSectionId = (href, title) => {
+    // Try URL-based resolution first
     try {
       const url = new URL(href, window.location.origin);
       if (url.hash) return url.hash.replace(/^#/, '');
@@ -96,85 +134,102 @@ export default function HeroQuickMenu() {
       if (pathSegment === '' || pathSegment === 'home') {
         return SECTION_MAPPING.HOME;
       }
+      
+      // Check path segments against keywords
       if (pathSegment.includes('about')) return SECTION_MAPPING.ABOUT;
       if (pathSegment.includes('project')) return SECTION_MAPPING.PROJECTS;
       if (pathSegment.includes('skill')) return SECTION_MAPPING.SKILLS;
-    } catch {}
+    } catch {
+      // URL parsing failed, continue to title-based fallback
+    }
     
-    // Fallback to title-based mapping
+    // Fallback to title-based mapping with keyword arrays
     const titleLower = (title || '').toLowerCase();
-    if (titleLower.includes('about') || titleLower.includes('über')) return SECTION_MAPPING.ABOUT;
-    if (titleLower.includes('project') || titleLower.includes('projekt')) return SECTION_MAPPING.PROJECTS;
-    if (titleLower.includes('skill') || titleLower.includes('fähigkeit')) return SECTION_MAPPING.SKILLS;
-    if (titleLower.includes('home') || titleLower.includes('start')) return SECTION_MAPPING.HOME;
-    if (titleLower.includes('terminal')) return SECTION_MAPPING.TERMINAL;
+    
+    if (KEYWORDS.ABOUT.some(keyword => titleLower.includes(keyword))) {
+      return SECTION_MAPPING.ABOUT;
+    }
+    if (KEYWORDS.PROJECTS.some(keyword => titleLower.includes(keyword))) {
+      return SECTION_MAPPING.PROJECTS;
+    }
+    if (KEYWORDS.SKILLS.some(keyword => titleLower.includes(keyword))) {
+      return SECTION_MAPPING.SKILLS;
+    }
+    if (KEYWORDS.HOME.some(keyword => titleLower.includes(keyword))) {
+      return SECTION_MAPPING.HOME;
+    }
+    if (KEYWORDS.TERMINAL.some(keyword => titleLower.includes(keyword))) {
+      return SECTION_MAPPING.TERMINAL;
+    }
     
     return null;
   };
 
-  // Scroll to section with smooth behavior
-  const scrollTo = (id) => {
+  const scrollToSection = (sectionId) => {
     const container = document.getElementById('content-scroll');
     if (!container) return;
     
-    const target = id === SECTION_MAPPING.HOME 
+    const target = sectionId === SECTION_MAPPING.HOME 
       ? document.querySelector('section.hero') 
-      : document.getElementById(id);
+      : document.getElementById(sectionId);
     
     if (!target) return;
     
-    // Use same scroll behavior as arrow keys
-    // Calculate exact position for scroll-snap
-    const targetTop = target.offsetTop;
     container.scrollTo({ 
-      top: targetTop, 
+      top: target.offsetTop, 
       behavior: 'smooth' 
     });
     
-    // Update URL while preserving current path (e.g., /de/)
+    // Update URL while preserving current path
     const currentPath = window.location.pathname;
-    const url = id === SECTION_MAPPING.HOME ? `${currentPath}#` : `${currentPath}#${id}`;
-    window.history.replaceState(null, '', url);
+    const newUrl = sectionId === SECTION_MAPPING.HOME 
+      ? `${currentPath}#` 
+      : `${currentPath}#${sectionId}`;
+    window.history.replaceState(null, '', newUrl);
     
-    // Notify global listeners (e.g., ScrollArrow) about jump target
+    // Notify other components about navigation
     try {
       window.dispatchEvent(new CustomEvent('nav:jump', { 
-        detail: { id } 
+        detail: { id: sectionId } 
       }));
-    } catch {}
+    } catch (error) {
+      console.warn('Failed to dispatch nav:jump event:', error);
+    }
   };
 
-  // Handle navigation item click
-  const handleItemClick = (e, id) => {
-    if (!id) return;
-    e.preventDefault();
-    scrollTo(id);
+  const handleItemClick = (event, sectionId) => {
+    if (!sectionId) return;
+    
+    event.preventDefault();
+    scrollToSection(sectionId);
   };
 
-  // Filter out terminal items (rendered separately)
-  const pillItems = menuItems.filter((item) => 
-    resolveSectionId(item.url, item.title) !== SECTION_MAPPING.TERMINAL
-  );
+  // Computed values
+  const navigationItems = menuItems
+    .filter(item => resolveSectionId(item.url, item.title) !== SECTION_MAPPING.TERMINAL)
+    .filter(item => {
+      // Hide TypeScript on mobile devices
+      if (isMobile && item.title.toLowerCase().includes(KEYWORDS.TYPESCRIPT)) {
+        return false;
+      }
+      return true;
+    });
 
   return (
-    <div className="hero__quick">
-      {pillItems.map((item) => {
-        const id = resolveSectionId(item.url, item.title);
-        const label = item.title;
-        
-        // Hide TypeScript on mobile devices
-        if (isMobile && label.toLowerCase().includes('typescript')) {
-          return null;
-        }
+    <div className={CSS_CLASSES.CONTAINER}>
+      {navigationItems.map((item) => {
+        const sectionId = resolveSectionId(item.url, item.title);
+        const currentPath = window.location.pathname;
+        const href = `${currentPath}#${sectionId || ''}`;
         
         return (
           <a 
             key={item.id} 
-            href={`${window.location.pathname}#${id || ''}`} 
-            className="hero__quick-btn" 
-            onClick={(e) => handleItemClick(e, id)}
+            href={href} 
+            className={CSS_CLASSES.BUTTON} 
+            onClick={(event) => handleItemClick(event, sectionId)}
           >
-            {label}
+            {item.title}
           </a>
         );
       })}
