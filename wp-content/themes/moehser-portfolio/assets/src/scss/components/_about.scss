@@ -1,9 +1,84 @@
 // About Component
 // ===============
 
-  @use '../utils/tokens';
+@use '../utils/tokens';
 
-// About section - Using unified base classes
+// Constants
+// ---------
+
+// Layout constants
+$about-max-width: 1280px;
+$about-padding-horizontal: 1.25rem;
+$about-padding-vertical: 120px;
+$about-scroll-margin: 80px;
+$about-bottom-padding: 4vh;
+
+// Card styling constants
+$about-card-radius: 16px;
+$about-card-backdrop-blur: 10px;
+$about-card-backdrop-saturate: 140%;
+$about-card-padding-min: 24px;
+$about-card-padding-max: 48px;
+
+// Typography constants
+$about-font-family: 'Poppins', sans-serif;
+$about-title-size-min: 2rem;
+$about-title-size-max: 3.2rem;
+$about-subtitle-size-min: 0.95rem;
+$about-subtitle-size-max: 1.15rem;
+$about-content-size: 1.125rem;
+$about-content-line-height: 1.7;
+
+// Spacing constants
+$about-header-gap-min: 12px;
+$about-header-gap-max: 24px;
+$about-body-gap-min: 8px;
+$about-body-gap-max: 16px;
+$about-title-margin: 8px;
+
+// Color constants (light theme)
+$about-bg-light: rgba(255, 255, 255, 0.95);
+$about-border-light: rgba(15, 23, 42, 0.12);
+$about-title-light: #0f172a;
+$about-subtitle-light: #64748b;
+$about-text-light: #374151;
+$about-link-light: #2563eb;
+$about-link-hover-light: #1d4ed8;
+
+// Color constants (dark theme)
+$about-bg-dark: rgba(30, 41, 59, 0.95);
+$about-border-dark: rgba(255, 255, 255, 0.12);
+$about-title-dark: #ffffff;
+$about-subtitle-dark: #e2e8f0;
+$about-text-dark: #f1f5f9;
+$about-link-dark: #22c55e;
+$about-link-hover-dark: #16a34a;
+
+// Skill tag constants
+$about-skill-bg-light: #f3f4f6;
+$about-skill-text-light: #374151;
+$about-skill-border-light: #e5e7eb;
+$about-skill-hover-bg-light: #3b82f6;
+$about-skill-hover-text-light: #ffffff;
+
+// CTA button constants
+$about-cta-bg-light: #3b82f6;
+$about-cta-bg-hover-light: #2563eb;
+$about-cta-bg-dark: #22c55e;
+$about-cta-bg-hover-dark: #16a34a;
+$about-cta-radius: 12px;
+$about-cta-padding-v: 1rem;
+$about-cta-padding-h: 2.5rem;
+$about-cta-min-width: 200px;
+
+// Animation constants
+$about-wave-duration: 2s;
+$about-wave-origin: 70% 70%;
+$about-transition-duration: 0.2s;
+$about-cta-transition-duration: 0.3s;
+
+// About section layout
+// --------------------
 .about {
   min-height: 100vh;
   width: 100%;
