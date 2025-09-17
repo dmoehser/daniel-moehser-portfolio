@@ -1,187 +1,239 @@
 // Terminal Commands
 // =================
 
-// All available terminal commands and their logic
-// ------------------------------
-
 import { getEmail, getEmailSubject, generateMailtoUrl } from '../../utils/emailHelper.js';
 
-// Helper function to safely get social media URLs
-const getSocialUrl = (type) => {
-  if (typeof window !== 'undefined' && window[`__SOCIAL_${type}__`]) {
-    return window[`__SOCIAL_${type}__`];
+// Constants
+// ---------
+const TERMINAL_CONFIG = {
+  TIMING: {
+    NAVIGATION_DELAY: 500,      // milliseconds
+    CLOSE_DELAY: 300,           // milliseconds
+    IMPRINT_DELAY: 100,         // milliseconds
+    LANGUAGE_SWITCH_DELAY: 100  // milliseconds
+  },
+  FALLBACK_VALUES: {
+    SOCIAL_URL: '—',
+    NO_SKILLS: ['No skills data available'],
+    NO_DATA: ['Skills data not available']
   }
-  return '—';
 };
 
-// Helper function to get skills from cards
-// ----------------------------------------
+const GLOBAL_VARS = {
+  SOCIAL_PREFIX: '__SOCIAL_',
+  SOCIAL_SUFFIX: '__',
+  SKILLS_CARD_PREFIX: '__SKILLS_CARD',
+  SKILLS_CARD_SUFFIX: '__'
+};
+
+const HTML_ENTITIES = {
+  '&amp;': '&',
+  '&lt;': '<',
+  '&gt;': '>',
+  '&quot;': '"',
+  '&#39;': "'",
+  '&nbsp;': ' '
+};
+
+const EVENTS = {
+  TERMINAL_CLOSE: 'terminal:close',
+  PROJECTS_LAYOUT: 'projects:layout'
+};
+
+const THEME_CLASSES = {
+  DARK: 'theme-dark',
+  LIGHT: 'theme-light'
+};
+
+const STORAGE_KEYS = {
+  THEME: 'theme',
+  LANGUAGE_PREFERENCE: 'user_language_preference'
+};
+
+const URL_PATTERNS = {
+  GERMAN_PATH: '/de/',
+  IMPRINT_PATH: '/imprint',
+  ROOT_PATH: '/'
+};
+
+// Utility functions
+// -----------------
+const isServerSideRendering = () => {
+  return typeof window === 'undefined';
+};
+
+const getSocialUrl = (type) => {
+  if (isServerSideRendering()) return TERMINAL_CONFIG.FALLBACK_VALUES.SOCIAL_URL;
+  
+  const globalVar = GLOBAL_VARS.SOCIAL_PREFIX + type + GLOBAL_VARS.SOCIAL_SUFFIX;
+  return window[globalVar] || TERMINAL_CONFIG.FALLBACK_VALUES.SOCIAL_URL;
+};
+
+const decodeHtmlEntities = (text) => {
+  if (!text) return '';
+  
+  return text.replace(/&[^;]+;/g, (entity) => {
+    return HTML_ENTITIES[entity] || entity;
+  });
+};
+
+const getSkillsCardData = (cardIndex) => {
+  if (isServerSideRendering()) return null;
+  
+  const globalVar = GLOBAL_VARS.SKILLS_CARD_PREFIX + cardIndex + GLOBAL_VARS.SKILLS_CARD_SUFFIX;
+  return window[globalVar] || null;
+};
+
+const cleanMarkdownText = (text) => {
+  if (!text) return '';
+  return text.replace(/\*\*(.*?)\*\*/g, '$1');
+};
+
+const parseSkillsList = (skillsList) => {
+  if (!skillsList || !skillsList.trim()) return [];
+  
+  const decodedList = decodeHtmlEntities(skillsList);
+  return decodedList.split('\n').filter(item => item.trim()).map(item => item.trim());
+};
+
+const parseTagsList = (tags) => {
+  if (!tags || !tags.trim()) return [];
+  
+  const decodedTags = decodeHtmlEntities(tags);
+  return decodedTags.split(',').map(tag => tag.trim()).filter(tag => tag);
+};
+
+const formatSkillsTree = (items, isLastCard = false) => {
+  if (!items || items.length === 0) return [];
+  
+  return items.map((item, index) => {
+    const isLast = index === items.length - 1;
+    const prefix = isLast ? '└──' : '├──';
+    return `│  ${prefix} ${item}`;
+  });
+};
+
+const processSkillsCard = (cardIndex) => {
+  const cardData = getSkillsCardData(cardIndex);
+  if (!cardData || !cardData.title) return [];
+  
+  const skills = [];
+  const decodedTitle = decodeHtmlEntities(cardData.title);
+  skills.push(`┌─ ${decodedTitle}`);
+  
+  // Priority: skills_list > description > tags
+  if (cardData.skills_list && cardData.skills_list.trim()) {
+    const skillItems = parseSkillsList(cardData.skills_list);
+    skills.push(...formatSkillsTree(skillItems));
+  } else if (cardData.description && cardData.description.trim()) {
+    const cleanDescription = cleanMarkdownText(decodeHtmlEntities(cardData.description));
+    skills.push(`│  └── ${cleanDescription}`);
+  } else if (cardData.tags && cardData.tags.trim()) {
+    const tagItems = parseTagsList(cardData.tags);
+    skills.push(...formatSkillsTree(tagItems));
+  }
+  
+  skills.push(''); // Empty line between cards
+  return skills;
+};
+
+// Skills data extraction
+// ----------------------
 const getSkillsFromCards = () => {
-  if (typeof window === 'undefined') {
-    return ['Skills data not available'];
+  if (isServerSideRendering()) {
+    return TERMINAL_CONFIG.FALLBACK_VALUES.NO_DATA;
   }
 
-  const skills = [];
+  const allSkills = [];
   
-  // Check each skill card (1-5)
+  // Process each skill card (1-5)
   for (let i = 1; i <= 5; i++) {
-    const cardData = window[`__SKILLS_CARD${i}__`];
-    if (cardData && cardData.title) {
-      // Decode HTML entities
-      const title = cardData.title.replace(/&[^;]+;/g, (entity) => {
-        const entities = {
-          '&amp;': '&',
-          '&lt;': '<',
-          '&gt;': '>',
-          '&quot;': '"',
-          '&#39;': "'",
-          '&nbsp;': ' '
-        };
-        return entities[entity] || entity;
-      });
-      
-      skills.push(`┌─ ${title}`);
-      
-      // Check if there's a skills list
-      if (cardData.skills_list && cardData.skills_list.trim()) {
-        const skillsList = cardData.skills_list.replace(/&[^;]+;/g, (entity) => {
-          const entities = {
-            '&amp;': '&',
-            '&lt;': '<',
-            '&gt;': '>',
-            '&quot;': '"',
-            '&#39;': "'",
-            '&nbsp;': ' '
-          };
-          return entities[entity] || entity;
-        });
-        
-        // Split skills list by line breaks and add each skill
-        const skillItems = skillsList.split('\n').filter(item => item.trim());
-        skillItems.forEach((skill, index) => {
-          const isLast = index === skillItems.length - 1;
-          const prefix = isLast ? '└──' : '├──';
-          skills.push(`│  ${prefix} ${skill.trim()}`);
-        });
-      } else {
-        // If no skills list, show description first, then tags
-        if (cardData.description && cardData.description.trim()) {
-          const description = cardData.description.replace(/&[^;]+;/g, (entity) => {
-            const entities = {
-              '&amp;': '&',
-              '&lt;': '<',
-              '&gt;': '>',
-              '&quot;': '"',
-              '&#39;': "'",
-              '&nbsp;': ' '
-            };
-            return entities[entity] || entity;
-          });
-          
-          // Remove markdown formatting and show clean description
-          const cleanDescription = description.replace(/\*\*(.*?)\*\*/g, '$1');
-          skills.push(`│  └── ${cleanDescription}`);
-        } else if (cardData.tags && cardData.tags.trim()) {
-          // If no description, show tags
-          const tags = cardData.tags.replace(/&[^;]+;/g, (entity) => {
-            const entities = {
-              '&amp;': '&',
-              '&lt;': '<',
-              '&gt;': '>',
-              '&quot;': '"',
-              '&#39;': "'",
-              '&nbsp;': ' '
-            };
-            return entities[entity] || entity;
-          });
-          
-          const tagItems = tags.split(',').map(tag => tag.trim()).filter(tag => tag);
-          tagItems.forEach((tag, index) => {
-            const isLast = index === tagItems.length - 1;
-            const prefix = isLast ? '└──' : '├──';
-            skills.push(`│  ${prefix} ${tag}`);
-          });
-        }
-      }
-      skills.push(''); // Empty line between cards
-    }
+    const cardSkills = processSkillsCard(i);
+    allSkills.push(...cardSkills);
   }
   
   // Remove last empty line if present
-  if (skills[skills.length - 1] === '') {
-    skills.pop();
+  if (allSkills.length > 0 && allSkills[allSkills.length - 1] === '') {
+    allSkills.pop();
   }
   
-  return skills.length > 0 ? skills : ['No skills data available'];
+  return allSkills.length > 0 ? allSkills : TERMINAL_CONFIG.FALLBACK_VALUES.NO_SKILLS;
 };
 
-// Helper function to scroll to section smoothly
+// Navigation utilities
+// --------------------
+const dispatchTerminalClose = () => {
+  if (isServerSideRendering()) return;
+  window.dispatchEvent(new Event(EVENTS.TERMINAL_CLOSE));
+};
+
 const scrollToSection = (sectionId) => {
-  if (typeof window !== 'undefined') {
-    // Use the existing hash navigation system by changing the URL hash
-    // This triggers the existing hash change handler in App.jsx
-    const currentHash = window.location.hash;
-    const newHash = `#${sectionId}`;
-    
-    if (currentHash !== newHash) {
-      window.location.hash = newHash;
-      
-      // Close terminal after navigation
-      setTimeout(() => {
-        window.dispatchEvent(new Event('terminal:close'));
-      }, 500);
-    } else {
-      // If already at the section, just close the terminal
-      window.dispatchEvent(new Event('terminal:close'));
-    }
+  if (isServerSideRendering()) return;
+  
+  const currentHash = window.location.hash;
+  const newHash = `#${sectionId}`;
+  
+  if (currentHash !== newHash) {
+    window.location.hash = newHash;
+    setTimeout(dispatchTerminalClose, TERMINAL_CONFIG.TIMING.NAVIGATION_DELAY);
+  } else {
+    dispatchTerminalClose();
   }
 };
 
-// Helper function to open imprint page
+const isGermanPath = () => {
+  if (isServerSideRendering()) return false;
+  return window.location.pathname.includes(URL_PATTERNS.GERMAN_PATH);
+};
+
+const getImprintUrl = () => {
+  const isGerman = isGermanPath();
+  return isGerman ? '/de/imprint/' : '/imprint/';
+};
+
 const openImprint = () => {
-  if (typeof window !== 'undefined') {
-    // Close terminal before navigation
-    window.dispatchEvent(new Event('terminal:close'));
-    // Small delay to allow terminal to close before navigation
-    setTimeout(() => {
-      // Navigate to appropriate imprint page based on current language
-      const isGermanPath = window.location.pathname.includes('/de/');
-      const imprintUrl = isGermanPath ? '/de/imprint/' : '/imprint/';
-      window.location.href = imprintUrl;
-    }, 100);
-  }
+  if (isServerSideRendering()) return;
+  
+  dispatchTerminalClose();
+  setTimeout(() => {
+    window.location.href = getImprintUrl();
+  }, TERMINAL_CONFIG.TIMING.IMPRINT_DELAY);
 };
 
-// Helper function to detect German language
+// Language utilities
+// ------------------
 const isGerman = () => {
-  if (typeof window === 'undefined') return false;
-  return window.location.pathname.includes('/de/');
+  return isGermanPath();
+};
+
+const generateNewLanguagePath = (targetLang, currentPath) => {
+  if (targetLang === 'de') {
+    if (currentPath.startsWith(URL_PATTERNS.GERMAN_PATH)) return null;
+    return currentPath === URL_PATTERNS.ROOT_PATH ? URL_PATTERNS.GERMAN_PATH : `/de${currentPath}`;
+  } else {
+    if (!currentPath.startsWith(URL_PATTERNS.GERMAN_PATH)) return null;
+    const pathWithoutDe = currentPath.replace('/de', '');
+    return pathWithoutDe === '' ? URL_PATTERNS.ROOT_PATH : pathWithoutDe;
+  }
 };
 
 const switchLanguage = (targetLang) => {
-  if (typeof window === 'undefined') return;
+  if (isServerSideRendering()) return;
   
   const currentPath = window.location.pathname;
+  const newPath = generateNewLanguagePath(targetLang, currentPath);
+  
+  if (!newPath) return; // Already on target language
+  
   const search = window.location.search;
   const hash = window.location.hash;
   
-  let newPath;
-  if (targetLang === 'de') {
-    if (currentPath.startsWith('/de/')) return;
-    newPath = currentPath === '/' ? '/de/' : `/de${currentPath}`;
-  } else {
-    if (!currentPath.startsWith('/de/')) return;
-    const pathWithoutDe = currentPath.replace('/de', '');
-    newPath = pathWithoutDe === '' ? '/' : pathWithoutDe;
-  }
-  
-  localStorage.setItem('user_language_preference', targetLang);
-  
-  window.dispatchEvent(new Event('terminal:close'));
+  localStorage.setItem(STORAGE_KEYS.LANGUAGE_PREFERENCE, targetLang);
+  dispatchTerminalClose();
   
   setTimeout(() => {
     window.location.href = newPath + search + hash;
-  }, 100);
+  }, TERMINAL_CONFIG.TIMING.LANGUAGE_SWITCH_DELAY);
 };
 
 export const makeCommands = () => {
