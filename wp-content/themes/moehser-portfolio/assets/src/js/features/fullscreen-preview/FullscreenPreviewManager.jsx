@@ -1,46 +1,95 @@
 // Fullscreen Preview Manager Component
 // ===================================
 
-// Manages fullscreen preview state and event listeners
-// ------------------------------
-
 import { useEffect, useState } from 'react';
 
+// Constants
+// ---------
+const EVENT_CONFIG = {
+  FULLSCREEN_OPEN: 'project:fullscreen:open',
+  FULLSCREEN_CLOSE: 'project:fullscreen:close',
+  KEYS: {
+    ESCAPE: 'Escape'
+  }
+};
+
+const INITIAL_STATE = {
+  IS_FULLSCREEN: false,
+  PROJECT: null
+};
+
+const EVENT_OPTIONS = {
+  KEYDOWN: { passive: true }
+};
+
 export default function FullscreenPreviewManager() {
-  const [isFullscreenPreview, setIsFullscreenPreview] = useState(false);
-  const [fullscreenProject, setFullscreenProject] = useState(null);
+  const [isFullscreenPreview, setIsFullscreenPreview] = useState(INITIAL_STATE.IS_FULLSCREEN);
+  const [fullscreenProject, setFullscreenProject] = useState(INITIAL_STATE.PROJECT);
 
-  // Fullscreen preview event listeners
+  // Utility functions
+  // -----------------
+  const openFullscreenPreview = (projectData) => {
+    setIsFullscreenPreview(true);
+    setFullscreenProject(projectData);
+  };
+
+  const closeFullscreenPreview = () => {
+    setIsFullscreenPreview(INITIAL_STATE.IS_FULLSCREEN);
+    setFullscreenProject(INITIAL_STATE.PROJECT);
+  };
+
+  const dispatchCloseEvent = () => {
+    try {
+      const closeEvent = new Event(EVENT_CONFIG.FULLSCREEN_CLOSE);
+      window.dispatchEvent(closeEvent);
+    } catch (error) {
+      console.warn('Failed to dispatch fullscreen close event:', error);
+    }
+  };
+
+  const isEscapeKeyPressed = (event) => {
+    return event.key === EVENT_CONFIG.KEYS.ESCAPE;
+  };
+
+  // Event handlers
+  // --------------
+  const handleFullscreenOpen = (event) => {
+    if (event.detail) {
+      openFullscreenPreview(event.detail);
+    }
+  };
+
+  const handleFullscreenClose = () => {
+    closeFullscreenPreview();
+  };
+
+  const handleEscapeKey = (event) => {
+    if (isEscapeKeyPressed(event) && isFullscreenPreview) {
+      dispatchCloseEvent();
+    }
+  };
+
+  // Fullscreen preview event listeners effect
+  // ------------------------------------------
   useEffect(() => {
-    const openFullscreen = (e) => {
-      setIsFullscreenPreview(true);
-      setFullscreenProject(e.detail);
-    };
-    
-    const closeFullscreen = () => {
-      setIsFullscreenPreview(false);
-      setFullscreenProject(null);
-    };
-
-    window.addEventListener('project:fullscreen:open', openFullscreen);
-    window.addEventListener('project:fullscreen:close', closeFullscreen);
+    window.addEventListener(EVENT_CONFIG.FULLSCREEN_OPEN, handleFullscreenOpen);
+    window.addEventListener(EVENT_CONFIG.FULLSCREEN_CLOSE, handleFullscreenClose);
 
     return () => {
-      window.removeEventListener('project:fullscreen:open', openFullscreen);
-      window.removeEventListener('project:fullscreen:close', closeFullscreen);
+      window.removeEventListener(EVENT_CONFIG.FULLSCREEN_OPEN, handleFullscreenOpen);
+      window.removeEventListener(EVENT_CONFIG.FULLSCREEN_CLOSE, handleFullscreenClose);
     };
   }, []);
 
-  // Close fullscreen preview on Escape
+  // Escape key handling effect
+  // --------------------------
   useEffect(() => {
-    const onKey = (e) => {
-      if (e.key === 'Escape' && isFullscreenPreview) {
-        window.dispatchEvent(new Event('project:fullscreen:close'));
-      }
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.addEventListener('keydown', handleEscapeKey, EVENT_OPTIONS.KEYDOWN);
+    return () => window.removeEventListener('keydown', handleEscapeKey);
   }, [isFullscreenPreview]);
 
-  return { isFullscreenPreview, fullscreenProject };
+  return { 
+    isFullscreenPreview, 
+    fullscreenProject
+  };
 }
