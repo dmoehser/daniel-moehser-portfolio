@@ -1,217 +1,295 @@
 // Live Updates for Layout Builder
 // ===============================
 
-// Handles real-time updates when user changes layout settings
-// ------------------------------
-
 (function() {
     'use strict';
 
-    // Configuration object from PHP
-    const layoutConfig = window.__LAYOUT_CONFIG__ || {
+    // Constants
+    // ---------
+    const LAYOUT_CONFIG_DEFAULT = {
         order: ['about', 'skills', 'projects'],
         visibility: { about: true, skills: true, projects: true },
         all: ['about', 'skills', 'projects']
     };
-    
-    // Timing and retry constants
-    const TIMING = {
+
+    const TIMING_CONFIG = {
         RETRY_DELAY: 500,        // milliseconds
         RESIZE_DEBOUNCE: 250,    // milliseconds
         MAX_RETRIES: 10
     };
-    
-    // DOM elements cache
+
+    const DOM_CONFIG = {
+        SELECTORS: {
+            CONTENT_SCROLL: '#content-scroll',
+            PAGE_SCROLL: '.page-scroll',
+            ABOUT_CONTENT: '#about .about__content-text'
+        },
+        ALTERNATIVE_SELECTORS: {
+            DATA_SECTION: '[data-section="{sectionId}"]',
+            CLASS_NAME: '.{sectionId}',
+            ID_SECTION: '#{sectionId}-section'
+        }
+    };
+
+    const CSS_CONFIG = {
+        CLASSES: {
+            SECTION_HIDDEN: 'section-hidden'
+        },
+        PROPERTIES: {
+            DISPLAY_NONE: 'none',
+            DISPLAY_FLEX: 'flex',
+            SCROLL_SNAP_TYPE: 'y mandatory',
+            SCROLL_SNAP_ALIGN: 'start',
+            SCROLL_SNAP_STOP: 'always',
+            MIN_HEIGHT: '100vh',
+            HEIGHT: '100vh',
+            OVERFLOW_Y: 'auto',
+            WIDTH: '100%',
+            FLEX: '0 0 auto',
+            FLEX_DIRECTION: 'column'
+        }
+    };
+
+    const CUSTOMIZER_CONFIG = {
+        SECTION_PREFIX: 'moehser_show_',
+        SECTIONS_ORDER: 'moehser_sections_order',
+        SKILLS_LAYOUT_MODE: 'moehser_skills_layout_mode',
+        SKILLS_CARD_PREFIX: 'moehser_skills_card',
+        SKILLS_CARD_SUFFIX: '_enabled',
+        ABOUT_PAGE_ID: 'moehser_about_page_id'
+    };
+
+    const API_CONFIG = {
+        WP_REST_PAGES: '/wp-json/wp/v2/pages/',
+        FIELDS_PARAM: '?_fields=content.rendered'
+    };
+
+    const GLOBAL_VARS = {
+        LAYOUT_CONFIG: '__LAYOUT_CONFIG__',
+        SKILLS_LAYOUT_MODE: '__SKILLS_LAYOUT_MODE__',
+        SKILLS_CARDS_ENABLED: '__SKILLS_CARDS_ENABLED__',
+        ABOUT_HTML: '__ABOUT_HTML__'
+    };
+
+    // State management
+    // ----------------
+    const layoutConfig = window[GLOBAL_VARS.LAYOUT_CONFIG] || LAYOUT_CONFIG_DEFAULT;
     let sectionElements = {};
     let containerElement = null;
 
-    // Initialize the live updates system
-    function init() {
-        // Cache section elements
-        cacheSectionElements();
-        
-        // If sections not yet mounted by React, wait and observe DOM
-        if (Object.keys(sectionElements).length === 0) {
-            setupMountWaiters();
-        } else {
-            // Apply initial layout now
-            applyLayout();
-        }
-        
-        // Listen for Customizer changes (ensure preview channel is ready)
-        if (window.wp && window.wp.customize) {
-            window.wp.customize.bind('preview-ready', function() {
-                setupCustomizerListeners();
-            });
-        }
-        
-        // Listen for window resize
-        window.addEventListener('resize', debounce(applyLayout, TIMING.RESIZE_DEBOUNCE));
-    }
+    // Utility functions
+    // -----------------
+    const isWordPressCustomizerAvailable = () => {
+        return window.wp && window.wp.customize;
+    };
 
-    // Cache all section elements
-    function cacheSectionElements() {
+    const getSectionElement = (sectionId) => {
+        // Try primary selector first
+        let element = document.getElementById(sectionId);
+        if (element) return element;
+
+        // Try alternative selectors
+        const altSelectors = [
+            DOM_CONFIG.ALTERNATIVE_SELECTORS.DATA_SECTION.replace('{sectionId}', sectionId),
+            DOM_CONFIG.ALTERNATIVE_SELECTORS.CLASS_NAME.replace('{sectionId}', sectionId),
+            DOM_CONFIG.ALTERNATIVE_SELECTORS.ID_SECTION.replace('{sectionId}', sectionId)
+        ];
+
+        for (const selector of altSelectors) {
+            element = document.querySelector(selector);
+            if (element) return element;
+        }
+
+        return null;
+    };
+
+    const getMainContainer = () => {
+        return document.querySelector(DOM_CONFIG.SELECTORS.CONTENT_SCROLL) || 
+               document.querySelector(DOM_CONFIG.SELECTORS.PAGE_SCROLL) || 
+               document.body;
+    };
+
+    const cacheSectionElements = () => {
+        sectionElements = {};
+        
         layoutConfig.all.forEach(sectionId => {
-            const element = document.getElementById(sectionId);
+            const element = getSectionElement(sectionId);
             if (element) {
                 sectionElements[sectionId] = element;
-            } else {
-                // Try alternative selectors
-                const altElement = document.querySelector(`[data-section="${sectionId}"]`) || 
-                                 document.querySelector(`.${sectionId}`) ||
-                                 document.querySelector(`#${sectionId}-section`);
-                if (altElement) {
-                    sectionElements[sectionId] = altElement;
-                }
             }
         });
         
-        // Find main container - prioritize content-scroll over page-scroll
-        containerElement = document.querySelector('#content-scroll') || 
-                          document.querySelector('.page-scroll') || 
-                          document.body;
-    }
+        containerElement = getMainContainer();
+    };
 
-    // Wait for React components to mount
-    function setupMountWaiters() {
-        // Retry approach
+    const hasCachedSections = () => {
+        return Object.keys(sectionElements).length > 0;
+    };
+
+    const getVisibleSections = () => {
+        return layoutConfig.order.filter(id => layoutConfig.visibility[id]);
+    };
+
+    const applySectionVisibility = (sectionId, element, isVisible) => {
+        if (!element) return;
+        
+        if (isVisible) {
+            element.style.display = '';
+            element.classList.remove(CSS_CONFIG.CLASSES.SECTION_HIDDEN);
+        } else {
+            element.style.display = CSS_CONFIG.PROPERTIES.DISPLAY_NONE;
+            element.classList.add(CSS_CONFIG.CLASSES.SECTION_HIDDEN);
+        }
+    };
+
+    const applySectionOrder = (sectionId, element, orderIndex) => {
+        if (!element) return;
+        
+        // Hero is always first (order 0), other sections start at order 1
+        element.style.order = orderIndex + 1;
+    };
+
+    const applySectionScrollSnap = (element) => {
+        if (!element) return;
+        
+        element.style.scrollSnapAlign = CSS_CONFIG.PROPERTIES.SCROLL_SNAP_ALIGN;
+        element.style.scrollSnapStop = CSS_CONFIG.PROPERTIES.SCROLL_SNAP_STOP;
+        element.style.minHeight = CSS_CONFIG.PROPERTIES.MIN_HEIGHT;
+        element.style.width = CSS_CONFIG.PROPERTIES.WIDTH;
+        element.style.flex = CSS_CONFIG.PROPERTIES.FLEX;
+    };
+
+    const applyContainerScrollSnap = (shouldEnable) => {
+        const scrollSnapType = shouldEnable ? CSS_CONFIG.PROPERTIES.SCROLL_SNAP_TYPE : CSS_CONFIG.PROPERTIES.DISPLAY_NONE;
+        
+        document.body.style.scrollSnapType = scrollSnapType;
+        
+        if (containerElement) {
+            containerElement.style.scrollSnapType = scrollSnapType;
+            
+            if (shouldEnable) {
+                containerElement.style.height = CSS_CONFIG.PROPERTIES.HEIGHT;
+                containerElement.style.overflowY = CSS_CONFIG.PROPERTIES.OVERFLOW_Y;
+                containerElement.style.display = CSS_CONFIG.PROPERTIES.DISPLAY_FLEX;
+                containerElement.style.flexDirection = CSS_CONFIG.PROPERTIES.FLEX_DIRECTION;
+            }
+        }
+    };
+
+    // Main functions
+    // --------------
+    const initializeLayoutSystem = () => {
+        cacheSectionElements();
+        
+        if (!hasCachedSections()) {
+            setupMountWaiters();
+        } else {
+            applyLayout();
+        }
+        
+        if (isWordPressCustomizerAvailable()) {
+            window.wp.customize.bind('preview-ready', setupCustomizerListeners);
+        }
+        
+        window.addEventListener('resize', debounce(applyLayout, TIMING_CONFIG.RESIZE_DEBOUNCE));
+    };
+
+    const setupMountWaiters = () => {
         let retryCount = 0;
         
-        const retry = () => {
-            if (retryCount >= TIMING.MAX_RETRIES) return;
+        const retryMounting = () => {
+            if (retryCount >= TIMING_CONFIG.MAX_RETRIES) return;
             retryCount++;
             
             setTimeout(() => {
                 cacheSectionElements();
-                if (Object.keys(sectionElements).length > 0) {
+                if (hasCachedSections()) {
                     applyLayout();
                 } else {
-                    retry();
+                    retryMounting();
                 }
-            }, TIMING.RETRY_DELAY);
+            }, TIMING_CONFIG.RETRY_DELAY);
         };
         
-        retry();
+        retryMounting();
         
-        // MutationObserver approach
+        // MutationObserver for DOM changes
         const observer = new MutationObserver(() => {
             cacheSectionElements();
-            if (Object.keys(sectionElements).length > 0) {
+            if (hasCachedSections()) {
                 applyLayout();
                 observer.disconnect();
             }
         });
         
         observer.observe(document.body, { childList: true, subtree: true });
-    }
+    };
 
-    // Apply the current layout configuration
-    function applyLayout() {
-        if (!containerElement) {
-            return;
-        }
+    const applyLayout = () => {
+        if (!containerElement) return;
         
-        // Apply visibility
+        // Apply visibility to all sections
         Object.entries(sectionElements).forEach(([sectionId, element]) => {
-            if (!element) return;
             const isVisible = layoutConfig.visibility[sectionId];
-            if (isVisible) {
-                element.style.display = '';
-                element.classList.remove('section-hidden');
-            } else {
-                element.style.display = 'none';
-                element.classList.add('section-hidden');
-            }
+            applySectionVisibility(sectionId, element, isVisible);
         });
         
-        // Apply order
-        applySectionOrder();
+        // Apply order to visible sections
+        const visibleSections = getVisibleSections();
+        visibleSections.forEach((sectionId, index) => {
+            const element = sectionElements[sectionId];
+            applySectionOrder(sectionId, element, index);
+        });
         
         // Update scroll behavior
         updateScrollBehavior();
         
         // Fix scroll snap issues
         fixScrollSnap();
-    }
+    };
 
-    // Apply section order using CSS order property
-    function applySectionOrder() {
-        const visibleSections = layoutConfig.order.filter(id => layoutConfig.visibility[id]);
+    const updateScrollBehavior = () => {
+        const visibleSections = getVisibleSections();
+        const shouldEnableScrollSnap = visibleSections.length > 0;
         
-        if (visibleSections.length === 0) return;
+        applyContainerScrollSnap(shouldEnableScrollSnap);
         
-        // Hero is always first (order 0), other sections start at order 1
-        visibleSections.forEach((sectionId, index) => {
-            const element = sectionElements[sectionId];
-            if (element) {
-                element.style.order = index + 1; // +1 because Hero is at order 0
-            }
-        });
-    }
-
-    // Update scroll behavior based on visible sections
-    function updateScrollBehavior() {
-        const visibleSections = layoutConfig.order.filter(id => layoutConfig.visibility[id]);
-        
-        // Hero is always visible, so we need at least 2 sections for scroll snapping
-        if (visibleSections.length <= 0) {
-            // Disable scroll snapping if no additional sections
-            document.body.style.scrollSnapType = 'none';
-            if (containerElement) {
-                containerElement.style.scrollSnapType = 'none';
-            }
-        } else {
-            // Enable scroll snapping (Hero + visible sections)
-            document.body.style.scrollSnapType = 'y mandatory';
-            if (containerElement) {
-                containerElement.style.scrollSnapType = 'y mandatory';
-            }
-            
-            // Ensure all visible sections have scroll-snap only (no layout overrides)
+        if (shouldEnableScrollSnap) {
+            // Apply scroll snap to all visible sections
             visibleSections.forEach(sectionId => {
                 const element = sectionElements[sectionId];
-                if (!element) return;
-                element.style.scrollSnapAlign = 'start';
-                element.style.scrollSnapStop = 'always';
-                element.style.minHeight = '100vh';
+                applySectionScrollSnap(element);
             });
         }
-    }
+    };
 
-    // Fix scroll snap issues after layout changes
-    function fixScrollSnap() {
+    const fixScrollSnap = () => {
+        if (!containerElement) return;
+        
         // Force reflow to ensure CSS changes are applied
-        if (containerElement) {
-            containerElement.style.display = 'none';
-            containerElement.offsetHeight; // Force reflow
-            containerElement.style.display = 'flex';
+        containerElement.style.display = CSS_CONFIG.PROPERTIES.DISPLAY_NONE;
+        containerElement.offsetHeight; // Force reflow
+        containerElement.style.display = CSS_CONFIG.PROPERTIES.DISPLAY_FLEX;
+        
+        // Ensure proper scroll container setup for content-scroll or page-scroll
+        const isScrollContainer = containerElement.id === 'content-scroll' || 
+                                 containerElement.classList.contains('page-scroll');
+        
+        if (isScrollContainer) {
+            applyContainerScrollSnap(true);
         }
         
-        // Ensure proper scroll container setup
-        if (containerElement && (containerElement.id === 'content-scroll' || 
-                                containerElement.classList.contains('page-scroll'))) {
-            containerElement.style.height = '100vh';
-            containerElement.style.overflowY = 'auto';
-            containerElement.style.scrollSnapType = 'y mandatory';
-            containerElement.style.display = 'flex';
-            containerElement.style.flexDirection = 'column';
-        }
-        
-        // Ensure all visible sections have scroll-snap styles only
-        const visibleSections = layoutConfig.order.filter(id => layoutConfig.visibility[id]);
+        // Apply scroll snap styles to all visible sections
+        const visibleSections = getVisibleSections();
         visibleSections.forEach(sectionId => {
             const element = sectionElements[sectionId];
-            if (!element) return;
-            element.style.minHeight = '100vh';
-            element.style.scrollSnapAlign = 'start';
-            element.style.scrollSnapStop = 'always';
-            element.style.width = '100%';
-            element.style.flex = '0 0 auto';
+            applySectionScrollSnap(element);
         });
-    }
+    };
 
-    // Setup Customizer listeners for live updates
-    function setupCustomizerListeners() {
+    // Customizer integration
+    // ----------------------
+    const setupCustomizerListeners = () => {
         const customize = window.wp.customize;
         
         // Listen for section visibility changes
@@ -321,7 +399,7 @@
     }
 
     // Utility: Debounce function
-    function debounce(func, wait) {
+    const debounce = (func, wait) => {
         let timeout;
         return function executedFunction(...args) {
             const later = () => {
@@ -331,37 +409,49 @@
             clearTimeout(timeout);
             timeout = setTimeout(later, wait);
         };
-    }
+    };
 
-    // Public API for external use
-    window.MoehserLayoutBuilder = {
-        getConfig: () => ({ ...layoutConfig }),
-        applyLayout: applyLayout,
-        showSection: (sectionId) => {
-            if (layoutConfig.visibility.hasOwnProperty(sectionId)) {
-                layoutConfig.visibility[sectionId] = true;
-                applyLayout();
+    // Public API
+    // -----------
+    const createPublicAPI = () => {
+        return {
+            getConfig: () => ({ ...layoutConfig }),
+            applyLayout: applyLayout,
+            showSection: (sectionId) => {
+                if (layoutConfig.visibility.hasOwnProperty(sectionId)) {
+                    layoutConfig.visibility[sectionId] = true;
+                    applyLayout();
+                }
+            },
+            hideSection: (sectionId) => {
+                if (layoutConfig.visibility.hasOwnProperty(sectionId)) {
+                    layoutConfig.visibility[sectionId] = false;
+                    applyLayout();
+                }
+            },
+            setOrder: (newOrder) => {
+                if (Array.isArray(newOrder)) {
+                    layoutConfig.order = newOrder;
+                    applyLayout();
+                }
             }
-        },
-        hideSection: (sectionId) => {
-            if (layoutConfig.visibility.hasOwnProperty(sectionId)) {
-                layoutConfig.visibility[sectionId] = false;
-                applyLayout();
-            }
-        },
-        setOrder: (newOrder) => {
-            if (Array.isArray(newOrder)) {
-                layoutConfig.order = newOrder;
-                applyLayout();
-            }
+        };
+    };
+
+    // Initialize public API
+    window.MoehserLayoutBuilder = createPublicAPI();
+
+    // Initialization
+    // --------------
+    const initializeWhenReady = () => {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeLayoutSystem);
+        } else {
+            initializeLayoutSystem();
         }
     };
 
-    // Initialize when DOM is ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
+    // Start initialization
+    initializeWhenReady();
 
 })();
