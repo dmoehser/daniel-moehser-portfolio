@@ -179,7 +179,7 @@ $z-header: 100;
     border: $spacing-1 solid $border-light;
     border-radius: $border-radius;
     padding: clamp($spacing-24, 3.5vw, $spacing-48);
-    box-shadow: 0 $spacing-4 $spacing-6 -$spacing-1 rgba(0, 0, 0, 0.1), 0 $spacing-2 $spacing-4 -$spacing-1 rgba(0, 0, 0, 0.06);
+    box-shadow: 0 $spacing-4 $spacing-6 (-$spacing-1) rgba(0, 0, 0, 0.1), 0 $spacing-2 $spacing-4 (-$spacing-1) rgba(0, 0, 0, 0.06);
     backdrop-filter: blur($spacing-4) saturate(110%);
     -webkit-backdrop-filter: blur($spacing-4) saturate(110%);
   }
