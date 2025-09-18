@@ -1,141 +1,268 @@
 // Contact Form Styles
-// ==================
+// ===================
+
+@use '../utils/tokens';
+
+// Layout Constants
+// ---------------
+$container-margin: 2rem 0;
+$wrapper-margin-top: 1rem;
+$header-margin-bottom: 2rem;
+$fields-gap: 1.5rem;
+$field-gap: 0.5rem;
+$recaptcha-margin: 1rem 0;
+$actions-margin-top: 1rem;
+$status-margin-top: 1rem;
+
+// Toggle Button Constants
+// ----------------------
+$toggle-gap: 0.75rem;
+$toggle-padding: 1rem 1.5rem;
+$toggle-padding-mobile: 0.875rem 1.25rem;
+$toggle-border-radius: 12px;
+$toggle-font-size: 1rem;
+$toggle-font-size-mobile: 0.875rem;
+$toggle-font-weight: 600;
+$toggle-icon-size: 1.25rem;
+
+// Form Card Constants
+// ------------------
+$form-border-radius: 16px;
+$form-padding: 2rem;
+$form-padding-mobile: 1.5rem;
+
+// Input Field Constants
+// --------------------
+$input-padding: 0.75rem 1rem;
+$input-border-radius: 8px;
+$input-font-size: 1rem;
+$textarea-min-height: 120px;
+
+// Button Constants
+// ---------------
+$submit-padding: 0.875rem 2rem;
+$submit-border-radius: 8px;
+$submit-font-size: 1rem;
+$submit-font-weight: 600;
+$submit-min-width: 140px;
+
+// Status Message Constants
+// -----------------------
+$status-padding: 1rem;
+$status-border-radius: 8px;
+$status-font-weight: 500;
+
+// Typography Constants
+// -------------------
+$title-font-size: 1.5rem;
+$title-font-size-mobile: 1.25rem;
+$title-font-weight: 700;
+$title-line-height: 1.2;
+$description-font-size: 1rem;
+$description-font-size-mobile: 0.875rem;
+$description-line-height: 1.5;
+$label-font-size: 0.875rem;
+$label-font-weight: 600;
+
+// Color Constants
+// --------------
+// Light Theme
+$toggle-bg: rgba(59, 130, 246, 0.1);
+$toggle-bg-hover: rgba(59, 130, 246, 0.15);
+$toggle-border: rgba(59, 130, 246, 0.2);
+$toggle-border-hover: rgba(59, 130, 246, 0.3);
+$toggle-color: #3b82f6;
+
+$form-bg: rgba(255, 255, 255, 0.95);
+$form-border: rgba(15, 23, 42, 0.12);
+$form-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+$input-bg: rgba(255, 255, 255, 0.8);
+$input-bg-focus: rgba(255, 255, 255, 0.95);
+$input-bg-disabled: rgba(15, 23, 42, 0.05);
+$input-border: rgba(15, 23, 42, 0.1);
+$input-border-focus: #3b82f6;
+$input-focus-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+
+$submit-bg: #3b82f6;
+$submit-bg-hover: #2563eb;
+$submit-hover-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+
+$success-bg: rgba(16, 185, 129, 0.1);
+$success-color: #059669;
+$success-border: rgba(16, 185, 129, 0.2);
+
+$error-bg: rgba(239, 68, 68, 0.1);
+$error-color: #dc2626;
+$error-border: rgba(239, 68, 68, 0.2);
+
+// Dark Theme
+$dark-toggle-bg: rgba(59, 130, 246, 0.15);
+$dark-toggle-bg-hover: rgba(59, 130, 246, 0.2);
+$dark-toggle-border: rgba(59, 130, 246, 0.3);
+$dark-toggle-border-hover: rgba(59, 130, 246, 0.4);
+$dark-toggle-color: #60a5fa;
+
+$dark-form-bg: rgba(11, 18, 32, 0.95);
+$dark-form-border: rgba(255, 255, 255, 0.12);
+$dark-form-color: #e2e8f0;
+$dark-form-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+
+$dark-input-bg: rgba(11, 18, 32, 0.8);
+$dark-input-bg-focus: rgba(11, 18, 32, 0.95);
+$dark-input-bg-disabled: rgba(255, 255, 255, 0.05);
+$dark-input-border: rgba(255, 255, 255, 0.1);
+$dark-input-border-focus: #60a5fa;
+$dark-input-focus-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+
+// Animation Constants
+// ------------------
+$transition-duration: 0.2s;
+$transition-easing: ease;
+$hover-transform: translateY(-1px);
+$active-transform: translateY(0);
+$disabled-opacity: 0.6;
+$placeholder-opacity: 0.7;
+
+// Backdrop Filter Constants
+// ------------------------
+$backdrop-blur: blur(4px) saturate(110%);
 
 // Expandable contact form with smooth animations
-// ------------------------------
+// ---------------------------------------------
 
 .contact-form-container {
-  margin: 2rem 0;
+  margin: $container-margin;
   width: 100%;
 }
 
 .contact-form__toggle {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 1.5rem;
-  background: rgba(59, 130, 246, 0.1);
-  border: 2px solid rgba(59, 130, 246, 0.2);
-  border-radius: 12px;
-  color: #3b82f6;
-  font-weight: 600;
-  font-size: 1rem;
+  gap: $toggle-gap;
+  padding: $toggle-padding;
+  background: $toggle-bg;
+  border: 2px solid $toggle-border;
+  border-radius: $toggle-border-radius;
+  color: $toggle-color;
+  font-weight: $toggle-font-weight;
+  font-size: $toggle-font-size;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all $transition-duration $transition-easing;
   text-decoration: none;
   width: 100%;
   justify-content: center;
 
   &:hover {
-    background: rgba(59, 130, 246, 0.15);
-    border-color: rgba(59, 130, 246, 0.3);
-    transform: translateY(-1px);
+    background: $toggle-bg-hover;
+    border-color: $toggle-border-hover;
+    transform: $hover-transform;
   }
 
   &:active {
-    transform: translateY(0);
+    transform: $active-transform;
   }
 }
 
 .contact-form__toggle-icon {
-  font-size: 1.25rem;
+  font-size: $toggle-icon-size;
   line-height: 1;
 }
 
 .contact-form__toggle-text {
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: $toggle-font-size;
+  font-weight: $toggle-font-weight;
 }
 
 .contact-form__wrapper {
   overflow: hidden;
-  margin-top: 1rem;
+  margin-top: $wrapper-margin-top;
 }
 
 .contact-form {
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  backdrop-filter: blur(4px) saturate(110%);
-  -webkit-backdrop-filter: blur(4px) saturate(110%);
+  background: $form-bg;
+  border: 1px solid $form-border;
+  border-radius: $form-border-radius;
+  padding: $form-padding;
+  box-shadow: $form-shadow;
+  backdrop-filter: $backdrop-blur;
+  -webkit-backdrop-filter: $backdrop-blur;
 }
 
 .contact-form__header {
-  margin-bottom: 2rem;
+  margin-bottom: $header-margin-bottom;
   text-align: center;
 }
 
 .contact-form__title {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: $title-font-size;
+  font-weight: $title-font-weight;
   color: var(--color-text);
   margin: 0 0 0.5rem 0;
-  line-height: 1.2;
+  line-height: $title-line-height;
 }
 
 .contact-form__description {
   color: var(--color-text-secondary);
-  font-size: 1rem;
+  font-size: $description-font-size;
   margin: 0;
-  line-height: 1.5;
+  line-height: $description-line-height;
 }
 
 .contact-form__fields {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: $fields-gap;
 }
 
 .contact-form__field {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: $field-gap;
 }
 
 .contact-form__label {
-  font-weight: 600;
+  font-weight: $label-font-weight;
   color: var(--color-text);
-  font-size: 0.875rem;
+  font-size: $label-font-size;
   margin: 0;
 }
 
 .contact-form__input,
 .contact-form__textarea {
-  padding: 0.75rem 1rem;
-  border: 2px solid rgba(15, 23, 42, 0.1);
-  border-radius: 8px;
-  font-size: 1rem;
+  padding: $input-padding;
+  border: 2px solid $input-border;
+  border-radius: $input-border-radius;
+  font-size: $input-font-size;
   font-family: inherit;
-  background: rgba(255, 255, 255, 0.8);
+  background: $input-bg;
   color: var(--color-text);
-  transition: all 0.2s ease;
+  transition: all $transition-duration $transition-easing;
   width: 100%;
   box-sizing: border-box;
 
   &:focus {
     outline: none;
-    border-color: #3b82f6;
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: $input-border-focus;
+    background: $input-bg-focus;
+    box-shadow: $input-focus-shadow;
   }
 
   &:disabled {
-    opacity: 0.6;
+    opacity: $disabled-opacity;
     cursor: not-allowed;
-    background: rgba(15, 23, 42, 0.05);
+    background: $input-bg-disabled;
   }
 
   &::placeholder {
     color: var(--color-text-secondary);
-    opacity: 0.7;
+    opacity: $placeholder-opacity;
   }
 }
 
 .contact-form__textarea {
   resize: vertical;
-  min-height: 120px;
+  min-height: $textarea-min-height;
   font-family: inherit;
   line-height: 1.5;
 }
@@ -143,128 +270,128 @@
 .contact-form__recaptcha {
   display: flex;
   justify-content: center;
-  margin: 1rem 0;
+  margin: $recaptcha-margin;
 }
 
 .contact-form__actions {
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
+  margin-top: $actions-margin-top;
 }
 
 .contact-form__submit {
-  background: #3b82f6;
+  background: $submit-bg;
   color: white;
   border: none;
-  padding: 0.875rem 2rem;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
+  padding: $submit-padding;
+  border-radius: $submit-border-radius;
+  font-size: $submit-font-size;
+  font-weight: $submit-font-weight;
   cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 140px;
+  transition: all $transition-duration $transition-easing;
+  min-width: $submit-min-width;
 
   &:hover:not(:disabled) {
-    background: #2563eb;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    background: $submit-bg-hover;
+    transform: $hover-transform;
+    box-shadow: $submit-hover-shadow;
   }
 
   &:active:not(:disabled) {
-    transform: translateY(0);
+    transform: $active-transform;
   }
 
   &:disabled {
-    opacity: 0.6;
+    opacity: $disabled-opacity;
     cursor: not-allowed;
     transform: none;
   }
 }
 
 .contact-form__status {
-  padding: 1rem;
-  border-radius: 8px;
-  font-weight: 500;
+  padding: $status-padding;
+  border-radius: $status-border-radius;
+  font-weight: $status-font-weight;
   text-align: center;
-  margin-top: 1rem;
+  margin-top: $status-margin-top;
 }
 
 .contact-form__status--success {
-  background: rgba(16, 185, 129, 0.1);
-  color: #059669;
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  background: $success-bg;
+  color: $success-color;
+  border: 1px solid $success-border;
 }
 
 .contact-form__status--error {
-  background: rgba(239, 68, 68, 0.1);
-  color: #dc2626;
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  background: $error-bg;
+  color: $error-color;
+  border: 1px solid $error-border;
 }
 
-// Dark mode styles
-// ------------------------------
-.theme-dark {
+// Dark Mode Styles
+// ----------------
+body.theme-dark {
   .contact-form {
-    background: rgba(11, 18, 32, 0.95);
-    border-color: rgba(255, 255, 255, 0.12);
-    color: #e2e8f0;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    background: $dark-form-bg;
+    border-color: $dark-form-border;
+    color: $dark-form-color;
+    box-shadow: $dark-form-shadow;
   }
 
   .contact-form__toggle {
-    background: rgba(59, 130, 246, 0.15);
-    border-color: rgba(59, 130, 246, 0.3);
-    color: #60a5fa;
+    background: $dark-toggle-bg;
+    border-color: $dark-toggle-border;
+    color: $dark-toggle-color;
 
     &:hover {
-      background: rgba(59, 130, 246, 0.2);
-      border-color: rgba(59, 130, 246, 0.4);
+      background: $dark-toggle-bg-hover;
+      border-color: $dark-toggle-border-hover;
     }
   }
 
   .contact-form__input,
   .contact-form__textarea {
-    background: rgba(11, 18, 32, 0.8);
-    border-color: rgba(255, 255, 255, 0.1);
-    color: #e2e8f0;
+    background: $dark-input-bg;
+    border-color: $dark-input-border;
+    color: $dark-form-color;
 
     &:focus {
-      border-color: #60a5fa;
-      background: rgba(11, 18, 32, 0.95);
-      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+      border-color: $dark-input-border-focus;
+      background: $dark-input-bg-focus;
+      box-shadow: $dark-input-focus-shadow;
     }
 
     &:disabled {
-      background: rgba(255, 255, 255, 0.05);
+      background: $dark-input-bg-disabled;
     }
   }
 
   .contact-form__submit {
-    background: #3b82f6;
+    background: $submit-bg;
 
     &:hover:not(:disabled) {
-      background: #2563eb;
+      background: $submit-bg-hover;
     }
   }
 }
 
-// Responsive design
-// ------------------------------
+// Responsive Design
+// -----------------
 @media (max-width: 768px) {
   .contact-form {
-    padding: 1.5rem;
+    padding: $form-padding-mobile;
   }
 
   .contact-form__toggle {
-    padding: 0.875rem 1.25rem;
-    font-size: 0.875rem;
+    padding: $toggle-padding-mobile;
+    font-size: $toggle-font-size-mobile;
   }
 
   .contact-form__title {
-    font-size: 1.25rem;
+    font-size: $title-font-size-mobile;
   }
 
   .contact-form__description {
-    font-size: 0.875rem;
+    font-size: $description-font-size-mobile;
   }
 }

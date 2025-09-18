@@ -44,9 +44,6 @@ function moehser_is_vite_dev_server_running($host = VITE_DEV_HOST, $port = VITE_
 
 function moehser_is_development()
 {
-    // FORCE PRODUCTION MODE - Vite dev server is not working
-    return false;
-    
     if (defined('WP_ENV') && WP_ENV === 'development') {
         return true;
     }
