@@ -1,23 +1,38 @@
 // Sections
 // ========
+
+@use '../utils/tokens';
+
+// Spacing Constants
+// -----------------
+$spacing-8: 8px;
+$spacing-12: 12px;
+$spacing-16: 16px;
+$spacing-20: 20px;
+$spacing-24: 24px;
+$spacing-48: 48px;
+$spacing-80: 80px;
+$spacing-120: 120px;
+
+// Color Constants
+// ---------------
+$color-dark: #0f172a;
+$color-muted: #64748b;
+$color-light: #e2e8f0;
+$color-light-secondary: #cbd5e1;
+
 // Base styles for all sections
-// -----------------------------
+// =============================
 
 // Page scroll container
-// --------------------
+// ====================
 
 .page-scroll {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  
-  // Enable smooth scrolling
   scroll-behavior: smooth;
-  
-  // Scroll snapping for sections - disabled by default for Safari compatibility
-  scroll-snap-type: y proximity;
-  
-  // Ensure proper stacking context
+  scroll-snap-type: y proximity; // Disabled by default for Safari compatibility
   position: relative;
   z-index: 1;
 }
@@ -25,22 +40,14 @@
 .page-scroll > section {
   min-height: 100vh;
   width: 100%;
-  
-  // Scroll snapping
   scroll-snap-align: start;
-  
-  // Flexbox properties for ordering
   flex: 0 0 auto;
-  
-  // Smooth transitions
   transition: all 0.3s ease;
-  
-  // Ensure proper positioning
   position: relative;
 }
 
 // Safari scroll-snap fixes - CSS fallback
-// ----------------------------------------
+// =========================================
 @supports (-webkit-appearance: none) {
   .page-scroll {
     scroll-snap-type: none !important;
@@ -63,15 +70,13 @@
   
   .page-scroll > section {
     min-height: 100vh;
-    // Ensure mobile compatibility
-    -webkit-overflow-scrolling: touch;
+    -webkit-overflow-scrolling: touch; // Mobile compatibility
   }
 }
 
 // Base section styles
-// ------------------
+// ====================
 
-// SECTION BASE - Base layout for all sections
 .section-base {
   min-height: 100vh;
   width: 100%;
@@ -80,98 +85,85 @@
   justify-content: center;
   background: transparent;
   scroll-snap-align: start;
-  scroll-margin-top: 80px; // Account for header height
+  scroll-margin-top: $spacing-80; // Account for header height
   position: relative;
-  padding: 120px 0 4vh 0; // Increased top padding to stay below menu
+  padding: $spacing-120 0 4vh 0; // Stay below menu
   box-sizing: border-box;
-  z-index: 1; // Lower than header (1000)
+  z-index: 1;
 }
 
-// SECTION INNER - Unified inner wrapper
 .section-inner {
   width: min(1280px, 92vw);
   margin: 0 auto;
-  padding: 20px 1.25rem; // Added top/bottom padding for hover effects
+  padding: $spacing-20 1.25rem;
   position: relative;
-  z-index: 2; // Lower than header
+  z-index: 2;
   overflow: visible;
 }
 
-// SECTION CARD - Unified card structure
 .section-card {
   width: 100%;
   margin: 0 auto;
   background: rgba(255,255,255,.95);
   border: 1px solid rgba(15,23,42,.12);
-  border-radius: 16px;
+  border-radius: $spacing-16;
   overflow: visible;
   backdrop-filter: blur(10px) saturate(140%);
   -webkit-backdrop-filter: blur(10px) saturate(140%);
-  padding: clamp(24px, 3.5vw, 48px);
+  padding: clamp($spacing-24, 3.5vw, $spacing-48);
   position: relative;
 }
 
-// SECTION HEADER - Unified header structure
 .section-header {
   text-align: center;
-  margin-bottom: clamp(12px, 2.5vw, 24px);
+  margin-bottom: clamp($spacing-12, 2.5vw, $spacing-24);
 }
 
 .section-title {
-  margin: 0 0 8px;
+  margin: 0 0 $spacing-8;
   font-size: clamp(2rem, 4vw, 3.2rem);
   font-weight: 900;
-  color: #0f172a;
+  color: $color-dark;
   line-height: 1.1;
 }
 
 .section-subtitle {
   margin: 0;
-  color: #64748b;
+  color: $color-muted;
   font-size: clamp(0.95rem, 1.7vw, 1.15rem);
   font-weight: 600;
 }
 
-// SECTION CONTENT - Unified content wrapper
 .section-content {
   width: 100%;
 }
-
-// SECTION BODY - Unified body structure
-.section-body {
-  width: 100%;
-}
-
-// SECTION LOADING/ERROR/EMPTY - Unified states
 .section-loading,
 .section-error,
 .section-empty {
   text-align: center;
-  padding: clamp(24px, 3.5vw, 48px);
-  color: #64748b;
+  padding: clamp($spacing-24, 3.5vw, $spacing-48);
+  color: $color-muted;
 }
 
-// Dark mode support
-// -----------------
+// Dark Mode Support
+// =================
 
 body.theme-dark .section-card {
   background: rgba(30,41,59,.95);
   border-color: rgba(255,255,255,.12);
-  color: #e2e8f0;
+  color: $color-light;
 }
 
 body.theme-dark .section-title {
-  color: #e2e8f0;
+  color: $color-light;
 }
 
 body.theme-dark .section-subtitle {
-  color: #cbd5e1;
+  color: $color-light-secondary;
 }
 
 body.theme-dark .section-loading,
 body.theme-dark .section-error,
 body.theme-dark .section-empty {
-  color: #cbd5e1;
+  color: $color-light-secondary;
 }
-
-
