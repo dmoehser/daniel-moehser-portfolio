@@ -1,16 +1,12 @@
 // UI Components
 // =============
 
-// All reusable UI elements and components
-// ------------------------------
-
-// Social media and navigation
-@import './social-dock';
-@import './scroll-progress';
-@import './print';
-@import './theme-toggle';
-@import './settings-gear';
-@import './mobile-menu';
-@import './back-to-projects';
-@import './arrow';
-@import './footer';
+@use './social-dock';
+@use './scroll-progress';
+@use './print';
+@use './theme-toggle';
+@use './settings-gear';
+@use './mobile-menu';
+@use './back-to-projects';
+@use './arrow';
+@use './footer';
