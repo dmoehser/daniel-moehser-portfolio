@@ -1,85 +1,140 @@
 // Social Dock
 // ===========
 
-// Social dock positioning and structure
-// ------------------------------
+@use '../../utils/tokens';
+
+// Social Dock Constants
+// ---------------------
+$dock-position: 16px;
+$dock-z-index: 10;
+$dock-gap-desktop: 12px;
+$dock-gap-mobile: 8px;
+
+// Social Button Constants
+// -----------------------
+$social-size-desktop: 48px;
+$social-size-enhanced: 46px;
+$social-size-mobile: 36px;
+$social-icon-desktop: 20px;
+$social-icon-mobile: 16px;
+$social-border-radius: 50%;
+$social-border-radius-enhanced: 12px;
+
+// Animation Constants
+// -------------------
+$transition-standard: 0.2s;
+$transition-mobile: 0.3s;
+$transform-hover: translateY(-2px);
+$transform-active: scale(0.95);
+
+// Color Constants
+// ---------------
+$color-slate-900: #0f172a;
+$color-slate-200: #e2e8f0;
+$color-green-accent: rgba(34, 255, 136, 0.25);
+$color-green-accent-hover: rgba(34, 255, 136, 0.4);
+$color-green-500: #22c55e;
+
+// Background Constants
+// --------------------
+$bg-white-90: rgba(255, 255, 255, 0.9);
+$bg-white-100: rgba(255, 255, 255, 1);
+$bg-dark-90: rgba(11, 18, 32, 0.9);
+$bg-dark-100: rgba(11, 18, 32, 1);
+
+// Gradient Constants
+// ------------------
+$gradient-light: linear-gradient(180deg, rgba(255,255,255,.78), rgba(255,255,255,.66));
+$gradient-dark: linear-gradient(180deg, rgba(30,41,59,.9), rgba(30,41,59,.78));
+
+// Border Constants
+// ----------------
+$border-light: rgba(15, 23, 42, 0.1);
+$border-light-12: rgba(15, 23, 42, 0.12);
+$border-dark: rgba(255, 255, 255, 0.1);
+
+// Shadow Constants
+// ----------------
+$shadow-hover: 0 8px 24px rgba(15, 23, 42, 0.15);
+$shadow-dark-hover: 0 8px 24px rgba(0, 0, 0, 0.3);
+$shadow-enhanced: inset 0 1px 0 rgba(255,255,255,.7), 0 10px 30px rgba(15,23,42,.12), 0 1px 0 rgba(15,23,42,.06);
+$shadow-dark-enhanced: inset 0 1px 0 rgba(255,255,255,.06), 0 10px 30px rgba(0,0,0,.3);
+$shadow-dark-enhanced-hover: inset 0 1px 0 rgba(255,255,255,.08), 0 10px 30px rgba(34,197,94,.3);
+
+// Social Dock Component
+// =====================
 
 .social-dock {
   position: fixed;
-  left: 16px;
-  bottom: 16px;
-  z-index: 10;
+  left: $dock-position;
+  bottom: $dock-position;
+  z-index: $dock-z-index;
   margin: 0;
   padding: 0;
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: $dock-gap-desktop;
 }
 
 // Mobile optimizations
-// -------------------
+// ====================
 
 @media (max-width: 768px) {
   .social-dock {
-    // Hide on mobile - integrated into mobile menu
     display: none !important;
   }
   
-  // Mobile collapsible version
   .social-dock--mobile {
     flex-direction: column;
-    gap: 8px;
-    left: 16px;
+    gap: $dock-gap-mobile;
+    left: $dock-position;
     transform: none;
   }
   
-  // Toggle button for mobile
   .social-dock__toggle {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(15, 23, 42, 0.1);
+    width: $social-size-mobile;
+    height: $social-size-mobile;
+    border-radius: $social-border-radius;
+    background: $bg-white-90;
+    border: 1px solid $border-light;
     backdrop-filter: blur(10px);
-    transition: all 0.2s ease;
+    transition: all $transition-standard ease;
     cursor: pointer;
     
     &:active {
-      transform: scale(0.95);
-      background: rgba(255, 255, 255, 1);
+      transform: $transform-active;
+      background: $bg-white-100;
     }
     
     img {
-      width: 16px;
-      height: 16px;
+      width: $social-icon-mobile;
+      height: $social-icon-mobile;
       opacity: 0.8;
     }
   }
   
-  // Expanded links container
   .social-dock__links {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    animation: slideUp 0.3s ease-out;
+    gap: $dock-gap-mobile;
+    animation: slideUp $transition-mobile ease-out;
   }
   
-  // Smaller social buttons on mobile
   .social {
-    width: 36px;
-    height: 36px;
+    width: $social-size-mobile;
+    height: $social-size-mobile;
     
     img {
-      width: 16px;
-      height: 16px;
+      width: $social-icon-mobile;
+      height: $social-icon-mobile;
     }
     
     &:active {
-      transform: scale(0.95);
+      transform: $transform-active;
     }
   }
 }
@@ -97,32 +152,32 @@
 }
 
 // Individual social link styling
-// ------------------------------
+// ==============================
 
 .social {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(15, 23, 42, 0.1);
+  width: $social-size-desktop;
+  height: $social-size-desktop;
+  border-radius: $social-border-radius;
+  background: $bg-white-90;
+  border: 1px solid $border-light;
   backdrop-filter: blur(10px);
-  transition: all 0.2s ease;
+  transition: all $transition-standard ease;
   text-decoration: none;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.15);
-    background: rgba(255, 255, 255, 1);
+    transform: $transform-hover;
+    box-shadow: $shadow-hover;
+    background: $bg-white-100;
   }
 
   img {
-    width: 20px;
-    height: 20px;
+    width: $social-icon-desktop;
+    height: $social-icon-desktop;
     opacity: 0.8;
-    transition: opacity 0.2s ease;
+    transition: opacity $transition-standard ease;
   }
 
   &:hover img {
@@ -130,21 +185,22 @@
   }
 }
 
-// Enhanced Social Dock styling (from hero component)
-// ------------------------------
+// Enhanced Social Dock styling
+// ============================
+
 .social-dock .social {
-  width: 46px;
-  height: 46px;
+  width: $social-size-enhanced;
+  height: $social-size-enhanced;
   display: grid;
   place-items: center;
   text-decoration: none;
   font-weight: 900;
   font-size: 18px;
-  color: #0f172a;
-  background: linear-gradient(180deg, rgba(255,255,255,.78), rgba(255,255,255,.66));
-  border: 1px solid rgba(15,23,42,.12);
-  border-radius: 12px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 10px 30px rgba(15,23,42,.12), 0 1px 0 rgba(15,23,42,.06);
+  color: $color-slate-900;
+  background: $gradient-light;
+  border: 1px solid $border-light-12;
+  border-radius: $social-border-radius-enhanced;
+  box-shadow: $shadow-enhanced;
 }
 
 .social-dock .social:hover {
@@ -152,41 +208,41 @@
 }
 
 // Dark mode support
-// -----------------
+// =================
+
 body.theme-dark .social {
-  background: rgba(11, 18, 32, 0.9);
-  border-color: rgba(255, 255, 255, 0.1);
+  background: $bg-dark-90;
+  border-color: $border-dark;
 
   &:hover {
-    background: rgba(11, 18, 32, 1);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    background: $bg-dark-100;
+    box-shadow: $shadow-dark-hover;
   }
 }
 
-// Dark mode support for enhanced Social Dock styling
-// --------------------------------------------------
 body.theme-dark .social-dock .social {
-  color: #e2e8f0;
-  background: linear-gradient(180deg, rgba(30,41,59,.9), rgba(30,41,59,.78));
-  border-color: rgba(34,255,136,.25);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 10px 30px rgba(0,0,0,.3);
+  color: $color-slate-200;
+  background: $gradient-dark;
+  border-color: $color-green-accent;
+  box-shadow: $shadow-dark-enhanced;
 }
 
 body.theme-dark .social-dock .social:hover {
-  border-color: rgba(34,255,136,.4);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 10px 30px rgba(34,197,94,.3);
-  filter: none; // Remove brightness filter in dark mode
+  border-color: $color-green-accent-hover;
+  box-shadow: $shadow-dark-enhanced-hover;
+  filter: none;
 }
 
 // Dark mode mobile support
-// ------------------------
+// ========================
+
 @media (max-width: 768px) {
   body.theme-dark .social-dock__toggle {
-    background: rgba(11, 18, 32, 0.9);
-    border-color: rgba(255, 255, 255, 0.1);
+    background: $bg-dark-90;
+    border-color: $border-dark;
     
     &:active {
-      background: rgba(11, 18, 32, 1);
+      background: $bg-dark-100;
     }
   }
 }
