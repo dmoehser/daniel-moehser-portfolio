@@ -1,100 +1,145 @@
 // Footer Component
-// ===============
+// ================
 
-// Footer positioned to match Settings Gear height
-// ----------------------------------------------
+@use '../../utils/tokens';
+
+// Spacing Constants
+// -----------------
+$spacing-1: 1px;
+$spacing-2: 2px;
+$spacing-8: 8px;
+$spacing-12: 12px;
+$spacing-16: 16px;
+$spacing-20: 20px;
+$spacing-24: 24px;
+$spacing-26: 26px;
+$spacing-30: 30px;
+$spacing-60: 60px;
+
+// Size Constants (rem)
+// --------------------
+$size-0-25: 0.25rem;
+$size-0-5: 0.5rem;
+$size-1: 1rem;
+$size-2: 2rem;
+
+// Color Constants
+// ---------------
+$color-dark: #0f172a;
+$color-light: #e2e8f0;
+
+// Background Colors
+// -----------------
+$bg-gradient-light: linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.62));
+$bg-gradient-light-hover: linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.7));
+$bg-dark: rgba(30,41,59,.95);
+$bg-dark-hover: rgba(30,41,59,.98);
+
+// Border Colors
+// -------------
+$border-light: rgba(15,23,42,.10);
+$border-dark: rgba(255,255,255,.12);
+$border-green: rgba(34,197,94,.4);
+
+// Size Constants
+// --------------
+$border-radius: 8px;
+$z-footer: 5;
+$z-link: 20;
 
 .site-footer {
   background: transparent;
   width: 100%;
   position: absolute;
   bottom: 0;
-  z-index: 5;
-  min-height: 30px;
-  margin-top: 0.5rem;
+  z-index: $z-footer;
+  min-height: $spacing-30;
+  margin-top: $size-0-5;
   
   &__inner {
     max-width: 100%;
     margin: 0;
-    padding: 0.25rem 2rem;
+    padding: $size-0-25 $size-2;
   }
   
   &__content {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    min-height: 30px;
-    padding: 0.25rem 0;
+    min-height: $spacing-30;
+    padding: $size-0-25 0;
     width: 100%;
   }
   
   &__nav {
     display: flex;
-    gap: 2rem;
+    gap: $size-2;
     align-items: center;
   }
   
   &__link {
-    font-size: 1rem;
+    font-size: $size-1;
     font-weight: 800;
-    color: #0f172a;
+    color: $color-dark;
     text-decoration: none;
-    padding: 16px 26px;
-    border-radius: 8px;
+    padding: $spacing-16 $spacing-26;
+    border-radius: $border-radius;
     position: relative;
-    z-index: 20;
+    z-index: $z-link;
     transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-    background: linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.62));
-    border: 1px solid rgba(15,23,42,.10);
-    backdrop-filter: saturate(140%) blur(8px);
-    -webkit-backdrop-filter: saturate(140%) blur(8px);
+    background: $bg-gradient-light;
+    border: $spacing-1 solid $border-light;
+    backdrop-filter: saturate(140%) blur($spacing-8);
+    -webkit-backdrop-filter: saturate(140%) blur($spacing-8);
     
     &:hover {
-      background: linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.7));
-      transform: translateY(-2px) scale(1.03);
-      box-shadow: 0 12px 26px rgba(15,23,42,.12);
-      color: #0f172a;
+      background: $bg-gradient-light-hover;
+      transform: translateY(-$spacing-2) scale(1.03);
+      box-shadow: 0 $spacing-12 $spacing-26 rgba(15,23,42,.12);
+      color: $color-dark;
     }
   }
 }
 
 // Projects section specific positioning
-// ------------------------------------
+// ====================================
+
 .projects .site-footer {
-  position: absolute; // Not fixed, only visible in projects section
-  bottom: 24px; // Same position as Settings Gear standard position
-  right: 60px; // Position left of Settings Gear (Settings Gear is 36px wide + 24px margin = 60px)
-  width: auto; // Only as wide as needed
-  z-index: 5;
+  position: absolute;
+  bottom: $spacing-24;
+  right: $spacing-60;
+  width: auto;
+  z-index: $z-footer;
   
   &__content {
     justify-content: flex-end;
-    padding: 0; // No extra padding needed
+    padding: 0;
   }
 }
 
 // Mobile adjustments
-// ------------------
+// ==================
+
 @media (max-width: 768px) {
   .site-footer {
-    display: none !important; // Hide footer on mobile - Imprint is now in hamburger menu
+    display: none !important;
   }
 }
 
-  // Dark mode support
-// -----------------
+// Dark Mode Support
+// =================
 
 .theme-dark {
   .site-footer__link {
-    background: rgba(30,41,59,.95);
-    color: #e2e8f0;
-    border-color: rgba(255,255,255,.12);
+    background: $bg-dark;
+    color: $color-light;
+    border-color: $border-dark;
     
     &:hover {
-      background: rgba(30,41,59,.98);
-      border-color: rgba(34,197,94,.4);
-      box-shadow: 0 12px 26px rgba(34,197,94,.15);
-      color: #e2e8f0;
+      background: $bg-dark-hover;
+      border-color: $border-green;
+      box-shadow: 0 $spacing-12 $spacing-26 rgba(34,197,94,.15);
+      color: $color-light;
     }
   }
 }
