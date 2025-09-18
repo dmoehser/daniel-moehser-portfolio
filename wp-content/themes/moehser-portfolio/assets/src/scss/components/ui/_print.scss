@@ -65,7 +65,9 @@ $line-height-tight: 1.2;
   .wpadminbar,
   .scroll-progress-top,
   .social-dock,
-  .fullscreen-preview-overlay {
+  .fullscreen-preview-overlay,
+  .hero-arrow,
+  .hero-arrow__container {
     display: none !important;
   }
 
@@ -305,9 +307,25 @@ $line-height-tight: 1.2;
   #projects .project-card__actions { display: none !important; }
   #projects .project-card__technologies { display: none !important; }
   #projects .project-card__tags { display: none !important; }
-  #projects .print-project-heading { font-size: 11pt !important; margin: 0 0 4pt 0 !important; color: #000 !important; }
-  #projects .project-card__title { font-size: 10pt !important; margin: 0 0 4pt 0 !important; color: #000 !important; font-weight: bold !important; }
-  #projects .project-card__excerpt { font-size: 8pt !important; line-height: 1.2 !important; margin: 0 0 6pt 0 !important; color: #333 !important; }
+  #projects .print-project-heading {
+    font-size: $font-size-large !important;
+    margin: 0 0 $spacing-4 0 !important;
+    color: $color-black !important;
+  }
+  
+  #projects .project-card__title {
+    font-size: $font-size-medium !important;
+    margin: 0 0 $spacing-4 0 !important;
+    color: $color-black !important;
+    font-weight: bold !important;
+  }
+  
+  #projects .project-card__excerpt {
+    font-size: $font-size-tiny !important;
+    line-height: $line-height-tight !important;
+    margin: 0 0 $spacing-6 0 !important;
+    color: $color-gray-dark !important;
+  }
 
   // Force-visible states for print
   // ------------------------------
@@ -324,7 +342,7 @@ $line-height-tight: 1.2;
   #skills .custom-scrollbar { display: none !important; }
   #skills .skill-card { 
     box-shadow: none !important; 
-    border-color: #ddd !important; 
+    border-color: $color-gray-light !important; 
     break-inside: avoid-page; 
     page-break-inside: avoid; 
   }
