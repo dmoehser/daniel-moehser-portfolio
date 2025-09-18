@@ -6,11 +6,8 @@
 // Settings Gear Constants
 // -----------------------
 $gear-size-desktop: 36px;
-$gear-size-mobile: 40px;
 $gear-padding-desktop: 6px;
-$gear-padding-mobile: 8px;
 $gear-position-desktop: 24px;
-$gear-position-mobile: 20px;
 $gear-position-projects: 80px;
 $gear-z-index: 25;
 $gear-z-performance: 26;
@@ -19,9 +16,7 @@ $gear-z-tooltip: 27;
 // Menu Constants
 // --------------
 $menu-width-desktop: 160px;
-$menu-width-mobile: 140px;
 $menu-position-desktop: 48px;
-$menu-position-mobile: 52px;
 $menu-padding: 8px;
 $menu-border-radius: 12px;
 
@@ -29,7 +24,6 @@ $menu-border-radius: 12px;
 // -------------------
 $transition-fast: 0.15s;
 $transition-standard: 0.2s;
-$border-radius-small: 4px;
 $border-radius-medium: 8px;
 
 // Color Constants
@@ -38,40 +32,17 @@ $color-slate-500: #64748b;
 $color-slate-900: #0f172a;
 $color-slate-700: #374151;
 $color-slate-800: #1f2937;
-$color-slate-600: #475569;
-$color-slate-400: #94a3b8;
-$color-slate-300: #cbd5e1;
-$color-slate-200: #e2e8f0;
-$color-slate-100: #f1f5f9;
 $color-blue-500: #3b82f6;
-$color-blue-600: #2563eb;
-$color-green-500: #22c55e;
-$color-green-600: #16a34a;
-$color-green-400: #4ade80;
-$color-amber-500: #f59e0b;
-$color-amber-600: #d97706;
-$color-amber-400: #fbbf24;
 
 // Background Constants
 // --------------------
 $bg-white-95: rgba(255, 255, 255, 0.95);
 $bg-white-10: rgba(255, 255, 255, 0.1);
-$bg-white-05: rgba(255, 255, 255, 0.05);
-$bg-dark-95: rgba(30, 41, 59, 0.95);
-$bg-dark-30: rgba(30, 41, 59, 0.3);
-$bg-black-90: rgba(0, 0, 0, 0.9);
-$bg-black-30: rgba(0, 0, 0, 0.3);
-$bg-black-15: rgba(0, 0, 0, 0.15);
-$bg-black-10: rgba(0, 0, 0, 0.1);
-$bg-black-08: rgba(0, 0, 0, 0.08);
-$bg-black-05: rgba(0, 0, 0, 0.05);
 $bg-black-02: rgba(0, 0, 0, 0.02);
 
 // Border Constants
 // ----------------
 $border-light: rgba(15, 23, 42, 0.12);
-$border-dark: rgba(255, 255, 255, 0.12);
-$border-dark-10: rgba(255, 255, 255, 0.1);
 
 // Settings Gear Component
 // =======================
