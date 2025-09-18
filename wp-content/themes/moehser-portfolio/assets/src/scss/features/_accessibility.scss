@@ -1,13 +1,53 @@
 // Accessibility Styles
-// ===================
+// ====================
+
+@use '../utils/tokens';
+
+// Spacing Constants
+// -----------------
+$spacing-1: 1px;
+$spacing-2: 2px;
+$spacing-4: 4px;
+$spacing-6: 6px;
+$spacing-8: 8px;
+$spacing-10: 10px;
+$spacing-12: 12px;
+$spacing-16: 16px;
+$spacing-20: 20px;
+$spacing-40: 40px;
+$spacing-44: 44px;
+
+// Color Constants
+// ---------------
+$color-black: #000;
+$color-white: #fff;
+$color-gray-light: #f0f0f0;
+$color-gray: #333;
+$color-gray-medium: #666;
+$color-gray-border: #ccc;
+$color-focus: #0066cc;
+$color-focus-dark: #66b3ff;
+$color-error: #dc3545;
+$color-success: #28a745;
+
+// Z-Index Constants
+// -----------------
+$z-skip-link: 10000;
+
+// Size Constants
+// --------------
+$min-touch-target: 44px;
+$border-radius: 4px;
 
 // Screen Reader Only
+// ==================
+
 .sr-only {
   position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
+  width: $spacing-1 !important;
+  height: $spacing-1 !important;
   padding: 0 !important;
-  margin: -1px !important;
+  margin: -$spacing-1 !important;
   overflow: hidden !important;
   clip: rect(0, 0, 0, 0) !important;
   white-space: nowrap !important;
@@ -15,46 +55,52 @@
 }
 
 // Skip Links
+// ===========
+
 .skip-link {
   position: absolute;
-  top: -40px;
-  left: 6px;
-  background: #000;
-  color: #fff;
-  padding: 8px 16px;
+  top: -$spacing-40;
+  left: $spacing-6;
+  background: $color-black;
+  color: $color-white;
+  padding: $spacing-8 $spacing-16;
   text-decoration: none;
-  z-index: 10000;
-  border-radius: 4px;
+  z-index: $z-skip-link;
+  border-radius: $border-radius;
   font-weight: 600;
   transition: top 0.3s ease;
 
   &:focus {
-    top: 6px;
-    outline: 2px solid #fff;
-    outline-offset: 2px;
+    top: $spacing-6;
+    outline: $spacing-2 solid $color-white;
+    outline-offset: $spacing-2;
   }
 
   &:hover {
-    background: #333;
+    background: $color-gray;
   }
 }
 
 // Focus Management
+// ================
+
 .focus-trap {
   &:focus {
-    outline: 2px solid #0066cc;
-    outline-offset: 2px;
+    outline: $spacing-2 solid $color-focus;
+    outline-offset: $spacing-2;
   }
 }
 
 // High Contrast Mode Support
+// ===========================
+
 @media (prefers-contrast: high) {
   .btn {
-    border: 2px solid currentColor;
+    border: $spacing-2 solid currentColor;
   }
 
   .card {
-    border: 1px solid currentColor;
+    border: $spacing-1 solid currentColor;
   }
 
   .text-muted {
@@ -64,6 +110,8 @@
 }
 
 // Reduced Motion Support
+// ======================
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -80,16 +128,17 @@
 }
 
 // Focus Indicators
+// ================
+
 .focus-visible {
-  outline: 2px solid #0066cc;
-  outline-offset: 2px;
+  outline: $spacing-2 solid $color-focus;
+  outline-offset: $spacing-2;
 }
 
-// Button Focus States
 .btn {
   &:focus-visible {
-    outline: 2px solid #0066cc;
-    outline-offset: 2px;
+    outline: $spacing-2 solid $color-focus;
+    outline-offset: $spacing-2;
   }
 
   &:focus:not(:focus-visible) {
@@ -97,12 +146,11 @@
   }
 }
 
-// Link Focus States
 a {
   &:focus-visible {
-    outline: 2px solid #0066cc;
-    outline-offset: 2px;
-    border-radius: 2px;
+    outline: $spacing-2 solid $color-focus;
+    outline-offset: $spacing-2;
+    border-radius: $spacing-2;
   }
 
   &:focus:not(:focus-visible) {
@@ -110,13 +158,12 @@ a {
   }
 }
 
-// Form Element Focus States
 input,
 textarea,
 select {
   &:focus-visible {
-    outline: 2px solid #0066cc;
-    outline-offset: 2px;
+    outline: $spacing-2 solid $color-focus;
+    outline-offset: $spacing-2;
   }
 
   &:focus:not(:focus-visible) {
@@ -125,11 +172,13 @@ select {
 }
 
 // ARIA Live Regions
+// =================
+
 [aria-live] {
   position: absolute;
   left: -10000px;
-  width: 1px;
-  height: 1px;
+  width: $spacing-1;
+  height: $spacing-1;
   overflow: hidden;
 }
 
@@ -168,8 +217,8 @@ select {
 .menu-item {
   &:focus {
     background-color: rgba(0, 0, 0, 0.1);
-    outline: 2px solid #0066cc;
-    outline-offset: -2px;
+    outline: $spacing-2 solid $color-focus;
+    outline-offset: -$spacing-2;
   }
 
   &[aria-selected="true"] {
@@ -198,42 +247,26 @@ select {
   &[aria-expanded="true"] {
     &::after {
       content: '▼';
-      margin-left: 8px;
+      margin-left: $spacing-8;
     }
   }
 
   &[aria-expanded="false"] {
     &::after {
       content: '▶';
-      margin-left: 8px;
+      margin-left: $spacing-8;
     }
   }
 }
 
-// Image Accessibility
-img {
-  &[role="presentation"] {
-    // Decorative images
-  }
-
-  &[alt=""] {
-    // Images with empty alt text (decorative)
-  }
-}
-
-// Link Accessibility
 a {
-  &[aria-describedby] {
-    // Links with additional descriptions
-  }
-
   &[target="_blank"] {
     &::after {
       content: ' (opens in new tab)';
       position: absolute;
       left: -10000px;
-      width: 1px;
-      height: 1px;
+      width: $spacing-1;
+      height: $spacing-1;
       overflow: hidden;
       clip: rect(0, 0, 0, 0);
       white-space: nowrap;
@@ -242,75 +275,76 @@ a {
 }
 
 // Form Accessibility
+// ==================
+
 .form-group {
   position: relative;
 
   .form-label {
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: $spacing-4;
     font-weight: 600;
   }
 
   .form-control {
     width: 100%;
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: $spacing-8 $spacing-12;
+    border: $spacing-1 solid $color-gray-border;
+    border-radius: $border-radius;
 
     &:focus {
-      border-color: #0066cc;
-      box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+      border-color: $color-focus;
+      box-shadow: 0 0 0 $spacing-2 rgba(0, 102, 204, 0.2);
     }
 
     &[aria-invalid="true"] {
-      border-color: #dc3545;
+      border-color: $color-error;
     }
   }
 
   .form-error {
-    color: #dc3545;
+    color: $color-error;
     font-size: 0.875em;
-    margin-top: 4px;
+    margin-top: $spacing-4;
   }
 
   .form-help {
-    color: #666;
+    color: $color-gray-medium;
     font-size: 0.875em;
-    margin-top: 4px;
+    margin-top: $spacing-4;
   }
 }
 
-// Required Field Indicator
 .required {
   &::after {
     content: ' *';
-    color: #dc3545;
+    color: $color-error;
   }
 }
 
-// Error States
 .has-error {
   .form-control {
-    border-color: #dc3545;
+    border-color: $color-error;
   }
 
   .form-label {
-    color: #dc3545;
+    color: $color-error;
   }
 }
 
-// Success States
 .has-success {
   .form-control {
-    border-color: #28a745;
+    border-color: $color-success;
   }
 
   .form-label {
-    color: #28a745;
+    color: $color-success;
   }
 }
 
 // Loading States
+// ==============
+
 .loading {
   position: relative;
   pointer-events: none;
@@ -320,11 +354,11 @@ a {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 20px;
-    height: 20px;
-    margin: -10px 0 0 -10px;
-    border: 2px solid #f3f3f3;
-    border-top: 2px solid #0066cc;
+    width: $spacing-20;
+    height: $spacing-20;
+    margin: -$spacing-10 0 0 -$spacing-10;
+    border: $spacing-2 solid #f3f3f3;
+    border-top: $spacing-2 solid $color-focus;
     border-radius: 50%;
     animation: spin 1s linear infinite;
   }
@@ -336,36 +370,40 @@ a {
 }
 
 // Dark Mode Accessibility
+// =======================
+
 @media (prefers-color-scheme: dark) {
   .skip-link {
-    background: #fff;
-    color: #000;
+    background: $color-white;
+    color: $color-black;
 
     &:hover {
-      background: #f0f0f0;
+      background: $color-gray-light;
     }
   }
 
   .focus-visible {
-    outline-color: #66b3ff;
+    outline-color: $color-focus-dark;
   }
 
   .btn:focus-visible {
-    outline-color: #66b3ff;
+    outline-color: $color-focus-dark;
   }
 
   a:focus-visible {
-    outline-color: #66b3ff;
+    outline-color: $color-focus-dark;
   }
 
   input:focus-visible,
   textarea:focus-visible,
   select:focus-visible {
-    outline-color: #66b3ff;
+    outline-color: $color-focus-dark;
   }
 }
 
 // Print Styles
+// ============
+
 @media print {
   .skip-link,
   .sr-only {
@@ -382,30 +420,35 @@ a {
 }
 
 // High DPI Support
+// ================
+
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .focus-visible {
-    outline-width: 1px;
+    outline-width: $spacing-1;
   }
 }
 
 // Mobile Accessibility
+// ====================
+
 @media (max-width: 768px) {
   .skip-link {
-    left: 10px;
-    right: 10px;
+    left: $spacing-10;
+    right: $spacing-10;
     text-align: center;
   }
 
-  // Ensure touch targets are at least 44px
   .btn,
   .menu-item,
   .form-control {
-    min-height: 44px;
-    min-width: 44px;
+    min-height: $min-touch-target;
+    min-width: $min-touch-target;
   }
 }
 
 // Reduced Data Mode
+// =================
+
 @media (prefers-reduced-data: reduce) {
   .loading {
     &::after {
