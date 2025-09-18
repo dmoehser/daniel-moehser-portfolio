@@ -355,7 +355,7 @@ a {
     left: 50%;
     width: $spacing-20;
     height: $spacing-20;
-    margin: -$spacing-10 0 0 -$spacing-10;
+    margin: (-$spacing-10) 0 0 (-$spacing-10);
     border: $spacing-2 solid #f3f3f3;
     border-top: $spacing-2 solid $color-focus;
     border-radius: 50%;
