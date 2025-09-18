@@ -139,7 +139,6 @@ export default function SocialDock() {
 
   const getSocialLinkProps = (social) => {
     const props = {
-      key: social.type,
       href: social.href(),
       className: social.className,
       'aria-label': social.ariaLabel
@@ -219,7 +218,7 @@ export default function SocialDock() {
           {isExpanded && (
             <div className={CSS_CLASSES.LINKS}>
               {SOCIAL_LINKS.map((social) => (
-                <a {...getSocialLinkProps(social)}>
+                <a key={social.type} {...getSocialLinkProps(social)}>
                   <img {...getIconProps(social.icon)} />
                 </a>
               ))}
@@ -229,7 +228,7 @@ export default function SocialDock() {
       ) : (
         // Desktop: Original vertical layout
         SOCIAL_LINKS.map((social) => (
-          <a {...getSocialLinkProps(social)}>
+          <a key={social.type} {...getSocialLinkProps(social)}>
             <img {...getIconProps(social.icon)} />
           </a>
         ))
