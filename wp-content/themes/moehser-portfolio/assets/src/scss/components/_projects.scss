@@ -1,21 +1,34 @@
-// Projects Component
-// =================
+// Projects Styles
+// ===============
 
 @use '../utils/tokens';
 
-// Project section - Using unified base classes
+// Color Constants
+// ---------
+$color-white: #ffffff;
+$color-dark: #0f172a;
+$color-accent: #38bdf8;
+$color-green: #22c55e;
+$color-muted: #64748b;
+$color-green-light: #4ade80;
+$color-white-short: #fff;
+$border-radius: 12px;
+
+// Main Projects Layout
+// --------------------
+
 .projects {
   min-height: 100vh;
   width: 100%;
   display: flex;
-  flex-direction: column; // Vertikale Anordnung
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between; // Content oben, Footer unten
+  justify-content: space-between;
   background: transparent;
   scroll-snap-align: start;
   scroll-margin-top: 80px;
   position: relative;
-  padding: 120px 0 0 0; // Kein padding-bottom mehr
+  padding: 120px 0 0 0;
   box-sizing: border-box;
   z-index: 1;
 }
@@ -27,15 +40,15 @@
   position: relative;
   z-index: 2;
   overflow: visible;
-  flex: 0 0 auto; // Nimmt nur den benötigten Raum ein
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-// Footer positioning now handled in _footer.scss
+// Flow Mode Layout
+// ----------------
 
-// Natural flow for grid mode
 .projects.projects--flow {
   min-height: auto;
   padding-top: 80px;
@@ -48,7 +61,6 @@
   min-height: 0;
   max-height: none;
 }
-// In flow mode keep screenshot height stable; let text drive card height
 .projects.projects--flow .project-card--side-by-side.project-card--list .project-card__screenshot {
   height: 280px;
   min-height: 280px;
@@ -138,7 +150,7 @@
   right: 8px;
   display: flex;
   gap: 8px;
-  z-index: 10; // Höher als Footer
+  z-index: 10;
   min-width: 36px;
   height: 36px;
   justify-content: flex-end;
@@ -155,12 +167,21 @@
   cursor: pointer;
   transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
 }
-.projects__toggle-btn img { width: 22px; height: 22px; display: block; }
-.projects__toggle-btn:hover { background: #fff; border-color: rgba(56,189,248,.4); box-shadow: 0 1px 2px rgba(15,23,42,.08); }
-.projects__toggle-btn.is-active { border-color: rgba(56,189,248,.6); box-shadow: 0 0 0 2px rgba(56,189,248,.25); }
+.projects__toggle-btn img {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+.projects__toggle-btn:hover {
+  background: $color-white-short;
+  border-color: rgba(56,189,248,.4);
+  box-shadow: 0 1px 2px rgba(15,23,42,.08);
+}
+.projects__toggle-btn.is-active {
+  border-color: rgba(56,189,248,.6);
+  box-shadow: 0 0 0 2px rgba(56,189,248,.25);
+}
 
-// Custom tooltip for toggle buttons
-// ---------------------------------
 .projects__toggle-btn {
   position: relative;
 }
@@ -171,7 +192,7 @@
   left: 50%;
   transform: translateX(-50%);
   background: rgba(15,23,42,.9);
-  color: #fff;
+  color: $color-white-short;
   padding: 6px 10px;
   border-radius: 6px;
   font-size: 0.8rem;
@@ -188,26 +209,34 @@
   visibility: visible;
 }
 
-// Dark mode tooltip
-body.theme-dark .projects__toggle-btn { background: rgba(30,41,59,.9); border-color: rgba(255,255,255,.12); }
-body.theme-dark .projects__toggle-btn:hover { background: rgba(30,41,59,1); border-color: #4ade80; }
-body.theme-dark .projects__toggle-btn.is-active { border-color: #22c55e; box-shadow: 0 0 0 2px rgba(34,255,136,.35); }
+body.theme-dark .projects__toggle-btn {
+  background: rgba(30,41,59,.9);
+  border-color: rgba(255,255,255,.12);
+}
+body.theme-dark .projects__toggle-btn:hover {
+  background: rgba(30,41,59,1);
+  border-color: $color-green-light;
+}
+body.theme-dark .projects__toggle-btn.is-active {
+  border-color: $color-green;
+  box-shadow: 0 0 0 2px rgba(34,255,136,.35);
+}
 body.theme-dark .projects__toggle-btn::after {
   background: rgba(255,255,255,.95);
-  color: #0f172a;
+  color: $color-dark;
 }
 
 .projects__title {
   margin: 0 0 8px;
   font-size: clamp(2rem, 4vw, 3.2rem);
   font-weight: 900;
-  color: #0f172a;
+  color: $color-dark;
   line-height: 1.1;
 }
 
 .projects__subtitle {
   margin: 0;
-  color: #64748b;
+  color: $color-muted;
   font-size: clamp(0.95rem, 1.7vw, 1.15rem);
   font-weight: 600;
 }
@@ -221,19 +250,15 @@ body.theme-dark .projects__toggle-btn::after {
 .projects__empty {
   text-align: center;
   padding: clamp(24px, 3.5vw, 48px);
-  color: #64748b;
+  color: $color-muted;
 }
 
-// Project status styling
-// ----------------------
 
 .projects__status {
   padding: 2rem;
   color: #374151;
 }
 
-// Projects slider
-// ---------------
 
 .projects__slider--side-by-side {
   position: relative;
@@ -256,8 +281,9 @@ body.theme-dark .projects__toggle-btn::after {
   }
 }
 
-// Side-by-side project card
-// -------------------------
+// Side-by-side Project Cards
+// --------------------------
+
 .project-card--side-by-side {
   display: flex;
   flex-direction: row;
@@ -281,7 +307,6 @@ body.theme-dark .projects__toggle-btn::after {
     transform: none;
   }
   
-  // Left side - Screenshot
   .project-card__screenshot {
     flex: 0 0 60%;
     width: 60%;
@@ -295,7 +320,7 @@ body.theme-dark .projects__toggle-btn::after {
     height: 500px;
     min-height: 500px;
     max-height: 500px;
-    border-radius: 12px;
+    border-radius: $border-radius;
     margin: 16px 24px 16px 16px;
     
     img {
@@ -310,19 +335,23 @@ body.theme-dark .projects__toggle-btn::after {
     .skeleton.skeleton--image {
       position: absolute;
       inset: 0;
-      border-radius: 12px;
-      background: linear-gradient(90deg, rgba(148,163,184,0.15) 25%, rgba(148,163,184,0.25) 37%, rgba(148,163,184,0.15) 63%);
+      border-radius: $border-radius;
+      background: linear-gradient(
+        90deg,
+        rgba(148,163,184,0.15) 25%,
+        rgba(148,163,184,0.25) 37%,
+        rgba(148,163,184,0.15) 63%
+      );
       background-size: 400% 100%;
       animation: projects-skeleton-shimmer 1.2s ease-in-out infinite;
     }
   }
   
-  // Right side - Project Info
   .project-card__info {
     flex: 0 0 40%;
     width: 40%;
     max-width: 40%;
-    min-width: 0; // Prevent flex overflow
+    min-width: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
@@ -335,7 +364,7 @@ body.theme-dark .projects__toggle-btn::after {
     .project-card__title {
       font-size: 1.5rem;
       font-weight: 700;
-      color: #0f172a;
+      color: $color-dark;
       margin: 0 0 0.75rem;
       line-height: 1.2;
     }
@@ -346,9 +375,16 @@ body.theme-dark .projects__toggle-btn::after {
       line-height: 1.7;
       margin: 0 0 1rem;
       max-width: 70ch;
-      p { margin: 0 0 0.75em; }
-      ul, ol { padding-left: 1.2em; margin: 0.5em 0; }
-      li { margin: 0.25em 0; }
+      p {
+        margin: 0 0 0.75em;
+      }
+      ul, ol {
+        padding-left: 1.2em;
+        margin: 0.5em 0;
+      }
+      li {
+        margin: 0.25em 0;
+      }
     }
     
     .project-card__technologies {
@@ -366,7 +402,7 @@ body.theme-dark .projects__toggle-btn::after {
         padding: 8px 16px;
         margin: 0;
         background: rgba(56,189,248,.1);
-        color: #0f172a;
+        color: $color-dark;
         border: 1px solid rgba(56,189,248,.3);
         border-radius: 20px;
         font-size: 0.9rem;
@@ -397,7 +433,7 @@ body.theme-dark .projects__toggle-btn::after {
         gap: 10px;
       }
       .project-card__cta-row--two {
-        grid-template-columns: 1fr 1fr; // Two equal columns
+        grid-template-columns: 1fr 1fr;
       }
 
       .project-card__demo-btn {
@@ -406,7 +442,11 @@ body.theme-dark .projects__toggle-btn::after {
         justify-content: center;
         width: 100%;
         padding: clamp(0.6rem, 2vw, 0.8rem) clamp(0.8rem, 2.5vw, 1.2rem);
-        background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+        background: linear-gradient(
+          135deg,
+          $color-accent,
+          #0ea5e9
+        );
         color: white;
         border: none;
         border-radius: 8px;
@@ -422,7 +462,11 @@ body.theme-dark .projects__toggle-btn::after {
       
         &:hover {
           transform: none;
-          background: linear-gradient(135deg, #0ea5e9, #0284c7);
+          background: linear-gradient(
+            135deg,
+            #0ea5e9,
+            #0284c7
+          );
         }
       }
       .project-card__demo-btn[type="button"],
@@ -434,7 +478,7 @@ body.theme-dark .projects__toggle-btn::after {
 
       .project-card__demo-btn--secondary {
         background: rgba(15,23,42,.05);
-        color: #0f172a;
+        color: $color-dark;
         border: 1px solid rgba(15,23,42,.15);
         display: inline-flex;
         align-items: center;
@@ -456,12 +500,11 @@ body.theme-dark .projects__toggle-btn::after {
     }
   }
 
-  // Robust text wrapping inside info panel
   .project-card__info .project-card__title,
   .project-card__info .project-card__excerpt {
-    overflow-wrap: break-word; // Natural wrapping
-    word-break: break-word; // Legacy fallback
-    hyphens: none; // Avoid hyphenation
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: none;
     white-space: normal;
     max-width: 100%;
   }
@@ -469,30 +512,41 @@ body.theme-dark .projects__toggle-btn::after {
     height: 12px;
     margin: 8px 0;
     border-radius: 6px;
-    background: linear-gradient(90deg, rgba(148,163,184,0.15) 25%, rgba(148,163,184,0.25) 37%, rgba(148,163,184,0.15) 63%);
+    background: linear-gradient(
+      90deg,
+      rgba(148,163,184,0.15) 25%,
+      rgba(148,163,184,0.25) 37%,
+      rgba(148,163,184,0.15) 63%
+    );
     background-size: 400% 100%;
     animation: projects-skeleton-shimmer 1.2s ease-in-out infinite;
   }
   .skeleton.skeleton--tag {
     height: 28px;
     border-radius: 20px;
-    background: linear-gradient(90deg, rgba(148,163,184,0.15) 25%, rgba(148,163,184,0.25) 37%, rgba(148,163,184,0.15) 63%);
+    background: linear-gradient(
+      90deg,
+      rgba(148,163,184,0.15) 25%,
+      rgba(148,163,184,0.25) 37%,
+      rgba(148,163,184,0.15) 63%
+    );
     background-size: 400% 100%;
     animation: projects-skeleton-shimmer 1.2s ease-in-out infinite;
   }
 }
 
-// List view compact variant
-// -------------------------
+// List View Variant
+// -----------------
+
 .project-card--side-by-side.project-card--list {
   display: flex;
   flex-direction: row;
-  align-items: stretch; // Equal height columns
+  align-items: stretch;
   height: auto;
   min-height: auto;
   max-height: none;
   border: 1px solid rgba(15,23,42,.12);
-  border-radius: 12px;
+  border-radius: $border-radius;
   transition: border-color 180ms ease, box-shadow 180ms ease;
   box-shadow: 0 1px 2px rgba(15,23,42,.06);
   padding: 0;
@@ -505,7 +559,7 @@ body.theme-dark .projects__toggle-btn::after {
   min-height: 240px;
   max-height: 240px;
   margin: 16px 20px 16px 16px;
-  border-radius: 12px;
+  border-radius: $border-radius;
   overflow: hidden;
   background: #f8fafc;
 }
@@ -557,16 +611,17 @@ body.theme-dark .projects__toggle-btn::after {
   overflow-wrap: anywhere;
   word-break: break-word;
 }
-.project-card--side-by-side.project-card--list .project-card__technologies .project-card__tech-tag { padding: 6px 12px; font-size: 0.85rem; }
+.project-card--side-by-side.project-card--list .project-card__technologies .project-card__tech-tag {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
 .project-card--side-by-side.project-card--list .project-card__actions { 
   position: static;
   align-self: stretch;
   width: 100%;
-  margin-top: auto; // Keep at bottom
+  margin-top: auto;
 }
 
-// List view: avoid extra gaps
-// ---------------------------
 .project-card--side-by-side.project-card--list .project-card__excerpt {
   flex: 1 1 auto;
   min-height: 0;
@@ -585,19 +640,32 @@ body.theme-dark .projects__toggle-btn::after {
   width: 100%;
   max-width: 100%;
 }
-.project-card--side-by-side.project-card--list .project-card__cta-row--two { grid-template-columns: 1fr 1fr; }
-.project-card--side-by-side.project-card--list .project-card__cta-row--one { grid-template-columns: 1fr; }
-.project-card--side-by-side.project-card--list .project-card__cta-row .project-card__demo-btn { padding: 0.6rem 1rem; font-size: 0.85rem; }
+.project-card--side-by-side.project-card--list .project-card__cta-row--two {
+  grid-template-columns: 1fr 1fr;
+}
+.project-card--side-by-side.project-card--list .project-card__cta-row--one {
+  grid-template-columns: 1fr;
+}
+.project-card--side-by-side.project-card--list .project-card__cta-row .project-card__demo-btn {
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+}
 
-// List view hover frame effect (match grid)
 body.theme-dark .project-card--side-by-side.project-card--list { 
   border-color: rgba(255,255,255,.12);
   box-shadow: 0 1px 2px rgba(0,0,0,.35);
 }
 
+// Skeleton Animation
+// ------------------
+
 @keyframes projects-skeleton-shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 body.theme-dark .skeleton {
@@ -605,12 +673,14 @@ body.theme-dark .skeleton {
 }
 
 // Navigation Buttons
+// ------------------
+
 .projects__nav-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-      width: 72px; // Bigger hit area
-    height: 72px; // Bigger hit area
+      width: 72px;
+    height: 72px;
   background: rgba(255, 255, 255, 0.95);
   border: 2px solid rgba(15, 23, 42, 0.15);
   border-radius: 50%;
@@ -619,7 +689,7 @@ body.theme-dark .skeleton {
   justify-content: center;
   font-size: 1.8rem;
   font-weight: bold;
-  color: #0f172a;
+  color: $color-dark;
   cursor: pointer;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
@@ -670,7 +740,7 @@ body.theme-dark .skeleton {
   gap: 10px;
   position: relative;
   border: 1px solid rgba(15,23,42,.12);
-  border-radius: 12px;
+  border-radius: $border-radius;
   padding: 12px;
   transition: border-color 180ms ease, box-shadow 180ms ease;
 }
@@ -680,7 +750,7 @@ body.theme-dark .skeleton {
   width: 100%;
   aspect-ratio: 16 / 9;
   background: #f8fafc;
-  border-radius: 12px;
+  border-radius: $border-radius;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -701,7 +771,7 @@ body.theme-dark .projects__grid-card {
   border-color: rgba(255,255,255,.12);
 }
 body.theme-dark .projects__grid-card:hover {
-  border-color: #22c55e;
+  border-color: $color-green;
   box-shadow: 0 0 0 3px rgba(34,255,136,.35);
 }
 
@@ -711,7 +781,9 @@ body.theme-dark .projects__grid-card:hover {
   grid-template-columns: 1fr;
   gap: 10px;
 }
-.projects__grid-cta-row--two { grid-template-columns: 1fr 1fr; }
+.projects__grid-cta-row--two {
+  grid-template-columns: 1fr 1fr;
+}
 .projects__grid-cta-btn {
   display: inline-flex;
   align-items: center;
@@ -721,8 +793,12 @@ body.theme-dark .projects__grid-card:hover {
   padding: clamp(0.5rem, 1.8vw, 0.6rem) clamp(0.7rem, 2.2vw, 0.9rem);
   border-radius: 8px;
   border: none;
-  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
-  color: #fff;
+  background: linear-gradient(
+    135deg,
+    $color-accent,
+    #0ea5e9
+  );
+  color: $color-white-short;
   font-weight: 700;
   font-size: clamp(0.85rem, 2.2vw, 1rem);
   line-height: 1.1;
@@ -737,10 +813,12 @@ button.projects__grid-cta-btn {
   -webkit-appearance: none;
   appearance: none;
 }
-.projects__grid-cta-btn:hover { filter: brightness(1.05); }
+.projects__grid-cta-btn:hover {
+  filter: brightness(1.05);
+}
 .projects__grid-cta-btn--secondary {
   background: rgba(15,23,42,.05);
-  color: #0f172a;
+  color: $color-dark;
   border: 1px solid rgba(15,23,42,.15);
 }
 .projects__grid-cta-btn--secondary:hover {
@@ -754,12 +832,12 @@ button.projects__grid-cta-btn {
 }
 body.theme-dark .projects__grid-cta-btn--secondary {
   background: transparent;
-  color: #fff;
+  color: $color-white-short;
   border: 2px solid #94a3b8;
 }
 body.theme-dark .projects__grid-cta-btn--secondary:hover {
   background: rgba(34,255,136,.15) !important;
-  border-color: #4ade80 !important;
+  border-color: $color-green-light !important;
 }
 body.theme-dark .projects__grid-cta-ico { filter: invert(1) brightness(1.2) contrast(1.1); }
 
@@ -767,7 +845,7 @@ body.theme-dark .projects__grid-cta-ico { filter: invert(1) brightness(1.2) cont
   margin: 4px 0 0;
   font-size: 1.05rem;
   font-weight: 700;
-  color: #0f172a;
+  color: $color-dark;
 }
 
 .projects__grid-excerpt {
@@ -782,15 +860,19 @@ body.theme-dark .projects__grid-cta-ico { filter: invert(1) brightness(1.2) cont
   overflow: hidden;
 }
 
-body.theme-dark .projects__grid-title { color: #e2e8f0; }
-body.theme-dark .projects__grid-excerpt { color: #cbd5e1; }
+body.theme-dark .projects__grid-title {
+  color: #e2e8f0;
+}
+body.theme-dark .projects__grid-excerpt {
+  color: #cbd5e1;
+}
 
-// Simple project card styling
-// ----------------------------
+// Standard Project Cards
+// ----------------------
 
 .project-card {
-  background: #fff;
-  border-radius: 12px;
+  background: $color-white-short;
+  border-radius: $border-radius;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -819,18 +901,18 @@ body.theme-dark .projects__grid-excerpt { color: #cbd5e1; }
 }
 
 .project-card__title a {
-  color: #0f172a;
+  color: $color-dark;
   text-decoration: none;
 }
 
 .project-card__title a:hover {
-  color: #22c55e;
+  color: $color-green;
 }
 
 .project-card__cta {
   display: inline-block;
   margin-top: 0.25rem;
-  color: #38bdf8;
+  color: $color-accent;
   text-decoration: none;
   font-weight: 600;
 }
@@ -842,19 +924,17 @@ body.theme-dark .projects__grid-excerpt { color: #cbd5e1; }
 // Mobile UX Optimization
 // ----------------------
 
-// Force list view on mobile for better UX
+// Mobile list view enforcement
 @media (max-width: 768px) {
-  // Allow projects section to grow beyond 100vh on mobile for natural scrolling
   .projects {
     min-height: auto !important;
     height: auto !important;
   }
   
   .projects__view-toggle {
-    display: none !important; // Hide grid/list toggle on mobile
+    display: none !important;
   }
   
-  // Force list view regardless of user preference
   .projects__grid {
     display: none !important;
   }
@@ -863,12 +943,10 @@ body.theme-dark .projects__grid-excerpt { color: #cbd5e1; }
     display: block !important;
   }
   
-  // Ensure layoutMode grid still works with forced list display
   .projects.projects--flow .projects__list {
     display: block !important;
   }
   
-  // Improve readability on mobile
   .project-card__title {
     font-size: clamp(1.1rem, 2.5vw, 1.3rem);
     line-height: 1.3;
@@ -884,7 +962,6 @@ body.theme-dark .projects__grid-excerpt { color: #cbd5e1; }
     padding: 0.25rem 0.5rem !important;
     cursor: default !important;
     pointer-events: none !important;
-    // Disable all interactive effects on mobile
     &:hover {
       background: rgba(15,23,42,.08) !important;
       border-color: rgba(15,23,42,.15) !important;
@@ -892,12 +969,10 @@ body.theme-dark .projects__grid-excerpt { color: #cbd5e1; }
     }
   }
   
-  // Improve touch targets for buttons
   .project-card__cta {
     min-height: 44px;
     padding: 0.6rem 1rem;
     font-size: 0.9rem;
-    // Disable hover effects on mobile
     &:hover {
       text-decoration: none;
     }
@@ -907,17 +982,15 @@ body.theme-dark .projects__grid-excerpt { color: #cbd5e1; }
     min-height: 44px;
     padding: 0.6rem 1rem;
     font-size: 0.9rem;
-    // Disable hover effects on mobile
     &:hover {
-      background: #22c55e;
-      border-color: #22c55e;
+      background: $color-green;
+      border-color: $color-green;
       transform: none;
       box-shadow: none;
     }
   }
   
   .project-card__demo-btn--secondary {
-    // Disable hover effects on mobile
     &:hover {
       background: #f8fafc;
       border-color: #e2e8f0;
@@ -926,7 +999,6 @@ body.theme-dark .projects__grid-excerpt { color: #cbd5e1; }
     }
   }
   
-  // Disable hover effects on project card links
   .project-card__title a:hover {
     color: inherit;
   }
@@ -978,7 +1050,7 @@ body.theme-dark .projects__grid-excerpt { color: #cbd5e1; }
       min-height: 200px;
       max-height: 200px;
       margin: 16px 16px 0 16px;
-      border-radius: 12px;
+      border-radius: $border-radius;
     }
     
     .project-card__info {
@@ -995,11 +1067,14 @@ body.theme-dark .projects__grid-excerpt { color: #cbd5e1; }
     height: 56px;
     font-size: 1.5rem;
     
-    &--prev { left: -70px; }
-    &--next { right: -70px; }
+    &--prev {
+      left: -70px;
+    }
+    &--next {
+      right: -70px;
+    }
   }
 
-  // Mobile tuning for list view in flow mode (better image/text proportion)
   .projects.projects--flow .project-card--side-by-side.project-card--list {
     flex-direction: column !important;
     height: auto;
@@ -1014,7 +1089,7 @@ body.theme-dark .projects__grid-excerpt { color: #cbd5e1; }
     min-height: 240px;
     max-height: 240px;
     margin: 16px 16px 0 16px;
-    border-radius: 12px;
+    border-radius: $border-radius;
   }
   .projects.projects--flow .project-card--side-by-side.project-card--list .project-card__info {
     flex: 1;
@@ -1038,7 +1113,7 @@ body.theme-dark .projects__card {
 // Unified section titles and subtitles
 // ------------------------------------
 body.theme-dark .projects__title {
-  color: #ffffff;
+  color: $color-white;
   text-shadow: 0 0 1px rgba(255,255,255,0.1);
 }
 
@@ -1047,17 +1122,35 @@ body.theme-dark .projects__subtitle {
 }
 
 // Dark mode: improve body copy contrast
-body.theme-dark .project-card__excerpt { color: #ffffff; }
-body.theme-dark .project-card__excerpt * { color: inherit; }
-body.theme-dark .project-card__excerpt li { color: inherit; }
-body.theme-dark .project-card__excerpt li::marker { color: #ffffff; }
-body.theme-dark .project-card__excerpt a { color: #38bdf8; }
-body.theme-dark .project-card__excerpt a:hover { color: #4ade80; }
-body.theme-dark .project-card__info { color: #ffffff; }
-body.theme-dark .project-card__title { color: #ffffff; }
+body.theme-dark .project-card__excerpt {
+  color: $color-white;
+}
+body.theme-dark .project-card__excerpt * {
+  color: inherit;
+}
+body.theme-dark .project-card__excerpt li {
+  color: inherit;
+}
+body.theme-dark .project-card__excerpt li::marker {
+  color: $color-white;
+}
+body.theme-dark .project-card__excerpt a {
+  color: $color-accent;
+}
+body.theme-dark .project-card__excerpt a:hover {
+  color: $color-green-light;
+}
+body.theme-dark .project-card__info {
+  color: $color-white;
+}
+body.theme-dark .project-card__title {
+  color: $color-white;
+}
 // Enforce white text across all nested elements in info panel (override lingering light styles)
 body.theme-dark .project-card--side-by-side .project-card__info,
-body.theme-dark .project-card--side-by-side .project-card__info * { color: #ffffff !important; }
+body.theme-dark .project-card--side-by-side .project-card__info * {
+  color: $color-white !important;
+}
 
 // Dark mode: screenshot panel contrast
 body.theme-dark .project-card__screenshot {
@@ -1080,59 +1173,61 @@ body.theme-dark .project-card__title a {
 }
 
 body.theme-dark .project-card__title a:hover {
-  color: #22c55e;
+  color: $color-green;
 }
 
 body.theme-dark .project-card__cta {
-  color: #38bdf8;
+  color: $color-accent;
 }
 
 body.theme-dark .project-card__cta:hover {
-  color: #4ade80;
+  color: $color-green-light;
 }
 
 // Dark mode: tags base + states unified
 body.theme-dark .project-card__technologies .project-card__tech-tag,
 body.theme-dark .project-card__tech-tag {
   background: rgba(11,18,32,.75) !important;
-  color: #c7f5d9 !important; // Similar to skills section
+  color: #c7f5d9 !important;
   border-color: rgba(34,255,136,.25) !important;
 }
 body.theme-dark .project-card__technologies .project-card__tech-tag:hover,
 body.theme-dark .project-card__tech-tag:hover {
   background: rgba(11,18,32,.95) !important;
   border-color: rgba(34,255,136,.4) !important;
-  color: #ffffff !important;
+  color: $color-white !important;
 }
 body.theme-dark .project-card__technologies .project-card__tech-tag:focus-visible,
 body.theme-dark .project-card__demo-btn:focus-visible {
-  outline: 2px solid #38bdf8;
+  outline: 2px solid $color-accent;
   outline-offset: 2px;
 }
 
 body.theme-dark .project-card__demo-btn {
   background: rgba(56,189,248,.9);
-  color: #ffffff !important;
+  color: $color-white !important;
   border-color: rgba(56,189,248,.3);
 }
 
 body.theme-dark .project-card__demo-btn:hover {
   background: rgba(34,255,136,1);
   border-color: rgba(34,255,136,.5);
-  color: #ffffff !important;
+  color: $color-white !important;
 }
 
 // Dark mode: secondary button (GitHub) better contrast
 body.theme-dark .project-card__demo-btn--secondary {
-  background: transparent; // Outlined style
-  color: #ffffff !important;
+  background: transparent;
+  color: $color-white !important;
   border: 2px solid #94a3b8 !important;
   box-shadow: 0 1px 2px rgba(0,0,0,.3);
-  .project-card__cta-ico { filter: invert(1) brightness(1.2) contrast(1.1); }
+  .project-card__cta-ico {
+    filter: invert(1) brightness(1.2) contrast(1.1);
+  }
 }
 body.theme-dark .project-card__demo-btn--secondary:hover {
   background: rgba(34,255,136,.15) !important;
-  border-color: #4ade80 !important;
+  border-color: $color-green-light !important;
 }
 
 // Projects Credits
@@ -1168,17 +1263,15 @@ body.theme-dark .project-card__demo-btn--secondary:hover {
     color: var(--color-text-dark);
   }
   
-  // Credits use same brand classes as header logo
-  // Dark mode colors are already defined in _hero.scss
 }
 
 // No cookies hint styling
 // -----------------------
-.projects__credits small[style*="#64748b"] {
-  color: #64748b !important;
+.projects__credits small[style*="$color-muted"] {
+  color: $color-muted !important;
 }
 
-.theme-dark .projects__credits small[style*="#64748b"] {
+.theme-dark .projects__credits small[style*="$color-muted"] {
   color: #94a3b8 !important;
 }
 
