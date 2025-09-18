@@ -4,7 +4,7 @@
 @use '../utils/tokens';
 
 // Color Constants
-// ---------
+// ----------------
 $color-white: #ffffff;
 $color-dark: #0f172a;
 $color-accent: #38bdf8;
@@ -1215,7 +1215,7 @@ body.theme-dark .project-card__demo-btn:hover {
   color: $color-white !important;
 }
 
-// Dark mode: secondary button (GitHub) better contrast
+// Dark mode secondary buttons
 body.theme-dark .project-card__demo-btn--secondary {
   background: transparent;
   color: $color-white !important;
