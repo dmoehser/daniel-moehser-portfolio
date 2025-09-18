@@ -1,60 +1,84 @@
 // Back to Projects Button
-// ======================
+// =======================
 
-// Right-side menu bar for exiting fullscreen preview
-// ------------------------------
+@use '../../utils/tokens';
+
+// Spacing Constants
+// -----------------
+$spacing-1: 1px;
+$spacing-8: 8px;
+$spacing-10: 10px;
+$spacing-12: 12px;
+$spacing-14: 14px;
+$spacing-16: 16px;
+$spacing-20: 20px;
+$spacing-24: 24px;
+$spacing-48: 48px;
+$spacing-55: 55px;
+$spacing-180: 180px;
+
+// Color Constants
+// ---------------
+$color-dark: #0f172a;
+$bg-light: rgba(255, 255, 255, 0.95);
+$border-light: rgba(15, 23, 42, 0.12);
+
+// Size Constants
+// --------------
+$button-width: 180px;
+$button-height: 48px;
+$button-width-minimized: 48px;
+$border-radius: 8px;
+$z-button: 1000;
 
 .back-to-projects {
   position: fixed;
-  top: 55px;
+  top: $spacing-55;
   right: 0;
-  z-index: 1000;
+  z-index: $z-button;
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  border-radius: 8px;
-  backdrop-filter: blur(10px);
+  background: $bg-light;
+  border: $spacing-1 solid $border-light;
+  border-radius: $border-radius;
+  backdrop-filter: blur($spacing-10);
   transition: all 0.3s ease;
   cursor: pointer;
   overflow: hidden;
-  width: 180px;
-  height: 48px;
+  width: $button-width;
+  height: $button-height;
 
-  // Minimized state
   &--minimized {
-    width: 48px;
+    width: $button-width-minimized;
 
     .back-to-projects__text {
       opacity: 0;
-      transform: translateX(20px);
+      transform: translateX($spacing-20);
       visibility: hidden;
     }
   }
 
-  // Arrow icon container
   &__arrow {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
-    color: #0f172a;
-    font-size: 24px;
+    width: $spacing-48;
+    height: $spacing-48;
+    color: $color-dark;
+    font-size: $spacing-24;
     font-weight: bold;
-    margin-left: 12px;
+    margin-left: $spacing-12;
   }
 
-  // Menu text
   &__text {
-    color: #0f172a;
-    font-size: 14px;
+    color: $color-dark;
+    font-size: $spacing-14;
     font-weight: 600;
     white-space: nowrap;
     opacity: 1;
     transform: translateX(0);
     transition: all 0.3s ease;
-    margin-right: 16px;
+    margin-right: $spacing-16;
     align-self: center;
     line-height: 1;
     visibility: visible;
