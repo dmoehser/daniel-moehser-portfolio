@@ -1,14 +1,56 @@
-// Print
-// =====
+// Print Styles
+// ============
+
+@use '../../utils/tokens';
+
+// Print Spacing Constants
+// -----------------------
+$print-margin: 12mm;
+$print-padding: 10mm;
+$spacing-4: 4px;
+$spacing-6: 6px;
+$spacing-12: 12px;
+$spacing-16: 16px;
+$spacing-24: 24px;
+
+// Print Font Sizes (pt)
+// ---------------------
+$font-size-base: 11.5pt;
+$font-size-small: 7pt;
+$font-size-large: 11pt;
+$font-size-medium: 10pt;
+$font-size-tiny: 8pt;
+
+// Print Colors
+// ------------
+$color-white: #ffffff;
+$color-black: #000;
+$color-gray-dark: #333;
+$color-gray-medium: #667;
+$color-gray-light: #ddd;
+
+// Print Layout Constants
+// ----------------------
+$line-height-print: 1.4;
+$line-height-tight: 1.2;
 
 @media print {
-  @page { margin: 12mm; }
-  // Make the first page (Hero) landscape
-  @page :first { size: landscape; }
-  html, body { background: #ffffff !important; }
+  @page {
+    margin: $print-margin;
+  }
   
-  // Hide UI
-  // -------
+  @page :first {
+    size: landscape;
+  }
+  
+  html,
+  body {
+    background: $color-white !important;
+  }
+  
+  // Hide UI elements
+  // ================
+  
   #site-header,
   #site-header *,
   .site-header__inner,
@@ -17,15 +59,16 @@
   .menu *,
   .pill,
   .hero__quick,
-  .hero__quick * ,
+  .hero__quick *,
   .hero__brand,
-  .hero__brand * ,
+  .hero__brand *,
   .wpadminbar,
   .scroll-progress-top,
   .social-dock,
-  .fullscreen-preview-overlay { display: none !important; }
+  .fullscreen-preview-overlay {
+    display: none !important;
+  }
 
-  // Ensure header cannot occupy space in print
   #site-header {
     position: static !important;
     height: 0 !important;
@@ -35,40 +78,70 @@
     background: transparent !important;
   }
 
-  // Reset fx
-  // ---------
-  * { transition: none !important; animation: none !important; }
+  // Reset animations and transitions
+  // ================================
+  
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
 
   // Section sizing and page breaks
-  // ------------------------------
+  // ==============================
+  
   #hero,
   #skills,
   #about,
   #projects {
     min-height: auto !important;
     height: auto !important;
-    padding: 24px 0 !important;
+    padding: $spacing-24 0 !important;
     break-inside: avoid;
     page-break-inside: avoid;
   }
-  // Start each main section on a new page (except the first on paper)
+  
   #skills,
   #about,
-  #projects { break-before: page; page-break-before: always; }
+  #projects {
+    break-before: page;
+    page-break-before: always;
+  }
 
-  // Ensure exactly one page per section
-  // -----------------------------------
-  #hero { break-after: page; page-break-after: always; }
-  #skills { break-after: page; page-break-after: always; }
-  #about { break-after: page; page-break-after: always; }
-  #projects { break-after: auto; page-break-after: auto; }
+  #hero {
+    break-after: page;
+    page-break-after: always;
+  }
+  
+  #skills {
+    break-after: page;
+    page-break-after: always;
+  }
+  
+  #about {
+    break-after: page;
+    page-break-after: always;
+  }
+  
+  #projects {
+    break-after: auto;
+    page-break-after: auto;
+  }
 
   // Hero cleanup
-  // ------------
-  #hero, #hero * { box-shadow: none !important; }
-  #hero { background: transparent !important; }
+  // ============
+  
+  #hero,
+  #hero * {
+    box-shadow: none !important;
+  }
+  
+  #hero {
+    background: transparent !important;
+  }
 
-  // Reset 100vh/overflow/flex that block pagination
+  // Reset layout for print
+  // ======================
+  
   .page-scroll,
   .page-scroll > section,
   .section-base,
@@ -81,7 +154,7 @@
     overflow: visible !important;
     display: block !important;
   }
-  // Ensure containers do not exceed printable area
+  
   .section-inner,
   .skills__inner,
   .about__inner,
@@ -89,9 +162,10 @@
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
-    padding-left: 10mm !important;
-    padding-right: 10mm !important;
+    padding-left: $print-padding !important;
+    padding-right: $print-padding !important;
   }
+  
   .section-content,
   .section-card {
     width: 100% !important;
@@ -100,47 +174,88 @@
     overflow: visible !important;
   }
 
-  // Typography improvements (print)
-  // -------------------------------
-  body { font-size: 11.5pt; line-height: 1.4; }
-  p, li { line-height: 1.4; }
-  h1, h2, h3 { page-break-after: avoid; break-after: avoid; }
+  // Typography improvements
+  // =======================
+  
+  body {
+    font-size: $font-size-base;
+    line-height: $line-height-print;
+  }
+  
+  p,
+  li {
+    line-height: $line-height-print;
+  }
+  
+  h1,
+  h2,
+  h3 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
 
-  // General link URLs (after content)
-  // ---------------------------------
+  // Link URLs
+  // =========
+  
   a[href^="http"]:after {
     content: " (" attr(href) ")";
-    font-size: 7pt;
+    font-size: $font-size-small;
     font-weight: normal;
-    color: #667;
+    color: $color-gray-medium;
     text-decoration: none;
   }
-  // Hide URLs for action buttons
+  
   .project-card__demo-btn:after,
   .hero__quick-btn:after,
-  .animated-border:after { content: none !important; }
+  .animated-border:after {
+    content: none !important;
+  }
   
-  // Project description URLs (before content)
-  // ----------------------------------------
   #projects a[href^="http"]:before {
     content: " (" attr(href) ") ";
-    font-size: 7pt;
+    font-size: $font-size-small;
     font-weight: normal;
-    color: #667;
+    color: $color-gray-medium;
     text-decoration: none;
   }
-  // Hide URLs for project action buttons
+  
   #projects .project-card__demo-btn:before,
-  #projects .project-card__github-btn:before { content: none !important; }
+  #projects .project-card__github-btn:before {
+    content: none !important;
+  }
 
   // About section optimization
-  // ---------------------------
-  #about .about__card { break-inside: avoid-page; page-break-inside: avoid; }
-  #about .about__content-text p { orphans: 3; widows: 3; }
-  #about ul, #about ol { break-inside: avoid; page-break-inside: avoid; }
-  #about .about__cta { display: none !important; }
-  #skills .skills__inner { height: auto !important; overflow: visible !important; }
-  #skills .skills__viewport { height: auto !important; overflow: visible !important; }
+  // ==========================
+  
+  #about .about__card {
+    break-inside: avoid-page;
+    page-break-inside: avoid;
+  }
+  
+  #about .about__content-text p {
+    orphans: 3;
+    widows: 3;
+  }
+  
+  #about ul,
+  #about ol {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  
+  #about .about__cta {
+    display: none !important;
+  }
+  
+  #skills .skills__inner {
+    height: auto !important;
+    overflow: visible !important;
+  }
+  
+  #skills .skills__viewport {
+    height: auto !important;
+    overflow: visible !important;
+  }
 
   // Projects: show all slides, stack vertically
   // ------------------------------
@@ -163,7 +278,7 @@
   #projects .projects__print-stack .projects__slide {
     display: block !important;
     width: 100% !important;
-    margin: 0 0 16px 0 !important;
+    margin: 0 0 $spacing-16 0 !important;
   }
   #projects .projects__print-stack .projects__slide + .projects__slide {
     break-before: page;
@@ -215,7 +330,10 @@
   }
   #skills .skills--adaptive .skills__top-row,
   #skills .skills--fixed .skills__top-row,
-  #skills .skills__bottom-row { grid-template-columns: 1fr !important; gap: 12px !important; }
+  #skills .skills__bottom-row {
+    grid-template-columns: 1fr !important;
+    gap: $spacing-12 !important;
+  }
   #skills .skill-card--standard,
   #skills .skill-card--special { height: auto !important; max-height: none !important; }
   #skills .skill-card__description { 
