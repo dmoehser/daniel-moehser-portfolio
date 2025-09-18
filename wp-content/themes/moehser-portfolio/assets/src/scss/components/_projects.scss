@@ -4,7 +4,7 @@
 @use '../utils/tokens';
 
 // Color Constants
-// ----------------
+// ---------------
 $color-white: #ffffff;
 $color-dark: #0f172a;
 $color-accent: #38bdf8;
@@ -12,7 +12,24 @@ $color-green: #22c55e;
 $color-muted: #64748b;
 $color-green-light: #4ade80;
 $color-white-short: #fff;
+
+// Spacing Constants
+// -----------------
+$spacing-6: 6px;
+$spacing-8: 8px;
+$spacing-10: 10px;
+$spacing-12: 12px;
+$spacing-16: 16px;
+$spacing-20: 20px;
+$spacing-24: 24px;
+$spacing-32: 32px;
+$spacing-48: 48px;
+
+// Size Constants
+// --------------
 $border-radius: 12px;
+$nav-btn-size-desktop: 72px;
+$nav-btn-size-mobile: 56px;
 
 // Main Projects Layout
 // --------------------
@@ -113,14 +130,6 @@ $border-radius: 12px;
   }
 }
 
-.projects__inner {
-  width: min(1280px, 92vw);
-  margin: 0 auto;
-  padding: 0 1.25rem;
-  position: relative;
-  z-index: 2;
-  overflow: visible;
-}
 
 .projects__content {
   width: 100%;
@@ -131,25 +140,25 @@ $border-radius: 12px;
   margin: 0 auto;
   background: rgba(255,255,255,.95);
   border: 1px solid rgba(15,23,42,.12);
-  border-radius: 16px;
+  border-radius: $spacing-16;
   overflow: visible;
   backdrop-filter: blur(10px) saturate(140%);
   -webkit-backdrop-filter: blur(10px) saturate(140%);
-  padding: clamp(24px, 3.5vw, 48px);
+  padding: clamp($spacing-24, 3.5vw, $spacing-48);
   position: relative;
 }
 
 .projects__header {
   text-align: center;
-  margin-bottom: clamp(12px, 2.5vw, 24px);
+  margin-bottom: clamp($spacing-12, 2.5vw, $spacing-24);
   position: relative;
 }
 .projects__view-toggle {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: $spacing-8;
+  right: $spacing-8;
   display: flex;
-  gap: 8px;
+  gap: $spacing-8;
   z-index: 10;
   min-width: 36px;
   height: 36px;
@@ -158,7 +167,7 @@ $border-radius: 12px;
 .projects__toggle-btn {
   width: 36px;
   height: 36px;
-  border-radius: 10px;
+  border-radius: $spacing-10;
   border: 1px solid rgba(15,23,42,.15);
   background: rgba(255,255,255,.9);
   display: inline-flex;
@@ -193,8 +202,8 @@ $border-radius: 12px;
   transform: translateX(-50%);
   background: rgba(15,23,42,.9);
   color: $color-white-short;
-  padding: 6px 10px;
-  border-radius: 6px;
+  padding: $spacing-6 $spacing-10;
+  border-radius: $spacing-6;
   font-size: 0.8rem;
   font-weight: 500;
   white-space: nowrap;
@@ -321,7 +330,7 @@ body.theme-dark .projects__toggle-btn::after {
     min-height: 500px;
     max-height: 500px;
     border-radius: $border-radius;
-    margin: 16px 24px 16px 16px;
+    margin: $spacing-16 $spacing-24 $spacing-16 $spacing-16;
     
     img {
       width: 100%;
@@ -399,12 +408,12 @@ body.theme-dark .projects__toggle-btn::after {
 
       .project-card__tech-tag {
         display: inline-block;
-        padding: 8px 16px;
+        padding: $spacing-8 $spacing-16;
         margin: 0;
         background: rgba(56,189,248,.1);
         color: $color-dark;
         border: 1px solid rgba(56,189,248,.3);
-        border-radius: 20px;
+        border-radius: $spacing-20;
         font-size: 0.9rem;
         font-weight: 500;
         text-decoration: none;
@@ -430,7 +439,7 @@ body.theme-dark .projects__toggle-btn::after {
       .project-card__cta-row {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 10px;
+        gap: $spacing-10;
       }
       .project-card__cta-row--two {
         grid-template-columns: 1fr 1fr;
@@ -449,7 +458,7 @@ body.theme-dark .projects__toggle-btn::after {
         );
         color: white;
         border: none;
-        border-radius: 8px;
+        border-radius: $spacing-8;
         font-weight: 700;
         font-size: clamp(0.85rem, 2.2vw, 1rem);
         line-height: 1.1;
@@ -558,7 +567,7 @@ body.theme-dark .projects__toggle-btn::after {
   height: 240px;
   min-height: 240px;
   max-height: 240px;
-  margin: 16px 20px 16px 16px;
+  margin: $spacing-16 $spacing-20 $spacing-16 $spacing-16;
   border-radius: $border-radius;
   overflow: hidden;
   background: #f8fafc;
@@ -574,7 +583,7 @@ body.theme-dark .projects__toggle-btn::after {
   flex: 1;
   width: auto;
   max-width: none;
-  padding: 12px 40px 16px 12px;
+  padding: $spacing-12 40px $spacing-16 $spacing-12;
   overflow: hidden;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -589,7 +598,7 @@ body.theme-dark .projects__toggle-btn::after {
 .project-card--side-by-side.project-card--list .project-card__title { 
   font-size: 1.15rem; 
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: $spacing-8;
   line-height: 1.3;
   white-space: normal;
   overflow-wrap: anywhere;
@@ -612,7 +621,7 @@ body.theme-dark .projects__toggle-btn::after {
   word-break: break-word;
 }
 .project-card--side-by-side.project-card--list .project-card__technologies .project-card__tech-tag {
-  padding: 6px 12px;
+  padding: $spacing-6 $spacing-12;
   font-size: 0.85rem;
 }
 .project-card--side-by-side.project-card--list .project-card__actions { 
@@ -628,12 +637,12 @@ body.theme-dark .projects__toggle-btn::after {
   overflow-y: auto;
 }
 .project-card--side-by-side.project-card--list .project-card__technologies { 
-  margin-bottom: 12px;
+  margin-bottom: $spacing-12;
   flex: 0 0 auto;
   max-width: 100%;
   overflow: hidden;
   word-wrap: break-word;
-  gap: 6px;
+  gap: $spacing-6;
 }
 .project-card--side-by-side.project-card--list .project-card__cta-row { 
   margin-right: 0; 
@@ -679,8 +688,8 @@ body.theme-dark .skeleton {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-      width: 72px;
-    height: 72px;
+  width: $nav-btn-size-desktop;
+  height: $nav-btn-size-desktop;
   background: rgba(255, 255, 255, 0.95);
   border: 2px solid rgba(15, 23, 42, 0.15);
   border-radius: 50%;
@@ -721,7 +730,7 @@ body.theme-dark .skeleton {
 .projects__grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: clamp(12px, 2.5vw, 20px);
+  gap: clamp($spacing-12, 2.5vw, $spacing-20);
 }
 
 @media (min-width: 600px) {
@@ -737,11 +746,11 @@ body.theme-dark .skeleton {
 .projects__grid-card {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: $spacing-10;
   position: relative;
   border: 1px solid rgba(15,23,42,.12);
   border-radius: $border-radius;
-  padding: 12px;
+  padding: $spacing-12;
   transition: border-color 180ms ease, box-shadow 180ms ease;
 }
 
@@ -779,7 +788,7 @@ body.theme-dark .projects__grid-card:hover {
 .projects__grid-cta-row {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 10px;
+  gap: $spacing-10;
 }
 .projects__grid-cta-row--two {
   grid-template-columns: 1fr 1fr;
@@ -791,7 +800,7 @@ body.theme-dark .projects__grid-card:hover {
   gap: clamp(6px, 1.5vw, 8px);
   width: 100%;
   padding: clamp(0.5rem, 1.8vw, 0.6rem) clamp(0.7rem, 2.2vw, 0.9rem);
-  border-radius: 8px;
+  border-radius: $spacing-8;
   border: none;
   background: linear-gradient(
     135deg,
@@ -922,7 +931,7 @@ body.theme-dark .projects__grid-excerpt {
 }
 
 // Mobile UX Optimization
-// ----------------------
+// ======================
 
 // Mobile list view enforcement
 @media (max-width: 768px) {
@@ -1008,8 +1017,8 @@ body.theme-dark .projects__grid-excerpt {
   }
 }
 
-// Responsive design
-// -----------------
+// Responsive Design
+// =================
 
 // Projects Responsive
 @media (max-width: 1024px) {
@@ -1022,11 +1031,11 @@ body.theme-dark .projects__grid-excerpt {
       height: 450px;
       min-height: 450px;
       max-height: 450px;
-      margin: 20px 28px 20px 20px;
+      margin: $spacing-20 28px $spacing-20 $spacing-20;
     }
     
     .project-card__info {
-      padding: 24px;
+      padding: $spacing-24;
       
       .project-card__title {
         font-size: 1.3rem;
@@ -1049,7 +1058,7 @@ body.theme-dark .projects__grid-excerpt {
       height: 200px;
       min-height: 200px;
       max-height: 200px;
-      margin: 16px 16px 0 16px;
+      margin: $spacing-16 $spacing-16 0 $spacing-16;
       border-radius: $border-radius;
     }
     
@@ -1057,14 +1066,14 @@ body.theme-dark .projects__grid-excerpt {
       flex: 1;
       width: 100%;
       max-width: 100%;
-      padding: 20px;
+      padding: $spacing-20;
       overflow-y: auto;
     }
   }
   
   .projects__nav-btn {
-    width: 56px;
-    height: 56px;
+    width: $nav-btn-size-mobile;
+    height: $nav-btn-size-mobile;
     font-size: 1.5rem;
     
     &--prev {
@@ -1095,13 +1104,13 @@ body.theme-dark .projects__grid-excerpt {
     flex: 1;
     width: 100%;
     max-width: 100%;
-    padding: 16px 32px 16px 16px;
+    padding: $spacing-16 $spacing-32 $spacing-16 $spacing-16;
   }
 }
 
 
-// Dark mode support
-// -----------------
+// Dark Mode Support
+// =================
 
 // Dark mode for Project Cards
 body.theme-dark .projects__card {
@@ -1231,7 +1240,7 @@ body.theme-dark .project-card__demo-btn--secondary:hover {
 }
 
 // Projects Credits
-// ----------------
+// ================
 .projects__credits {
   text-align: center;
   margin-top: 2rem;
