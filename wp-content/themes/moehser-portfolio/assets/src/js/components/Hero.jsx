@@ -54,8 +54,7 @@ function getTagStyles(isDark) {
 function getTextStyles(isDark, variant = 'primary') {
   const styles = {
     primary: { color: isDark ? '#e2e8f0' : '#0f172a' },
-    secondary: { color: isDark ? '#cbd5e1' : '#0f172a' },
-    mobile: { color: isDark ? '#94a3b8' : '#64748b' }
+    secondary: { color: isDark ? '#cbd5e1' : '#0f172a' }
   };
   return styles[variant] || styles.primary;
 }
@@ -110,7 +109,7 @@ export default function Hero() {
   const fullH1 = heroTitle;
   const fullP = heroSubtitle;
 
-  // Extract complex text rendering logic
+  // Render paragraph text with name highlighting
   const renderParagraphText = () => {
     const idx = pText.indexOf(name);
     if (idx >= 0) {
@@ -183,7 +182,7 @@ export default function Hero() {
       return; // skip timers
     }
     
-    // Skip typing animation on mobile devices and tablets
+    // Use static text on mobile for better UX
     if (isMobile) {
       setStage(2);
       setH1Text(fullH1);
@@ -191,7 +190,7 @@ export default function Hero() {
       return;
     }
     
-    // Show blinking cursor near image for initial delay, then start typing
+    // Start typing animation after cursor delay
     const t = setTimeout(() => setStage(1), TIMING.CURSOR_DELAY);
     return () => clearTimeout(t);
   }, [isPrint, isMobile]);
@@ -310,8 +309,8 @@ export default function Hero() {
             </div>
             
             <div className="hero__mobile-text">
-              <h1 style={getTextStyles(isDark, 'primary')}>{fullH1}</h1>
-              <p style={getTextStyles(isDark, 'mobile')}>
+              <h1>{fullH1}</h1>
+              <p>
                 {renderParagraphText()}
               </p>
             </div>

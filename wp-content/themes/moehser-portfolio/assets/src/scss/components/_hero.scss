@@ -303,18 +303,8 @@ $avatar-size-small: min(70vw, 350px);
     display: block;
     text-align: center;
   }
-}
-
-// Desktop: Hide mobile text, show typewriter effect
-@media (min-width: 1025px) {
-  .hero__mobile-text {
-    display: none !important;
-  }
   
-  .hero__code {
-    display: block !important;
-  }
-  
+  // Mobile text styling
   .hero__mobile-text h1 {
     font-size: clamp(2rem, 6vw, 3rem);
     font-weight: 700;
@@ -334,6 +324,31 @@ $avatar-size-small: min(70vw, 350px);
   .hero__mobile-text .hero__name {
     color: var(--accent);
     font-weight: 800;
+  }
+  
+  // Dark mode text colors
+  // ---------------------
+  body.theme-dark .hero__mobile-text h1 {
+    color: $color-light !important;
+  }
+
+  body.theme-dark .hero__mobile-text p {
+    color: $color-muted !important;
+  }
+
+  body.theme-dark .hero__mobile-text .hero__name {
+    color: var(--accent) !important;
+  }
+}
+
+// Desktop: Hide mobile text, show typewriter effect
+@media (min-width: 1025px) {
+  .hero__mobile-text {
+    display: none !important;
+  }
+  
+  .hero__code {
+    display: block !important;
   }
 }
 
@@ -420,19 +435,7 @@ body.theme-dark .brand-caret {
   color: $color-light;
 }
 
-// Dark Mode Mobile Text
-// ---------------------
-body.theme-dark .hero__mobile-text h1 {
-  color: $color-light;
-}
-
-body.theme-dark .hero__mobile-text p {
-  color: $color-muted;
-}
-
-body.theme-dark .hero__mobile-text .hero__name {
-  color: var(--accent);
-}
+// Dark Mode Mobile Text styles are handled inside the mobile media query above
 
 // Theme Toggle Styling
 // -------------------
