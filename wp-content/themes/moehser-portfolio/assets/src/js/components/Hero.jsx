@@ -99,6 +99,7 @@ export default function Hero() {
   const [pText, setPText] = useState('');
   const [isPrint, setIsPrint] = useState(false);
   const [isDark, setIsDark] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   
   // Get customizer values from WordPress
   const heroTitle = getCustomizerValue('__HERO_TITLE__');
@@ -162,6 +163,18 @@ export default function Hero() {
     return () => observer.disconnect();
   }, []);
 
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 1024); // includes tablets
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   useEffect(() => {
     if (isPrint) {
       setStage(2);
@@ -169,13 +182,22 @@ export default function Hero() {
       setPText(fullP);
       return; // skip timers
     }
+    
+    // Skip typing animation on mobile devices and tablets
+    if (isMobile) {
+      setStage(2);
+      setH1Text(fullH1);
+      setPText(fullP);
+      return;
+    }
+    
     // Show blinking cursor near image for initial delay, then start typing
     const t = setTimeout(() => setStage(1), TIMING.CURSOR_DELAY);
     return () => clearTimeout(t);
-  }, [isPrint]);
+  }, [isPrint, isMobile]);
 
   useEffect(() => {
-    if (isPrint) return; // skip typing in print
+    if (isPrint || isMobile) return; // skip typing in print and mobile
     if (stage === 1 && h1Text.length < fullH1.length) {
       const t = setTimeout(() => setH1Text(fullH1.slice(0, h1Text.length + 1)), TIMING.H1_TYPING_SPEED);
       return () => clearTimeout(t);
@@ -183,15 +205,15 @@ export default function Hero() {
       const t = setTimeout(() => setStage(2), TIMING.H1_PAUSE);
       return () => clearTimeout(t);
     }
-  }, [stage, h1Text, isPrint]);
+  }, [stage, h1Text, isPrint, isMobile]);
 
   useEffect(() => {
-    if (isPrint) return; // skip typing in print
+    if (isPrint || isMobile) return; // skip typing in print and mobile
     if (stage === 2 && pText.length < fullP.length) {
       const t = setTimeout(() => setPText(fullP.slice(0, pText.length + 1)), TIMING.P_TYPING_SPEED);
       return () => clearTimeout(t);
     }
-  }, [stage, pText, isPrint]);
+  }, [stage, pText, isPrint, isMobile]);
 
   return (
     <>
