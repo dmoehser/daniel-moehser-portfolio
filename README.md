@@ -1,188 +1,142 @@
 # Daniel Moehser | Portfolio Website
 
-A modern, responsive portfolio website built with WordPress, featuring a custom theme, dynamic project management, and interactive UI components. Showcases my web development projects and skills with a clean, professional design.
+A responsive portfolio website built with WordPress, featuring a custom theme, dynamic project management, and interactive UI components. Showcases my web development projects and skills with a clean, professional design.
 
-## Live Demo
+## Live Website
 
-Visit the live website: [https://danielmoehser.dev](https://danielmoehser.dev) *(Coming Soon)*
+Visit the live website: [https://danielmoehser.dev](https://danielmoehser.dev)
 
-*Note: This will be my actual portfolio website showcasing all my projects and skills.*
+## What This Is
 
-## GitHub Repository
+My personal portfolio website built with WordPress. I built it as a custom theme to dive deep into WordPress development and understand how the platform works.
 
+The project includes custom PHP backend logic, a comprehensive SCSS design system, and React/JSX components for interactive features.
+
+## Github Repository
 View source code: [https://github.com/dmoehser/daniel-moehser-portfolio](https://github.com/dmoehser/daniel-moehser-portfolio)
 
 ## Features
 
-- **Custom WordPress Theme**: Built from scratch with modern PHP and SCSS
+- **Custom WordPress Theme**: Built with PHP and SCSS
 - **Dynamic Project Management**: Custom Post Types with drag & drop reordering
 - **Interactive UI**: Smooth animations, hover effects, and responsive design
+- **Terminal Interface**: Yes, there's actually a working terminal on the website for website control (type `help` to see all commands)
 - **Dark/Light Mode**: Toggle between themes with persistent user preference
 - **Project Showcase**: Grid and list views with detailed project information
 - **Skills Section**: Animated skill bars and technology tags
-- **Contact Integration**: Working contact forms and social media links
 - **Mobile Responsive**: Optimized for all device sizes
 - **SEO Optimized**: Clean URLs, meta tags, and structured data
-- **Terminal Interface**: Interactive terminal for website control
 - **Performance Metrics**: Real-time performance monitoring with Google Core Web Vitals
+- **Print Optimization**: Optimized print styles for all sections
 
 ## Technologies Used
 
 - **WordPress**: Content Management System
 - **PHP**: Backend development and theme customization
-- **JavaScript (ES6+)**: Interactive features and animations
-- **SCSS**: Advanced CSS preprocessing and organization
+- **React/JSX + ES6+**: Interactive components and features
+- **SCSS**: CSS preprocessing with organized design system
 - **Custom Post Types**: Dynamic content management
 - **REST API**: Custom endpoints for project data
-- **Responsive Design**: Mobile-first approach
+- **Vite**: Asset compilation and development
 
 ## Project Structure
 
 ```
-moehser-portfolio/
+wp-content/themes/moehser-portfolio/
 ├── assets/
 │   ├── src/
-│   │   ├── js/                 # JavaScript modules
-│   │   ├── scss/              # SCSS stylesheets
-│   │   └── images/            # Theme images
-│   └── dist/                  # Compiled assets
+│   │   ├── js/                    # React/JSX components
+│   │   │   ├── main.jsx           # Main entry point
+│   │   │   ├── components/        # UI components
+│   │   │   │   ├── Hero.jsx
+│   │   │   │   ├── Projects.jsx
+│   │   │   │   ├── Skills.jsx
+│   │   │   │   ├── Terminal.jsx
+│   │   │   │   └── ui/            # Reusable UI components
+│   │   │   ├── features/          # Feature modules
+│   │   │   │   ├── terminal/
+│   │   │   │   ├── performance/
+│   │   │   │   └── accessibility/
+│   │   │   └── utils/             # Helper functions
+│   │   └── scss/                  # SCSS with design system
+│   │       ├── main.scss          # Main entry point
+│   │       ├── utils/
+│   │       │   └── _tokens.scss   # Design tokens
+│   │       ├── components/        # Component styles
+│   │       ├── features/          # Feature styles
+│   │       └── pages/             # Page styles
+│   └── dist/                      # Compiled assets (Vite output)
 ├── inc/
-│   ├── customizer.php         # WordPress Customizer
-│   ├── cpt-project.php        # Custom Post Type
-│   ├── api.php               # REST API endpoints
-│   └── projects-reorder.php  # Drag & drop reordering
-├── wp-content/
-│   └── uploads/
-│       └── projects/          # Project demos
-├── functions.php              # Theme functions
-├── style.css                 # Theme stylesheet
-└── index.php                 # Main template
+│   ├── api.php                   # REST API endpoints
+│   ├── cpt-project.php           # Custom Post Types
+│   ├── layout-builder.php        # Layout building features
+│   ├── projects-reorder.php      # Drag & drop functionality
+│   └── vite.php                  # Vite integration
+├── functions.php                  # Theme functions
+├── header.php, footer.php, index.php # WordPress templates
+├── package.json                   # Node.js dependencies
+├── vite.config.js                # Vite configuration
+└── style.css                     # WordPress required file
 ```
-
-## Key Features Implemented
-
-### Custom WordPress Theme
-- **Modern PHP Architecture**: Clean, maintainable code structure
-- **SCSS Organization**: Modular stylesheets with variables and mixins
-- **JavaScript Modules**: ES6+ modules for interactive features
-- **WordPress Hooks**: Proper integration with WordPress core
-
-### Dynamic Project Management
-- **Custom Post Types**: Easy project addition and editing
-- **Drag & Drop Reordering**: Visual project reordering with AJAX saving
-- **Custom Fields**: Project metadata and configuration
-- **REST API**: Custom endpoints for frontend data
-- **Admin Interface**: User-friendly project management
-
-### Interactive UI Components
-- **Project Grid/List Views**: Toggle between different layouts
-- **Modal Windows**: Fullscreen project previews
-- **Smooth Animations**: CSS transitions and JavaScript effects
-- **Dark/Light Mode**: Theme switching with localStorage
-
-### Responsive Design
-- **Mobile-First**: Optimized for all screen sizes
-- **Flexible Grid**: CSS Grid and Flexbox layouts
-- **Touch-Friendly**: Mobile-optimized interactions
-- **Performance**: Optimized images and assets
-
-### Advanced Features
-- **Terminal Interface**: Interactive command-line interface for website control
-- **Performance Metrics**: Real-time performance monitoring with Google Core Web Vitals
 
 ## What I Learned
 
-- **WordPress Development**: Custom themes, plugins, and APIs
+- **WordPress Development**: Custom themes, APIs, and WordPress core integration
 - **PHP Programming**: Object-oriented PHP and WordPress functions
-- **Advanced CSS**: SCSS, animations, and responsive design
-- **JavaScript ES6+**: Modules, async/await, and DOM manipulation
+- **React/JSX**: Building interactive UI components
+- **SCSS Architecture**: Organized stylesheets with design systems
 - **REST API Development**: Custom endpoints and data management
-- **Drag & Drop Interfaces**: Native HTML5 drag & drop with AJAX integration
-- **Performance Optimization**: Asset optimization and caching
-- **SEO Best Practices**: Meta tags, structured data, and clean URLs
-- **User Experience**: Intuitive navigation and interactive design
-- **Terminal Integration**: Interactive terminal interface
-- **Performance Metrics**: Google Core Web Vitals monitoring
+- **Performance Optimization**: Core Web Vitals and asset optimization
+- **Drag & Drop Interfaces**: HTML5 drag & drop with AJAX integration
 
 ## Why I Built This
 
 I wanted to create a professional portfolio website that showcases my development skills while being easy to maintain and update. This project demonstrates my ability to work with WordPress, create custom themes, and build interactive user interfaces.
 
-## Getting Started
+Building everything from scratch allowed me to experiment with WordPress APIs, implement proper SCSS architecture, and create unique interactive features.
 
-### Prerequisites
-- **WordPress** (5.0 or higher)
-- **PHP** (7.4 or higher)
-- **MySQL** (5.6 or higher)
-- **Node.js** (for asset compilation)
+## Development Setup
 
-### Installation
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/dmoehser/daniel-moehser-portfolio.git
-   cd daniel-moehser-portfolio
-   ```
+If you want to run this locally or contribute:
 
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+### What You Need
+- WordPress (5.0+)
+- PHP (7.4+)
+- Node.js (for building assets)
+- MySQL
 
-3. **Compile assets**:
-   ```bash
-   npm run build
-   ```
-
-4. **Upload to WordPress**:
-   - Upload the theme to `/wp-content/themes/`
-   - Activate the theme in WordPress admin
-   - Configure customizer settings
-
-### Development
+### Getting It Running
 ```bash
-# Watch for changes
-npm run watch
+# Clone it
+git clone https://github.com/dmoehser/daniel-moehser-portfolio.git
+cd daniel-moehser-portfolio
 
-# Build for production
+# Install dependencies
+npm install
+
+# Build assets
 npm run build
+
+# Or watch for changes while developing
+npm run watch
 ```
 
-## Customization
+### Working with the Code
 
-### Adding Projects
-1. **WordPress Admin** → **Projects** → **Add New**
-2. **Fill in project details**:
-   - Title and description
-   - Technologies used
-   - GitHub repository URL
-   - Demo URL (if available)
-   - Featured image
-3. **Publish** the project
+**SCSS Structure**: Everything is organized in `assets/src/scss/` with a design system. Each component has its own constants section, with shared tokens in `utils/_tokens.scss`.
 
-### Styling
-- **SCSS files** in `assets/src/scss/`
-- **Variables** in `_variables.scss`
-- **Components** in `components/` folder
-- **Compile** with `npm run build`
+**Adding Projects**: Use the WordPress admin - there's a custom "Projects" post type with drag & drop reordering.
+
+**JavaScript**: Mix of React/JSX components and ES6+ modules in `assets/src/js/` that gets compiled with Vite.
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+Feel free to open issues or submit pull requests if you find bugs or have suggestions.
 
 ## License
 
-This project is licensed under the MIT License.
-
-## Acknowledgments
-
-- **WordPress Community** for documentation and best practices
-- **Modern Web Development** techniques and patterns
-- **Open Source** libraries and tools
+MIT License - use it however you want.
 
 ---
 
-**Created with ❤️ by [danielmoehser.dev](https://danielmoehser.dev)**
+Created with ❤️ by [danielmoehser.dev](https://danielmoehser.dev)
