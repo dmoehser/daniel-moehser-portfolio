@@ -435,8 +435,6 @@ body.theme-dark .brand-caret {
   color: $color-light;
 }
 
-// Dark Mode Mobile Text styles are handled inside the mobile media query above
-
 // Theme Toggle Styling
 // -------------------
 .theme-toggle__btn--hero {
@@ -479,13 +477,18 @@ body.theme-dark .theme-toggle__btn--hero {
 
 // Hero Brand and Logo
 // -------------------
-@media (min-width: 769px) {
+@media (min-width: 1025px) {
   .hero__brand { 
     position: fixed; 
     top: 16px; 
     left: 16px; 
     z-index: 9001; 
     background: transparent;
+    width: auto;
+    min-height: auto;
+    padding: 6px 0;
+    border: none;
+    box-shadow: none;
   }
 }
 .hero__brand-link {
