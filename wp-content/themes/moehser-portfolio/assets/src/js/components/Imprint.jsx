@@ -27,7 +27,7 @@ const PROFILE_ADDRESS = {
 // -----------
 const CONTACT_FORM_DELAY = 100;
 const SOCIAL_DOCK_OFFSET = 80;
-const MOBILE_BREAKPOINT = 768;
+const MOBILE_BREAKPOINT = 1024; // includes tablets
 const CONTACT_ICONS = {
   EMAIL: '📧',
   CLOSE: '✕'

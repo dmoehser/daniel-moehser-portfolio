@@ -63,7 +63,7 @@ $color-light-secondary: #cbd5e1;
 }
 
 // Responsive adjustments for page-scroll
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .page-scroll {
     scroll-snap-type: y proximity; // Less strict on mobile
   }

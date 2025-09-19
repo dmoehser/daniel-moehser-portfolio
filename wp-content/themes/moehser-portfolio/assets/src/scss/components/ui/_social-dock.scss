@@ -79,7 +79,7 @@ $shadow-dark-enhanced-hover: inset 0 1px 0 rgba(255,255,255,.08), 0 10px 30px rg
 // Mobile optimizations
 // ====================
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .social-dock {
     display: none !important;
   }
@@ -235,7 +235,7 @@ body.theme-dark .social-dock .social:hover {
 // Dark mode mobile support
 // ========================
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   body.theme-dark .social-dock__toggle {
     background: $bg-dark-90;
     border-color: $border-dark;

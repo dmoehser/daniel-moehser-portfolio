@@ -934,7 +934,7 @@ body.theme-dark .projects__grid-excerpt {
 // ======================
 
 // Mobile list view enforcement
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .projects {
     min-height: auto !important;
     height: auto !important;
@@ -1044,7 +1044,7 @@ body.theme-dark .projects__grid-excerpt {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .project-card--side-by-side {
     flex-direction: column !important;
     height: 400px;
@@ -1286,7 +1286,7 @@ body.theme-dark .project-card__demo-btn--secondary:hover {
 
 // Mobile adjustments for credits
 // ------------------------------
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .projects__credits {
     margin-top: 1.5rem;
     padding: 0.75rem 0 0 0;
