@@ -16,37 +16,15 @@ function api_error($code, $message, $status = 400) {
 
 // Helper function for project data processing
 // ------------------------------------------
-function get_project_data($project, $is_german = false) {
+function get_project_data($project) {
     $meta = get_post_meta($project->ID);
     $featured_data = get_featured_image_data($project->ID);
     
-    // Get language-specific content
-    $title = html_entity_decode($project->post_title, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-    $content = $project->post_content;
-    $excerpt = $project->post_excerpt;
-    
-    // Use German versions if available and requested
-    if ($is_german) {
-        $german_title = isset($meta['project_title_de'][0]) ? $meta['project_title_de'][0] : '';
-        $german_content = isset($meta['project_content_de'][0]) ? $meta['project_content_de'][0] : '';
-        $german_excerpt = isset($meta['project_excerpt_de'][0]) ? $meta['project_excerpt_de'][0] : '';
-        
-        if (!empty($german_title)) {
-            $title = html_entity_decode($german_title, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-        }
-        if (!empty($german_content)) {
-            $content = $german_content;
-        }
-        if (!empty($german_excerpt)) {
-            $excerpt = $german_excerpt;
-        }
-    }
-    
     return array_merge([
         'id' => $project->ID,
-        'title' => $title,
-        'content' => $content,
-        'excerpt' => $excerpt,
+        'title' => html_entity_decode($project->post_title, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+        'content' => $project->post_content,
+        'excerpt' => $project->post_excerpt,
         'slug' => $project->post_name,
         'date' => $project->post_date,
         'modified' => $project->post_modified,
@@ -58,7 +36,6 @@ function get_project_data($project, $is_german = false) {
         'project_url_external' => isset($meta['project_url'][0]) ? $meta['project_url'][0] : '',
         'project_demo_mode' => isset($meta['project_demo_mode'][0]) ? $meta['project_demo_mode'][0] : 'iframe',
         'project_github_url' => isset($meta['project_github_url'][0]) ? $meta['project_github_url'][0] : '',
-        'language' => $is_german ? 'de' : 'en'
     ], $featured_data);
 }
 
@@ -245,7 +222,7 @@ function handle_projects_de_request($request) {
     
     if (!empty($projects)) {
         foreach ($projects as $project) {
-            $result[] = get_project_data($project, false);
+            $result[] = get_project_data($project);
         }
     }
 
@@ -298,7 +275,7 @@ function handle_single_project_de_request($request) {
         return api_error('project_not_found', 'Project not found', 404);
     }
 
-    $result = get_project_data($project, false);
+    $result = get_project_data($project);
     
     // Restore original site context
     if (is_multisite() && isset($german_site) && $german_site) {
