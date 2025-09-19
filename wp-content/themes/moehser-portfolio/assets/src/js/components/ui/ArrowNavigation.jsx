@@ -12,7 +12,7 @@ import { useEffect } from 'react';
 const NAVIGATION = {
   SCROLL_LOCK_DURATION: 450,
   SECTION_OFFSET: 4,
-  MOBILE_BREAKPOINT: 768,
+  MOBILE_BREAKPOINT: 1024,
   CONTAINER_ID: 'content-scroll'
 };
 

@@ -498,7 +498,7 @@ body.theme-dark {
 }
 
 // Mobile adjustments
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .settings-gear {
     bottom: 20px;
     right: 20px;
@@ -528,7 +528,7 @@ body.theme-dark {
 
 // Print mode - hide settings gear
 // Hide on mobile - integrated into mobile menu
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .settings-gear {
     display: none !important;
   }

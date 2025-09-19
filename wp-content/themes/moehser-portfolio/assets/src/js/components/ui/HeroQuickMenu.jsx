@@ -18,7 +18,7 @@ const API_CONFIG = {
   LOCALIZED_ENDPOINT: '/de/wp-json/moehser/v1/menu/header_primary'
 };
 
-const MOBILE_BREAKPOINT = 768; // pixels
+const MOBILE_BREAKPOINT = 1024; // pixels (includes tablets)
 
 const CSS_CLASSES = {
   CONTAINER: 'hero__quick',

@@ -13,7 +13,7 @@ import linkedinIcon from '../../../img/linkedin.svg';
 // Constants
 // ---------
 const BREAKPOINT_CONFIG = {
-  MOBILE_MAX_WIDTH: 768 // pixels
+  MOBILE_MAX_WIDTH: 1024 // pixels (includes tablets)
 };
 
 const ICON_CONFIG = {

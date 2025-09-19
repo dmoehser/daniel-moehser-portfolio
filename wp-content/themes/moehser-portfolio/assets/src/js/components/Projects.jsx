@@ -86,7 +86,7 @@ const LAYOUT_MODES = {
 
 // Media queries
 const MEDIA_QUERIES = {
-  MOBILE: '(max-width: 768px)',
+  MOBILE: '(max-width: 1024px)',
   PRINT: 'print',
   REDUCED_MOTION: '(prefers-reduced-motion: reduce)'
 };

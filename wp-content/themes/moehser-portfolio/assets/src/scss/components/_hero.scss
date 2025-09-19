@@ -253,8 +253,8 @@ $avatar-size-small: min(70vw, 350px);
   background: rgba(255,255,255,0.55); 
 }
 
-// Mobile optimizations
-@media (max-width: 768px) {
+// Mobile and Tablet optimizations
+@media (max-width: 1024px) {
   // Mobile header bar with glassmorphism effect
   .hero__brand {
     position: fixed;
@@ -306,7 +306,7 @@ $avatar-size-small: min(70vw, 350px);
 }
 
 // Desktop: Hide mobile text, show typewriter effect
-@media (min-width: 769px) {
+@media (min-width: 1025px) {
   .hero__mobile-text {
     display: none !important;
   }

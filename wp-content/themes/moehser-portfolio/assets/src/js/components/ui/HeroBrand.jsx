@@ -75,7 +75,7 @@ export default function HeroBrand() {
   // Detect mobile screen size
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth <= 1024); // includes tablets
     };
     
     checkMobile();

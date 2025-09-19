@@ -21,7 +21,7 @@ const API_CONFIG = {
   FALLBACK_LOCALIZED: '/de/index.php?rest_route=/moehser/v1/menu/header_primary'
 };
 
-const MOBILE_BREAKPOINT = 768; // pixels
+const MOBILE_BREAKPOINT = 1024; // pixels (includes tablets)
 
 const CSS_CLASSES = {
   CONTAINER: 'mobile-menu',
