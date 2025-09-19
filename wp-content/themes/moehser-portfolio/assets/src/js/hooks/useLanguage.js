@@ -3,49 +3,135 @@
 
 import { useState, useEffect } from 'react';
 
+// Constants
+// ---------
+const LANGUAGE_CONFIG = {
+  DEFAULT_LANGUAGE: 'en',
+  GERMAN_CODE: 'de',
+  GERMAN_PATH_PATTERN: '/de/',
+  STORAGE_KEY: 'user_language_preference'
+};
+
+const API_CONFIG = {
+  ENDPOINT: '/wp-json/moehser/v1/content',
+  TIMEOUT: 5000 // milliseconds
+};
+
+const FALLBACK_CONTENT = {
+  GERMAN: {
+    ABOUT_TITLE: 'Über mich',
+    ABOUT_SUBTITLE: 'Meine Geschichte & Erfahrung',
+    PROJECTS_TITLE: 'Projekte', 
+    PROJECTS_SUBTITLE: 'Meine neuesten Arbeiten und Projekte',
+    SKILLS_TITLE: 'Fähigkeiten',
+    SKILLS_SUBTITLE: 'Technologien & Tools mit denen ich arbeite'
+  },
+  ENGLISH: {
+    ABOUT_TITLE: 'About Me',
+    ABOUT_SUBTITLE: 'My story & experience',
+    PROJECTS_TITLE: 'Projects',
+    PROJECTS_SUBTITLE: 'My latest work and projects', 
+    SKILLS_TITLE: 'Skills',
+    SKILLS_SUBTITLE: 'Technologies & tools I work with'
+  }
+};
+
+const GLOBAL_VARS = {
+  ABOUT_TITLE: '__ABOUT_TITLE__',
+  ABOUT_SUBTITLE: '__ABOUT_SUBTITLE__',
+  PROJECTS_TITLE: '__PROJECTS_TITLE__',
+  PROJECTS_SUBTITLE: '__PROJECTS_SUBTITLE__',
+  SKILLS_TITLE: '__SKILLS_TITLE__',
+  SKILLS_SUBTITLE: '__SKILLS_SUBTITLE__'
+};
+
+// Utility functions
+// -----------------
+const isServerSideRendering = () => {
+  return typeof window === 'undefined';
+};
+
+const detectLanguageFromPath = () => {
+  if (isServerSideRendering()) return { language: LANGUAGE_CONFIG.DEFAULT_LANGUAGE, isGerman: false };
+  
+  const path = window.location.pathname;
+  const isGermanPath = path.includes(LANGUAGE_CONFIG.GERMAN_PATH_PATTERN);
+  
+  return {
+    language: isGermanPath ? LANGUAGE_CONFIG.GERMAN_CODE : LANGUAGE_CONFIG.DEFAULT_LANGUAGE,
+    isGerman: isGermanPath
+  };
+};
+
+const getGlobalVariable = (varName, fallback = '') => {
+  if (isServerSideRendering()) return fallback;
+  return window[varName] || fallback;
+};
+
+const createFallbackContent = (isGerman) => {
+  const fallback = isGerman ? FALLBACK_CONTENT.GERMAN : FALLBACK_CONTENT.ENGLISH;
+  
+  return {
+    language: isGerman ? LANGUAGE_CONFIG.GERMAN_CODE : LANGUAGE_CONFIG.DEFAULT_LANGUAGE,
+    about: {
+      title: getGlobalVariable(GLOBAL_VARS.ABOUT_TITLE, fallback.ABOUT_TITLE),
+      subtitle: getGlobalVariable(GLOBAL_VARS.ABOUT_SUBTITLE, fallback.ABOUT_SUBTITLE)
+    },
+    projects: {
+      title: getGlobalVariable(GLOBAL_VARS.PROJECTS_TITLE, fallback.PROJECTS_TITLE),
+      subtitle: getGlobalVariable(GLOBAL_VARS.PROJECTS_SUBTITLE, fallback.PROJECTS_SUBTITLE)
+    },
+    skills: {
+      title: getGlobalVariable(GLOBAL_VARS.SKILLS_TITLE, fallback.SKILLS_TITLE),
+      subtitle: getGlobalVariable(GLOBAL_VARS.SKILLS_SUBTITLE, fallback.SKILLS_SUBTITLE)
+    }
+  };
+};
+
+// Custom Hook
+// -----------
 export function useLanguage() {
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState(LANGUAGE_CONFIG.DEFAULT_LANGUAGE);
   const [isGerman, setIsGerman] = useState(false);
   const [content, setContent] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Initialize language detection
   useEffect(() => {
-    // Detect language from URL path
-    const detectLanguage = () => {
-      const path = window.location.pathname;
-      const isGermanPath = path.includes('/de/');
-      
-      setLanguage(isGermanPath ? 'de' : 'en');
-      setIsGerman(isGermanPath);
-    };
+    const { language: detectedLang, isGerman: detectedGerman } = detectLanguageFromPath();
+    setLanguage(detectedLang);
+    setIsGerman(detectedGerman);
+  }, []);
 
-    detectLanguage();
-
-    // Load language-specific content
+  // Content loading with improved error handling
+  useEffect(() => {
     const loadContent = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/wp-json/moehser/v1/content');
+        
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), API_CONFIG.TIMEOUT);
+        
+        const response = await fetch(API_CONFIG.ENDPOINT, {
+          signal: controller.signal,
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+          throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+        }
+        
         const data = await response.json();
         setContent(data);
       } catch (error) {
-        console.error('Failed to load language content:', error);
-        // Fallback to window variables
-        setContent({
-          language: isGerman ? 'de' : 'en',
-          about: {
-            title: window.__ABOUT_TITLE__ || (isGerman ? 'Über mich' : 'About Me'),
-            subtitle: window.__ABOUT_SUBTITLE__ || (isGerman ? 'Meine Geschichte & Erfahrung' : 'My story & experience')
-          },
-          projects: {
-            title: window.__PROJECTS_TITLE__ || (isGerman ? 'Projekte' : 'Projects'),
-            subtitle: window.__PROJECTS_SUBTITLE__ || (isGerman ? 'Meine neuesten Arbeiten und Projekte' : 'My latest work and projects')
-          },
-          skills: {
-            title: window.__SKILLS_TITLE__ || (isGerman ? 'Fähigkeiten' : 'Skills'),
-            subtitle: window.__SKILLS_SUBTITLE__ || (isGerman ? 'Technologien & Tools mit denen ich arbeite' : 'Technologies & tools I work with')
-          }
-        });
+        console.error('Failed to load language content:', error.message);
+        // Use fallback content with global variables
+        setContent(createFallbackContent(isGerman));
       } finally {
         setLoading(false);
       }
@@ -54,8 +140,8 @@ export function useLanguage() {
     loadContent();
   }, [isGerman]);
 
-  // Get language-specific text
-  const t = (key, fallback = '') => {
+  // Translation function with dot notation support
+  const getTranslation = (key, fallback = '') => {
     if (!content) return fallback;
     
     const keys = key.split('.');
@@ -72,38 +158,51 @@ export function useLanguage() {
     return value || fallback;
   };
 
-  // Get switch URL for language toggle
-  const getSwitchUrl = () => {
+  // URL generation utilities
+  const generateLanguageSwitchUrl = () => {
+    if (isServerSideRendering()) return '#';
+    
     const currentPath = window.location.pathname;
     const currentHash = window.location.hash;
     const currentSearch = window.location.search;
+    const origin = window.location.origin;
     
     if (isGerman) {
-      // Switch from localized to main site
-      const newPath = currentPath.replace('/de', '') || '/';
-      return `${window.location.origin}${newPath}${currentSearch}${currentHash}`;
+      // Switch from German to English
+      const newPath = currentPath.replace(LANGUAGE_CONFIG.GERMAN_PATH_PATTERN, '/') || '/';
+      return `${origin}${newPath}${currentSearch}${currentHash}`;
     } else {
-      // Switch from main to localized site
-      const newPath = currentPath === '/' ? '/de/' : currentPath.replace('/', '/de/');
-      return `${window.location.origin}${newPath}${currentSearch}${currentHash}`;
+      // Switch from English to German
+      const newPath = currentPath === '/' ? 
+        LANGUAGE_CONFIG.GERMAN_PATH_PATTERN : 
+        currentPath.replace('/', LANGUAGE_CONFIG.GERMAN_PATH_PATTERN);
+      return `${origin}${newPath}${currentSearch}${currentHash}`;
     }
   };
 
-  const switchLanguage = () => {
-    const newLanguage = isGerman ? 'en' : 'de';
-    localStorage.setItem('user_language_preference', newLanguage);
+  const performLanguageSwitch = () => {
+    if (isServerSideRendering()) return;
     
-    const switchUrl = getSwitchUrl();
+    const newLanguage = isGerman ? LANGUAGE_CONFIG.DEFAULT_LANGUAGE : LANGUAGE_CONFIG.GERMAN_CODE;
+    
+    try {
+      localStorage.setItem(LANGUAGE_CONFIG.STORAGE_KEY, newLanguage);
+    } catch (error) {
+      console.warn('Failed to save language preference:', error.message);
+    }
+    
+    const switchUrl = generateLanguageSwitchUrl();
     window.location.href = switchUrl;
   };
 
+  // Public API
   return {
     language,
     isGerman,
     content,
     loading,
-    t,
-    getSwitchUrl,
-    switchLanguage
+    t: getTranslation,                    // Translation function (public API)
+    getSwitchUrl: generateLanguageSwitchUrl, // URL generator (public API)  
+    switchLanguage: performLanguageSwitch    // Language switcher (public API)
   };
 }

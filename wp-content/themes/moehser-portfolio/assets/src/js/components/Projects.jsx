@@ -31,8 +31,10 @@ const waitForPrintStability = async (extraDelayMs = 250) => {
   }
 };
 
-// Animation constants
-// -------------------
+// Constants
+// =========
+
+// Animation settings
 const ANIMATION = {
   FADE_IN: {
     hidden: { opacity: 0, y: 30 },
@@ -55,8 +57,7 @@ const ANIMATION = {
   }
 };
 
-// Touch/Swipe constants
-// --------------------
+// Touch/swipe settings
 const TOUCH = {
   MIN_DISTANCE: 40,
   MAX_TIME: 600,
@@ -64,22 +65,62 @@ const TOUCH = {
   INTENT_RATIO: 1.5
 };
 
-// Print constants
-// ---------------
+// Print settings
 const PRINT = {
   STABILITY_DELAY: 4000,
   DEFAULT_DELAY: 250
 };
 
-// LocalStorage constants
-// ---------------------
+// LocalStorage settings
 const STORAGE = {
   VIEW_MODE_KEY: 'projects_view_mode',
-  DEFAULT_VIEW: false // false = grid, true = list
+  DEFAULT_VIEW: false
 };
 
+// Layout modes
+const LAYOUT_MODES = {
+  SIDE_BY_SIDE: 'side_by_side',
+  GRID: 'grid',
+  LIST: 'list'
+};
+
+// Media queries
+const MEDIA_QUERIES = {
+  MOBILE: '(max-width: 768px)',
+  PRINT: 'print',
+  REDUCED_MOTION: '(prefers-reduced-motion: reduce)'
+};
+
+// API endpoints
+const API_ENDPOINTS = {
+  PROJECTS: '/wp-json/moehser/v1/projects',
+  PROJECTS_DE: '/de/wp-json/moehser/v1/projects'
+};
+
+// Default values
+const DEFAULTS = {
+  TITLE: 'Projekte',
+  SUBTITLE: 'Subtitle below the main title',
+  AUTOPLAY_DELAY: 5,
+  SKELETON_WIDTHS: ['85%', '70%', '60%'],
+  MARGIN_BOTTOM: '16px'
+};
+
+// CSS classes
+const CSS_CLASSES = {
+  PROJECT_CARD: 'project-card',
+  PROJECT_CARD_SIDE_BY_SIDE: 'project-card--side-by-side',
+  PROJECT_CARD_LIST: 'project-card--list',
+  SKELETON: 'skeleton',
+  SKELETON_TEXT_LINE: 'skeleton--text-line',
+  SKELETON_IMAGE: 'skeleton--image'
+};
+
+
+// Utility Functions
+// =================
+
 // LocalStorage helpers
-// -------------------
 const saveViewMode = (isListView) => {
   try {
     if (typeof window !== 'undefined' && window.localStorage) {
@@ -100,6 +141,131 @@ const loadViewMode = () => {
     // Silent fail, return default
   }
   return STORAGE.DEFAULT_VIEW;
+};
+
+// Media query helpers
+const createMediaQuery = (query) => {
+  if (typeof window === 'undefined' || !window.matchMedia) return null;
+  return window.matchMedia(query);
+};
+
+const addMediaQueryListener = (mediaQuery, callback) => {
+  if (!mediaQuery || !mediaQuery.addListener) return;
+  mediaQuery.addListener(callback);
+};
+
+const removeMediaQueryListener = (mediaQuery, callback) => {
+  if (!mediaQuery || !mediaQuery.removeListener) return;
+  mediaQuery.removeListener(callback);
+};
+
+// Window object helpers
+const isWindowAvailable = () => typeof window !== 'undefined';
+
+const getWindowValue = (key, defaultValue = null) => {
+  return isWindowAvailable() ? window[key] : defaultValue;
+};
+
+// API helpers
+const getApiUrl = (isGerman) => {
+  return isGerman ? API_ENDPOINTS.PROJECTS_DE : API_ENDPOINTS.PROJECTS;
+};
+
+// Image error handling
+const createErrorImage = () => {
+  const img = new Image();
+  img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzY2NjY2NiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlIG5vdCBhdmFpbGFibGU8L3RleHQ+PC9zdmc+';
+  return img;
+};
+
+const handleImageError = (e) => {
+  e.target.src = createErrorImage().src;
+  e.target.alt = 'Image not available';
+};
+
+// Project content helpers
+const getProjectExcerpt = (project, maxLength = 150) => {
+  if (!project) return '';
+  
+  const content = project.content?.rendered || project.excerpt?.rendered || '';
+  const cleanContent = content.replace(/<[^>]*>/g, '').trim();
+  
+  if (cleanContent.length <= maxLength) return cleanContent;
+  return cleanContent.substring(0, maxLength).trim() + '...';
+};
+
+const hasProjectContent = (project) => {
+  return project && (
+    (project.content?.rendered && project.content.rendered.trim() !== '') ||
+    (project.excerpt?.rendered && project.excerpt.rendered.trim() !== '') ||
+    (project.content && project.content.trim() !== '') ||
+    (project.excerpt && project.excerpt.trim() !== '')
+  );
+};
+
+const getProjectContent = (project) => {
+  if (!project) return '';
+  
+  // Check for .rendered properties first (WordPress API format)
+  if (project.content?.rendered && project.content.rendered.trim() !== '') {
+    return project.content.rendered;
+  }
+  if (project.excerpt?.rendered && project.excerpt.rendered.trim() !== '') {
+    return project.excerpt.rendered;
+  }
+  
+  // Fallback to direct properties
+  if (project.content && project.content.trim() !== '') {
+    return project.content;
+  }
+  if (project.excerpt && project.excerpt.trim() !== '') {
+    return project.excerpt;
+  }
+  
+  return '';
+};
+
+// Skeleton rendering helper
+const renderSkeletonLines = (count = 3) => {
+  return Array.from({ length: count }, (_, i) => (
+    <div
+      key={i}
+      className={CSS_CLASSES.SKELETON_TEXT_LINE}
+      style={{ width: DEFAULTS.SKELETON_WIDTHS[i] || '60%' }}
+    />
+  ));
+};
+
+// Custom Hooks
+// ============
+
+// Customizer values hook
+const useCustomizerValues = () => {
+  const [customizerValues, setCustomizerValues] = useState({});
+  
+  useEffect(() => {
+    const values = getWindowValue('moehserCustomizerValues', {});
+    setCustomizerValues(values);
+  }, []);
+  
+  return customizerValues;
+};
+
+// Initial list view hook
+const useInitialListView = (layoutMode) => {
+  const [initialListView, setInitialListView] = useState(false);
+  
+  useEffect(() => {
+    if (layoutMode === LAYOUT_MODES.LIST) {
+      setInitialListView(true);
+    } else if (layoutMode === LAYOUT_MODES.GRID) {
+      setInitialListView(false);
+    } else {
+      setInitialListView(loadViewMode());
+    }
+  }, [layoutMode]);
+  
+  return initialListView;
 };
 
 // Render project excerpt
@@ -407,156 +573,109 @@ export default function Projects() {
   // Language detection
   const { isGerman } = useLanguage();
   
+  // State variables
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [listView, setListView] = useState(() => {
-    // For side_by_side mode, view toggle doesn't apply
-    if (typeof window !== 'undefined') {
-      const mode = window.__PROJECTS_LAYOUT_MODE__ || 'side_by_side';
-      if (mode === 'side_by_side') return false;
-      
-      // For grid/list modes, check saved preference or use mode default
-      const savedView = loadViewMode();
-      if (savedView !== null) return savedView;
-      
-      return mode === 'list'; // list mode defaults to true, grid mode defaults to false
-    }
-    return false;
-  });
   const [isPrint, setIsPrint] = useState(false);
   const [printReady, setPrintReady] = useState(false);
-  const pendingPrintRef = useRef(false);
   const [isPaused, setIsPaused] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [shouldFocusOnSlide, setShouldFocusOnSlide] = useState(false);
-  const currentSlideTitleRef = useRef(null);
-  const touchStartRef = useRef({ x: 0, y: 0, time: 0 });
-  const touchActiveRef = useRef(false);
   const [imageLoaded, setImageLoaded] = useState({});
   const [isMobile, setIsMobile] = useState(false);
 
+  // Refs
+  const pendingPrintRef = useRef(false);
+  const currentSlideTitleRef = useRef(null);
+  const touchStartRef = useRef({ x: 0, y: 0, time: 0 });
+  const touchActiveRef = useRef(false);
+
+  // Custom hooks
+  const customizerValues = useCustomizerValues();
+  const layoutMode = getWindowValue('__PROJECTS_LAYOUT_MODE__', LAYOUT_MODES.SIDE_BY_SIDE);
+  const initialListView = useInitialListView(layoutMode);
+  const [listView, setListView] = useState(initialListView);
+
+  // Helper functions
   const markImageLoaded = (projectId) => {
     if (!projectId) return;
     setImageLoaded((prev) => ({ ...prev, [projectId]: true }));
   };
 
-  // Enhanced setListView that persists to localStorage
   const updateListView = (newListView) => {
     setListView(newListView);
     saveViewMode(newListView);
   };
 
-  // Get customizer values
-  const projectsTitle = typeof window !== 'undefined' 
-    ? window.__PROJECTS_TITLE__ || 'Projekte' 
-    : 'Projekte';
-  const projectsSubtitle = typeof window !== 'undefined' 
-    ? window.__PROJECTS_SUBTITLE__ || '' 
-    : '';
-
-  // Check if subtitle should be displayed
+  // Customizer values
+  const projectsTitle = getWindowValue('__PROJECTS_TITLE__', DEFAULTS.TITLE);
+  const projectsSubtitle = getWindowValue('__PROJECTS_SUBTITLE__', '');
   const hasSubtitle = projectsSubtitle && 
     projectsSubtitle.trim() !== '' && 
-    projectsSubtitle !== 'Subtitle below the main title';
-  const layoutMode = typeof window !== 'undefined'
-    ? window.__PROJECTS_LAYOUT_MODE__ || 'side_by_side'
-    : 'side_by_side';
-  const showViewToggle = typeof window !== 'undefined'
-    ? (typeof window.__PROJECTS_SHOW_VIEW_TOGGLE__ !== 'undefined' 
-        ? window.__PROJECTS_SHOW_VIEW_TOGGLE__ 
-        : true)
-    : true;
-  const autoplay = typeof window !== 'undefined' 
-    ? window.__PROJECTS_AUTOPLAY__ || false 
-    : false;
-  const autoplayDelay = typeof window !== 'undefined' 
-    ? window.__PROJECTS_AUTOPLAY_DELAY__ || 5 
-    : 5;
-  const showOnlyActiveProjects = typeof window !== 'undefined'
-    ? (typeof window.__SHOW_ONLY_ACTIVE_PROJECTS__ !== 'undefined' 
-        ? window.__SHOW_ONLY_ACTIVE_PROJECTS__ 
-        : true)
-    : true;
+    projectsSubtitle !== DEFAULTS.SUBTITLE;
+  const showViewToggle = getWindowValue('__PROJECTS_SHOW_VIEW_TOGGLE__', true);
+  const autoplay = getWindowValue('__PROJECTS_AUTOPLAY__', false);
+  const autoplayDelay = getWindowValue('__PROJECTS_AUTOPLAY_DELAY__', DEFAULTS.AUTOPLAY_DELAY);
+  const showOnlyActiveProjects = getWindowValue('__SHOW_ONLY_ACTIVE_PROJECTS__', true);
 
-  // Determine default view based on layout mode
-  const getDefaultView = () => {
-    if (layoutMode === 'list') return true;
-    if (layoutMode === 'grid') return false;
-    return false;
-  };
 
+  // Media query and print detection
   useEffect(() => {
-    // Detect print mode via events and media query
-    const mq = window.matchMedia ? window.matchMedia('print') : null;
-    const rmq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
-    const mobileMq = window.matchMedia ? window.matchMedia('(max-width: 768px)') : null;
+    if (!isWindowAvailable()) return;
+
+    const printMq = createMediaQuery(MEDIA_QUERIES.PRINT);
+    const reducedMotionMq = createMediaQuery(MEDIA_QUERIES.REDUCED_MOTION);
+    const mobileMq = createMediaQuery(MEDIA_QUERIES.MOBILE);
     
     const handleBeforePrint = () => {
       pendingPrintRef.current = true;
       setIsPrint(true);
     };
+    
     const handleAfterPrint = () => {
       pendingPrintRef.current = false;
       setIsPrint(false);
     };
-    const handleMobileChange = (e) => {
-      setIsMobile(e.matches);
-    };
     
-    if (typeof window !== 'undefined') {
-      // If print dialog already open at mount
-      const mq = window.matchMedia && window.matchMedia('print');
-      if (mq && typeof mq.matches === 'boolean' && mq.matches) {
-        pendingPrintRef.current = true;
-        setIsPrint(true);
-      }
-      
-      // Set initial mobile state
-      if (mobileMq) {
-        setIsMobile(mobileMq.matches);
-      }
-      
-      window.addEventListener('beforeprint', handleBeforePrint);
-      window.addEventListener('afterprint', handleAfterPrint);
-      if (mq && typeof mq.addEventListener === 'function') {
-        mq.addEventListener('change', (e) => setIsPrint(e.matches));
-      }
-      if (rmq) {
-        setReducedMotion(Boolean(rmq.matches));
-        if (typeof rmq.addEventListener === 'function') {
-          rmq.addEventListener('change', (e) => setReducedMotion(Boolean(e.matches)));
-        }
-      }
-      if (mobileMq && typeof mobileMq.addEventListener === 'function') {
-        mobileMq.addEventListener('change', handleMobileChange);
-      }
+    const handleMobileChange = (e) => setIsMobile(e.matches);
+    const handleReducedMotionChange = (e) => setReducedMotion(e.matches);
+    const handlePrintChange = (e) => setIsPrint(e.matches);
+    
+    // Set initial states
+    if (printMq?.matches) {
+      pendingPrintRef.current = true;
+      setIsPrint(true);
     }
+    if (mobileMq) setIsMobile(mobileMq.matches);
+    if (reducedMotionMq) setReducedMotion(reducedMotionMq.matches);
+    
+    // Add event listeners
+    window.addEventListener('beforeprint', handleBeforePrint);
+    window.addEventListener('afterprint', handleAfterPrint);
+    addMediaQueryListener(printMq, handlePrintChange);
+    addMediaQueryListener(reducedMotionMq, handleReducedMotionChange);
+    addMediaQueryListener(mobileMq, handleMobileChange);
+    
     return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('beforeprint', handleBeforePrint);
-        window.removeEventListener('afterprint', handleAfterPrint);
-        if (mq && typeof mq.removeEventListener === 'function') {
-          mq.removeEventListener('change', (e) => setIsPrint(e.matches));
-        }
-        if (rmq && typeof rmq.removeEventListener === 'function') {
-          rmq.removeEventListener('change', (e) => setReducedMotion(Boolean(e.matches)));
-        }
-        if (mobileMq && typeof mobileMq.removeEventListener === 'function') {
-          mobileMq.removeEventListener('change', handleMobileChange);
-        }
-      }
+      window.removeEventListener('beforeprint', handleBeforePrint);
+      window.removeEventListener('afterprint', handleAfterPrint);
+      removeMediaQueryListener(printMq, handlePrintChange);
+      removeMediaQueryListener(reducedMotionMq, handleReducedMotionChange);
+      removeMediaQueryListener(mobileMq, handleMobileChange);
     };
   }, []);
 
-  // Terminal layout commands
+  // Terminal layout commands listener
   useEffect(() => {
+    if (!isWindowAvailable()) return;
+
     const handleLayoutChange = (event) => {
       const { layout } = event.detail;
-      if (layout === 'grid') {
+      if (layout === LAYOUT_MODES.GRID) {
         updateListView(false);
-      } else if (layout === 'list') {
+      } else if (layout === LAYOUT_MODES.LIST) {
         updateListView(true);
       }
     };
@@ -567,48 +686,45 @@ export default function Projects() {
     };
   }, []);
 
+  // Fetch projects data and preload images
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        // Dynamic API URL for multisite setup
-        const apiUrl = window.location.pathname.startsWith('/de/') 
-          ? '/de/wp-json/moehser/v1/projects'
-          : '/wp-json/moehser/v1/projects';
-        
+        const apiUrl = getApiUrl(isGerman);
         const response = await fetch(apiUrl);
+        
         if (!response.ok) {
           throw new Error('Failed to fetch projects');
         }
-        const data = await response.json();
         
-        // Filter active projects only
-        const filteredProjects = data.filter(project => project.project_status === 'active');
+        const data = await response.json();
+        const filteredProjects = showOnlyActiveProjects 
+          ? data.filter(project => project.project_status === 'active')
+          : data;
+        
         setProjects(filteredProjects);
 
         // Preload images for print mode
-        try {
-          const urls = filteredProjects
-            .map(p => p.featured_image_wide_2x || p.featured_image_wide || p.project_screenshot || p.featured_image)
-            .filter(Boolean);
-          if (urls.length === 0) {
-            setPrintReady(true);
-          } else {
-            let remaining = urls.length;
-            urls.forEach((u) => {
-              const img = new Image();
-              const done = () => {
-                remaining -= 1;
-                if (remaining <= 0) {
-                  setPrintReady(true);
-                }
-              };
-              img.onload = done;
-              img.onerror = done;
-              img.src = u;
-            });
-          }
-        } catch {
+        const imageUrls = filteredProjects
+          .map(p => p.featured_image_wide_2x || p.featured_image_wide || p.project_screenshot || p.featured_image)
+          .filter(Boolean);
+        
+        if (imageUrls.length === 0) {
           setPrintReady(true);
+        } else {
+          let remaining = imageUrls.length;
+          imageUrls.forEach((url) => {
+            const img = new Image();
+            const done = () => {
+              remaining -= 1;
+              if (remaining <= 0) {
+                setPrintReady(true);
+              }
+            };
+            img.onload = done;
+            img.onerror = done;
+            img.src = url;
+          });
         }
       } catch (err) {
         setError(err.message);
@@ -620,28 +736,29 @@ export default function Projects() {
     fetchProjects();
   }, [isPrint]);
 
-  // Remove dark theme for print
+  // Print mode effects
   useEffect(() => {
-    if (isPrint) {
-      const body = document.body;
-      const originalClass = body.className;
-      
-      body.classList.remove('theme-dark');
-      return () => {
-        body.className = originalClass;
-      };
-    }
+    if (!isPrint) return;
+    
+    const body = document.body;
+    const originalClass = body.className;
+    body.classList.remove('theme-dark');
+    
+    return () => {
+      body.className = originalClass;
+    };
   }, [isPrint]);
 
-  // Trigger print when ready
   useEffect(() => {
+    if (!(isPrint && printReady && projects.length > 0 && pendingPrintRef.current)) return;
+    
     let cancelled = false;
     const triggerPrint = async () => {
-      if (!(isPrint && printReady && projects.length > 0 && pendingPrintRef.current)) return;
       await waitForPrintStability(PRINT.STABILITY_DELAY);
       if (cancelled) return;
       try { window.print(); } catch {}
     };
+    
     triggerPrint();
     return () => { cancelled = true; };
   }, [isPrint, printReady, projects.length]);
@@ -653,33 +770,38 @@ export default function Projects() {
     }
 
     const autoplayTimer = setInterval(() => {
-      setCurrentSlide((prevSlide) => {
-        if (prevSlide >= projects.length - 1) {
-          return 0;
-        } else {
-          return prevSlide + 1;
-        }
-      });
+      setCurrentSlide(prevSlide => 
+        prevSlide >= projects.length - 1 ? 0 : prevSlide + 1
+      );
     }, Math.max(1, autoplayDelay) * 1000);
 
     const handleVisibility = () => {
-      if (document.hidden) {
-        clearInterval(autoplayTimer);
-      }
+      if (document.hidden) clearInterval(autoplayTimer);
     };
+    
     document.addEventListener('visibilitychange', handleVisibility);
-
     return () => {
       document.removeEventListener('visibilitychange', handleVisibility);
       clearInterval(autoplayTimer);
     };
-  }, [autoplay, autoplayDelay, projects.length, currentSlide, isPaused, reducedMotion, isPrint]);
+  }, [autoplay, autoplayDelay, projects.length, isPaused, reducedMotion, isPrint]);
+
+  // Navigation helpers
+  const goToPreviousSlide = () => {
+    setCurrentSlide(Math.max(0, currentSlide - 1));
+    setShouldFocusOnSlide(true);
+  };
+
+  const goToNextSlide = () => {
+    setCurrentSlide(Math.min(projects.length - 1, currentSlide + 1));
+    setShouldFocusOnSlide(true);
+  };
 
   // Keyboard navigation
   useEffect(() => {
+    if (projects.length <= 1) return;
+    
     const handleKeyDown = (e) => {
-      if (projects.length <= 1) return;
-      
       if (e.key === 'ArrowLeft') {
         e.preventDefault();
         goToPreviousSlide();
@@ -695,17 +817,7 @@ export default function Projects() {
     };
   }, [projects.length, currentSlide]);
 
-  const goToPreviousSlide = () => {
-    setCurrentSlide(Math.max(0, currentSlide - 1));
-    setShouldFocusOnSlide(true);
-  };
-
-  const goToNextSlide = () => {
-    setCurrentSlide(Math.min(projects.length - 1, currentSlide + 1));
-    setShouldFocusOnSlide(true);
-  };
-
-  // Focus slide title for accessibility
+  // Focus management for accessibility
   useEffect(() => {
     if (shouldFocusOnSlide && currentSlideTitleRef.current) {
       currentSlideTitleRef.current.focus();
@@ -713,22 +825,30 @@ export default function Projects() {
     }
   }, [shouldFocusOnSlide, currentSlide]);
 
-  // Touch swipe handlers
+  // Touch handlers
   const onTouchStart = (e) => {
     if (isPrint || projects.length <= 1) return;
-    const t = e.touches && e.touches[0] ? e.touches[0] : null;
-    if (!t) return;
+    const touch = e.touches?.[0];
+    if (!touch) return;
+    
     touchActiveRef.current = true;
-    touchStartRef.current = { x: t.clientX, y: t.clientY, time: Date.now() };
+    touchStartRef.current = { 
+      x: touch.clientX, 
+      y: touch.clientY, 
+      time: Date.now() 
+    };
   };
 
   const onTouchMove = (e) => {
     if (!touchActiveRef.current) return;
-    const t = e.touches && e.touches[0] ? e.touches[0] : null;
-    if (!t) return;
-    const dx = t.clientX - touchStartRef.current.x;
-    const dy = t.clientY - touchStartRef.current.y;
-    if (Math.abs(dx) > TOUCH.SCROLL_THRESHOLD && Math.abs(dx) > Math.abs(dy) * TOUCH.INTENT_RATIO) {
+    const touch = e.touches?.[0];
+    if (!touch) return;
+    
+    const dx = touch.clientX - touchStartRef.current.x;
+    const dy = touch.clientY - touchStartRef.current.y;
+    
+    if (Math.abs(dx) > TOUCH.SCROLL_THRESHOLD && 
+        Math.abs(dx) > Math.abs(dy) * TOUCH.INTENT_RATIO) {
       e.preventDefault();
     }
   };
@@ -736,14 +856,18 @@ export default function Projects() {
   const onTouchEnd = (e) => {
     if (!touchActiveRef.current) return;
     touchActiveRef.current = false;
-    const t = e.changedTouches && e.changedTouches[0] ? e.changedTouches[0] : null;
-    if (!t) return;
-    const dx = t.clientX - touchStartRef.current.x;
-    const dy = t.clientY - touchStartRef.current.y;
+    
+    const touch = e.changedTouches?.[0];
+    if (!touch) return;
+    
+    const dx = touch.clientX - touchStartRef.current.x;
+    const dy = touch.clientY - touchStartRef.current.y;
     const dt = Date.now() - touchStartRef.current.time;
+    
     const horizontal = Math.abs(dx) > Math.abs(dy) * TOUCH.INTENT_RATIO;
     const fastEnough = dt < TOUCH.MAX_TIME;
     const farEnough = Math.abs(dx) > TOUCH.MIN_DISTANCE;
+    
     if (horizontal && fastEnough && farEnough) {
       if (dx < 0 && currentSlide < projects.length - 1) {
         goToNextSlide();
@@ -753,69 +877,51 @@ export default function Projects() {
     }
   };
 
+  // Project click handler
   const handleProjectClick = (project) => {
-    if (project.project_url_external) {
-      if (project.project_demo_mode === 'iframe') {
-        try {
-          const event = new CustomEvent('project:fullscreen:open', {
-            detail: {
-              url: project.project_url_external,
-              id: project.id,
-              title: project.title
-            }
-          });
-          window.dispatchEvent(event);
-        } catch (error) {
-          window.open(project.project_url_external, '_blank');
-        }
-      } else {
+    if (!project.project_url_external) return;
+    
+    if (project.project_demo_mode === 'iframe') {
+      try {
+        const event = new CustomEvent('project:fullscreen:open', {
+          detail: {
+            url: project.project_url_external,
+            id: project.id,
+            title: project.title
+          }
+        });
+        window.dispatchEvent(event);
+      } catch (error) {
         window.open(project.project_url_external, '_blank');
       }
+    } else {
+      window.open(project.project_url_external, '_blank');
     }
   };
 
-  // State handlers
+  // Early returns for different states
   if ((loading && !isPrint) || (isPrint && (!printReady || loading))) {
-    return (
-      <ProjectsLoading 
-        projectsTitle={projectsTitle}
-        projectsSubtitle={projectsSubtitle}
-        hasSubtitle={hasSubtitle}
-      />
-    );
+    return <ProjectsLoading />;
   }
 
   if (error && !isPrint) {
-    return (
-      <ProjectsError 
-        projectsTitle={projectsTitle}
-        projectsSubtitle={projectsSubtitle}
-        error={error}
-        hasSubtitle={hasSubtitle}
-      />
-    );
+    return <ProjectsError error={error} />;
   }
 
   if (projects.length === 0 && !isPrint) {
-    return (
-      <ProjectsEmpty 
-        projectsTitle={projectsTitle}
-        projectsSubtitle={projectsSubtitle}
-        hasSubtitle={hasSubtitle}
-      />
-    );
+    return <ProjectsEmpty />;
   }
 
-  // Grid mode render
+  // Render functions
   const renderGrid = () => (
     <div className="projects__grid">
-      {projects.map((p) => (
-        <article key={p.id} className="projects__grid-card" aria-label={`Projekt: ${p.title}`}>
+      {projects.map((project) => (
+        <article key={project.id} className="projects__grid-card" aria-label={`Projekt: ${project.title}`}>
           <div className="projects__grid-thumb">
-            {renderProjectScreenshot(p, { isPriority: false })}
+            {renderProjectScreenshot(project, { isPriority: false })}
           </div>
-          <h3 className="projects__grid-title">{p.title}</h3>
-          {renderGridActions(p, handleProjectClick)}
+          <h3 className="projects__grid-title">{project.title}</h3>
+          {renderGridActions(project, handleProjectClick)}
         </article>
       ))}
     </div>
@@ -828,7 +934,7 @@ export default function Projects() {
           <div className="projects__card section-card">
             {/* View toggle buttons */}
             <div className="projects__view-toggle">
-              {(layoutMode === 'grid' || layoutMode === 'list') && showViewToggle && (
+              {(layoutMode === LAYOUT_MODES.GRID || layoutMode === LAYOUT_MODES.LIST) && showViewToggle && (
                 listView ? (
                   <button
                     className="projects__toggle-btn"
@@ -899,13 +1005,11 @@ export default function Projects() {
                       </div>
                       <div className="project-card__info">
                         <h3 className="project-card__title">{proj.title}</h3>
-                        {(proj.excerpt && proj.excerpt.trim() !== '') || (proj.content && proj.content.trim() !== '') ? (
-                          <div className="project-card__excerpt" dangerouslySetInnerHTML={{ __html: (proj.excerpt && proj.excerpt.trim() !== '' ? proj.excerpt : proj.content) }} />
+                        {hasProjectContent(proj) ? (
+                          <div className="project-card__excerpt" dangerouslySetInnerHTML={{ __html: getProjectContent(proj) }} />
                         ) : (
                           <div aria-hidden="true">
-                            <div className="skeleton skeleton--text-line" style={{ width: '85%' }}></div>
-                            <div className="skeleton skeleton--text-line" style={{ width: '70%' }}></div>
-                            <div className="skeleton skeleton--text-line" style={{ width: '60%' }}></div>
+                            {renderSkeletonLines(3)}
                           </div>
                         )}
                         {renderProjectTechnologies(proj)}
@@ -929,13 +1033,11 @@ export default function Projects() {
                       </div>
                       <div className="project-card__info">
                         <h3 className="project-card__title">{proj.title}</h3>
-                        {(proj.excerpt && proj.excerpt.trim() !== '') || (proj.content && proj.content.trim() !== '') ? (
-                          <div className="project-card__excerpt" dangerouslySetInnerHTML={{ __html: (proj.excerpt && proj.excerpt.trim() !== '' ? proj.excerpt : proj.content) }} />
+                        {hasProjectContent(proj) ? (
+                          <div className="project-card__excerpt" dangerouslySetInnerHTML={{ __html: getProjectContent(proj) }} />
                         ) : (
                           <div aria-hidden="true">
-                            <div className="skeleton skeleton--text-line" style={{ width: '85%' }}></div>
-                            <div className="skeleton skeleton--text-line" style={{ width: '70%' }}></div>
-                            <div className="skeleton skeleton--text-line" style={{ width: '60%' }}></div>
+                            {renderSkeletonLines(3)}
                           </div>
                         )}
                         {renderProjectTechnologies(proj)}

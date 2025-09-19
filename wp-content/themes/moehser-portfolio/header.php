@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html <?php 
-    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
-    $is_german = strpos($request_uri, '/de/') !== false;
+    // Use helper function for consistent language detection
+    $is_german = function_exists('is_german_request') ? is_german_request() : strpos($_SERVER['REQUEST_URI'] ?? '', '/de/') !== false;
     echo $is_german ? 'lang="de" dir="ltr"' : 'lang="en" dir="ltr"';
 ?>>
   <head>
@@ -30,6 +30,8 @@
     <?php wp_head(); ?>
   </head>
   <body <?php body_class(); ?>>
+    <?php
+    // Empty header - content rendered by React components
+    // wp_head() required for WordPress plugins and theme functionality
+    ?>
     <header></header>
-
-

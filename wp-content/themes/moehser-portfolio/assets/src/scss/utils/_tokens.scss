@@ -1,40 +1,41 @@
 // Design Tokens
 // =============
 
-// Neutral defaults for a developer portfolio
-// ------------------------------
+// Color Palette
+// =============
 
-// Colors
-// ------
-$color-bg: #f8fafc;         // page background
-$color-text: #0f172a;       // primary text
-$color-muted: #475569;      // secondary text
-$color-brand: #0f172a;      // brand primary
-$color-accent: #38bdf8;     // accent for interactive elements
+// Light Theme Colors
+// ------------------
+$color-bg: #f8fafc;         // Page background
+$color-text: #0f172a;       // Primary text
+$color-muted: #475569;      // Secondary text
+$color-brand: #0f172a;      // Brand primary
+$color-accent: #38bdf8;     // Interactive elements accent
 
-// Dark mode palette - X/Twitter inspired backgrounds
-// -------------------------------------------------
-$dark-bg: #15202b;          // main background (X-like)
-$dark-bg-section: #192734;  // section backgrounds (slightly lighter)
-$dark-bg-card: #1e2732;     // card backgrounds (subtle contrast)
-$dark-text: #c7f5d9;        // keep original green text
-$dark-muted: #89cda3;       // keep original muted green
-$dark-accent: #22ff88;      // keep original green accent
+// Dark Theme Colors
+// -----------------
+$dark-bg: #15202b;          // Main background (X/Twitter inspired)
+$dark-bg-section: #192734;  // Section backgrounds (slightly lighter)
+$dark-bg-card: #1e2732;     // Card backgrounds (subtle contrast)
+$dark-text: #c7f5d9;        // Primary green text
+$dark-muted: #89cda3;       // Secondary green text
+$dark-accent: #22ff88;      // Interactive green accent
 
-// Spacing scale
-// -------------
-// Multiples of 4
-$space-1: .25rem; // 4px
-$space-2: .5rem;  // 8px
-$space-3: .75rem; // 12px
-$space-4: 1rem;   // 16px
-$space-6: 1.5rem; // 24px
-$space-8: 2rem;   // 32px
+// Typography System
+// =================
+$font-family-sans: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
 
-// Typography
-// ----------
-$font-sans: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+// Spacing System
+// ==============
+$space-1: 0.25rem;          // 4px
+$space-2: 0.5rem;           // 8px
+$space-3: 0.75rem;          // 12px
+$space-4: 1rem;             // 16px
+$space-6: 1.5rem;           // 24px
+$space-8: 2rem;             // 32px
+
+// Additional Tokens
+// =================
+
 $font-size-base: 16px;
 $radius-lg: 12px;
-
-

@@ -1,28 +1,29 @@
 <?php
-/**
- * Setup initial menu_order for existing projects
- * 
- * @package Moehser_Portfolio
- */
+// Setup initial menu_order for existing projects
+// =============================================
 
 // Prevent direct access
 if (!defined('ABSPATH')) {
     exit;
 }
 
-/**
- * Set initial menu_order for existing projects
- */
+// Configuration constants
+// ----------------------
+const SETUP_OPTION_NAME = 'moehser_menu_order_setup_done';
+const PROJECTS_PER_PAGE = -1;
+
+// Set initial menu_order for existing projects
+// -------------------------------------------
 function moehser_setup_project_menu_order() {
     // Only run once
-    if (get_option('moehser_menu_order_setup_done')) {
+    if (get_option(SETUP_OPTION_NAME)) {
         return;
     }
     
     $projects = get_posts([
         'post_type' => 'project',
         'post_status' => 'publish',
-        'posts_per_page' => -1,
+        'posts_per_page' => PROJECTS_PER_PAGE,
         'orderby' => 'date',
         'order' => 'DESC'
     ]);
@@ -35,15 +36,16 @@ function moehser_setup_project_menu_order() {
     }
     
     // Mark as done
-    update_option('moehser_menu_order_setup_done', true);
+    update_option(SETUP_OPTION_NAME, true);
 }
 
 // Run on theme activation
 add_action('after_switch_theme', 'moehser_setup_project_menu_order');
 
 // Also run on admin init if not done yet
+// --------------------------------------
 add_action('admin_init', function() {
-    if (!get_option('moehser_menu_order_setup_done')) {
+    if (!get_option(SETUP_OPTION_NAME)) {
         moehser_setup_project_menu_order();
     }
 });

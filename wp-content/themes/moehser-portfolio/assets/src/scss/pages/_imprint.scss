@@ -1,30 +1,87 @@
 // Imprint Page Styles
 // ===================
 
+@use '../utils/tokens';
+
+// Spacing Constants
+// -----------------
+$spacing-1: 1px;
+$spacing-2: 2px;
+$spacing-4: 4px;
+$spacing-6: 6px;
+$spacing-12: 12px;
+$spacing-14: 14px;
+$spacing-16: 16px;
+$spacing-20: 20px;
+$spacing-24: 24px;
+$spacing-26: 26px;
+$spacing-48: 48px;
+
+// Size Constants (rem)
+// --------------------
+$size-0-75: 0.75rem;
+$size-1: 1rem;
+$size-1-1: 1.1rem;
+$size-1-5: 1.5rem;
+$size-1-75: 1.75rem;
+$size-2: 2rem;
+$size-2-5: 2.5rem;
+$size-3: 3rem;
+
+// Color Constants
+// ---------------
+$color-dark: #0f172a;
+$color-light: #e2e8f0;
+$color-muted: #64748b;
+$color-text-dark: #94a3b8;
+$color-accent: #38bdf8;
+
+// Background Colors
+// -----------------
+$bg-light: rgba(255,255,255,.95);
+$bg-dark: rgba(30,41,59,.95);
+$bg-gradient-light: linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.62));
+$bg-gradient-light-hover: linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.7));
+
+// Border Colors
+// -------------
+$border-light: rgba(15,23,42,.12);
+$border-dark: rgba(255,255,255,.12);
+$border-button: rgba(15,23,42,.10);
+$border-green: rgba(34,197,94,.4);
+
+// Size Constants
+// --------------
+$max-width: 1200px;
+$content-max-width: 800px;
+$border-radius: 16px;
+$border-radius-small: 8px;
+$z-header: 100;
+
 // Imprint page layout and components
-// ------------------------------
+// ==================================
 
 .imprint-page {
   min-height: 100vh;
-  background: var(--color-bg);
-  color: var(--color-text);
+  background: transparent;
+  color: $color-dark;
 }
 
 // Header with logo and back button
-// ------------------------------
+// ================================
 .imprint-header {
   position: sticky;
   top: 0;
-  z-index: 100;
-  background: var(--color-bg);
-  border-bottom: 1px solid var(--color-border);
-  backdrop-filter: blur(4px) saturate(110%);
-  -webkit-backdrop-filter: blur(4px) saturate(110%);
+  z-index: $z-header;
+  background: transparent;
+  border-bottom: $spacing-1 solid $border-light;
+  backdrop-filter: blur($spacing-4) saturate(110%);
+  -webkit-backdrop-filter: blur($spacing-4) saturate(110%);
   
   &__inner {
-    max-width: 1200px;
+    max-width: $max-width;
     margin: 0 auto;
-    padding: 1rem 3rem; // Match imprint content padding
+    padding: $size-1 $size-3;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -35,7 +92,7 @@
       text-decoration: none;
       font-family: monospace;
       font-weight: bold;
-      font-size: 1.1rem;
+      font-size: $size-1-1;
       transition: all 0.2s ease;
       
       &:hover {
@@ -47,65 +104,64 @@
   &__back-btn {
     display: inline-flex;
     align-items: center;
-    gap: 14px;
-    padding: 16px 26px;
-    border-radius: 8px;
-    background: linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.62));
-    color: #0f172a;
+    gap: $spacing-14;
+    padding: $spacing-16 $spacing-26;
+    border-radius: $border-radius-small;
+    background: $bg-gradient-light;
+    color: $color-dark;
     text-decoration: none;
     font-weight: 800;
-    font-size: 1rem;
-    border: 1px solid rgba(15,23,42,.10);
-    backdrop-filter: saturate(120%) blur(4px);
-    -webkit-backdrop-filter: saturate(120%) blur(4px);
+    font-size: $size-1;
+    border: $spacing-1 solid $border-button;
+    backdrop-filter: saturate(120%) blur($spacing-4);
+    -webkit-backdrop-filter: saturate(120%) blur($spacing-4);
     cursor: pointer;
     transition: all 0.2s ease;
     
     &:hover {
-      background: linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.7));
-      transform: translateY(-2px) scale(1.03);
-      box-shadow: 0 12px 26px rgba(15,23,42,.12);
-      color: #0f172a;
+      background: $bg-gradient-light-hover;
+      transform: translateY(-$spacing-2) scale(1.03);
+      box-shadow: 0 $spacing-12 $spacing-26 $border-light;
+      color: $color-dark;
     }
     
     svg {
-      width: 20px;
-      height: 20px;
+      width: $spacing-20;
+      height: $spacing-20;
     }
   }
 }
 
 // Main content area
-// ------------------------------
+// =================
+
 .imprint-main {
-  padding: 2rem 0;
+  padding: $size-2 0;
 }
 
-// Override section-base padding for imprint
-// ------------------------------
 .imprint.section-base {
-  padding: 2rem 0 4vh 0; // Reduced from 120px to 2rem
+  padding: $size-2 0 4vh 0;
 }
 
 // Imprint section - Custom styling
-// ------------------------------
+// =================================
 .imprint {
   min-height: 100vh;
   width: 100%;
   display: flex;
   align-items: flex-start;
-  justify-content: flex-start; // Align to left
+  justify-content: flex-start;
   background: transparent;
   position: relative;
-  padding: 2rem 0 4vh 0; // Reduced top padding
+  padding: $size-2 0 4vh 0;
   box-sizing: border-box;
   z-index: 1;
   
   &__inner {
     width: 100%;
-    max-width: 1200px; // Match header max-width
+    max-width: $max-width;
     margin: 0 auto;
-    padding: 0 3rem; // Increased padding to move content right
+    padding: 0 $size-3;
     position: relative;
     z-index: 2;
     overflow: visible;
@@ -113,35 +169,35 @@
   
   &__content {
     width: 100%;
-    max-width: 800px;
-    margin: 0; // No centering
+    max-width: $content-max-width;
+    margin: 0;
   }
   
   &__card {
     width: 100%;
-    background: rgba(255,255,255,.95);
-    border: 1px solid rgba(15,23,42,.12);
-    border-radius: 16px;
-    padding: clamp(24px, 3.5vw, 48px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    backdrop-filter: blur(4px) saturate(110%);
-    -webkit-backdrop-filter: blur(4px) saturate(110%);
+    background: $bg-light;
+    border: $spacing-1 solid $border-light;
+    border-radius: $border-radius;
+    padding: clamp($spacing-24, 3.5vw, $spacing-48);
+    box-shadow: 0 $spacing-4 $spacing-6 (-$spacing-1) rgba(0, 0, 0, 0.1), 0 $spacing-2 $spacing-4 (-$spacing-1) rgba(0, 0, 0, 0.06);
+    backdrop-filter: blur($spacing-4) saturate(110%);
+    -webkit-backdrop-filter: blur($spacing-4) saturate(110%);
   }
   
   &__header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: $size-2;
   }
   
   &__title {
-    font-size: 2.5rem;
+    font-size: $size-2-5;
     font-weight: 700;
-    color: var(--color-text);
+    color: $color-dark;
     margin: 0;
   }
   
   &__body {
-    margin-top: 1rem;
+    margin-top: $size-1;
   }
   
   &__text {
@@ -150,10 +206,10 @@
   
   &__content-text {
     h3 {
-      font-size: 1.5rem;
+      font-size: $size-1-5;
       font-weight: 600;
-      color: var(--color-text);
-      margin: 2rem 0 1rem 0;
+      color: $color-dark;
+      margin: $size-2 0 $size-1 0;
       
       &:first-child {
         margin-top: 0;
@@ -161,17 +217,17 @@
     }
     
     p {
-      margin: 1rem 0;
-      color: var(--color-text-secondary);
+      margin: $size-1 0;
+      color: $color-muted;
       
       strong {
-        color: var(--color-text);
+        color: $color-dark;
         font-weight: 600;
       }
     }
     
     a {
-      color: var(--color-primary);
+      color: $color-accent;
       text-decoration: none;
       
       &:hover {
@@ -181,88 +237,88 @@
   }
 }
 
-// Responsive design
-// ------------------------------
+// Responsive Design
+// =================
 @media (max-width: 768px) {
   .imprint-header {
     &__inner {
-      padding: 0.75rem 1rem; // Reduced vertical padding
+      padding: $size-0-75 $size-1;
     }
     
     &__back-btn {
-      display: none !important; // Hide back button on mobile
+      display: none !important;
     }
   }
   
   .imprint {
     &__inner {
-      padding: 0 0.75rem; // Reduced side padding for more content space
+      padding: 0 $size-0-75;
     }
     
     &__card {
-      padding: 1.5rem 1rem; // Reduced padding to give more text space
-      margin: 0; // Remove any margins
+      padding: $size-1-5 $size-1;
+      margin: 0;
     }
     
     &__title {
-      font-size: 1.75rem; // Slightly smaller title
-      margin-bottom: 1rem; // Reduced margin
+      font-size: $size-1-75;
+      margin-bottom: $size-1;
     }
     
     &__content-text {
       h3 {
-        font-size: 1.1rem; // Smaller headings
-        margin: 1.25rem 0 0.5rem 0; // Reduced margins
+        font-size: $size-1-1;
+        margin: 1.25rem 0 0.5rem 0;
       }
       
       p {
-        margin: 0.75rem 0; // Reduced paragraph margins
-        font-size: 0.9rem; // Slightly smaller text for better fit
-        line-height: 1.5; // Tighter line height
+        margin: $size-0-75 0;
+        font-size: 0.9rem;
+        line-height: 1.5;
       }
     }
   }
 }
 
-// Dark mode support
-// ------------------------------
+// Dark Mode Support
+// =================
 .theme-dark {
   .imprint-header {
-    background: var(--color-bg-dark);
-    border-bottom-color: var(--color-border-dark);
+    background: transparent;
+    border-bottom-color: $border-dark;
     
     .imprint-header__logo-link {
       span {
-        &:nth-child(1) { color: #94a3b8 !important; } // <
-        &:nth-child(2) { color: #e2e8f0 !important; } // danielmoehser
-        &:nth-child(3) { color: #38bdf8 !important; } // .dev
-        &:nth-child(4) { color: #94a3b8 !important; } // />
+        &:nth-child(1) { color: $color-text-dark !important; }
+        &:nth-child(2) { color: $color-light !important; }
+        &:nth-child(3) { color: $color-accent !important; }
+        &:nth-child(4) { color: $color-text-dark !important; }
       }
     }
     
     .imprint-header__back-btn {
-      background: rgba(30,41,59,.95);
-      border-color: rgba(255,255,255,.12);
-      color: #e2e8f0;
+      background: $bg-dark;
+      border-color: $border-dark;
+      color: $color-light;
       
       &:hover {
         background: rgba(30,41,59,.98);
-        border-color: rgba(34,197,94,.4);
-        box-shadow: 0 12px 26px rgba(34,197,94,.15);
-        color: #e2e8f0;
+        border-color: $border-green;
+        box-shadow: 0 $spacing-12 $spacing-26 rgba(34,197,94,.15);
+        color: $color-light;
       }
     }
   }
   
   .imprint__card {
-    background: rgba(30,41,59,.95);
-    border-color: rgba(255,255,255,.12);
-    color: #e2e8f0;
+    background: $bg-dark;
+    border-color: $border-dark;
+    color: $color-light;
   }
 }
 
 // Desktop/Mobile visibility classes
-// ------------------------------
+// =================================
 .desktop-only {
   display: block;
 }
@@ -282,14 +338,15 @@
 }
 
 // Imprint Credits
-// ---------------
+// ================
+
 .imprint__credits {
   text-align: center;
-  padding: 2rem 0;
+  padding: $size-2 0;
   
   p {
     margin: 0;
-    color: var(--color-text);
+    color: $color-dark;
     font-size: 0.875rem;
     opacity: 0.7;
     transition: opacity 0.2s ease;
@@ -306,35 +363,26 @@
   }
 }
 
-// Dark mode support for imprint credits
-// -------------------------------------
 .theme-dark .imprint__credits {
   p {
-    color: var(--color-text-dark);
+    color: $color-light;
   }
-  
-  // Credits use same brand classes as header logo
-  // Dark mode colors are already defined in _hero.scss
 }
 
-// No cookies hint styling
-// -----------------------
 .imprint__credits small[style*="#64748b"] {
-  color: #64748b !important;
+  color: $color-muted !important;
 }
 
 .theme-dark .imprint__credits small[style*="#64748b"] {
-  color: #94a3b8 !important;
+  color: $color-text-dark !important;
 }
 
-// Mobile adjustments for imprint credits
-// -------------------------------------
 @media (max-width: 768px) {
   .imprint__credits {
-    padding: 1rem 0;
+    padding: $size-1 0;
     
     p {
-      font-size: 0.75rem;
+      font-size: $size-0-75;
     }
   }
 }

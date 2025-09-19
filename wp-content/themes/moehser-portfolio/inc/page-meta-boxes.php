@@ -1,10 +1,37 @@
 <?php
-/**
- * Page Meta Boxes for Moehser Portfolio
- */
+
+// Page Meta Boxes for Moehser Portfolio
+// =====================================
 
 if (!defined('ABSPATH')) {
     exit;
+}
+
+// Meta box configuration
+// ----------------------
+const FOOTER_META_KEY = '_moehser_footer_enabled';
+const FOOTER_DEFAULT_VALUE = '1';
+const FOOTER_NONCE_ACTION = 'moehser_page_footer_meta_box';
+
+// Helper function to validate meta box security
+// --------------------------------------------
+function validate_meta_box_security($post_id, $nonce_name, $nonce_action) {
+    // Check if nonce is valid
+    if (!isset($_POST[$nonce_name]) || !wp_verify_nonce($_POST[$nonce_name], $nonce_action)) {
+        return false;
+    }
+    
+    // Check if user has permission
+    if (!current_user_can('edit_post', $post_id)) {
+        return false;
+    }
+    
+    // Check if this is an autosave
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return false;
+    }
+    
+    return true;
 }
 
 // Add meta box to pages
@@ -20,14 +47,15 @@ add_action('add_meta_boxes', function() {
 });
 
 // Meta box callback
+// ----------------
 function moehser_page_footer_meta_box_callback($post) {
     // Add nonce for security
-    wp_nonce_field('moehser_page_footer_meta_box', 'moehser_page_footer_meta_box_nonce');
+    wp_nonce_field(FOOTER_NONCE_ACTION, FOOTER_NONCE_ACTION . '_nonce');
     
-    // Get current value
-    $footer_enabled = get_post_meta($post->ID, '_moehser_footer_enabled', true);
+    // Get current value with default
+    $footer_enabled = get_post_meta($post->ID, FOOTER_META_KEY, true);
     if ($footer_enabled === '') {
-        $footer_enabled = '1'; // Default to enabled
+        $footer_enabled = FOOTER_DEFAULT_VALUE;
     }
     
     echo '<p>';
@@ -43,26 +71,16 @@ function moehser_page_footer_meta_box_callback($post) {
 }
 
 // Save meta box data
+// -----------------
 add_action('save_post', function($post_id) {
-    // Check if nonce is valid
-    if (!isset($_POST['moehser_page_footer_meta_box_nonce']) || 
-        !wp_verify_nonce($_POST['moehser_page_footer_meta_box_nonce'], 'moehser_page_footer_meta_box')) {
-        return;
-    }
-    
-    // Check if user has permission
-    if (!current_user_can('edit_post', $post_id)) {
-        return;
-    }
-    
-    // Check if this is an autosave
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+    // Validate security using helper function
+    if (!validate_meta_box_security($post_id, FOOTER_NONCE_ACTION . '_nonce', FOOTER_NONCE_ACTION)) {
         return;
     }
     
     // Save footer setting
     $footer_enabled = isset($_POST['moehser_footer_enabled']) ? '1' : '0';
-    update_post_meta($post_id, '_moehser_footer_enabled', $footer_enabled);
+    update_post_meta($post_id, FOOTER_META_KEY, $footer_enabled);
 });
 
 // Footer is now handled entirely by React component

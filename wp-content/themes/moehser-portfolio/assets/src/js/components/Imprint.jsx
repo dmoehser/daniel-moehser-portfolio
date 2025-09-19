@@ -1,8 +1,6 @@
 // Imprint Component
 // ================
-
 // Static imprint page with WordPress integration
-// ---------------------------------------------
 
 import React, { useState, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -11,10 +9,141 @@ import HeroBrand from './ui/HeroBrand';
 import MobileMenu from './ui/MobileMenu';
 import { useLanguage } from '../hooks/useLanguage';
 
+// Configuration constants
+// ----------------------
+const DEFAULT_IMPRINT_TITLE = 'Imprint';
+const DEFAULT_BUSINESS_EMAIL_SUBJECT = 'Business Inquiry - Portfolio Contact';
+const PROFILE_NAME = 'Daniel Moehser';
+const PROFILE_EMAIL = 'hi@danielmoehser.dev';
+const PROFILE_WEBSITE = 'danielmoehser.dev';
+const PROFILE_ADDRESS = {
+  STREET: 'Sydneystr. 8',
+  CITY: '22297 Hamburg',
+  COUNTRY_DE: 'Deutschland',
+  COUNTRY_EN: 'Germany'
+};
+
+// UI constants
+// -----------
+const CONTACT_FORM_DELAY = 100;
+const SOCIAL_DOCK_OFFSET = 80;
+const MOBILE_BREAKPOINT = 768;
+const CONTACT_ICONS = {
+  EMAIL: '📧',
+  CLOSE: '✕'
+};
+
+// Language-specific content
+// ------------------------
+const CONTACT_LABELS = {
+  DE: {
+    CONTACT: 'Kontakt',
+    CONTACT_FORM: 'Kontaktformular',
+    CLOSE_FORM: 'Kontaktformular schließen'
+  },
+  EN: {
+    CONTACT: 'Contact',
+    CONTACT_FORM: 'Contact Form',
+    CLOSE_FORM: 'Close Contact Form'
+  }
+};
+
+// Print content constants
+// ----------------------
+const PRINT_CONTENT = {
+  DE: {
+    TITLE: 'Rechtliche Hinweise',
+    CONTACT_EMAIL: 'E-Mail:',
+    CONTACT_WEBSITE: 'Website:',
+    RESPONSIBLE_TITLE: 'Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV',
+    DISCLAIMER_TITLE: 'Haftungsausschluss',
+    DISCLAIMER_TEXT: 'Die Inhalte meiner Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte kann ich jedoch keine Gewähr übernehmen.',
+    PRIVACY_TITLE: 'Datenschutz',
+    PRIVACY_TEXT: 'Die Nutzung meiner Website ist in der Regel ohne Angabe personenbezogener Daten möglich. Soweit auf meinen Seiten personenbezogene Daten (beispielsweise Name, Anschrift oder E-Mail-Adressen) erhoben werden, erfolgt dies, soweit möglich, stets auf freiwilliger Basis.',
+    COPYRIGHT_TITLE: 'Urheberrecht',
+    COPYRIGHT_TEXT: 'Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.'
+  },
+  EN: {
+    TITLE: 'Legal Notice',
+    CONTACT_EMAIL: 'Email:',
+    CONTACT_WEBSITE: 'Website:',
+    RESPONSIBLE_TITLE: 'Responsible for content according to German law (§ 55 Abs. 2 RStV)',
+    DISCLAIMER_TITLE: 'Disclaimer',
+    DISCLAIMER_TEXT: 'The contents of my pages have been created with the utmost care. However, I cannot guarantee the accuracy, completeness and timeliness of the content.',
+    PRIVACY_TITLE: 'Privacy',
+    PRIVACY_TEXT: 'The use of my website is generally possible without providing personal data. If personal data (such as name, address or e-mail addresses) is collected on my pages, this is always done on a voluntary basis as far as possible.',
+    COPYRIGHT_TITLE: 'Copyright',
+    COPYRIGHT_TEXT: 'The content and works created by the site operators on these pages are subject to German copyright law. The reproduction, processing, distribution and any kind of exploitation outside the limits of copyright require the written consent of the respective author or creator.'
+  }
+};
+
+// Helper functions
+// ---------------
+function getCustomizerValue(key, defaultValue = '') {
+  return typeof window !== 'undefined' ? (window[key] || defaultValue) : defaultValue;
+}
+
+function isGermanLanguage() {
+  return typeof window !== 'undefined' && 
+    (window.location.pathname.includes('/de/') || 
+     document.querySelector('.imprint__content-text')?.innerHTML.includes('Kontakt'));
+}
+
+function generateContactFormButton(isGerman) {
+  const labels = isGerman ? CONTACT_LABELS.DE : CONTACT_LABELS.EN;
+  return `
+    <div class="imprint-contact-section">
+      <h3>${labels.CONTACT}</h3>
+      <div class="contact-form-container">
+        <button class="contact-form__toggle" onclick="window.toggleImprintContactForm()" id="imprint-contact-toggle">
+          <span class="contact-form__toggle-icon">${CONTACT_ICONS.EMAIL}</span>
+          <span class="contact-form__toggle-text">${labels.CONTACT_FORM}</span>
+        </button>
+        <div class="contact-form__wrapper" id="imprint-contact" style="display: none;">
+          <!-- Contact form will be rendered here -->
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function generatePrintContent(isGerman) {
+  const labels = isGerman ? CONTACT_LABELS.DE : CONTACT_LABELS.EN;
+  const content = isGerman ? PRINT_CONTENT.DE : PRINT_CONTENT.EN;
+  const country = isGerman ? PROFILE_ADDRESS.COUNTRY_DE : PROFILE_ADDRESS.COUNTRY_EN;
+  
+  return `
+    <h2>${content.TITLE}</h2>
+    <p><strong>${PROFILE_NAME}</strong><br>
+    ${PROFILE_ADDRESS.STREET}<br>
+    ${PROFILE_ADDRESS.CITY}<br>
+    ${country}</p>
+
+    <h3>${labels.CONTACT}</h3>
+    <p>${content.CONTACT_EMAIL} ${PROFILE_EMAIL}</p>
+    <p>${content.CONTACT_WEBSITE} ${PROFILE_WEBSITE}</p>
+    
+    <h3>${content.RESPONSIBLE_TITLE}</h3>
+    <p><strong>${PROFILE_NAME}</strong><br>
+    ${PROFILE_ADDRESS.STREET}<br>
+    ${PROFILE_ADDRESS.CITY}<br>
+    ${country}</p>
+
+    <h3>${content.DISCLAIMER_TITLE}</h3>
+    <p>${content.DISCLAIMER_TEXT}</p>
+
+    <h3>${content.PRIVACY_TITLE}</h3>
+    <p>${content.PRIVACY_TEXT}</p>
+
+    <h3>${content.COPYRIGHT_TITLE}</h3>
+    <p>${content.COPYRIGHT_TEXT}</p>
+  `;
+}
+
 export default function Imprint() {
   // Get page content from WordPress
-  const imprintTitle = typeof window !== 'undefined' ? (window.__IMPRINT_TITLE__ || 'Imprint') : 'Imprint';
-  const imprintHTML = typeof window !== 'undefined' ? (window.__IMPRINT_HTML__ || '') : '';
+  const imprintTitle = getCustomizerValue('__IMPRINT_TITLE__', DEFAULT_IMPRINT_TITLE);
+  const imprintHTML = getCustomizerValue('__IMPRINT_HTML__');
   const contentToShow = imprintHTML || '';
 
   // Language detection
@@ -28,121 +157,30 @@ export default function Imprint() {
   const isExpandedRef = useRef(false);
 
   // Get business email subject from WordPress Customizer
-  const businessEmailSubject = typeof window !== 'undefined' ? 
-    (window.__BUSINESS_EMAIL_SUBJECT__ || 'Business Inquiry - Portfolio Contact') : 
-    'Business Inquiry - Portfolio Contact';
+  const businessEmailSubject = getCustomizerValue('__BUSINESS_EMAIL_SUBJECT__', DEFAULT_BUSINESS_EMAIL_SUBJECT);
 
   // Process content to replace h3 Contact/Kontakt with contact form
   const processImprintContent = (html) => {
     if (!html) return '';
     
     // Detect language from URL or content
-    const isGerman = typeof window !== 'undefined' && 
-      (window.location.pathname.includes('/de/') || 
-       html.includes('Kontakt') || 
-       html.includes('Impressum'));
+    const isGerman = isGermanLanguage();
     
-    // German contact form button
-    const germanContactFormButton = `
-      <div class="imprint-contact-section">
-        <h3>Kontakt</h3>
-        <div class="contact-form-container">
-          <button class="contact-form__toggle" onclick="window.toggleImprintContactForm()" id="imprint-contact-toggle">
-            <span class="contact-form__toggle-icon">📧</span>
-            <span class="contact-form__toggle-text">Kontaktformular</span>
-          </button>
-          <div class="contact-form__wrapper" id="imprint-contact" style="display: none;">
-            <!-- Contact form will be rendered here -->
-          </div>
-        </div>
-      </div>
-    `;
-    
-    // English contact form button
-    const englishContactFormButton = `
-      <div class="imprint-contact-section">
-        <h3>Contact</h3>
-        <div class="contact-form-container">
-          <button class="contact-form__toggle" onclick="window.toggleImprintContactForm()" id="imprint-contact-toggle">
-            <span class="contact-form__toggle-icon">📧</span>
-            <span class="contact-form__toggle-text">Contact Form</span>
-          </button>
-          <div class="contact-form__wrapper" id="imprint-contact" style="display: none;">
-            <!-- Contact form will be rendered here -->
-          </div>
-        </div>
-      </div>
-    `;
+    // Generate contact form button based on language
+    const contactFormButton = generateContactFormButton(isGerman);
     
     // Replace based on language
     if (isGerman) {
-      return html.replace(/<h3[^>]*>Kontakt<\/h3>/gi, germanContactFormButton);
+      return html.replace(/<h3[^>]*>Kontakt<\/h3>/gi, contactFormButton);
     } else {
-      return html.replace(/<h3[^>]*>Contact<\/h3>/gi, englishContactFormButton);
+      return html.replace(/<h3[^>]*>Contact<\/h3>/gi, contactFormButton);
     }
   };
 
   const processedContent = processImprintContent(contentToShow);
 
-  // Language detection is already handled by useLanguage hook
-
-  // Static print content - German version
-  const printContentGerman = `
-    <h2>Rechtliche Hinweise</h2>
-    <p><strong>Daniel Moehser</strong><br>
-    Sydneystr. 8<br>
-    22297 Hamburg<br>
-    Deutschland</p>
-
-    <h3>Kontakt</h3>
-    <p>E-Mail: hi@danielmoehser.dev</p>
-    <p>Website: danielmoehser.dev</p>
-    
-    <h3>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h3>
-    <p><strong>Daniel Moehser</strong><br>
-    Sydneystr. 8<br>
-    22297 Hamburg<br>
-    Deutschland</p>
-
-    <h3>Haftungsausschluss</h3>
-    <p>Die Inhalte meiner Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte kann ich jedoch keine Gewähr übernehmen.</p>
-
-    <h3>Datenschutz</h3>
-    <p>Die Nutzung meiner Website ist in der Regel ohne Angabe personenbezogener Daten möglich. Soweit auf meinen Seiten personenbezogene Daten (beispielsweise Name, Anschrift oder E-Mail-Adressen) erhoben werden, erfolgt dies, soweit möglich, stets auf freiwilliger Basis.</p>
-
-    <h3>Urheberrecht</h3>
-    <p>Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.</p>
-  `;
-
-  // Static print content - English version
-  const printContentEnglish = `
-    <h2>Legal Notice</h2>
-    <p><strong>Daniel Moehser</strong><br>
-    Sydneystr. 8<br>
-    22297 Hamburg<br>
-    Germany</p>
-
-    <h3>Contact</h3>
-    <p>Email: hi@danielmoehser.dev</p>
-    <p>Website: danielmoehser.dev</p>
-    <h3>Responsible for content according to German law (§ 55 Abs. 2 RStV)</h3>
-    <p><strong>Daniel Moehser</strong><br>
-    Sydneystr. 8<br>
-    22297 Hamburg<br>
-    Germany</p>
-
-    <h3>Disclaimer</h3>
-    <p>The contents of my pages have been created with the utmost care. However, I cannot guarantee the accuracy, completeness and timeliness of the content.</p>
-
-    <h3>Privacy</h3>
-    <p>The use of my website is generally possible without providing personal data. If personal data (such as name, address or e-mail addresses) is collected on my pages, this is always done on a voluntary basis as far as possible.</p>
-
-    <h3>Copyright</h3>
-    <p>The content and works created by the site operators on these pages are subject to German copyright law. The reproduction, processing, distribution and any kind of exploitation outside the limits of copyright require the written consent of the respective author or creator.</p>
-  `;
-
-  // Select appropriate print content based on language
-  const printContent = isGerman ? printContentGerman : printContentEnglish;
+  // Generate print content based on language
+  const printContent = generatePrintContent(isGerman);
 
   // Navigate back to home section
   const goBack = () => {
@@ -209,16 +247,15 @@ export default function Imprint() {
         const text = toggleButton.querySelector('.contact-form__toggle-text');
         
         // Detect language for button text
-        const isGerman = typeof window !== 'undefined' && 
-          (window.location.pathname.includes('/de/') || 
-           document.querySelector('.imprint__content-text')?.innerHTML.includes('Kontakt'));
+        const isGerman = isGermanLanguage();
+        const labels = isGerman ? CONTACT_LABELS.DE : CONTACT_LABELS.EN;
         
         if (isContactFormExpanded) {
-          icon.textContent = '✕';
-          text.textContent = isGerman ? 'Kontaktformular schließen' : 'Close Contact Form';
+          icon.textContent = CONTACT_ICONS.CLOSE;
+          text.textContent = labels.CLOSE_FORM;
         } else {
-          icon.textContent = '📧';
-          text.textContent = isGerman ? 'Kontaktformular' : 'Contact Form';
+          icon.textContent = CONTACT_ICONS.EMAIL;
+          text.textContent = labels.CONTACT_FORM;
         }
         
         // Clear and render form
@@ -241,7 +278,7 @@ export default function Imprint() {
     };
 
     // Initial render with delay
-    const timeoutId = setTimeout(renderContactForm, 100);
+    const timeoutId = setTimeout(renderContactForm, CONTACT_FORM_DELAY);
     
     return () => clearTimeout(timeoutId);
   }, [isContactFormExpanded, businessEmailSubject, processedContent]);
@@ -290,12 +327,12 @@ export default function Imprint() {
             overflow: visible !important;
             text-align: left !important;
             /* Offset for social dock */
-            margin-left: 80px !important;
+            margin-left: ${SOCIAL_DOCK_OFFSET}px !important;
             margin-right: auto !important;
           }
 
           /* Mobile optimizations */
-          @media (max-width: 768px) {
+          @media (max-width: ${MOBILE_BREAKPOINT}px) {
             .imprint__inner {
               padding: 0 0.75rem !important;
               margin-left: 0 !important;
@@ -360,7 +397,7 @@ export default function Imprint() {
             justify-content: space-between !important;
             align-items: center !important;
             /* Offset for social dock */
-            margin-left: 80px !important;
+            margin-left: ${SOCIAL_DOCK_OFFSET}px !important;
             margin-right: auto !important;
           }
 
@@ -388,7 +425,7 @@ export default function Imprint() {
           }
 
           /* Hide back button on mobile */
-          @media (max-width: 768px) {
+          @media (max-width: ${MOBILE_BREAKPOINT}px) {
             .imprint-header__back-btn {
               display: none !important;
             }

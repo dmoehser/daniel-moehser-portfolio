@@ -1,12 +1,83 @@
 <?php
 
+// Theme Functions
+// ===============
+// Main theme functionality and configuration
+
+// Configuration constants
+// ----------------------
+const MAX_UPLOAD_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+const PROJECT_IMAGE_WIDTH = 1440;
+const PROJECT_IMAGE_HEIGHT = 810;
+const PROJECT_IMAGE_WIDTH_2X = 2880;
+const PROJECT_IMAGE_HEIGHT_2X = 1620;
+const OG_IMAGE_WIDTH = 1200;
+const OG_IMAGE_HEIGHT = 630;
+const URL_WATCHER_INTERVAL = 1000; // Interval for URL watcher in milliseconds (checks every 1 second)
+const URL_WATCHER_TIMEOUT = 60000; // 60 seconds
+
+// Helper functions
+// ---------------
+function is_german_request() {
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    return strpos($request_uri, '/de/') !== false;
+}
+
+function get_meta_description($is_german, $type = 'homepage') {
+    $descriptions = [
+        'homepage' => [
+            'en' => 'Daniel Moehser - Full-Stack Developer Portfolio. Showcasing web development projects, skills and experience in React, WordPress, PHP and modern technologies.',
+            'de' => 'Daniel Moehser - Full-Stack Entwickler Portfolio. Zeigt Webentwicklungsprojekte, Fähigkeiten und Erfahrung in React, WordPress, PHP und modernen Technologien.'
+        ],
+        'imprint' => [
+            'en' => 'Imprint of Daniel Moehser - Legal information, contact details and privacy policy for the portfolio.',
+            'de' => 'Impressum von Daniel Moehser - Rechtliche Informationen, Kontaktdaten und Datenschutzhinweise für das Portfolio.'
+        ]
+    ];
+    
+    return $descriptions[$type][$is_german ? 'de' : 'en'] ?? '';
+}
+
+function get_og_content($is_german, $type = 'homepage') {
+    $content = [
+        'homepage' => [
+            'title' => [
+                'en' => 'Daniel Moehser - Full-Stack Developer',
+                'de' => 'Daniel Moehser - Full-Stack Entwickler'
+            ],
+            'description' => [
+                'en' => 'Portfolio showcasing web development projects, skills and experience in React, WordPress, PHP and modern technologies.',
+                'de' => 'Portfolio mit Webentwicklungsprojekten, Fähigkeiten und Erfahrung in React, WordPress, PHP und modernen Technologien.'
+            ]
+        ],
+        'imprint' => [
+            'title' => [
+                'en' => 'Imprint - Daniel Moehser',
+                'de' => 'Impressum - Daniel Moehser'
+            ],
+            'description' => [
+                'en' => 'Legal information and contact details for Daniel Moehser\'s portfolio.',
+                'de' => 'Rechtliche Informationen und Kontaktdaten für das Portfolio von Daniel Moehser.'
+            ]
+        ]
+    ];
+    
+    $lang = $is_german ? 'de' : 'en';
+    return [
+        'title' => $content[$type]['title'][$lang] ?? '',
+        'description' => $content[$type]['description'][$lang] ?? ''
+    ];
+}
+
 // Theme setup
 add_action('after_setup_theme', function () {
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
+    
     // Project images: unified wide crop for consistent UI & better LCP
-    add_image_size('project_wide', 1440, 810, true);      // 16:9, desktop
-    add_image_size('project_wide_2x', 2880, 1620, true);  // 2x for retina
+    add_image_size('project_wide', PROJECT_IMAGE_WIDTH, PROJECT_IMAGE_HEIGHT, true);
+    add_image_size('project_wide_2x', PROJECT_IMAGE_WIDTH_2X, PROJECT_IMAGE_HEIGHT_2X, true);
+    
     // Register navigation menu locations used by the React header
     register_nav_menus([
         'header_primary' => __('Header Primary', 'moehser-portfolio'),
@@ -31,10 +102,8 @@ add_action('template_redirect', function() {
     if ($is_imprint_page) {
         status_header(200);
         
-        $title = 'Imprint';
-        if (strpos($request_uri, '/de/imprint') !== false) {
-            $title = 'Impressum';
-        }
+        $is_german = is_german_request();
+        $title = $is_german ? 'Impressum' : 'Imprint';
         
         add_filter('document_title_parts', function($title_parts) use ($title) {
             $title_parts['title'] = $title;
@@ -69,31 +138,29 @@ add_action('template_redirect', function() {
 
 // Client-side cleanup for customize_changeset_uuid - robust solution
 // SEO Meta Descriptions
+// ---------------------
 add_action('wp_head', function() {
-    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
-    $is_german = strpos($request_uri, '/de/') !== false;
+    $is_german = is_german_request();
     
     // Homepage Meta Description
     if (is_home() || is_front_page()) {
-        $description = $is_german 
-            ? 'Daniel Moehser - Full-Stack Entwickler Portfolio. Zeigt Webentwicklungsprojekte, Fähigkeiten und Erfahrung in React, WordPress, PHP und modernen Technologien.'
-            : 'Daniel Moehser - Full-Stack Developer Portfolio. Showcasing web development projects, skills and experience in React, WordPress, PHP and modern technologies.';
+        $description = get_meta_description($is_german, 'homepage');
         echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
     }
     
     // Imprint Page Meta Description
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
     if (strpos($request_uri, '/imprint') !== false) {
-        $description = $is_german
-            ? 'Impressum von Daniel Moehser - Rechtliche Informationen, Kontaktdaten und Datenschutzhinweise für das Portfolio.'
-            : 'Imprint of Daniel Moehser - Legal information, contact details and privacy policy for the portfolio.';
+        $description = get_meta_description($is_german, 'imprint');
         echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
     }
 }, 1);
 
 // Open Graph Meta Tags
+// --------------------
 add_action('wp_head', function() {
+    $is_german = is_german_request();
     $request_uri = $_SERVER['REQUEST_URI'] ?? '';
-    $is_german = strpos($request_uri, '/de/') !== false;
     $site_url = home_url();
     $current_url = home_url($request_uri);
     
@@ -104,17 +171,8 @@ add_action('wp_head', function() {
         : 'Full-Stack Developer Portfolio - Daniel Moehser';
     
     // Page-specific content
-    if (is_home() || is_front_page()) {
-        $og_title = $is_german ? 'Daniel Moehser - Full-Stack Entwickler' : 'Daniel Moehser - Full-Stack Developer';
-        $og_description = $is_german 
-            ? 'Portfolio mit Webentwicklungsprojekten, Fähigkeiten und Erfahrung in React, WordPress, PHP und modernen Technologien.'
-            : 'Portfolio showcasing web development projects, skills and experience in React, WordPress, PHP and modern technologies.';
-    } else {
-        $og_title = $is_german ? 'Impressum - Daniel Moehser' : 'Imprint - Daniel Moehser';
-        $og_description = $is_german 
-            ? 'Rechtliche Informationen und Kontaktdaten für das Portfolio von Daniel Moehser.'
-            : 'Legal information and contact details for Daniel Moehser\'s portfolio.';
-    }
+    $page_type = (is_home() || is_front_page()) ? 'homepage' : 'imprint';
+    $og_content = get_og_content($is_german, $page_type);
     
     // Use profile avatar from customizer as default image
     $profile_avatar = get_theme_mod('moehser_profile_avatar', '');
@@ -123,26 +181,24 @@ add_action('wp_head', function() {
     echo '<!-- Open Graph Meta Tags -->' . "\n";
     echo '<meta property="og:type" content="website">' . "\n";
     echo '<meta property="og:site_name" content="' . esc_attr($site_name) . '">' . "\n";
-    echo '<meta property="og:title" content="' . esc_attr($og_title) . '">' . "\n";
-    echo '<meta property="og:description" content="' . esc_attr($og_description) . '">' . "\n";
+    echo '<meta property="og:title" content="' . esc_attr($og_content['title']) . '">' . "\n";
+    echo '<meta property="og:description" content="' . esc_attr($og_content['description']) . '">' . "\n";
     echo '<meta property="og:url" content="' . esc_url($current_url) . '">' . "\n";
     echo '<meta property="og:image" content="' . esc_url($og_image) . '">' . "\n";
-    echo '<meta property="og:image:width" content="1200">' . "\n";
-    echo '<meta property="og:image:height" content="630">' . "\n";
+    echo '<meta property="og:image:width" content="' . OG_IMAGE_WIDTH . '">' . "\n";
+    echo '<meta property="og:image:height" content="' . OG_IMAGE_HEIGHT . '">' . "\n";
     echo '<meta property="og:locale" content="' . ($is_german ? 'de_DE' : 'en_US') . '">' . "\n";
 }, 2);
 
 // Twitter Cards
+// ------------
 add_action('wp_head', function() {
-    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
-    $is_german = strpos($request_uri, '/de/') !== false;
+    $is_german = is_german_request();
     $site_url = home_url();
     
     // Twitter Card content
-    $twitter_title = $is_german ? 'Daniel Moehser - Full-Stack Entwickler' : 'Daniel Moehser - Full-Stack Developer';
-    $twitter_description = $is_german 
-        ? 'Portfolio mit Webentwicklungsprojekten, Fähigkeiten und Erfahrung in React, WordPress, PHP und modernen Technologien.'
-        : 'Portfolio showcasing web development projects, skills and experience in React, WordPress, PHP and modern technologies.';
+    $twitter_content = get_og_content($is_german, 'homepage');
+    
     // Use profile avatar from customizer as Twitter image
     $profile_avatar = get_theme_mod('moehser_profile_avatar', '');
     $twitter_image = $profile_avatar ?: $site_url . '/wp-content/themes/moehser-portfolio/assets/dist/images/og-default.jpg';
@@ -151,8 +207,8 @@ add_action('wp_head', function() {
     echo '<meta name="twitter:card" content="summary_large_image">' . "\n";
     echo '<meta name="twitter:site" content="@danielmoehser">' . "\n";
     echo '<meta name="twitter:creator" content="@danielmoehser">' . "\n";
-    echo '<meta name="twitter:title" content="' . esc_attr($twitter_title) . '">' . "\n";
-    echo '<meta name="twitter:description" content="' . esc_attr($twitter_description) . '">' . "\n";
+    echo '<meta name="twitter:title" content="' . esc_attr($twitter_content['title']) . '">' . "\n";
+    echo '<meta name="twitter:description" content="' . esc_attr($twitter_content['description']) . '">' . "\n";
     echo '<meta name="twitter:image" content="' . esc_url($twitter_image) . '">' . "\n";
 }, 3);
 
@@ -168,9 +224,10 @@ add_action('wp_head', function() {
 }, 4);
 
 // JSON-LD Structured Data
+// -----------------------
 add_action('wp_head', function() {
+    $is_german = is_german_request();
     $request_uri = $_SERVER['REQUEST_URI'] ?? '';
-    $is_german = strpos($request_uri, '/de/') !== false;
     $site_url = home_url();
     $current_url = home_url($request_uri);
     
@@ -240,7 +297,7 @@ function auto_language_redirect() {
     if (is_admin() || is_customize_preview()) return;
     
     $request_uri = $_SERVER['REQUEST_URI'] ?? '';
-    if (strpos($request_uri, '/de/') !== false) return;
+    if (is_german_request()) return;
     
     if (isset($_GET['lang'])) {
         if ($_GET['lang'] === 'en') {
@@ -281,6 +338,9 @@ function auto_language_redirect() {
 
 add_action('wp_head', function() {
     if (!is_customize_preview()) {
+        $watcher_interval = URL_WATCHER_INTERVAL;
+        $watcher_timeout = URL_WATCHER_TIMEOUT;
+        
         echo '<script>
         // Immediate cleanup function
         function cleanCustomizeParam() {
@@ -315,7 +375,7 @@ add_action('wp_head', function() {
                         lastUrl = window.location.href;
                     }
                 }
-            }, 25); // Check every 25ms for faster response
+            }, ' . $watcher_interval . '); // Check every 25ms for faster response
         }
 
         // Start watcher immediately
@@ -338,7 +398,7 @@ add_action('wp_head', function() {
         // Stop watching after 60 seconds (longer runtime)
         setTimeout(() => {
             if (urlWatcher) clearInterval(urlWatcher);
-        }, 60000);
+        }, ' . $watcher_timeout . ');
         </script>';
     }
 });
@@ -368,7 +428,6 @@ require_once get_theme_file_path('inc/api.php');
 
 // Register custom post types
 require_once get_theme_file_path('inc/cpt-project.php'); // Step 1: Basic project functions activated
-require_once get_theme_file_path('inc/setup-projects.php'); // Activated: Creates example projects if none exist
 
 // Global language detection function
 if (!function_exists('get_current_language')) {
@@ -413,20 +472,21 @@ add_action('wp_enqueue_scripts', function () {
 });
 
 // Increase upload limits for avatar images
+// ----------------------------------------
 add_filter('upload_size_limit', function($limit) {
     // Increase limit to 5MB for all uploads in Customizer and Admin
     if (is_customize_preview() || is_admin()) {
-        return 5 * 1024 * 1024; // 5MB
+        return MAX_UPLOAD_SIZE;
     }
     return $limit;
 });
 
 // Additional WordPress Media Library filter
+// -----------------------------------------
 add_filter('wp_handle_upload', function($upload) {
     // Allow larger files for images in general
     if (strpos($upload['type'], 'image/') === 0) {
-        $max_image_size = 5 * 1024 * 1024; // 5MB for images
-        if ($upload['file'] && filesize($upload['file']) <= $max_image_size) {
+        if ($upload['file'] && filesize($upload['file']) <= MAX_UPLOAD_SIZE) {
             return $upload;
         }
     }
@@ -434,17 +494,15 @@ add_filter('wp_handle_upload', function($upload) {
 });
 
 // Additional filter for WordPress Media Library
+// --------------------------------------------
 add_filter('wp_handle_upload_prefilter', function($file) {
     // Special handling for avatar uploads
     if (isset($_REQUEST['customize_theme']) && strpos($file['name'], 'avatar') !== false) {
-        // Allow up to 5MB for avatar files
-        $max_size = 5 * 1024 * 1024; // 5MB in bytes
-
-        if ($file['size'] > $max_size) {
+        if ($file['size'] > MAX_UPLOAD_SIZE) {
             $file['error'] = sprintf(
                 'Avatar file is too large (%s). Maximum allowed size: %s.',
                 size_format($file['size']),
-                size_format($max_size)
+                size_format(MAX_UPLOAD_SIZE)
             );
         }
     }

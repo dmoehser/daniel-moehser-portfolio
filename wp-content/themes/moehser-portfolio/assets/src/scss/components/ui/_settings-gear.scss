@@ -1,66 +1,108 @@
 // Settings Gear Component
 // =======================
 
-// Subtle settings gear positioned bottom-right
-// --------------------------------------------
+@use '../../utils/tokens';
+
+// Settings Gear Constants
+// -----------------------
+$gear-size-desktop: 36px;
+$gear-padding-desktop: 6px;
+$gear-position-desktop: 24px;
+$gear-position-projects: 80px;
+$gear-z-index: 25;
+$gear-z-performance: 26;
+$gear-z-tooltip: 27;
+
+// Menu Constants
+// --------------
+$menu-width-desktop: 160px;
+$menu-position-desktop: 48px;
+$menu-padding: 8px;
+$menu-border-radius: 12px;
+
+// Animation Constants
+// -------------------
+$transition-fast: 0.15s;
+$transition-standard: 0.2s;
+$border-radius-medium: 8px;
+
+// Color Constants
+// ---------------
+$color-slate-500: #64748b;
+$color-slate-900: #0f172a;
+$color-slate-700: #374151;
+$color-slate-800: #1f2937;
+$color-blue-500: #3b82f6;
+
+// Background Constants
+// --------------------
+$bg-white-95: rgba(255, 255, 255, 0.95);
+$bg-white-10: rgba(255, 255, 255, 0.1);
+$bg-black-02: rgba(0, 0, 0, 0.02);
+
+// Border Constants
+// ----------------
+$border-light: rgba(15, 23, 42, 0.12);
+
+// Settings Gear Component
+// =======================
 
 .settings-gear {
   position: fixed;
-  bottom: 24px; // Standard Position
-  right: 24px;
-  z-index: 25; // Deutlich höher als Footer
+  bottom: $gear-position-desktop;
+  right: $gear-position-desktop;
+  z-index: $gear-z-index;
 }
 
-// Höhere Position nur in Projects-Section
 .projects .settings-gear {
-  bottom: 80px; // Höher als Footer-Button
+  bottom: $gear-position-projects;
 }
 
 .settings-gear__trigger {
-  width: 36px;
-  height: 36px;
+  width: $gear-size-desktop;
+  height: $gear-size-desktop;
   border: none;
   background: transparent;
   cursor: pointer;
-  padding: 6px;
+  padding: $gear-padding-desktop;
   border-radius: 50%;
-  transition: all 0.2s ease;
+  transition: all $transition-standard ease;
   opacity: 0.6;
   
   img {
     width: 100%;
     height: 100%;
-    color: #64748b;
-    transition: all 0.2s ease;
+    color: $color-slate-500;
+    transition: all $transition-standard ease;
   }
   
   &:hover {
     opacity: 1;
     transform: rotate(45deg);
-    background: rgba(255, 255, 255, 0.1);
+    background: $bg-white-10;
     backdrop-filter: blur(10px);
     
     img {
-      color: #0f172a;
+      color: $color-slate-900;
     }
   }
 }
 
 .settings-gear__menu {
   position: absolute;
-  bottom: 48px;
+  bottom: $menu-position-desktop;
   right: 0;
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  border-radius: 12px;
+  background: $bg-white-95;
+  border: 1px solid $border-light;
+  border-radius: $menu-border-radius;
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
   box-shadow: 
-    0 10px 25px rgba(15, 23, 42, 0.1),
-    0 4px 12px rgba(15, 23, 42, 0.05);
-  min-width: 160px;
-  padding: 8px;
-  animation: settingsMenuFadeIn 0.15s ease-out;
+    0 10px 25px rgba($color-slate-900, 0.1),
+    0 4px 12px rgba($color-slate-900, 0.05);
+  min-width: $menu-width-desktop;
+  padding: $menu-padding;
+  animation: settingsMenuFadeIn $transition-fast ease-out;
   transform-origin: bottom right;
 }
 
@@ -73,34 +115,33 @@
   min-width: 0;
   border: none;
   background: transparent;
-  border-radius: 8px;
+  border-radius: $border-radius-medium;
   cursor: pointer;
-  transition: all 0.15s ease;
-  
-  // Disabled state for Safari
-  &--disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    
-    &:hover {
-      background: rgba(0, 0, 0, 0.02);
-      transform: none;
-    }
-    
-    &:active {
-      transform: none;
-      background: rgba(0, 0, 0, 0.02);
-    }
-  }
-  color: #374151;
+  transition: all $transition-fast ease;
+  color: $color-slate-700;
   font-size: 0.85rem;
   font-weight: 500;
   text-align: left;
   white-space: nowrap;
   
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    
+    &:hover {
+      background: $bg-black-02;
+      transform: none;
+    }
+    
+    &:active {
+      transform: none;
+      background: $bg-black-02;
+    }
+  }
+  
   &:hover {
-    background: rgba(59, 130, 246, 0.08);
-    color: #1f2937;
+    background: rgba($color-blue-500, 0.08);
+    color: $color-slate-800;
     transform: translateX(2px);
   }
   
@@ -177,7 +218,7 @@
   padding: 16px;
   animation: settingsMenuFadeIn 0.15s ease-out;
   transform-origin: bottom right;
-  z-index: 26; // Höher als Footer
+  z-index: $gear-z-performance;
 }
 
 .settings-gear__performance-header {
@@ -295,7 +336,7 @@
   white-space: normal;
   width: 240px;
   word-wrap: break-word;
-  z-index: 27; // Höchste Priorität
+  z-index: $gear-z-tooltip;
   opacity: 0;
   visibility: hidden;
   transition: all 0.2s ease;

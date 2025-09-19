@@ -1,6 +1,21 @@
 // Sass modules must be loaded first
 @use './utils/tokens';
 
+// Main Constants
+// --------------
+$color-white: #ffffff;
+$color-brand: #0f172a;
+$color-accent: #38bdf8;
+$font-size-h1: 2rem;
+
+// Dark Mode Constants
+// -------------------
+$shadow-text: 0 0 1px rgba(255,255,255,0.1);
+$bg-hero-quick: rgba(4,12,24,.8);
+$border-hero-accent: rgba(34,255,136,.25);
+$bg-tile-gradient: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+$border-tile: rgba(255,255,255,0.08);
+
 // Core components
 @use './components/header';
 @use './components/ui';
@@ -20,35 +35,36 @@
 @use './features/performance';
 @use './features/accessibility';
 
+// Global Styles
+// =============
+
 :root {
-  --brand: #0f172a;
-  --accent: #38bdf8;
+  --brand: #{$color-brand};
+  --accent: #{$color-accent};
 }
 
 * {
   box-sizing: border-box;
 }
 
-html, body {
-  background: #ffffff;
+html,
+body {
+  background: $color-white;
 }
 
 body {
   margin: 0;
-  font-family: tokens.$font-sans;
+  font-family: tokens.$font-family-sans;
   color: tokens.$color-text;
 }
 
 // Dark mode support
-// -----------------
-// Toggled by .theme-dark on <body>
+// =================
 
 body.theme-dark {
   background: tokens.$dark-bg;
   color: tokens.$dark-text;
   
-  // Unified section backgrounds
-  // ---------------------------
   .hero,
   .skills,
   .about,
@@ -56,91 +72,87 @@ body.theme-dark {
     background: tokens.$dark-bg-section;
   }
   
-  // Enhanced white text for better contrast
-  // --------------------------------------
-  h1, h2, h3, h4, h5, h6 {
-    color: #ffffff;
-    text-shadow: 0 0 1px rgba(255,255,255,0.1);
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: $color-white;
+    text-shadow: $shadow-text;
   }
   
   .hero__code,
   .hero__mobile-text h1,
   .hero__mobile-text .hero__name {
-    color: #ffffff;
-    text-shadow: 0 0 1px rgba(255,255,255,0.1);
+    color: $color-white;
+    text-shadow: $shadow-text;
   }
 
-  // Hero components
-  .hero__brand-link { 
-    filter: none; 
+  .hero__brand-link {
+    filter: none;
   }
   
-  .hero__code { 
-    color: tokens.$dark-text; 
+  .hero__code {
+    color: tokens.$dark-text;
   }
   
-  .hero__code + .hero__code { 
-    color: tokens.$dark-muted; 
+  .hero__code + .hero__code {
+    color: tokens.$dark-muted;
   }
   
-  .hero__cursor, 
-  .hero__code .caret, 
-  .brand-caret { 
-    background: tokens.$dark-accent; 
-    color: tokens.$dark-accent; 
-    opacity: .9; 
+  .hero__cursor,
+  .hero__code .caret,
+  .brand-caret {
+    background: tokens.$dark-accent;
+    color: tokens.$dark-accent;
+    opacity: 0.9;
   }
 
-  .hero__quick-btn { 
-    background: rgba(4,12,24,.8); 
-    border-color: rgba(34,255,136,.25); 
+  .hero__quick-btn {
+    background: $bg-hero-quick;
+    border-color: $border-hero-accent;
   }
 
-  // Navigation elements
-  .scroll-arrow { 
-    background: tokens.$dark-accent; 
+  .scroll-arrow {
+    background: tokens.$dark-accent;
   }
 
-  // Tiles and cards
-  .tile { 
-    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); 
-    border-color: rgba(255,255,255,0.08); 
-    color: tokens.$dark-text; 
+  .tile {
+    background: $bg-tile-gradient;
+    border-color: $border-tile;
+    color: tokens.$dark-text;
   }
 
-  // SVG Icons - ensure visibility in dark mode
-  // -------------------------------------------
+  // SVG Icons
+  // =========
   
-  // All SVG elements
   svg {
-    color: #ffffff !important;
+    color: $color-white !important;
     fill: currentColor !important;
   }
   
-  // SVG images loaded as <img> tags - clean white
   img[src$=".svg"] {
     filter: brightness(0) invert(1) !important;
   }
   
-  // Social dock icons specifically
   .social img[src$=".svg"] {
     filter: brightness(0) invert(1) !important;
   }
   
-  // Settings gear icon
   .settings-gear img[src$=".svg"] {
     filter: brightness(0) invert(1) !important;
   }
   
-  // Project view toggle icons
   .projects__toggle-btn img[src$=".svg"] {
     filter: brightness(0) invert(1) !important;
   }
 }
 
+// Typography
+// ==========
+
 h1 {
-  color: var(--brand);
-  font-size: 2rem;
+  color: $color-brand;
+  font-size: $font-size-h1;
 }
-
-
