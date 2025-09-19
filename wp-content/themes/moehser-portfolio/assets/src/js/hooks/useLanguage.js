@@ -57,6 +57,7 @@ const detectLanguageFromPath = () => {
   const path = window.location.pathname;
   const isGermanPath = path.includes(LANGUAGE_CONFIG.GERMAN_PATH_PATTERN);
   
+  
   return {
     language: isGermanPath ? LANGUAGE_CONFIG.GERMAN_CODE : LANGUAGE_CONFIG.DEFAULT_LANGUAGE,
     isGerman: isGermanPath
@@ -91,17 +92,12 @@ const createFallbackContent = (isGerman) => {
 // Custom Hook
 // -----------
 export function useLanguage() {
-  const [language, setLanguage] = useState(LANGUAGE_CONFIG.DEFAULT_LANGUAGE);
-  const [isGerman, setIsGerman] = useState(false);
+  // Initialize with detected language immediately
+  const initialDetection = detectLanguageFromPath();
+  const [language, setLanguage] = useState(initialDetection.language);
+  const [isGerman, setIsGerman] = useState(initialDetection.isGerman);
   const [content, setContent] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  // Initialize language detection
-  useEffect(() => {
-    const { language: detectedLang, isGerman: detectedGerman } = detectLanguageFromPath();
-    setLanguage(detectedLang);
-    setIsGerman(detectedGerman);
-  }, []);
 
   // Content loading with improved error handling
   useEffect(() => {

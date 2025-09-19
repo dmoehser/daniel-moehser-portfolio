@@ -16,15 +16,37 @@ function api_error($code, $message, $status = 400) {
 
 // Helper function for project data processing
 // ------------------------------------------
-function get_project_data($project) {
+function get_project_data($project, $is_german = false) {
     $meta = get_post_meta($project->ID);
     $featured_data = get_featured_image_data($project->ID);
     
+    // Get language-specific content
+    $title = html_entity_decode($project->post_title, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $content = $project->post_content;
+    $excerpt = $project->post_excerpt;
+    
+    // Use German versions if available and requested
+    if ($is_german) {
+        $german_title = isset($meta['project_title_de'][0]) ? $meta['project_title_de'][0] : '';
+        $german_content = isset($meta['project_content_de'][0]) ? $meta['project_content_de'][0] : '';
+        $german_excerpt = isset($meta['project_excerpt_de'][0]) ? $meta['project_excerpt_de'][0] : '';
+        
+        if (!empty($german_title)) {
+            $title = html_entity_decode($german_title, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        }
+        if (!empty($german_content)) {
+            $content = $german_content;
+        }
+        if (!empty($german_excerpt)) {
+            $excerpt = $german_excerpt;
+        }
+    }
+    
     return array_merge([
         'id' => $project->ID,
-        'title' => html_entity_decode($project->post_title, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
-        'content' => $project->post_content,
-        'excerpt' => $project->post_excerpt,
+        'title' => $title,
+        'content' => $content,
+        'excerpt' => $excerpt,
         'slug' => $project->post_name,
         'date' => $project->post_date,
         'modified' => $project->post_modified,
@@ -36,6 +58,7 @@ function get_project_data($project) {
         'project_url_external' => isset($meta['project_url'][0]) ? $meta['project_url'][0] : '',
         'project_demo_mode' => isset($meta['project_demo_mode'][0]) ? $meta['project_demo_mode'][0] : 'iframe',
         'project_github_url' => isset($meta['project_github_url'][0]) ? $meta['project_github_url'][0] : '',
+        'language' => $is_german ? 'de' : 'en'
     ], $featured_data);
 }
 
@@ -180,6 +203,60 @@ function handle_projects_request($request) {
     return rest_ensure_response($result);
 }
 
+// German projects request handler
+// ------------------------------
+function handle_projects_de_request($request) {
+    $status = $request->get_param('status');
+    
+    // Switch to German site context for multisite
+    $current_blog_id = get_current_blog_id();
+    $german_site_id = $current_blog_id;
+    
+    if (is_multisite()) {
+        $current_site = get_current_site();
+        $german_site = get_site_by_path($current_site->domain, '/de/');
+        if ($german_site) {
+            $german_site_id = $german_site->blog_id;
+            switch_to_blog($german_site_id);
+        }
+    }
+    
+    $args = [
+        'post_type' => 'project',
+        'post_status' => ['publish'],
+        'posts_per_page' => -1,
+        'orderby' => 'menu_order',
+        'order' => 'ASC',
+    ];
+
+    // Filter by status if specified
+    if ($status && in_array($status, PROJECT_STATUSES, true)) {
+        $args['meta_query'] = [
+            [
+                'key' => 'project_status',
+                'value' => $status,
+                'compare' => '='
+            ]
+        ];
+    }
+
+    $projects = get_posts($args);
+    $result = [];
+    
+    if (!empty($projects)) {
+        foreach ($projects as $project) {
+            $result[] = get_project_data($project, false);
+        }
+    }
+
+    // Restore original site context
+    if (is_multisite() && isset($german_site) && $german_site) {
+        restore_current_blog();
+    }
+
+    return rest_ensure_response($result);
+}
+
 // Single project request handler
 // -----------------------------
 function handle_single_project_request($request) {
@@ -191,6 +268,44 @@ function handle_single_project_request($request) {
     }
 
     return rest_ensure_response(get_project_data($project));
+}
+
+// German single project request handler
+// ------------------------------------
+function handle_single_project_de_request($request) {
+    $project_id = intval($request['id']);
+    
+    // Switch to German site context for multisite
+    $current_blog_id = get_current_blog_id();
+    $german_site_id = $current_blog_id;
+    
+    if (is_multisite()) {
+        $current_site = get_current_site();
+        $german_site = get_site_by_path($current_site->domain, '/de/');
+        if ($german_site) {
+            $german_site_id = $german_site->blog_id;
+            switch_to_blog($german_site_id);
+        }
+    }
+    
+    $project = get_post($project_id);
+    
+    if (!$project || $project->post_type !== 'project') {
+        // Restore context before returning error
+        if (is_multisite() && isset($german_site) && $german_site) {
+            restore_current_blog();
+        }
+        return api_error('project_not_found', 'Project not found', 404);
+    }
+
+    $result = get_project_data($project, false);
+    
+    // Restore original site context
+    if (is_multisite() && isset($german_site) && $german_site) {
+        restore_current_blog();
+    }
+
+    return rest_ensure_response($result);
 }
 
 // Contact form request handler
@@ -261,6 +376,20 @@ add_action('rest_api_init', function () {
 		'methods' => 'GET',
 		'permission_callback' => '__return_true',
 		'callback' => 'handle_single_project_request',
+	]);
+
+	// German projects endpoint
+	register_rest_route('moehser/v1', '/de/projects', [
+		'methods' => 'GET',
+		'permission_callback' => '__return_true',
+		'callback' => 'handle_projects_de_request',
+	]);
+
+	// German single project endpoint
+	register_rest_route('moehser/v1', '/de/projects/(?P<id>\d+)', [
+		'methods' => 'GET',
+		'permission_callback' => '__return_true',
+		'callback' => 'handle_single_project_de_request',
 	]);
 
 	// Project reordering endpoint

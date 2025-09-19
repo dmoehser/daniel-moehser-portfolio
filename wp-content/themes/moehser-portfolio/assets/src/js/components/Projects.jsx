@@ -94,7 +94,7 @@ const MEDIA_QUERIES = {
 // API endpoints
 const API_ENDPOINTS = {
   PROJECTS: '/wp-json/moehser/v1/projects',
-  PROJECTS_DE: '/de/wp-json/moehser/v1/projects'
+  PROJECTS_DE: '/wp-json/moehser/v1/de/projects'
 };
 
 // Default values
