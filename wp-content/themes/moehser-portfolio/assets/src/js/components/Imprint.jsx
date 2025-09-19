@@ -58,8 +58,8 @@ const PRINT_CONTENT = {
     RESPONSIBLE_TITLE: 'Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV',
     DISCLAIMER_TITLE: 'Haftungsausschluss',
     DISCLAIMER_TEXT: 'Die Inhalte meiner Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte kann ich jedoch keine Gewähr übernehmen.',
-    PRIVACY_TITLE: 'Datenschutz',
-    PRIVACY_TEXT: 'Die Nutzung meiner Website ist in der Regel ohne Angabe personenbezogener Daten möglich. Soweit auf meinen Seiten personenbezogene Daten (beispielsweise Name, Anschrift oder E-Mail-Adressen) erhoben werden, erfolgt dies, soweit möglich, stets auf freiwilliger Basis.',
+    PRIVACY_TITLE: 'Datenschutz & Datenverarbeitung',
+    PRIVACY_TEXT: 'Die Nutzung meiner Website ist in der Regel ohne Angabe personenbezogener Daten möglich. Soweit auf meinen Seiten personenbezogene Daten (beispielsweise Name, Anschrift oder E-Mail-Adressen) erhoben werden, erfolgt dies, soweit möglich, stets auf freiwilliger Basis.<br><br>Bei der Nutzung des Kontaktformulars werden Ihre Daten von Google reCAPTCHA verarbeitet, um Spam zu verhindern. Dies ist für die Funktionalität des Formulars technisch erforderlich.<br>Es gelten die Datenschutzbestimmungen von Google: https://policies.google.com/privacy<br><br><strong>Lokaler Speicher</strong><br><br>Diese Website verwendet den lokalen Speicher des Browsers (keine Cookies), um Ihre Einstellungen zu speichern:<br><br>• Themenauswahl (Dunkel-/Hellmodus)<br>• Spracheinstellung (Deutsch/Englisch)<br>• Einstellungen der Benutzeroberfläche<br><br>Diese Daten verbleiben auf Ihrem Gerät und werden nicht übertragen.<br><br><strong>Kein Tracking</strong><br><br>Diese Website verwendet keine Analysen, Tracking-Cookies oder Werbung.',
     COPYRIGHT_TITLE: 'Urheberrecht',
     COPYRIGHT_TEXT: 'Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.'
   },
@@ -70,8 +70,8 @@ const PRINT_CONTENT = {
     RESPONSIBLE_TITLE: 'Responsible for content according to German law (§ 55 Abs. 2 RStV)',
     DISCLAIMER_TITLE: 'Disclaimer',
     DISCLAIMER_TEXT: 'The contents of my pages have been created with the utmost care. However, I cannot guarantee the accuracy, completeness and timeliness of the content.',
-    PRIVACY_TITLE: 'Privacy',
-    PRIVACY_TEXT: 'The use of my website is generally possible without providing personal data. If personal data (such as name, address or e-mail addresses) is collected on my pages, this is always done on a voluntary basis as far as possible.',
+    PRIVACY_TITLE: 'Privacy & Data Processing',
+    PRIVACY_TEXT: 'The use of my website is generally possible without providing personal data. If personal data (such as name, address or e-mail addresses) is collected on my pages, this is always done on a voluntary basis as far as possible.<br><br>When you use the contact form, your data is processed by Google reCAPTCHA to prevent spam. This is technically necessary for form functionality.<br>Google\'s privacy policy applies: https://policies.google.com/privacy<br><br><strong>Local Storage</strong><br><br>This website uses browser localStorage (not cookies) to save your preferences:<br><br>• Theme selection (dark/light mode)<br>• Language preference (German/English)<br>• Interface settings<br><br>This data stays on your device and is not transmitted.<br><br><strong>No Tracking</strong><br><br>This website does not use analytics, tracking cookies, or advertising.',
     COPYRIGHT_TITLE: 'Copyright',
     COPYRIGHT_TEXT: 'The content and works created by the site operators on these pages are subject to German copyright law. The reproduction, processing, distribution and any kind of exploitation outside the limits of copyright require the written consent of the respective author or creator.'
   }
@@ -636,21 +636,21 @@ export default function Imprint() {
             
             .imprint__text h2 {
               color: black !important;
-              font-size: 14pt !important;
-              margin: 16pt 0 8pt 0 !important;
+              font-size: 13pt !important;
+              margin: 12pt 0 6pt 0 !important;
             }
             
             .imprint__text h3 {
               color: black !important;
-              font-size: 12pt !important;
-              margin: 12pt 0 6pt 0 !important;
+              font-size: 11pt !important;
+              margin: 8pt 0 4pt 0 !important;
             }
             
             .imprint__text p {
               color: black !important;
-              font-size: 9pt !important;
-              line-height: 1.3 !important;
-              margin: 0 0 6pt 0 !important;
+              font-size: 8pt !important;
+              line-height: 1.2 !important;
+              margin: 0 0 4pt 0 !important;
             }
             
             .imprint__text strong {
