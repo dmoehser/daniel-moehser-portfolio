@@ -3,9 +3,13 @@ Theme Name: Moehser Portfolio
 Theme URI: https://danielmoehser.com
 Author: Daniel Moehser
 Author URI: https://danielmoehser.com
-Description: Custom React + Vite powered WordPress theme for the portfolio.
-Version: 0.1.0
+Description: Personal portfolio theme for showcasing projects, skills, and professional experience. Features modern design, dark mode toggle, dynamic project management, and interactive UI components for optimized presentation of work and expertise.
+Version: 1.0.0
 Text Domain: moehser-portfolio
+Requires at least: 6.0
+Tested up to: 6.8
+Requires PHP: 8.0
+License: GPL v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Tags: portfolio, personal, responsive, dark-mode, accessibility, modern, react
 */
-
-
