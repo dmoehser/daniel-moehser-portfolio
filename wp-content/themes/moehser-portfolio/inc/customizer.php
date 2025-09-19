@@ -311,7 +311,24 @@ function output_profile_data() {
     $social_email = get_theme_mod('moehser_social_email', '');
     $email_subject = get_theme_mod('moehser_email_subject', 'Portfolio Contact - New Inquiry');
     
-    if ($profile_avatar) output_js_variable('__PROFILE_AVATAR_URL__', $profile_avatar);
+    if ($profile_avatar) {
+        output_js_variable('__PROFILE_AVATAR_URL__', $profile_avatar);
+        
+        // Get alt text from WordPress media library
+        $avatar_id = attachment_url_to_postid($profile_avatar);
+        $avatar_alt = '';
+        
+        if ($avatar_id) {
+            $avatar_alt = get_post_meta($avatar_id, '_wp_attachment_image_alt', true);
+        }
+        
+        // Fallback alt text if none is set
+        if (empty($avatar_alt)) {
+            $avatar_alt = 'Daniel Moehser - Profile Photo';
+        }
+        
+        output_js_variable('__PROFILE_AVATAR_ALT__', $avatar_alt);
+    }
     if ($social_github) output_js_variable('__SOCIAL_GITHUB__', $social_github);
     if ($social_linkedin) output_js_variable('__SOCIAL_LINKEDIN__', $social_linkedin);
     if ($social_email) output_js_variable('__SOCIAL_EMAIL__', $social_email);

@@ -221,7 +221,10 @@ export default function Hero() {
           <div className="hero__photo">
             <div className="hero__avatar">
               {typeof window !== 'undefined' && window.__PROFILE_AVATAR_URL__ ? (
-                <img src={window.__PROFILE_AVATAR_URL__} alt="Profile" />
+                <img 
+                  src={window.__PROFILE_AVATAR_URL__} 
+                  alt={window.__PROFILE_AVATAR_ALT__ || 'Daniel Moehser - Profile Photo'} 
+                />
               ) : null}
               {stage === 0 && <span className="hero__cursor" />}
             </div>

@@ -80,7 +80,21 @@ function enqueue_vite_dev_client() {
     $linkedin = (string) get_theme_mod('moehser_social_linkedin') ?: '';
     $email = (string) get_theme_mod('moehser_social_email') ?: '';
     
+    // Get alt text for profile avatar
+    $avatar_alt = '';
+    if ($avatar) {
+        $avatar_id = attachment_url_to_postid($avatar);
+        if ($avatar_id) {
+            $avatar_alt = get_post_meta($avatar_id, '_wp_attachment_image_alt', true);
+        }
+        // Fallback alt text if none is set
+        if (empty($avatar_alt)) {
+            $avatar_alt = 'Daniel Moehser - Profile Photo';
+        }
+    }
+    
     $inline = 'window.__PROFILE_AVATAR_URL__ = ' . json_encode($avatar) . ';'
+            . 'window.__PROFILE_AVATAR_ALT__ = ' . json_encode($avatar_alt) . ';'
             . 'window.__PROFILE_GITHUB__ = ' . json_encode($github) . ';'
             . 'window.__PROFILE_LINKEDIN__ = ' . json_encode($linkedin) . ';'
             . 'window.__PROFILE_EMAIL__ = ' . json_encode($email) . ';'
