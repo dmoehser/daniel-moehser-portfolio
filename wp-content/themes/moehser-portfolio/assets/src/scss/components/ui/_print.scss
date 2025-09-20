@@ -199,20 +199,8 @@ $line-height-tight: 1.2;
   // Link URLs
   // =========
   
-  a[href^="http"]:after {
-    content: " (" attr(href) ")";
-    font-size: $font-size-small;
-    font-weight: normal;
-    color: $color-gray-medium;
-    text-decoration: none;
-  }
-  
-  .project-card__demo-btn:after,
-  .hero__quick-btn:after,
-  .animated-border:after {
-    content: none !important;
-  }
-  
+  // Show full URLs after external links for print readability
+  #about a[href^="http"]:before,
   #projects a[href^="http"]:before {
     content: " (" attr(href) ") ";
     font-size: $font-size-small;
@@ -221,8 +209,23 @@ $line-height-tight: 1.2;
     text-decoration: none;
   }
   
-  #projects .project-card__demo-btn:before,
-  #projects .project-card__github-btn:before {
+  // Prevent duplicate URL display from other stylesheets
+  #about a[href^="http"]:after,
+  #projects a[href^="http"]:after {
+    content: none !important;
+  }
+  
+  // Hide URLs on buttons and decorative elements
+  .project-card__demo-btn:before,
+  .project-card__demo-btn:after,
+  .project-card__github-btn:before,
+  .project-card__github-btn:after,
+  .hero__quick-btn:before,
+  .hero__quick-btn:after,
+  .about__cta-btn:before,
+  .about__cta-btn:after,
+  .animated-border:before,
+  .animated-border:after {
     content: none !important;
   }
 
