@@ -12,6 +12,14 @@ wp-content/uploads/
 wp-content/upgrade/
 wp-content/cache/
 wp-content/debug.log
+wp-content/backup-db/
+wp-content/backups/
+
+# WordPress core
+wp-admin/
+wp-includes/
+wp-*.php
+xmlrpc.php
 
 # Node / Vite
 node_modules/

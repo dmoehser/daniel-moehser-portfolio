@@ -1,3 +1,21 @@
+# Domain Redirects
+# ================
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# Redirect danielmoehser.com to danielmoehser.dev
+RewriteCond %{HTTP_HOST} ^(www\.)?danielmoehser\.com$ [NC]
+RewriteRule ^(.*)$ https://danielmoehser.dev/$1 [R=301,L]
+
+# Redirect danielmoehser.de to danielmoehser.dev/de
+RewriteCond %{HTTP_HOST} ^(www\.)?danielmoehser\.de$ [NC]
+RewriteRule ^(.*)$ https://danielmoehser.dev/de/$1 [R=301,L]
+
+# Force HTTPS for all domains
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
 # BEGIN WordPress Multisite
 <IfModule mod_rewrite.c>
 RewriteEngine On

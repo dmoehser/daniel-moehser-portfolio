@@ -61,15 +61,21 @@ const PROJECT_META_FIELDS = [
 
 // Allowed values for validation
 // -----------------------------
-const PROJECT_STATUSES = ['active', 'archived', 'development'];
-const PROJECT_DEMO_MODES = ['iframe', 'new_window'];
+if (!defined('PROJECT_STATUSES')) {
+    define('PROJECT_STATUSES', ['active', 'archived', 'development']);
+}
+if (!defined('PROJECT_DEMO_MODES')) {
+    define('PROJECT_DEMO_MODES', ['iframe', 'new_window']);
+}
 
 // Demo mode labels for admin interface
 // -----------------------------------
-const PROJECT_DEMO_LABELS = [
-    'iframe' => 'Embed in iframe',
-    'new_window' => 'Open in new window'
-];
+if (!defined('PROJECT_DEMO_LABELS')) {
+    define('PROJECT_DEMO_LABELS', [
+        'iframe' => 'Embed in iframe',
+        'new_window' => 'Open in new window'
+    ]);
+}
 
 // Helper function to render meta field input
 // -----------------------------------------
