@@ -6,6 +6,13 @@ A responsive portfolio website built with WordPress, featuring a custom theme, d
 
 Visit the live website: [https://danielmoehser.dev](https://danielmoehser.dev)
 
+**Multi-Domain Setup:**
+- **Main Site**: [danielmoehser.dev](https://danielmoehser.dev) - English portfolio
+- **German Site**: [danielmoehser.dev/de](https://danielmoehser.dev/de) - German portfolio
+- **Redirects**: 
+  - `danielmoehser.com` → `danielmoehser.dev`
+  - `danielmoehser.de` → `danielmoehser.dev/de`
+
 ## What This Is
 
 My personal portfolio website built with WordPress. I built it as a custom theme to dive deep into WordPress development and understand how the platform works.
@@ -120,6 +127,17 @@ npm run build
 # Or watch for changes while developing
 npm run watch
 ```
+
+### Production Deployment
+
+For deploying to a live server:
+
+1. **Database Setup**: Create MySQL database on your hosting provider
+2. **File Upload**: Upload all files except `wp-config.php` to your web root
+3. **Configuration**: Create production `wp-config.php` with your database credentials
+4. **Database Import**: Import your WordPress database
+5. **URL Migration**: Run the provided SQL script to update URLs from localhost to production domain
+6. **Security**: Configure Wordfence and WPS Hide Login plugins
 
 ### Working with the Code
 
