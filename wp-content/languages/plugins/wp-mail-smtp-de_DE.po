@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - WP Mail SMTP by WPForms &#8211; The Most Popular SMTP and Email Log Plugin - Stable (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-09-11 15:49:41+0000\n"
+"PO-Revision-Date: 2025-09-22 20:00:49+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,6 +10,109 @@ msgstr ""
 "X-Generator: GlotPress/4.0.1\n"
 "Language: de\n"
 "Project-Id-Version: Plugins - WP Mail SMTP by WPForms &#8211; The Most Popular SMTP and Email Log Plugin - Stable (latest release)\n"
+
+#. translators: %s - API key link.
+#: src/Providers/Mandrill/Options.php:116
+msgid "Follow this link to get an API Key from Mandrill: %s."
+msgstr "Folge diesem Link, um einen API-Schlüssel von Mandrill zu erhalten: %s."
+
+#: src/Providers/Mandrill/Options.php:60
+msgid "Mandrill"
+msgstr "Mandrill"
+
+#. translators: %2$s - URL to wpmailsmtp.com doc.
+#: src/Providers/Mandrill/Options.php:41
+msgid "To get started, read our <a href=\"%2$s\" target=\"_blank\" rel=\"noopener noreferrer\">Mandrill documentation</a>."
+msgstr "Um loszulegen, lies unsere <a href=\"%2$s\" target=\"_blank\" rel=\"noopener noreferrer\">Mandrill Dokumentation</a>."
+
+#. translators: %1$s - URL to Mandrill website.
+#: src/Providers/Mandrill/Options.php:38
+msgid "<a href=\"%1$s\" target=\"_blank\" rel=\"noopener noreferrer\">Mandrill</a> is a transactional email API for MailChimp users. It is a reliable, scalable, and secure delivery API for transactional emails. Mandrill requires a paid monthly subscription to send emails."
+msgstr "<a href=\"%1$s\" target=\"_blank\" rel=\"noopener noreferrer\">Mandrill</a> ist eine Transaktions-E-Mail-API für MailChimp-Nutzer. Sie ist eine zuverlässige, skalierbare und sichere Versand-API für Transaktions-E-Mails. Mandrill erfordert ein kostenpflichtiges monatliches Abonnement, um E-Mails zu versenden."
+
+#. translators: %s - The reason the email was rejected.
+#: src/Providers/Mandrill/Mailer.php:416
+msgid "The email failed to be sent. Reason: %s"
+msgstr "Die E-Mail konnte nicht gesendet werden. Grund: %s"
+
+#. Translators: %s - discount value $50.
+#: src/Admin/Pages/SettingsTab.php:288
+msgid "<strong>%s OFF</strong> for WP Mail SMTP users, applied at checkout."
+msgstr "<strong>%s OFF</strong> für WP Mail SMTP-Benutzer, wird an der Kasse angewendet."
+
+#: src/Admin/Pages/SettingsTab.php:283
+msgid "Discount"
+msgstr "Rabatt"
+
+#: src/Admin/Pages/SettingsTab.php:272
+msgid "Professional Setup and World-Class Support"
+msgstr "Professionelle Einrichtung und erstklassiger Support"
+
+#: src/Admin/Pages/SettingsTab.php:271
+msgid "White Glove Setup - Sit back while we handle everything"
+msgstr "White Glove Setup - Lehne dich zurück, während wir alles erledigen"
+
+#: src/Admin/Pages/SettingsTab.php:268
+msgid "Smart Routing, Multisite Support, and Manage Notifications"
+msgstr "Smart Routing, Multisite-Unterstützung und Verwaltung von Benachrichtigungen"
+
+#: src/Admin/Pages/SettingsTab.php:267
+msgid "Effortless Management - Control your email experience"
+msgstr "Mühelose Verwaltung - Kontrolliere dein E-Mail-Erlebnis"
+
+#: src/Admin/Pages/SettingsTab.php:264
+msgid "Gmail one-click setup, Microsoft 365 / Outlook, Amazon SES, and Zoho Mail"
+msgstr "Gmail Ein-Klick-Einrichtung, Microsoft 365 / Outlook, Amazon SES und Zoho Mail"
+
+#: src/Admin/Pages/SettingsTab.php:263
+msgid "Professional Email Services - Access enterprise-grade email providers"
+msgstr "Professionelle E-Mail-Dienste - Zugang zu E-Mail-Anbietern der Unternehmensklasse"
+
+#: src/Admin/Pages/SettingsTab.php:260
+msgid "Email Logging, Alerts, and Backup Connection"
+msgstr "E-Mail-Protokollierung, Warnmeldungen und Backup-Verbindung"
+
+#: src/Admin/Pages/SettingsTab.php:259
+msgid "Peace of Mind - Never wonder about your email status"
+msgstr "Seelenfrieden - Nie mehr über den Status deiner E-Mails nachdenken"
+
+#: src/Admin/Pages/SettingsTab.php:254
+msgid "Key Features You’ll Unlock:"
+msgstr "Die wichtigsten Funktionen, die du freischalten wirst:"
+
+#: src/Admin/Pages/SettingsTab.php:248
+msgid "Upgrade and join over <strong>4,000,000</strong> websites!"
+msgstr "Upgrade und schließe dich über <strong>4.000.000</strong> Websites an!"
+
+#: src/Admin/Pages/SettingsTab.php:245
+msgid "Level Up Your Email Game - Get Pro Features Now"
+msgstr "Verbessere dein E-Mail-System. Hol dir jetzt die Pro-Funktionen"
+
+#: src/Admin/Pages/SettingsTab.php:221
+msgid "Email Logs"
+msgstr "E-Mail-Protokolle"
+
+#. Translators: %s - discount value $50
+#: src/Admin/Pages/SettingsTab.php:80
+msgid "As a valued WP Mail SMTP Lite user, you can enjoy an exclusive <strong>%s discount</strong>, automatically applied at checkout to unlock even more features!"
+msgstr "Als geschätzter WP Mail SMTP Lite-Benutzer kannst du einen exklusiven <strong>%s-Rabatt</strong> genießen, der automatisch an der Kasse angewandt wird, um noch mehr Funktionen freizuschalten!"
+
+#: src/Admin/Pages/SettingsTab.php:74
+msgid "You're using <strong>WP Mail SMTP Lite</strong> - no license needed. Enjoy!"
+msgstr "Du benutzt <strong>WP Mail SMTP Lite</strong> - keine Lizenz erforderlich. Viel Spaß!"
+
+#. translators: %s - WPMailSMTP.com Upgrade page URL.
+#: src/Admin/Education.php:73
+msgid "You’re using WP Mail SMTP Lite. To unlock more features, consider <a href=\"%1$s\" target=\"_blank\" rel=\"noopener noreferrer\">upgrading to Pro</a> for <strong>%2$s OFF</strong>."
+msgstr "Du verwendest WP Mail SMTP Lite. Um mehr Funktionen freizuschalten, erwäge <a href=\"%1$s\" target=\"_blank\" rel=\"noopener noreferrer\">ein Upgrade auf Pro</a> für <strong>%2$s OFF</strong>."
+
+#: assets/languages/wp-mail-smtp-vue.php:1062
+msgid "Read how to set up Mandrill"
+msgstr "Lies, wie du Mandrill einrichtest"
+
+#: assets/languages/wp-mail-smtp-vue.php:1059
+msgid "Follow this link to get an API Key from Mandrill."
+msgstr "Folge diesem Link, um einen API-Schlüssel von Mandrill zu erhalten."
 
 #: src/Providers/MailerSend/Options.php:150
 msgid "pricing page"
@@ -3911,7 +4014,7 @@ msgstr "%s erfordert ein SSL-Zertifikat und ist daher derzeit nicht mit deiner W
 
 #: src/Providers/OptionsAbstract.php:417
 msgid "Learn More"
-msgstr "Mehr erfahren"
+msgstr "Weitere Informationen"
 
 #: src/Providers/PepipostAPI/Options.php:55
 msgid "Get Started with Pepipost"

@@ -34,7 +34,7 @@ services:
         define('WP_DEBUG_LOG', true);
         define('WP_DEBUG_DISPLAY', false);
     volumes:
-      - ./wp-content:/var/www/html/wp-content
+      - .:/var/www/html
       - ./php.ini:/usr/local/etc/php/conf.d/custom.ini
 
   phpmyadmin:

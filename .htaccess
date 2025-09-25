@@ -11,8 +11,9 @@ RewriteRule ^(.*)$ https://danielmoehser.dev/$1 [R=301,L]
 RewriteCond %{HTTP_HOST} ^(www\.)?danielmoehser\.de$ [NC]
 RewriteRule ^(.*)$ https://danielmoehser.dev/de/$1 [R=301,L]
 
-# Force HTTPS for all domains
+# Force HTTPS for all domains (except localhost for local development)
 RewriteCond %{HTTPS} off
+RewriteCond %{HTTP_HOST} !^localhost
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 </IfModule>
 

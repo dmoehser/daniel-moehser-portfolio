@@ -34,6 +34,9 @@ export default defineConfig({
         main: 'assets/src/js/main.jsx',
       },
       output: {
+        assetFileNames: '[name]-[hash][extname]',
+        chunkFileNames: '[name]-[hash].js',
+        entryFileNames: '[name]-[hash].js',
         manualChunks: {
           vendor: ['react', 'react-dom'],
         },

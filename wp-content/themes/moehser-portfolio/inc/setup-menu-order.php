@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
 // Configuration constants
 // ----------------------
 const SETUP_OPTION_NAME = 'moehser_menu_order_setup_done';
-const PROJECTS_PER_PAGE = -1;
+// PROJECTS_PER_PAGE is defined in projects-reorder.php
 
 // Set initial menu_order for existing projects
 // -------------------------------------------

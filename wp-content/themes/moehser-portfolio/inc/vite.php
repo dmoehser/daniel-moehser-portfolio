@@ -44,11 +44,11 @@ function moehser_is_vite_dev_server_running($host = VITE_DEV_HOST, $port = VITE_
 
 function moehser_is_development()
 {
-    if (defined('WP_ENV') && WP_ENV === 'development') {
+    if (defined('WP_ENV') && WP_ENV === 'local') {
         return true;
     }
-    // Force development mode when Vite is running
-    if (!is_admin() && moehser_is_vite_dev_server_running()) {
+    // Force development mode when Vite is running (only in local environment)
+    if (defined('WP_ENV') && WP_ENV === 'local' && !is_admin() && moehser_is_vite_dev_server_running()) {
         return true;
     }
     return false;
