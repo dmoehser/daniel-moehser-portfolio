@@ -21,6 +21,14 @@ wp-includes/
 wp-*.php
 xmlrpc.php
 
+# WordPress config & sensitive files
+wp-config.php
+wp-config-local.php
+wp-config-production.php
+*.sql
+*.sql.gz
+*.sql.bz2
+
 # Node / Vite
 node_modules/
 wp-content/themes/moehser-portfolio/assets/dist/
