@@ -15,6 +15,10 @@ wp-content/debug.log
 wp-content/backup-db/
 wp-content/backups/
 
+# WordPress plugins
+wp-content/plugins/
+!wp-content/plugins/index.php
+
 # WordPress core
 wp-admin/
 wp-includes/
