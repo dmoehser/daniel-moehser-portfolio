@@ -16,6 +16,7 @@
     "xterm-addon-web-links": "^0.9.0"
   },
   "devDependencies": {
+    "@babel/plugin-transform-react-jsx-development": "^7.27.1",
     "@vitejs/plugin-react": "^4.0.0",
     "sass": "^1.90.0",
     "terser": "^5.44.0",
