@@ -132,19 +132,28 @@ body.theme-dark {
     fill: currentColor !important;
   }
   
+  // External SVG files
   img[src$=".svg"] {
     filter: brightness(0) invert(1) !important;
   }
   
-  .social img[src$=".svg"] {
+  // Inline SVG data URIs
+  img[src^="data:image/svg+xml"] {
     filter: brightness(0) invert(1) !important;
   }
   
-  .settings-gear img[src$=".svg"] {
+  .social img[src$=".svg"],
+  .social img[src^="data:image/svg+xml"] {
     filter: brightness(0) invert(1) !important;
   }
   
-  .projects__toggle-btn img[src$=".svg"] {
+  .settings-gear img[src$=".svg"],
+  .settings-gear img[src^="data:image/svg+xml"] {
+    filter: brightness(0) invert(1) !important;
+  }
+  
+  .projects__toggle-btn img[src$=".svg"],
+  .projects__toggle-btn img[src^="data:image/svg+xml"] {
     filter: brightness(0) invert(1) !important;
   }
 }
