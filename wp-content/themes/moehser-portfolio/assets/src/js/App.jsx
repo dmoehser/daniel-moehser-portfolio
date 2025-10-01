@@ -2,12 +2,13 @@
 // =============
 // Main App Component - Core application structure
 
-import React, { useEffect } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import { AnimatePresence } from 'framer-motion';
 
 // Main components
 import Hero from './components/Hero.jsx';
-import Terminal from './components/Terminal.jsx';
+// Terminal Component - Lazy loaded for better performance
+const Terminal = lazy(() => import('./components/Terminal.jsx'));
 import About from './components/About.jsx';
 import Projects from './components/Projects.jsx';
 import Imprint from './components/Imprint.jsx';
@@ -21,7 +22,8 @@ import MobileMenu from './components/ui/MobileMenu.jsx';
 import ResourcePreloader from './components/ui/ResourcePreloader.jsx';
 import BackToProjectsButton from './components/ui/BackToProjectsButton.jsx';
 import ArrowNavigation from './components/ui/ArrowNavigation.jsx';
-import FullscreenPreview from './components/ui/FullscreenPreview.jsx';
+// Fullscreen Preview - Lazy loaded for better performance
+const FullscreenPreview = lazy(() => import('./components/ui/FullscreenPreview.jsx'));
 import Footer from './components/ui/Footer.jsx';
 
 // Feature managers
@@ -235,17 +237,23 @@ export default function App() {
 
       {/* Terminal overlay with smooth animations */}
       <AnimatePresence>
-        {showTerminal && <Terminal key="terminal-overlay" />}
+        {showTerminal && (
+          <Suspense fallback={null}>
+            <Terminal key="terminal-overlay" />
+          </Suspense>
+        )}
       </AnimatePresence>
 
       {/* Fullscreen project preview */}
       <AnimatePresence>
         {isFullscreenPreview && fullscreenProject && (
-          <FullscreenPreview
-            key="fullscreen-preview"
-            isFullscreenPreview={isFullscreenPreview}
-            fullscreenProject={fullscreenProject}
-          />
+          <Suspense fallback={null}>
+            <FullscreenPreview
+              key="fullscreen-preview"
+              isFullscreenPreview={isFullscreenPreview}
+              fullscreenProject={fullscreenProject}
+            />
+          </Suspense>
         )}
       </AnimatePresence>
 
