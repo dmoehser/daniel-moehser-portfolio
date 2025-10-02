@@ -6,14 +6,14 @@
 // Spacing Constants
 // -----------------
 $spacing-1: 1px;
-$spacing-2: 2px;
-$spacing-4: 4px;
-$spacing-6: 6px;
-$spacing-8: 8px;
-$spacing-10: 10px;
-$spacing-12: 12px;
-$spacing-16: 16px;
-$spacing-22: 22px;
+$spacing-2: 1.5px;        // Desktop scaling: 2px * 0.75
+$spacing-4: 3px;          // Desktop scaling: 4px * 0.75
+$spacing-6: 4.5px;        // Desktop scaling: 6px * 0.75
+$spacing-8: 6px;          // Desktop scaling: 8px * 0.75
+$spacing-10: 7.5px;       // Desktop scaling: 10px * 0.75
+$spacing-12: 9px;         // Desktop scaling: 12px * 0.75
+$spacing-16: 12px;        // Desktop scaling: 16px * 0.75
+$spacing-22: 16.5px;      // Desktop scaling: 22px * 0.75
 
 // Color Constants
 // ---------------
@@ -41,9 +41,9 @@ $dark-muted: #89cda3;
 
 // Size Constants
 // --------------
-$terminal-height: 44vh;
-$shellbar-height: 36px;
-$border-radius: 8px;
+$terminal-height: 44vh;   // Keep original height
+$shellbar-height: 27px;   // Desktop scaling: 36px * 0.75
+$border-radius: 6px;      // Desktop scaling: 8px * 0.75
 
 // Terminal structure and positioning
 // ==================================
@@ -170,7 +170,7 @@ $border-radius: 8px;
 }
 
 .terminal__head-inner {
-  width: min(1200px, 92vw);
+  width: min(900px, 92vw);  // Desktop scaling: 1200px * 0.75
 }
 
 .terminal__heading {
@@ -329,7 +329,7 @@ $border-radius: 8px;
 
 .term-lines {
   margin: 0;
-  padding-left: 1.2rem;
+  padding-left: 0.9rem;  // Desktop scaling: 1.2rem * 0.75
 }
 
 .term-lines li {
@@ -345,7 +345,7 @@ $border-radius: 8px;
 }
 
 .term-actions {
-  margin-top: .6rem;
+  margin-top: 0.45rem;  // Desktop scaling: 0.6rem * 0.75
   display: flex;
   gap: $spacing-8;
 }

@@ -19,7 +19,7 @@ import 'xterm/css/xterm.css';
 const TERMINAL_CONFIG = {
   FONT: {
     FAMILY: 'JetBrains Mono, monospace',
-    SIZE: 13,
+    SIZE: 10,
     LINE_HEIGHT: 1.15
   },
   THEME: {
