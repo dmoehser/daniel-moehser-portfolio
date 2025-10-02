@@ -16,12 +16,12 @@ $btn-gap: 10.5px;            // Desktop scaling: 14px * 0.75
 $btn-padding: 12px 19.5px;   // Desktop scaling: 16px 26px * 0.75
 $btn-border-radius: 6px;     // Desktop scaling: 8px * 0.75
 $btn-font-weight: 800;
-$btn-font-size: 0.75rem;     // Desktop scaling: 1rem * 0.75
+$btn-font-size: 1rem;        // Keep original for readability
 
 // Icon Button Constants
 // --------------------
 $icon-btn-size: 37.5px;      // Desktop scaling: 50px * 0.75
-$icon-btn-font-size: 16.5px; // Desktop scaling: 22px * 0.75
+$icon-btn-font-size: 22px;   // Keep original for readability
 
 // Animation Constants
 // ------------------

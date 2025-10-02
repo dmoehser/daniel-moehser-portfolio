@@ -5,19 +5,19 @@
 
 // Spacing Constants
 // -----------------
-$spacing-4: 4px;
-$spacing-6: 6px;
-$spacing-8: 8px;
-$spacing-10: 10px;
-$spacing-12: 12px;
-$spacing-16: 16px;
-$spacing-20: 20px;
-$spacing-24: 24px;
-$spacing-28: 28px;
-$spacing-32: 32px;
-$spacing-40: 40px;
-$spacing-80: 80px;
-$spacing-120: 120px;
+$spacing-4: 3px;           // Desktop scaling: 4px * 0.75
+$spacing-6: 4.5px;         // Desktop scaling: 6px * 0.75
+$spacing-8: 6px;           // Desktop scaling: 8px * 0.75
+$spacing-10: 7.5px;        // Desktop scaling: 10px * 0.75
+$spacing-12: 9px;          // Desktop scaling: 12px * 0.75
+$spacing-16: 12px;         // Desktop scaling: 16px * 0.75
+$spacing-20: 15px;         // Desktop scaling: 20px * 0.75
+$spacing-24: 18px;         // Desktop scaling: 24px * 0.75
+$spacing-28: 21px;         // Desktop scaling: 28px * 0.75
+$spacing-32: 24px;         // Desktop scaling: 32px * 0.75
+$spacing-40: 30px;         // Desktop scaling: 40px * 0.75
+$spacing-80: 60px;         // Desktop scaling: 80px * 0.75
+$spacing-120: 90px;        // Desktop scaling: 120px * 0.75
 
 // Color Constants
 // ---------------
@@ -29,9 +29,9 @@ $color-border: #e5e7eb;
 
 // Size Constants
 // --------------
-$card-height-standard: 260px;
-$card-height-special: 280px;
-$border-radius: 16px;
+$card-height-standard: 195px;   // Desktop scaling: 260px * 0.75
+$card-height-special: 210px;    // Desktop scaling: 280px * 0.75
+$border-radius: 12px;           // Desktop scaling: 16px * 0.75
 
 // Skills section with animated skill cards
 // ========================================
@@ -52,9 +52,9 @@ $border-radius: 16px;
 }
 
 .skills__inner {
-  width: min(1280px, 92vw);
+  width: min(960px, 92vw);     // Desktop scaling: 1280px * 0.75
   margin: 0 auto;
-  padding: 0 1.25rem;
+  padding: 0 0.9375rem;        // Desktop scaling: 1.25rem * 0.75
   position: relative;
   z-index: 2;
   overflow: visible;
@@ -100,7 +100,7 @@ $border-radius: 16px;
   grid-template-columns: repeat(2, 1fr);
   gap: $spacing-32;
   width: 100%;
-  max-width: 800px;
+  max-width: 600px;        // Desktop scaling: 800px * 0.75
   margin: 0 auto;
   justify-content: center;
 }
@@ -173,7 +173,7 @@ $border-radius: 16px;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
-  max-height: 72px;
+  max-height: 54px;         // Desktop scaling: 72px * 0.75
 
   strong {
     font-weight: 700;
@@ -187,7 +187,7 @@ $border-radius: 16px;
   margin: 0 0 $spacing-20 0;
   flex-grow: 1;
   overflow: hidden;
-  max-height: 120px;
+  max-height: 90px;       // Desktop scaling: 120px * 0.75
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -228,12 +228,12 @@ $border-radius: 16px;
 .animated-border {
   background: rgba(255,255,255,.65);
   color: $color-dark;
-  padding: $spacing-12 18px;
+  padding: $spacing-12 13.5px;               // Desktop scaling: 18px * 0.75
   border-radius: $spacing-8;
   font-size: 0.875rem;
   font-weight: 600;
   border: 1px solid rgba(15,23,42,.08);
-  border-bottom: 2px solid rgba(15,23,42,.15);
+  border-bottom: 1.5px solid rgba(15,23,42,.15); // Desktop scaling: 2px * 0.75
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
@@ -241,9 +241,9 @@ $border-radius: 16px;
 @media (hover: hover) {
   .animated-border:hover {
     background: rgba(255,255,255,.95);
-    border-bottom: 3px solid rgba(15,23,42,.3);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-bottom: 2.25px solid rgba(15,23,42,.3); // Desktop scaling: 3px * 0.75
+    transform: translateY(-2.25px);                // Desktop scaling: -3px * 0.75
+    box-shadow: 0 6px 18.75px rgba(0, 0, 0, 0.15); // Desktop scaling: 8px, 25px * 0.75
   }
 }
 
@@ -303,17 +303,17 @@ body.theme-dark {
   @media (hover: hover) {
     .skill-card:hover {
       box-shadow:
-        0 10px 15px -3px rgba(0, 0, 0, 0.1),
-        0 4px 6px -2px rgba(0, 0, 0, 0.05),
-        0 0 12px rgba(34, 197, 94, 0.3),
-        0 0 24px rgba(34, 197, 94, 0.15);
+        0 7.5px 11.25px -2.25px rgba(0, 0, 0, 0.1),  // Desktop scaling: 10px, 15px, -3px * 0.75
+        0 3px 4.5px -1.5px rgba(0, 0, 0, 0.05),      // Desktop scaling: 4px, 6px, -2px * 0.75
+        0 0 9px rgba(34, 197, 94, 0.3),              // Desktop scaling: 12px * 0.75
+        0 0 18px rgba(34, 197, 94, 0.15);            // Desktop scaling: 24px * 0.75
     }
     
     .animated-border:hover {
       background: rgba(11,18,32,.95);
-      border-bottom: 3px solid rgba(34,255,136,.4);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(34,255,136,0.15);
+      border-bottom: 2.25px solid rgba(34,255,136,.4); // Desktop scaling: 3px * 0.75
+      transform: translateY(-2.25px);                  // Desktop scaling: -3px * 0.75
+      box-shadow: 0 6px 18.75px rgba(34,255,136,0.15); // Desktop scaling: 8px, 25px * 0.75
     }
   }
 }
@@ -349,14 +349,14 @@ body.theme-dark {
   
   .skill-card {
     padding: $spacing-20;
-    min-height: 200px;
+    min-height: 150px;   // Desktop scaling: 200px * 0.75
     
     &:hover {
       transform: none;
       box-shadow: none;
     }
     
-    min-height: 44px;
+    min-height: 33px;    // Desktop scaling: 44px * 0.75
     
     .skill-card__description {
       line-height: 1.6;
@@ -461,11 +461,11 @@ body.theme-dark {
   .custom-scrollbar {
     display: none;
     position: absolute;
-    right: $spacing-6;
+    right: 4.5px;            // Desktop scaling: 6px * 0.75 (from $spacing-6)
     top: 50%;
     transform: translateY(-50%);
     height: 50%;
-    width: $spacing-6;
+    width: 4.5px;            // Desktop scaling: 6px * 0.75 (from $spacing-6)
     background: transparent;
     border-radius: 999px;
     opacity: 0;
@@ -495,13 +495,13 @@ body.theme-dark {
     will-change: transform, height;
   }
   .skills__top-row {
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); // Desktop scaling: 320px * 0.75
     grid-auto-flow: row dense;
     gap: $spacing-32;
   }
   
   .skills__bottom-row {
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); // Desktop scaling: 320px * 0.75
   }
   .skill-card--standard {
     height: auto;

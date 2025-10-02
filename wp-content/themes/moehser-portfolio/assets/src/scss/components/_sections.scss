@@ -5,14 +5,14 @@
 
 // Spacing Constants
 // -----------------
-$spacing-8: 8px;
-$spacing-12: 12px;
-$spacing-16: 16px;
-$spacing-20: 20px;
-$spacing-24: 24px;
-$spacing-48: 48px;
-$spacing-80: 80px;
-$spacing-120: 120px;
+$spacing-8: 6px;           // Desktop scaling: 8px * 0.75
+$spacing-12: 9px;          // Desktop scaling: 12px * 0.75
+$spacing-16: 12px;         // Desktop scaling: 16px * 0.75
+$spacing-20: 15px;         // Desktop scaling: 20px * 0.75
+$spacing-24: 18px;         // Desktop scaling: 24px * 0.75
+$spacing-48: 36px;         // Desktop scaling: 48px * 0.75
+$spacing-80: 60px;         // Desktop scaling: 80px * 0.75
+$spacing-120: 90px;        // Desktop scaling: 120px * 0.75
 
 // Color Constants
 // ---------------
@@ -93,9 +93,9 @@ $color-light-secondary: #cbd5e1;
 }
 
 .section-inner {
-  width: min(1280px, 92vw);
+  width: min(960px, 92vw);   // Desktop scaling: 1280px * 0.75
   margin: 0 auto;
-  padding: $spacing-20 1.25rem;
+  padding: $spacing-20 0.9375rem;  // Desktop scaling: 1.25rem * 0.75
   position: relative;
   z-index: 2;
   overflow: visible;
@@ -108,8 +108,8 @@ $color-light-secondary: #cbd5e1;
   border: 1px solid rgba(15,23,42,.12);
   border-radius: $spacing-16;
   overflow: visible;
-  backdrop-filter: blur(10px) saturate(140%);
-  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  backdrop-filter: blur(7.5px) saturate(140%);  // Desktop scaling: 10px * 0.75
+  -webkit-backdrop-filter: blur(7.5px) saturate(140%);
   padding: clamp($spacing-24, 3.5vw, $spacing-48);
   position: relative;
 }
