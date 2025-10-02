@@ -329,6 +329,7 @@ export default function Imprint() {
             text-align: left !important;
           }
 
+          /* Mobile optimizations */
           @media (max-width: ${MOBILE_BREAKPOINT}px) {
             .imprint__inner {
               padding: 0 0.75rem !important;
@@ -490,6 +491,8 @@ export default function Imprint() {
           .theme-dark .imprint__text a {
             color: #10b981 !important;
           }
+
+          /* Dark mode */
           .theme-dark .imprint__card {
             background: rgba(11,18,32,.95) !important;
             border-color: rgba(255,255,255,.12) !important;
@@ -502,6 +505,7 @@ export default function Imprint() {
             border-bottom-color: var(--color-border-dark);
           }
 
+          /* Contact Section Styles */
           .imprint-contact-section {
             margin: 2rem 0;
             padding: 1.5rem 0;
@@ -521,6 +525,7 @@ export default function Imprint() {
             border-top-color: rgba(255, 255, 255, 0.1);
           }
 
+          /* Ensure contact form is above terminal overlay */
           .contact-form-container {
             position: relative;
             z-index: 10000;
@@ -531,6 +536,7 @@ export default function Imprint() {
             z-index: 10000;
           }
 
+          /* Button styles for inline contact form */
           .contact-form__toggle {
             display: inline-flex;
             align-items: center;
@@ -577,6 +583,7 @@ export default function Imprint() {
             border-color: rgba(59, 130, 246, 0.4);
           }
 
+          /* Print mode styles */
           @media print {
             @page {
               size: portrait;
@@ -640,11 +647,13 @@ export default function Imprint() {
       </style>
       
       <div className="imprint-page" id="imprint-content">
+        {/* Mobile Header */}
         <div className="mobile-only">
           <HeroBrand />
           <MobileMenu />
         </div>
         
+        {/* Desktop Header with back button */}
         <header className="imprint-header desktop-only">
           <div className="imprint-header__inner">
             <div className="imprint-header__logo">
