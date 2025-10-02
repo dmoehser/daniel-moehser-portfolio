@@ -5,23 +5,23 @@
 
 // Layout Constants
 // ---------------
-$quick-top: 14px;
-$quick-right: 14px;
-$quick-gap: 12px;
+$quick-top: 10.5px;          // Desktop scaling: 14px * 0.75
+$quick-right: 10.5px;        // Desktop scaling: 14px * 0.75
+$quick-gap: 9px;             // Desktop scaling: 12px * 0.75
 $quick-z-index: 1000;
 
 // Button Constants
 // ---------------
-$btn-gap: 14px;
-$btn-padding: 16px 26px;
-$btn-border-radius: 8px;
+$btn-gap: 10.5px;            // Desktop scaling: 14px * 0.75
+$btn-padding: 12px 19.5px;   // Desktop scaling: 16px 26px * 0.75
+$btn-border-radius: 6px;     // Desktop scaling: 8px * 0.75
 $btn-font-weight: 800;
-$btn-font-size: 1rem;
+$btn-font-size: 0.75rem;     // Desktop scaling: 1rem * 0.75
 
 // Icon Button Constants
 // --------------------
-$icon-btn-size: 50px;
-$icon-btn-font-size: 22px;
+$icon-btn-size: 37.5px;      // Desktop scaling: 50px * 0.75
+$icon-btn-font-size: 16.5px; // Desktop scaling: 22px * 0.75
 
 // Animation Constants
 // ------------------
@@ -37,7 +37,7 @@ $light-btn-bg-hover: linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255
 $light-btn-color: #0f172a;
 $light-btn-border: rgba(15,23,42,.10);
 $light-btn-border-ghost: rgba(15,23,42,.25);
-$light-btn-shadow-hover: 0 12px 26px rgba(15,23,42,.12);
+$light-btn-shadow-hover: 0 9px 19.5px rgba(15,23,42,.12);  // Desktop scaling
 $light-ghost-bg-hover: rgba(15,23,42,.06);
 
 // Dark Theme Colors
@@ -47,7 +47,7 @@ $dark-btn-bg-hover: rgba(30,41,59,.98);
 $dark-btn-color: #e2e8f0;
 $dark-btn-border: rgba(34,255,136,.25);
 $dark-btn-border-hover: rgba(34,197,94,.4);
-$dark-btn-shadow-hover: 0 12px 26px rgba(34,197,94,.15);
+$dark-btn-shadow-hover: 0 9px 19.5px rgba(34,197,94,.15);  // Desktop scaling
 $dark-icon-color: #c7f5d9;
 $dark-icon-bg-hover: rgba(34,197,94,.1);
 $dark-icon-border-hover: rgba(34,255,136,.4);

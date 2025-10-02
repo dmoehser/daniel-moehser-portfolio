@@ -4,9 +4,9 @@
 // Main Constants
 // --------------
 $color-white: #ffffff;
-$color-brand: #0f172a;
-$color-accent: #38bdf8;
-$font-size-h1: 2rem;
+$color-brand: tokens.$color-brand;  // Use token instead of duplicate
+$color-accent: tokens.$color-accent; // Use token instead of duplicate
+$font-size-h1: 1.5rem;               // Desktop scaling: 2rem * 0.75
 
 // Dark Mode Constants
 // -------------------
