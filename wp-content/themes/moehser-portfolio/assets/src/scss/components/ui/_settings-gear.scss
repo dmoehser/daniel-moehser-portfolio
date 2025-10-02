@@ -109,9 +109,9 @@ $border-light: rgba(15, 23, 42, 0.12);
 .settings-gear__option {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 9px;                // Desktop scaling: 12px * 0.75
   width: 100%;
-  padding: 12px 16px;
+  padding: 9px 12px;       // Desktop scaling: 12px 16px * 0.75
   min-width: 0;
   border: none;
   background: transparent;
