@@ -6,14 +6,14 @@
 // Spacing Constants
 // -----------------
 $spacing-1: 1px;
-$spacing-10: 10px;
-$spacing-12: 12px;
-$spacing-14: 14px;
-$spacing-16: 16px;
-$spacing-20: 20px;
-$spacing-24: 24px;
-$spacing-48: 48px;
-$spacing-55: 55px;
+$spacing-10: 7.5px;       // Desktop scaling: 10px * 0.75
+$spacing-12: 9px;         // Desktop scaling: 12px * 0.75
+$spacing-14: 10.5px;      // Desktop scaling: 14px * 0.75
+$spacing-16: 12px;        // Desktop scaling: 16px * 0.75
+$spacing-20: 15px;        // Desktop scaling: 20px * 0.75
+$spacing-24: 18px;        // Desktop scaling: 24px * 0.75
+$spacing-48: 36px;        // Desktop scaling: 48px * 0.75
+$spacing-55: 41.25px;     // Desktop scaling: 55px * 0.75
 
 // Color Constants
 // ---------------
@@ -23,10 +23,10 @@ $border-light: rgba(15, 23, 42, 0.12);
 
 // Size Constants
 // --------------
-$button-width: 180px;
-$button-height: 48px;
-$button-width-minimized: 48px;
-$border-radius: 8px;
+$button-width: 135px;             // Desktop scaling: 180px * 0.75
+$button-height: 36px;             // Desktop scaling: 48px * 0.75
+$button-width-minimized: 36px;   // Desktop scaling: 48px * 0.75
+$border-radius: 6px;              // Desktop scaling: 8px * 0.75
 $z-button: 1000;
 
 .back-to-projects {

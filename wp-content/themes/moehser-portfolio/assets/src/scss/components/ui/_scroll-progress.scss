@@ -5,11 +5,11 @@
 
 // Scroll Progress Constants
 // -------------------------
-$scroll-height: 4px;
+$scroll-height: 3px;                  // Desktop scaling: 4px * 0.75
 $scroll-z-index: 1000;
 $scroll-transition: 0.1s;
-$scroll-border-radius: 2px;
-$scroll-glow-width: 20px;
+$scroll-border-radius: 1.5px;         // Desktop scaling: 2px * 0.75
+$scroll-glow-width: 15px;             // Desktop scaling: 20px * 0.75
 $scroll-progress-var: var(--progress, 0%);
 
 // Scroll Progress Colors

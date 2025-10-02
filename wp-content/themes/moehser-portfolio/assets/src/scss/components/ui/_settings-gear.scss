@@ -5,26 +5,26 @@
 
 // Settings Gear Constants
 // -----------------------
-$gear-size-desktop: 36px;
-$gear-padding-desktop: 6px;
-$gear-position-desktop: 24px;
-$gear-position-projects: 80px;
+$gear-size-desktop: 27px;      // Desktop scaling: 36px * 0.75
+$gear-padding-desktop: 4.5px;  // Desktop scaling: 6px * 0.75
+$gear-position-desktop: 18px;  // Desktop scaling: 24px * 0.75
+$gear-position-projects: 60px; // Desktop scaling: 80px * 0.75
 $gear-z-index: 25;
 $gear-z-performance: 26;
 $gear-z-tooltip: 27;
 
 // Menu Constants
 // --------------
-$menu-width-desktop: 160px;
-$menu-position-desktop: 48px;
-$menu-padding: 8px;
-$menu-border-radius: 12px;
+$menu-width-desktop: 120px;    // Desktop scaling: 160px * 0.75
+$menu-position-desktop: 36px;  // Desktop scaling: 48px * 0.75
+$menu-padding: 6px;            // Desktop scaling: 8px * 0.75
+$menu-border-radius: 9px;      // Desktop scaling: 12px * 0.75
 
 // Animation Constants
 // -------------------
 $transition-fast: 0.15s;
 $transition-standard: 0.2s;
-$border-radius-medium: 8px;
+$border-radius-medium: 6px;    // Desktop scaling: 8px * 0.75
 
 // Color Constants
 // ---------------

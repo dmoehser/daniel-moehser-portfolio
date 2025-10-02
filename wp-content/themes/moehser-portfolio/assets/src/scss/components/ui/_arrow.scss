@@ -6,15 +6,15 @@
 // Spacing Constants
 // -----------------
 $spacing-1: 1px;
-$spacing-2: 2px;
-$spacing-4: 4px;
-$spacing-8: 8px;
-$spacing-10: 10px;
-$spacing-12: 12px;
-$spacing-20: 20px;
-$spacing-25: 25px;
-$spacing-32: 32px;
-$spacing-35: 35px;
+$spacing-2: 1.5px;        // Desktop scaling: 2px * 0.75
+$spacing-4: 3px;          // Desktop scaling: 4px * 0.75
+$spacing-8: 6px;          // Desktop scaling: 8px * 0.75
+$spacing-10: 7.5px;       // Desktop scaling: 10px * 0.75
+$spacing-12: 9px;         // Desktop scaling: 12px * 0.75
+$spacing-20: 15px;        // Desktop scaling: 20px * 0.75
+$spacing-25: 18.75px;     // Desktop scaling: 25px * 0.75
+$spacing-32: 24px;        // Desktop scaling: 32px * 0.75
+$spacing-35: 26.25px;     // Desktop scaling: 35px * 0.75
 
 // Color Constants
 // ---------------
@@ -42,10 +42,10 @@ $border-pulse: rgba(56, 189, 248, 0.45);
 
 // Size Constants
 // --------------
-$arrow-size-desktop: 56px;
-$arrow-size-mobile: 48px;
-$icon-size-desktop: 20px;
-$icon-size-mobile: 18px;
+$arrow-size-desktop: 42px;   // Desktop scaling: 56px * 0.75
+$arrow-size-mobile: 36px;    // Desktop scaling: 48px * 0.75
+$icon-size-desktop: 15px;    // Desktop scaling: 20px * 0.75
+$icon-size-mobile: 13.5px;   // Desktop scaling: 18px * 0.75
 $z-arrow: 1000;
 
 @keyframes arrow-pulse {

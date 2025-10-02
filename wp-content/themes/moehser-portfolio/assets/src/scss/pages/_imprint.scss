@@ -6,27 +6,27 @@
 // Spacing Constants
 // -----------------
 $spacing-1: 1px;
-$spacing-2: 2px;
-$spacing-4: 4px;
-$spacing-6: 6px;
-$spacing-12: 12px;
-$spacing-14: 14px;
-$spacing-16: 16px;
-$spacing-20: 20px;
-$spacing-24: 24px;
-$spacing-26: 26px;
-$spacing-48: 48px;
+$spacing-2: 1.5px;        // Desktop scaling: 2px * 0.75
+$spacing-4: 3px;          // Desktop scaling: 4px * 0.75
+$spacing-6: 4.5px;        // Desktop scaling: 6px * 0.75
+$spacing-12: 9px;         // Desktop scaling: 12px * 0.75
+$spacing-14: 10.5px;      // Desktop scaling: 14px * 0.75
+$spacing-16: 12px;        // Desktop scaling: 16px * 0.75
+$spacing-20: 15px;        // Desktop scaling: 20px * 0.75
+$spacing-24: 18px;        // Desktop scaling: 24px * 0.75
+$spacing-26: 19.5px;      // Desktop scaling: 26px * 0.75
+$spacing-48: 36px;        // Desktop scaling: 48px * 0.75
 
-// Size Constants (rem)
-// --------------------
-$size-0-75: 0.75rem;
-$size-1: 1rem;
-$size-1-1: 1.1rem;
-$size-1-5: 1.5rem;
-$size-1-75: 1.75rem;
-$size-2: 2rem;
-$size-2-5: 2.5rem;
-$size-3: 3rem;
+// Size Constants (rem) - Already scaled by root font-size: 12px
+// ---------------------------------------------------------------
+$size-0-75: 0.75rem;  // 9px at 12px base
+$size-1: 1rem;        // 12px at 12px base
+$size-1-1: 1.1rem;    // 13.2px at 12px base
+$size-1-5: 1.5rem;    // 18px at 12px base
+$size-1-75: 1.75rem;  // 21px at 12px base
+$size-2: 2rem;        // 24px at 12px base
+$size-2-5: 2rem;      // 24px at 12px base (reduced from 2.5rem/30px)
+$size-3: 2.25rem;     // 27px at 12px base (reduced from 3rem/36px)
 
 // Color Constants
 // ---------------
@@ -52,10 +52,10 @@ $border-green: rgba(34,197,94,.4);
 
 // Size Constants
 // --------------
-$max-width: 1200px;
-$content-max-width: 800px;
-$border-radius: 16px;
-$border-radius-small: 8px;
+$max-width: 700px;
+$content-max-width: 500px;
+$border-radius: 12px;
+$border-radius-small: 6px;
 $z-header: 100;
 
 // Imprint page layout and components
@@ -79,9 +79,9 @@ $z-header: 100;
   -webkit-backdrop-filter: blur($spacing-4) saturate(110%);
   
   &__inner {
-    max-width: $max-width;
-    margin: 0 auto;
-    padding: $size-1 $size-3;
+    max-width: 750px !important;
+    margin: 0 auto !important;
+    padding: $size-1 clamp($spacing-24, 3.5vw, $spacing-48) !important;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -158,23 +158,24 @@ $z-header: 100;
   z-index: 1;
   
   &__inner {
-    width: 100%;
-    max-width: $max-width;
-    margin: 0 auto;
-    padding: 0 $size-3;
-    position: relative;
-    z-index: 2;
-    overflow: visible;
+    width: 100% !important;
+    max-width: $content-max-width !important;
+    margin: 0 auto !important;
+    padding: 0 $size-3 !important;
+    position: relative !important;
+    z-index: 2 !important;
+    overflow: visible !important;
   }
   
   &__content {
     width: 100%;
-    max-width: $content-max-width;
     margin: 0;
   }
   
   &__card {
-    width: 100%;
+    width: 100% !important;
+    max-width: 750px !important;
+    margin: 0 auto !important;
     background: $bg-light;
     border: $spacing-1 solid $border-light;
     border-radius: $border-radius;

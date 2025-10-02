@@ -295,7 +295,6 @@ export default function Imprint() {
       
       <style>
         {`
-          /* Force left alignment with highest priority */
           .imprint-page {
             min-height: 100vh !important;
             background: var(--color-bg) !important;
@@ -319,19 +318,17 @@ export default function Imprint() {
 
           .imprint__inner {
             width: 100% !important;
-            max-width: 1000px !important;
+            max-width: 750px !important;
             margin: 0 auto !important;
-            padding: 0 3rem !important;
+            margin-left: ${SOCIAL_DOCK_OFFSET}px !important;
+            margin-right: auto !important;
+            padding: 0 clamp(18px, 3.5vw, 36px) !important;
             position: relative !important;
             z-index: 2 !important;
             overflow: visible !important;
             text-align: left !important;
-            /* Offset for social dock */
-            margin-left: ${SOCIAL_DOCK_OFFSET}px !important;
-            margin-right: auto !important;
           }
 
-          /* Mobile optimizations */
           @media (max-width: ${MOBILE_BREAKPOINT}px) {
             .imprint__inner {
               padding: 0 0.75rem !important;
@@ -390,15 +387,14 @@ export default function Imprint() {
           }
 
           .imprint-header__inner {
-            max-width: 1000px !important;
+            max-width: 750px !important;
             margin: 0 auto !important;
-            padding: 1rem 3rem !important;
+            margin-left: ${SOCIAL_DOCK_OFFSET}px !important;
+            margin-right: auto !important;
+            padding: 1rem clamp(18px, 3.5vw, 36px) !important;
             display: flex !important;
             justify-content: space-between !important;
             align-items: center !important;
-            /* Offset for social dock */
-            margin-left: ${SOCIAL_DOCK_OFFSET}px !important;
-            margin-right: auto !important;
           }
 
           .imprint-header__logo-link {
@@ -424,7 +420,6 @@ export default function Imprint() {
             transition: all 0.2s ease !important;
           }
 
-          /* Hide back button on mobile */
           @media (max-width: ${MOBILE_BREAKPOINT}px) {
             .imprint-header__back-btn {
               display: none !important;
@@ -451,23 +446,13 @@ export default function Imprint() {
             border-bottom-color: rgba(255,255,255,.2) !important;
           }
 
-            .imprint__title {
-              font-size: 2.5rem;
-              font-weight: 700;
-              color: var(--color-text);
-              margin: 0 0 1.5rem 0;
-              line-height: 1.2;
-            }
-            
-            /* Ensure title is black in print mode */
-            @media print {
-              .imprint__title {
-                color: black !important;
-                font-size: 18pt !important;
-                font-weight: bold !important;
-                margin: 0 0 12pt 0 !important;
-              }
-            }
+          .imprint__title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-text);
+            margin: 0 0 1.5rem 0;
+            line-height: 1.2;
+          }
 
           .imprint__text {
             color: var(--color-text);
@@ -494,7 +479,7 @@ export default function Imprint() {
           }
 
           .imprint__text a {
-            color: #3b82f6 !important; /* Blue for light mode */
+            color: #3b82f6 !important;
             text-decoration: none;
           }
 
@@ -502,12 +487,9 @@ export default function Imprint() {
             text-decoration: underline;
           }
 
-          /* Dark mode link styling */
           .theme-dark .imprint__text a {
-            color: #10b981 !important; /* Green for dark mode */
+            color: #10b981 !important;
           }
-
-          /* Dark mode */
           .theme-dark .imprint__card {
             background: rgba(11,18,32,.95) !important;
             border-color: rgba(255,255,255,.12) !important;
@@ -520,7 +502,6 @@ export default function Imprint() {
             border-bottom-color: var(--color-border-dark);
           }
 
-          /* Contact Section Styles */
           .imprint-contact-section {
             margin: 2rem 0;
             padding: 1.5rem 0;
@@ -540,7 +521,6 @@ export default function Imprint() {
             border-top-color: rgba(255, 255, 255, 0.1);
           }
 
-          /* Ensure contact form is above terminal overlay */
           .contact-form-container {
             position: relative;
             z-index: 10000;
@@ -551,7 +531,6 @@ export default function Imprint() {
             z-index: 10000;
           }
 
-          /* Button styles for inline contact form */
           .contact-form__toggle {
             display: inline-flex;
             align-items: center;
@@ -598,7 +577,6 @@ export default function Imprint() {
             border-color: rgba(59, 130, 246, 0.4);
           }
 
-          /* Print mode styles */
           @media print {
             @page {
               size: portrait;
@@ -662,13 +640,11 @@ export default function Imprint() {
       </style>
       
       <div className="imprint-page" id="imprint-content">
-        {/* Mobile Header */}
         <div className="mobile-only">
           <HeroBrand />
           <MobileMenu />
         </div>
         
-        {/* Desktop Header with back button */}
         <header className="imprint-header desktop-only">
           <div className="imprint-header__inner">
             <div className="imprint-header__logo">
@@ -708,7 +684,6 @@ export default function Imprint() {
           </div>
         </header>
 
-        {/* Main content */}
         <main className="imprint-main">
           <section className="imprint">
             <div className="imprint__inner">
@@ -736,7 +711,6 @@ export default function Imprint() {
           </section>
         </main>
         
-        {/* Credits at bottom of page */}
         <div className="imprint__credits">
           <p className="mb-0 mt-2">
             <small>

@@ -5,20 +5,20 @@
 
 // Social Dock Constants
 // ---------------------
-$dock-position: 16px;
+$dock-position: 12px;        // Desktop scaling: 16px * 0.75
 $dock-z-index: 10;
-$dock-gap-desktop: 12px;
-$dock-gap-mobile: 8px;
+$dock-gap-desktop: 9px;      // Desktop scaling: 12px * 0.75
+$dock-gap-mobile: 6px;       // Desktop scaling: 8px * 0.75
 
 // Social Button Constants
 // -----------------------
-$social-size-desktop: 48px;
-$social-size-enhanced: 46px;
-$social-size-mobile: 36px;
-$social-icon-desktop: 20px;
-$social-icon-mobile: 16px;
+$social-size-desktop: 36px;  // Desktop scaling: 48px * 0.75
+$social-size-enhanced: 34.5px; // Desktop scaling: 46px * 0.75
+$social-size-mobile: 27px;   // Desktop scaling: 36px * 0.75
+$social-icon-desktop: 15px;  // Desktop scaling: 20px * 0.75
+$social-icon-mobile: 12px;   // Desktop scaling: 16px * 0.75
 $social-border-radius: 50%;
-$social-border-radius-enhanced: 12px;
+$social-border-radius-enhanced: 9px; // Desktop scaling: 12px * 0.75
 
 // Animation Constants
 // -------------------

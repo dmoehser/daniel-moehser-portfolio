@@ -6,14 +6,14 @@
 // Spacing Constants
 // -----------------
 $spacing-1: 1px;
-$spacing-2: 2px;
-$spacing-8: 8px;
-$spacing-12: 12px;
-$spacing-16: 16px;
-$spacing-24: 24px;
-$spacing-26: 26px;
-$spacing-30: 30px;
-$spacing-60: 60px;
+$spacing-2: 1.5px;        // Desktop scaling: 2px * 0.75
+$spacing-8: 6px;          // Desktop scaling: 8px * 0.75
+$spacing-12: 9px;         // Desktop scaling: 12px * 0.75
+$spacing-16: 12px;        // Desktop scaling: 16px * 0.75
+$spacing-24: 18px;        // Desktop scaling: 24px * 0.75
+$spacing-26: 19.5px;      // Desktop scaling: 26px * 0.75
+$spacing-30: 22.5px;      // Desktop scaling: 30px * 0.75
+$spacing-60: 45px;        // Desktop scaling: 60px * 0.75
 
 // Size Constants (rem)
 // --------------------
@@ -42,7 +42,7 @@ $border-green: rgba(34,197,94,.4);
 
 // Size Constants
 // --------------
-$border-radius: 8px;
+$border-radius: 6px;      // Desktop scaling: 8px * 0.75
 $z-footer: 5;
 $z-link: 20;
 
