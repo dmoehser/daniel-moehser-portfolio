@@ -204,18 +204,18 @@ $border-light: rgba(15, 23, 42, 0.12);
 // -----------------
 .settings-gear__performance-panel {
   position: absolute;
-  bottom: 48px;
+  bottom: 36px;              // Desktop scaling: 48px * 0.75
   right: 0;
-  width: 280px;
+  width: 210px;              // Desktop scaling: 280px * 0.75
   background: rgba(255, 255, 255, 0.95);
   border: 1px solid rgba(15, 23, 42, 0.12);
-  border-radius: 12px;
+  border-radius: 9px;        // Desktop scaling: 12px * 0.75
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
   box-shadow: 
-    0 10px 25px rgba(15, 23, 42, 0.1),
-    0 4px 12px rgba(15, 23, 42, 0.05);
-  padding: 16px;
+    0 7.5px 18.75px rgba(15, 23, 42, 0.1),     // Desktop scaling: 10px, 25px * 0.75
+    0 3px 9px rgba(15, 23, 42, 0.05);          // Desktop scaling: 4px, 12px * 0.75
+  padding: 12px;             // Desktop scaling: 16px * 0.75
   animation: settingsMenuFadeIn 0.15s ease-out;
   transform-origin: bottom right;
   z-index: $gear-z-performance;
@@ -225,11 +225,11 @@ $border-light: rgba(15, 23, 42, 0.12);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 9px;      // Desktop scaling: 12px * 0.75
   
   h3 {
     margin: 0;
-    font-size: 14px;
+    font-size: 10.5px;     // Desktop scaling: 14px * 0.75
     font-weight: 600;
     color: #1e293b;
     flex: 1;
@@ -238,17 +238,17 @@ $border-light: rgba(15, 23, 42, 0.12);
 }
 
 .settings-gear__performance-back {
-  width: 20px;
-  height: 20px;
+  width: 15px;               // Desktop scaling: 20px * 0.75
+  height: 15px;              // Desktop scaling: 20px * 0.75
   border: none;
   background: transparent;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 12px;           // Desktop scaling: 16px * 0.75
   color: #64748b;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: 3px;        // Desktop scaling: 4px * 0.75
   transition: all 0.15s ease;
   
   &:hover {
@@ -258,17 +258,17 @@ $border-light: rgba(15, 23, 42, 0.12);
 }
 
 .settings-gear__performance-close {
-  width: 20px;
-  height: 20px;
+  width: 15px;               // Desktop scaling: 20px * 0.75
+  height: 15px;              // Desktop scaling: 20px * 0.75
   border: none;
   background: transparent;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 12px;           // Desktop scaling: 16px * 0.75
   color: #64748b;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: 3px;        // Desktop scaling: 4px * 0.75
   transition: all 0.15s ease;
   
   &:hover {
@@ -280,14 +280,14 @@ $border-light: rgba(15, 23, 42, 0.12);
 .settings-gear__performance-metrics {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;              // Desktop scaling: 8px * 0.75
 }
 
 .settings-gear__metric {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 0;
+  padding: 4.5px 0;          // Desktop scaling: 6px * 0.75
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><text x="8" y="12" text-anchor="middle" font-family="Arial, sans-serif" font-size="clamp(12px, 1.2vw, 14px)" fill="%23000">?</text></svg>'), help;
   transition: all 0.2s ease;
@@ -304,9 +304,9 @@ $border-light: rgba(15, 23, 42, 0.12);
   
   &:hover {
     background: rgba(0, 0, 0, 0.02);
-    border-radius: 4px;
-    padding: 6px 8px;
-    margin: 0 -8px;
+    border-radius: 3px;      // Desktop scaling: 4px * 0.75
+    padding: 4.5px 6px;      // Desktop scaling: 6px, 8px * 0.75
+    margin: 0 -6px;          // Desktop scaling: -8px * 0.75
     
     .settings-gear__metric-tooltip {
       opacity: 1;
@@ -326,15 +326,15 @@ $border-light: rgba(15, 23, 42, 0.12);
   position: absolute;
   bottom: 100%;
   left: 50%;
-  transform: translateX(-50%) translateY(5px);
+  transform: translateX(-50%) translateY(3.75px);    // Desktop scaling: 5px * 0.75
   background: rgba(0, 0, 0, 0.9);
   color: white;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 11px;
+  padding: 6px 9px;                                  // Desktop scaling: 8px, 12px * 0.75
+  border-radius: 4.5px;                              // Desktop scaling: 6px * 0.75
+  font-size: 8.25px;                                 // Desktop scaling: 11px * 0.75
   line-height: 1.4;
   white-space: normal;
-  width: 240px;
+  width: 180px;                                      // Desktop scaling: 240px * 0.75
   word-wrap: break-word;
   z-index: $gear-z-tooltip;
   opacity: 0;
@@ -351,23 +351,23 @@ $border-light: rgba(15, 23, 42, 0.12);
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 4px solid rgba(0, 0, 0, 0.9);
+    border-left: 3px solid transparent;              // Desktop scaling: 4px * 0.75
+    border-right: 3px solid transparent;             // Desktop scaling: 4px * 0.75
+    border-top: 3px solid rgba(0, 0, 0, 0.9);        // Desktop scaling: 4px * 0.75
   }
 }
 
 .settings-gear__metric-label {
-  font-size: 12px;
+  font-size: 9px;        // Desktop scaling: 12px * 0.75
   font-weight: 500;
   color: #64748b;
 }
 
 .settings-gear__metric-value {
-  font-size: 12px;
+  font-size: 9px;        // Desktop scaling: 12px * 0.75
   font-weight: 600;
-  padding: 2px 6px;
-  border-radius: 4px;
+  padding: 1.5px 4.5px;  // Desktop scaling: 2px, 6px * 0.75
+  border-radius: 3px;    // Desktop scaling: 4px * 0.75
   
   &.good {
     background: rgba(34, 197, 94, 0.1);
